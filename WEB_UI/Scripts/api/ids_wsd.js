@@ -1122,9 +1122,9 @@
         });
     };
     // Операция выполнить поиск документа по номеру документа и номеру вагона, во всех местах (БД ИДС, Промежуточная база, СМС) и обновить в БД ИДС
-    ids_wsd.prototype.postOperationUpdateUZ_DOC = function (operation, callback) {
+    ids_wsd.prototype.postOperationUpdateUZ_DOC_Doc_Num = function (operation, callback) {
         $.ajax({
-            url: '../../api/ids/rwt/uz_doc/operation/update_num_doc/',
+            url: '../../api/ids/rwt/uz_doc/operation/update/document/num/',
             type: 'POST',
             data: JSON.stringify(operation),
             contentType: "application/json;charset=utf-8",
@@ -1139,14 +1139,38 @@
             },
             error: function (x, y, z) {
                 LockScreenOff();
-                OnAJAXError("ids_wsd.postOperationUpdateUZ_DOC", x, y, z);
+                OnAJAXError("ids_wsd.postOperationUpdateUZ_DOC_Doc_Num", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
     };
-
+    // Операция выполнить поиск документа по номеру вагона и дате прибытия, во всех местах (Промежуточная база, СМС) и добавить или обновить в БД ИДС
+    ids_wsd.prototype.postOperationUpdateUZ_DOC_Num_DT = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/uz_doc/operation/update/num/dt_arrival/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationUpdateUZ_DOC_Num_DT", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= IDS_DOC (Таблица ЭПД принятых вагонов в базе данных АМКР ИДС) ======================================
     //======= Arrival_UZ_Document_Docs (Доки по ЭПД УЗ по прибытию (не досылочные)) ======================================
     // Получить все доки

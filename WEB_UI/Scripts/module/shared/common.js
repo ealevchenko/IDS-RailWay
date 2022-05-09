@@ -4447,8 +4447,8 @@
         }
     };
 
-    validation_form.prototype.clear_all = function () {
-        this.clear_message();
+    validation_form.prototype.clear_all = function (not_clear_message) {
+        if (!not_clear_message) this.clear_message();
         this.clear_error();
     };
     // Очистить все ошибки
@@ -4538,8 +4538,21 @@
         return true;
     };
     // --------------------------------------------------------------------------
+    // Проверка на условие если true-Ок, false - error
+    validation_form.prototype.check_control_condition = function (result, o, mes_error, mes_ok, out_message) {
+        if (result) {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
     // Проверка на пустое значение "INPUT"
     validation_form.prototype.check_control_input_not_null = function (o, mes_error, mes_ok, out_message) {
+        var val = o.val();
         if (o.val() !== null && o.val() !== '') {
             this.set_control_ok(o.$element, mes_ok);
             if (out_message) this.out_info_message(mes_ok);

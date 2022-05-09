@@ -45,12 +45,15 @@
             'ficcd_title_search_car': 'Найти ЭПД по номеру вагона',
             'ficcd_title_manual_car': 'Ввести данные в ручную',
             'ficcd_title_search_main_doc': 'Найти основной документ на УЗ',
+            'ficcd_title_search_doc': 'Найти досылочный документ на УЗ',
             'ficcd_label_num': '№ Вагона:',
             'ficcd_title_num': 'Номер вагона',
             'ficcd_label_position_arrival': '№ в поезде:',
             'ficcd_title_position_arrival': 'Автоматический ввод\корректировка (номер вагона в составе)',
             'ficcd_label_date_adoption_act': 'Время и дата приема по акту:',
             'ficcd_title_date_adoption_act': 'Ручной ввод (если вагон принимаем по акту)',
+
+            'fogcd_label_not_epd': 'Без ЭПД',
             'ficcd_label_document_nom_doc': '№ Досылочной накладной:',
             'ficcd_title_document_nom_doc': 'Номер досылочной накладной',
             'ficcd_label_document_nom_main_doc': '№ Основной накладной:',
@@ -270,7 +273,9 @@
             'ficcd_mess_warning_sap_not_full': 'Информация о входящей поставке не полная, информация дополняется, вы можете обновить информацию сделать запрос в ручную.',
             'ficcd_mess_ok_sap_full': 'Информация о входящей поставке - полная, строка закрыта.',
             'ficcd_mess_run_operation_arrival_wagon': 'Выполняю операцию "ПРИНЯТЬ ВАГОН {0} НА АМКР"...',
-            'ficcd_mess_run_operation_searsh_main_doc': 'Выполняю операцию "ПОИСК ОСНОВГОНО ДОКУМЕНТА {0} ПО ВАГОНУ {1}"...',
+            'ficcd_mess_run_operation_searsh_main_doc': 'Выполняю операцию "ПОИСК ОСНОВГОНО ЭПД {0} ПО ВАГОНУ {1}"...',
+            'ficcd_mess_run_operation_searsh_doc_of_num_dt': 'Выполняю операцию "ПОИСК ЭПД ПО ВАГОНУ {0} ПРИБЫВШЕГО {1}"...',
+            'ficcd_mess_run_operation_change_mode_epd': 'Смена режима ЭПД...',
 
             'ficcd_mess_ok_operation_update_sap': 'Операция "ОБНОВИТЬ ВХОДЯЩУЮ ПОСТАВКУ" - выполнена',
             'ficcd_mess_error_operation_update_sap': 'Ошибка выполнения операции "ОБНОВИТЬ ВХОДЯЩУЮ ПОСТАВКУ"',
@@ -288,7 +293,13 @@
             'ficcd_title_uz_epd': 'с БД УЗ и ЭПД',
             'ficcd_title_uz': 'только с БД УЗ.',
 
+            'fogcd_form_search_epd': 'Найти ЭПД',
+            'fogcd_form_search_car_uz_epd_message': 'Если ЭПД не будет найден в БД ИДС, включить в поиск документа систему «УЗ Клиент»?. Внимание! Поиск ЭПД в системе «УЗ Клиент» может занять несколько минут!',
+
             'ficcd_mess_valid_not_nom_main_doc': 'Укажите номер накладной',
+            'ficcd_mess_valid_not_number_nom_main_doc': 'Номер накладной должен состоять из цифр',
+            'ficcd_mess_valid_not_epd_main_doc': 'Основной ЭПД – не найден!',
+            'ficcd_mess_valid_not_epd_doc': 'Досылочный ЭПД – не найден!',
 
             'ficcd_mess_valid_not_station_from_name': 'Укажите станцию отправления',
             'ficcd_mess_valid_station_from_name': 'Указанной станции отправления нет в справочнике ИДС',
@@ -341,9 +352,16 @@
             'ficcd_mess_warning_off_data_wagon_uz': 'Внимание! Запрос к БД УЗ - отключен! (будут применены данный из справочника ИДС).', //
             'ficcd_mess_warning_no_data_wagon_ids': 'По выбранному вагону нет данных в БД ИДС.', //
 
+            'ficcd_message_mode_null': 'Внимание! Выбран режим «Вода информации без накладной УЗ». Номер накладной будет сформирован автоматически, карточка переведена в ручной режим ввода.',
+            'ficcd_message_mode_1': 'Внимание! По указанному вагону неопределен ЭПД, для продолжения выберите один из двух режимов: 1-«Ввод информации без накладной УЗ» (Выбрать галочку «Без ЭПД»); 2-«Поиск ЭПД по номеру вагона и дате прибытия» (Нажать кнопку поиска возле номера вагона) .',
+            'ficcd_message_mode_2': 'Внимание! По указанному вагону неопределен основной ЭПД, для продолжения нажмите кнопку поиска ЭПД возле поля номера основной накладной. (Поиск ЭПД будет произведен по номеру вагона и номеру накладной)',
+            'ficcd_message_mode_3': 'Внимание! По указанному вагону не удалось найти основной ЭПД, карточка переведена в ручной режим ввода, введите в ручную недостающую информацию.',
+            'ficcd_message_mode_4': 'Внимание! По указанному вагону неопределен основной ЭПД, для продолжения выберите один из двух режимов: 1-«Ввод информации без накладной УЗ» (Выбрать галочку «Без ЭПД»); 2-«Поиск ЭПД по номеру вагона и номеру накладной» (Введите номер накладной и нажмите кнопку поиска)',
+            'ficcd_message_mode_5': 'Внимание! По указанному вагону не удалось найти ЭПД, карточка переведена в ручной режим ввода, для продолжения выберите один из двух режимов: 1-«Ввод информации без накладной УЗ» (Выбрать галочку «Без ЭПД»); 2-«Полный ручной ввод» (Номера накладных и характеристики - вводятся в ручную).',
+
             //'ficcd_mess_warning_no_data_dir_wagon': 'По выбранному вагону нет данных в справочнике вагонов ИДС.', //
             'ficcd_mess_warning_no_epd_wagon': 'По выбранному вагону нет перевозочного документа.', //
-            'ficcd_mess_warning_no_main_epd_wagon': 'По выбранному вагону нет не найден основной перевозочный документ.', //
+            'ficcd_mess_warning_no_main_epd_wagon': 'По выбранному вагону нет ЭПД.', //
             'ficcd_mess_error_wagon_arrival': 'Вагон {0} - принят: {1}, принял: {2}', //
 
 
@@ -505,14 +523,6 @@
         this.wagon = null;                      // Текущий вагон
         this.epd = {};                          // текщий ЭПД на вагон
         this.sap = null;                        // текщий САП на вагон
-        //this.current_id_return_wagons = null;   // Текущий id открытой строки возврата
-        //this.current_id_condition = null;       // Текущий id разметки
-        //this.arrival_id_wagon_rent = null;      // Текущий id аренды по прибытию
-        //this.outgoing_id_wagon_rent = null;     // Текущий id аренды по отправке
-        //this.current_id_countrys = null;        // Текущий id администрации
-        //this.current_id_genus = null;           // Текущий id род вагона
-        //this.current_id_owner = null;           // Текущий id владелец
-        //this.detention_edit = false;            // Текущий режим правки задержания
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['hazard_class', 'certification_data', 'commercial_condition', 'cargo', 'cargo_group', 'cargo_gng', 'cargo_etsng', 'external_station', 'border_checkpoint', 'shipper', 'consignee', 'station', 'divisions', 'countrys', 'genus_wagon', 'condition_arrival', 'type_wagons', 'owners_wagons', 'type_owner_ship', 'operators_wagons', 'limiting_loading', 'payer_sender'], false, function (result) {
             // Подгрузили списки
@@ -638,27 +648,27 @@
                     icon_right: 'fa fa-search',
                     click: function (event) {
                         event.preventDefault();
-                        //this.action_remove_wagon();
+                        this.action_search_car();
                     }.bind(this),
                 }
             };
-            var bt_manual_car = {
-                obj: 'bs_button',
-                options: {
-                    color: 'danger',
-                    size: 'sm',
-                    class: null,
-                    id: 'manual_car',
-                    label: null,
-                    title: langView('ficcd_title_manual_car', App.Langs),
-                    icon_left: null,
-                    icon_right: 'fa fa-edit',
-                    click: function (event) {
-                        event.preventDefault();
-                        //this.action_remove_wagon();
-                    }.bind(this),
-                }
-            };
+            //var bt_manual_car = {
+            //    obj: 'bs_button',
+            //    options: {
+            //        color: 'danger',
+            //        size: 'sm',
+            //        class: null,
+            //        id: 'manual_car',
+            //        label: null,
+            //        title: langView('ficcd_title_manual_car', App.Langs),
+            //        icon_left: null,
+            //        icon_right: 'fa fa-edit',
+            //        click: function (event) {
+            //            event.preventDefault();
+            //            //this.action_remove_wagon();
+            //        }.bind(this),
+            //    }
+            //};
             var form_input_num = {
                 obj: 'bs_input_number',
                 element: null,
@@ -684,7 +694,7 @@
                     input_group_prepend_class: null,
                     input_group_prepend_objs: [],
                     input_group_append_class: null,
-                    input_group_append_objs: [bt_search_car, bt_manual_car],
+                    input_group_append_objs: [bt_search_car],
                 },
                 childs: []
             };
@@ -742,7 +752,49 @@
                 },
                 childs: []
             };
-
+            var form_alert_epd = {
+                obj: 'bs_alert',
+                options: {
+                    id: null,
+                    class: null,
+                    validation_group: 'epd',
+                },
+                childs: []
+            };
+            var form_row_common3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_checkbox_not_epd = {
+                obj: 'bs_checkbox',
+                element: null,
+                options: {
+                    id: 'not_epd',
+                    validation_group: 'epd',
+                    form_group_size: 'xl',
+                    form_group_col: 2,
+                    form_group_class: 'text-left',
+                    label: langView('fogcd_label_not_epd', App.Langs),
+                    label_class: 'mb-1',
+                    checkbox_class: 'inp-manual',
+                    checkbox_title: null,
+                    checkbox_required: null,
+                    checkbox_readonly: false,
+                    element_default: null,
+                    element_change: function (e) {
+                        //event.preventDefault();
+                        if (this.wagon) {
+                            LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                            this.view_wagon_detali(this.wagon)
+                        }
+                        //var res = $(e.currentTarget).prop('checked');
+                    }.bind(this),
+                },
+                childs: []
+            };
             var bt_search_main_doc = {
                 obj: 'bs_button',
                 options: {
@@ -760,13 +812,30 @@
                     }.bind(this),
                 }
             };
+            var bt_search_doc = {
+                obj: 'bs_button',
+                options: {
+                    color: 'warning',
+                    size: 'sm',
+                    class: null,
+                    id: 'search_doc',
+                    label: null,
+                    title: langView('ficcd_title_search_doc', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fa fa-search',
+                    click: function (event) {
+                        event.preventDefault();
+                        //this.action_search_doc();
+                    }.bind(this),
+                }
+            };
             var form_input_document_nom_main_doc = {
                 obj: 'bs_input_text',
                 options: {
                     id: 'document_nom_main_doc',
-                    validation_group: 'common',
+                    validation_group: 'epd',
                     form_group_size: 'xl',
-                    form_group_col: 6,
+                    form_group_col: 5,
                     form_group_class: 'text-left',
                     label: langView('ficcd_label_document_nom_main_doc', App.Langs),
                     label_class: 'mb-1',
@@ -787,9 +856,9 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'document_nom_doc',
-                    validation_group: 'common',
+                    validation_group: 'epd',
                     form_group_size: 'xl',
-                    form_group_col: 6,
+                    form_group_col: 5,
                     form_group_class: 'text-left',
                     label: langView('ficcd_label_document_nom_doc', App.Langs),
                     label_class: 'mb-1',
@@ -798,7 +867,11 @@
                     input_title: langView('ficcd_title_document_nom_doc', App.Langs),
                     input_placeholder: null,
                     input_required: null,
-                    input_group: false,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: [],
+                    input_group_append_class: null,
+                    input_group_append_objs: [bt_search_doc],
                 },
                 childs: []
             };
@@ -3276,11 +3349,14 @@
             form_row_common1.childs.push(form_input_num);
             form_row_common1.childs.push(form_input_position_arrival);
             form_row_common1.childs.push(form_input_date_adoption_act);
-            form_row_common2.childs.push(form_input_document_nom_main_doc);
-            form_row_common2.childs.push(form_input_document_nom_doc);
+            form_row_common2.childs.push(form_alert_epd);
+            form_row_common3.childs.push(form_checkbox_not_epd);
+            form_row_common3.childs.push(form_input_document_nom_main_doc);
+            form_row_common3.childs.push(form_input_document_nom_doc);
             //
             fieldset_common.childs.push(form_row_common1);
             fieldset_common.childs.push(form_row_common2);
+            fieldset_common.childs.push(form_row_common3);
             // станция отправки
             form_row_departure_station.childs.push(form_input_code_stn_from);
             form_row_departure_station.childs.push(form_input_station_from_name);
@@ -3606,13 +3682,16 @@
     //-----------------------------------------------------------------------------
     // Очистить форму
     form_incoming_cars_detali.prototype.clear_form = function (not_alert) {
-        this.clear_out_validation(not_alert);
+        this.clear_out_validation(not_alert, not_alert);
         if (this.elements) {
             this.elements.input_number_num_car.val('');
             this.elements.input_number_position_arrival.val('1');
             this.elements.input_datetime_date_adoption_act.set(null); // уберем дату
-            this.elements.input_text_document_nom_doc.val('');
+
+            //this.elements.checkbox_not_epd.val(false);
             this.elements.input_text_document_nom_main_doc.val('');
+            this.elements.input_text_document_nom_doc.val('');
+
             // станция отправки
             this.elements.input_number_code_stn_from.val('');
             this.elements.autocomplete_station_from_name.text('');
@@ -3635,6 +3714,7 @@
             this.elements.select_station_amkr_name.val(-1);
             this.elements.autocomplete_division_name.val(-1);
             // Карточка вагона
+            this.elements.checkbox_route_flag.val(false);
             this.elements.input_number_kod_adm.val('');
             this.elements.select_name_adm.val(-1);
             this.elements.input_text_rod_vag.val('');
@@ -3711,8 +3791,9 @@
         this.elements.button_arrival_car.hide();
         this.elements.button_return_car.hide();
         this.elements.button_search_car.hide();
-        this.elements.button_manual_car.hide();
+        //this.elements.button_manual_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_search_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3722,23 +3803,27 @@
         this.elements.button_add_cargo_etsng.hide();
         this.elements.button_add_cargo_gng.hide();
         this.elements.button_add_incoming_supply.hide();
-
+        this.elements.checkbox_not_epd.val(false);
         // Общая (common)
         this.form.obj_form.validations[0].$elements.each(function () {
+            this.prop('disabled', true);
+        });
+        // Общая (epd)
+        this.form.obj_form.validations[1].$elements.each(function () {
             this.prop('disabled', true);
         });
         // Карточка вагона (wagon_card)
         this.elements.button_wagon_card_edit.hide();
         this.elements.button_wagon_card_save.hide();
-        this.form.obj_form.validations[1].$elements.each(function () {
-            this.prop('disabled', true);
-        });
-        // Платильщики (payment)
         this.form.obj_form.validations[2].$elements.each(function () {
             this.prop('disabled', true);
         });
-        // Груз (cargo)
+        // Платильщики (payment)
         this.form.obj_form.validations[3].$elements.each(function () {
+            this.prop('disabled', true);
+        });
+        // Груз (cargo)
+        this.form.obj_form.validations[4].$elements.each(function () {
             this.prop('disabled', true);
         });
     };
@@ -3754,8 +3839,9 @@
             this.elements.button_return_car.hide();
         }
         this.elements.button_search_car.hide();
-        this.elements.button_manual_car.hide();
+        //this.elements.button_manual_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_search_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3764,22 +3850,26 @@
         this.elements.button_add_payer_sender.hide();
         this.elements.button_add_cargo_etsng.hide();
         this.elements.button_add_cargo_gng.hide();
-
+        // Общая
         this.form.obj_form.validations[0].$elements.each(function () {
+            this.prop('disabled', true);
+        });
+        // Общая (epd)
+        this.form.obj_form.validations[1].$elements.each(function () {
             this.prop('disabled', true);
         });
         // Карточка вагона
         this.elements.button_wagon_card_edit.hide();
         this.elements.button_wagon_card_save.hide();
-        this.form.obj_form.validations[1].$elements.each(function () {
-            this.prop('disabled', true);
-        });
-        // Платильщики (payment)
         this.form.obj_form.validations[2].$elements.each(function () {
             this.prop('disabled', true);
         });
-        // Груз (cargo)
+        // Платильщики (payment)
         this.form.obj_form.validations[3].$elements.each(function () {
+            this.prop('disabled', true);
+        });
+        // Груз (cargo)
+        this.form.obj_form.validations[4].$elements.each(function () {
             this.prop('disabled', true);
         });
     };
@@ -3791,16 +3881,9 @@
         this.elements.button_return_car.hide();
 
         this.elements.button_search_car.hide();
-        this.elements.button_manual_car.hide();
-        //if (this.wagon_settings.type === 1 && !this.wagon_settings.main_otpr) {
-        //    this.elements.button_search_car.show();
-        //    this.elements.button_manual_car.show();
-        //} else {
-        //    this.elements.button_search_car.hide();
-        //    this.elements.button_manual_car.hide();
-        //}
         //this.elements.button_return_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_search_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3810,7 +3893,7 @@
         this.elements.button_add_cargo_etsng.hide();
         this.elements.button_add_cargo_gng.hide();
 
-        // деактивировать элементы ЭПД
+        // деактивировать элементы ЭПД (Общая)
         this.form.obj_form.validations[0].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', true);
@@ -3824,6 +3907,24 @@
         });
         // активировать элементы ручного ввода
         this.form.obj_form.validations[0].$elements.each(function () {
+            if (this.is('.inp-manual')) {
+                this.prop('disabled', false);
+            };
+        });
+        // деактивировать элементы ЭПД (Общая ЭПД)
+        this.form.obj_form.validations[1].$elements.each(function () {
+            if (this.is('.inp-manual-epd')) {
+                this.prop('disabled', true);
+            };
+        });
+        // деактивировать элементы базы данных УЗ
+        this.form.obj_form.validations[1].$elements.each(function () {
+            if (this.is('.inp-uz')) {
+                this.prop('disabled', true);
+            };
+        });
+        // активировать элементы ручного ввода
+        this.form.obj_form.validations[1].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
@@ -3831,55 +3932,55 @@
         // Карточка вагона
         this.elements.button_wagon_card_edit.hide();
         this.elements.button_wagon_card_save.hide();
-        this.form.obj_form.validations[1].$elements.each(function () {
+        this.form.obj_form.validations[2].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', true);
             };
         });
         // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[1].$elements.each(function () {
+        this.form.obj_form.validations[2].$elements.each(function () {
             if (this.is('.inp-uz')) {
                 this.prop('disabled', true);
             };
         });
         // активировать элементы ручного ввода
-        this.form.obj_form.validations[1].$elements.each(function () {
+        this.form.obj_form.validations[2].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
         });
         // Платильщики (payment)
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', true);
             };
         });
         // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-uz')) {
                 this.prop('disabled', true);
             };
         });
         // активировать элементы ручного ввода
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
         });
         // Груз (cargo)
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', true);
             };
         });
         // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-uz')) {
                 this.prop('disabled', true);
             };
         });
         // активировать элементы ручного ввода
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
@@ -3887,7 +3988,7 @@
     };
     // Перевести форму в режим не активно
     form_incoming_cars_detali.prototype.edit = function () {
-        this.clear_form();
+        this.clear_form(true);
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3897,6 +3998,7 @@
         this.elements.button_add_cargo_etsng.hide();
         this.elements.button_add_cargo_gng.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_search_doc.hide();
         // Переведем все компоненты в режим disabled
         // Общие компоненты
         if (this.wagon && this.wagon.arrival_sostav_status <= 1) {
@@ -3925,7 +4027,7 @@
                 this.prop('disabled', false);
             };
         });
-        // Карточка вагона
+        // Общая ЭПД
         this.form.obj_form.validations[1].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', false);
@@ -3939,42 +4041,60 @@
         });
         // активировать элементы ручного ввода
         this.form.obj_form.validations[1].$elements.each(function () {
+            if (this.is('.inp-manual')) {
+                this.prop('disabled', false);
+            };
+        });
+        // Карточка вагона
+        this.form.obj_form.validations[2].$elements.each(function () {
+            if (this.is('.inp-manual-epd')) {
+                this.prop('disabled', false);
+            };
+        });
+        // деактивировать элементы базы данных УЗ
+        this.form.obj_form.validations[2].$elements.each(function () {
+            if (this.is('.inp-uz')) {
+                this.prop('disabled', false);
+            };
+        });
+        // активировать элементы ручного ввода
+        this.form.obj_form.validations[2].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
         });
         // Оплата
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', false);
             };
         });
         // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-uz')) {
                 this.prop('disabled', false);
             };
         });
         // активировать элементы ручного ввода
-        this.form.obj_form.validations[2].$elements.each(function () {
+        this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
         });
         // Груз
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', false);
             };
         });
         // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-uz')) {
                 this.prop('disabled', false);
             };
         });
         // активировать элементы ручного ввода
-        this.form.obj_form.validations[3].$elements.each(function () {
+        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
@@ -3983,11 +4103,56 @@
     //-----------------------------------------------------------------------------
     //-- Функции отображения информации в форме
     //-----------------------------------------------------------------------------
+    // Обновить информацию по вагонам по по основному epd если в документе есть ссылка на него
+    form_incoming_cars_detali.prototype.update_wagon_of_main_epd = function (callback) {
+        // Проверим если есть ссылка на основной документ, тогда ищем его
+        if (this.wagon_settings.main_otpr && this.wagon_settings.main_otpr.otprdp && this.wagon_settings.main_otpr.otprdp.nom_osn_doc) {
+            this.wagon_settings.otpr_num = this.wagon_settings.main_otpr_num;                       // переопределяем основной номер как досылочный
+            this.wagon_settings.main_otpr_num = this.wagon_settings.main_otpr.otprdp.nom_osn_doc;   // сохраняем основной
+            // Получим ЭПД по основной накладной № накладной
+            var current_mode_epd = this.mode_epd
+            var operation = {
+                num_doc: this.wagon_settings.main_otpr.otprdp.nom_osn_doc,
+                num: this.wagon.num,
+                add: true,
+                search_sms: false, // Поищем позже через кнопку
+            };
+            this.ids_wsd.postOperationUpdateUZ_DOC_Doc_Num(operation, function (result) {
+                if (result && result.obj) {
+                    this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
+                        main_otpr = null; //TODO: !!!!! тест убрать
+                        if (!main_otpr) {
+                            this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
+                        }
+                        this.mode_epd = main_otpr ? 0 : 2; // Режим ЭПД
+                        this.wagon_settings.otpr = this.wagon_settings.main_otpr; // переопределяем основной как досылочный
+                        this.wagon_settings.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
+                        if (typeof callback === 'function') {
+                            callback(main_otpr);
+                        }
+                    }.bind(this));
+                } else {
+                    // Иногда нет данных, сообщаем!
+                    this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
+                    this.wagon_settings.otpr = this.wagon_settings.main_otpr; // переопределяем основной как досылочный
+                    this.wagon_settings.main_otpr = null;
+                    this.mode_epd = 2; // Режим ЭПД
+                    if (typeof callback === 'function') {
+                        callback(null);
+                    }
+                }
+            }.bind(this));
+        } else {
+            if (typeof callback === 'function') {
+                callback(null);
+            }
+        }
+    };
     // Обновить информацию по вагонам по новым данным epd
-    form_incoming_cars_detali.prototype.update_wagon_of_epd = function (options, callback) {
+    form_incoming_cars_detali.prototype.update_wagon_of_epd = function (callback) {
         // Получить все необходимые поля ЭПД
-        this.epd = this.epd_uz.get_all_field_epd(options.main_otpr, options.otpr, this.wagon.num);
-        options.dir_wagon = null; // сбросим информацию о вагоне
+        this.epd = this.epd_uz.get_all_field_epd(this.wagon_settings.main_otpr, this.wagon_settings.otpr, this.wagon.num);
+        this.wagon_settings.dir_wagon = null; // сбросим информацию о вагоне
         var info_operation = null;
         this.form.validation_wagon_card.clear_all();
         // обновим вагон
@@ -4033,8 +4198,8 @@
                         break;
                     };
                 }
-                options.dir_wagon = result.obj;
-                options.dir_wagon_mode = result.mode;
+                this.wagon_settings.dir_wagon = result.obj;
+                this.wagon_settings.dir_wagon_mode = result.mode;
                 var message = langView('ficcd_mess_ok_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), mode_operation, info_operation);
                 if (this.epd && this.epd.vagon && this.epd.vagon.nomer) {
                     this.form.validation_wagon_card.out_info_message(message);
@@ -4042,13 +4207,13 @@
                     this.form.validation_wagon_card.out_warning_message(message);
                 }
                 if (typeof callback === 'function') {
-                    callback(options);
+                    callback(true);
                 }
             } else {
                 // Ошибка обновления
                 this.form.validation_wagon_card.out_error_message(langView('ficcd_mess_error_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), result !== null ? result.result : null));
                 if (typeof callback === 'function') {
-                    callback(options);
+                    callback(false);
                 }
             }
         }.bind(this));
@@ -4077,171 +4242,9 @@
     // Показать детали
     form_incoming_cars_detali.prototype.wagon_detali = function (id, options) {
         LockScreen(langView('ficcd_mess_load_wagon', App.Langs));
-        this.clear_out_validation();
+        this.form.validation_epd.clear_all(); // стираем только при смене режима
+        this.clear_out_validation(false, false);
         this.id = id;
-        this.update_wagon(function (wagon) {
-            if (wagon !== null) {
-                if (this.elements) {
-                    if (options.type === 1) {
-                        // режим переноса в левую сторону
-                        this.view_epd(); // врежиме авто ЭПД
-                        //this.edit();
-                        LockScreen(langView('ficcd_mess_load_db_uz', App.Langs));
-                        var process = 2;
-                        // Выход из инициализации
-                        var out_init = function (process) {
-                            if (process === 0) {
-                                this.update_wagon_of_epd(options, function (options) {
-                                    this.view_wagon_detali(this.wagon, options);
-                                }.bind(this));
-
-                                //// Получить все необходимые поля ЭПД
-                                //this.epd = this.epd_uz.get_all_field_epd(options.main_otpr, options.otpr, wagon.num);
-                                //options.dir_wagon = null; // сбросим информацию о вагоне
-                                //var info_operation = null;
-                                //this.form.validation_wagon_card.clear_all();
-                                //// обновим вагон
-                                //if (this.epd && this.epd.vagon && this.epd.vagon.nomer) {
-                                //    //  Настроим по данным ЭПД
-                                //    info_operation = langView('ficcd_title_uz_epd', App.Langs);
-                                //    var option = {
-                                //        num: this.wagon.num,
-                                //        adm: this.epd.vagon.kod_adm,
-                                //        rod: this.epd.vagon.rod_vag,
-                                //        kol_os: this.epd.vagon.kol_os,
-                                //        usl_tip: this.epd.vagon.usl_tip,
-                                //        not_check_numeration: false, // не пропускать проверку на системную нумерацию
-                                //        user: App.User_Name,
-                                //    }
-
-                                //} else {
-                                //    // Настроим с пустыми параметрами
-                                //    info_operation = langView('ficcd_title_uz', App.Langs);
-                                //    var option = {
-                                //        num: this.wagon.num,
-                                //        adm: 0,
-                                //        rod: null,
-                                //        kol_os: 0,
-                                //        usl_tip: null,
-                                //        not_check_numeration: false, // не пропускать проверку на системную нумерацию
-                                //        user: App.User_Name,
-                                //    }
-                                //}
-                                //// Выполним обновление
-                                //LockScreen(langView('ficcd_mess_update_wagon', App.Langs));
-                                //this.ids_dir.postOperationCreateUpdateWagons(option, function (result) {
-                                //    if (result !== null && result.result >= 0) {
-                                //        var mode_operation = langView('ficcd_title_not', App.Langs);
-
-                                //        switch (result.mode) {
-                                //            case 1: {
-                                //                mode_operation = langView('ficcd_title_add', App.Langs);
-                                //                break;
-                                //            };
-                                //            case 2: {
-                                //                mode_operation = langView('ficcd_title_update', App.Langs);
-                                //                break;
-                                //            };
-                                //        }
-                                //        options.dir_wagon = result.obj;
-                                //        options.dir_wagon_mode = result.mode;
-                                //        var message = langView('ficcd_mess_ok_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), mode_operation, info_operation);
-                                //        if (this.epd && this.epd.vagon && this.epd.vagon.nomer) {
-                                //            this.form.validation_wagon_card.out_info_message(message);
-                                //        } else {
-                                //            this.form.validation_wagon_card.out_warning_message(message);
-                                //        }
-                                //        // Покажем детально
-                                //        this.view_wagon_detali(this.wagon, options);
-                                //    } else {
-                                //        // Ошибка обновления
-                                //        this.form.validation_wagon_card.out_error_message(langView('ficcd_mess_error_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), result !== null ? result.result : null));
-                                //    }
-                                //}.bind(this));
-                            }
-                        }.bind(this);
-                        //TODO:!ОТКЛЮЧИЛ ДЛЯ ПРОВЕРКИ
-                        if (select_uz_info) {
-                            this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
-                                if (info === null) {
-                                    // Иногда нет ответа, сообщаем!
-                                    this.out_warning(langView('ficcd_mess_warning_no_data_wagon_uz', App.Langs));
-                                }
-                                options.info = info;
-                                process--;
-                                out_init(process);
-                            }.bind(this));
-                        } else {
-                            options.info = null;
-                            this.out_warning(langView('ficcd_mess_warning_off_data_wagon_uz', App.Langs));
-                            process--;
-                            out_init(process);
-                        }
-                        // Получим ЭПД по коду базы УЗ
-                        this.ids_wsd.getOTPR_UZ_DOCOfNum(this.wagon.arrival_car_num_doc, function (otpr) {
-                            if (otpr === null) {
-                                // Иногда нет данных, сообщаем!
-                                this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
-                                options.main_otpr_num = null;
-                            } else {
-                                options.main_otpr_num = otpr.nom_doc;
-                            }
-                            options.main_otpr = otpr;   // делаем пока как основной
-                            options.otpr_num = null;    // обнуляем досылочный номер
-                            options.otpr = null;        // обнуляем досылочный
-                            // Проверим если есть ссылка на основной документ, тогда ищем его
-                            if (options.main_otpr && options.main_otpr.otprdp && options.main_otpr.otprdp.nom_osn_doc) {
-                                options.otpr_num = options.main_otpr_num;                       // переопределяем основной номер как досылочный
-                                options.main_otpr_num = options.main_otpr.otprdp.nom_osn_doc;   // сохраняем основной
-                                // Получим ЭПД по основной накладной № накладной
-                                var operation = {
-                                    num_doc: options.main_otpr.otprdp.nom_osn_doc,
-                                    num: this.wagon.num,
-                                    add: true,
-                                    search_sms: false, // Поищем позже через кнопку
-                                };
-                                this.ids_wsd.postOperationUpdateUZ_DOC(operation, function (result) {
-                                    if (result && result.obj) {
-                                        this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
-                                            if (!main_otpr) {
-                                                this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
-                                            }
-                                            options.otpr = options.main_otpr; // переопределяем основной как досылочный
-                                            options.main_otpr = null;//main_otpr;    // и переопределяем основной даже если он не считан будет нуль
-                                            process--;
-                                            out_init(process);
-                                        }.bind(this));
-                                    } else {
-                                        // Иногда нет данных, сообщаем!
-                                        this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
-                                        options.otpr = options.main_otpr; // переопределяем основной как досылочный
-                                        options.main_otpr = null;
-                                        process--;
-                                        out_init(process);
-                                    }
-
-                                }.bind(this));
-                            } else {
-                                process--;
-                                out_init(process);
-                            }
-
-
-                        }.bind(this));
-                    } else {
-                        // режим просмотра
-                        this.view();
-                        this.view_wagon_detali(this.wagon, options)
-                        LockScreenOff();
-                    }
-                } else {
-                    throw new Error('this.elements - пустой, нет привязки');
-                }
-            }
-        }.bind(this));
-    };
-    // Показать детали после определения типа (view & edit)
-    form_incoming_cars_detali.prototype.view_wagon_detali = function (wagon, options) {
         // Определим основные свойства
         this.wagon_settings = $.extend({
             type: 0,                // Тип операции 0-просмотр, 1-правка
@@ -4259,58 +4262,203 @@
             //wio: null,              // текущая операция  (используется в режиме правка)
             //present_wagons: null,   // Список предявленных вагонов(используется в режиме правка)
         }, options);
-
-        var nom_main_doc = wagon.arrival_uz_document_nom_main_doc;
-        var nom_doc = wagon.arrival_uz_document_nom_doc;
-
-        // Настроем отображение если окно в режиме редактирования
-        if (this.wagon_settings.type === 1) {
-            if (!this.wagon_settings.main_otpr) {
-                this.elements.button_search_car.show();
-                this.elements.button_manual_car.show();
-            } else {
-                this.elements.button_search_car.hide();
-                this.elements.button_manual_car.hide();
+        this.update_wagon(function (wagon) {
+            if (wagon !== null) {
+                if (this.elements) {
+                    if (this.wagon_settings.type === 1) {
+                        // режим переноса в левую сторону
+                        this.mode_epd = 0; // Режим ЭПД
+                        //this.view_epd(); // врежиме авто ЭПД
+                        //this.edit();
+                        LockScreen(langView('ficcd_mess_load_db_uz', App.Langs));
+                        var process = 2;
+                        // Выход из инициализации
+                        var out_init = function (process) {
+                            if (process === 0) {
+                                this.update_wagon_of_epd(function (result) {
+                                    if (result) this.view_wagon_detali(this.wagon);
+                                }.bind(this));
+                            }
+                        }.bind(this);
+                        //TODO:!ОТКЛЮЧИЛ ДЛЯ ПРОВЕРКИ
+                        if (select_uz_info) {
+                            this.uz_dir.getInfoWagonOfNum(this.wagon.num, function (info) {
+                                if (info === null) {
+                                    // Иногда нет ответа, сообщаем!
+                                    this.out_warning(langView('ficcd_mess_warning_no_data_wagon_uz', App.Langs));
+                                }
+                                this.wagon_settings.info = info;
+                                process--;
+                                out_init(process);
+                            }.bind(this));
+                        } else {
+                            this.wagon_settings.info = null;
+                            this.out_warning(langView('ficcd_mess_warning_off_data_wagon_uz', App.Langs));
+                            process--;
+                            out_init(process);
+                        }
+                        // Получим ЭПД по номеру накладной базы УЗ
+                        this.ids_wsd.getOTPR_UZ_DOCOfNum(this.wagon.arrival_car_num_doc, function (otpr) {
+                            if (otpr === null) {
+                                // Иногда нет данных, сообщаем!
+                                this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
+                                this.wagon_settings.main_otpr_num = null;
+                                this.mode_epd = 1; // Режим ЭПД
+                            } else {
+                                this.wagon_settings.main_otpr_num = otpr.nom_doc;
+                                this.mode_epd = 0; // Режим ЭПД
+                            }
+                            this.wagon_settings.main_otpr = otpr;   // делаем пока как основной
+                            this.wagon_settings.otpr_num = null;    // обнуляем досылочный номер
+                            this.wagon_settings.otpr = null;        // обнуляем досылочный
+                            // уточним информацию по основному документу если это досылка
+                            this.update_wagon_of_main_epd(function (main_otpr) {
+                                process--;
+                                out_init(process);
+                            }.bind(this));
+                        }.bind(this));
+                    } else {
+                        // режим просмотра
+                        this.view();
+                        this.view_wagon_detali(this.wagon)
+                        LockScreenOff();
+                    }
+                } else {
+                    throw new Error('this.elements - пустой, нет привязки');
+                }
             }
-            nom_main_doc = this.wagon_settings.main_otpr_num; //this.epd.nom_main_doc;
-            if (this.wagon_settings.otpr_num && this.wagon_settings.main_otpr_num && !this.wagon_settings.main_otpr) {
-                this.elements.button_search_main_doc.show();
-            } else {
-                this.elements.button_search_main_doc.hide();
+        }.bind(this));
+    };
+    // Показать детали после определения типа (view & edit)
+    form_incoming_cars_detali.prototype.view_wagon_detali = function (wagon) {
+        if (this.wagon_settings) {
+            var nom_main_doc = wagon.arrival_uz_document_nom_main_doc;
+            var nom_doc = wagon.arrival_uz_document_nom_doc;
+            // Настроем отображение если окно в режиме редактирования
+            this.form.validation_epd.clear_all();
+            if (this.wagon_settings.type === 1) {
+                if (this.elements.checkbox_not_epd.val() === true) {
+                    this.edit(); // режим ручной ЭПД
+                    this.elements.button_search_car.hide();
+                    this.elements.button_search_main_doc.hide();
+                    this.elements.button_search_doc.hide();
+                    this.elements.input_text_document_nom_main_doc.disable();
+                    this.elements.input_text_document_nom_doc.disable();
+                    nom_main_doc = 0;
+                    nom_doc = null;
+                    this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_null', App.Langs));
+                } else {
+                    this.view_epd(); // режим авто ЭПД
+                    switch (this.mode_epd) {
+                        case 0: {
+                            //Ок ЭПД определены
+                            this.elements.checkbox_not_epd.disable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.hide();
+                            this.elements.button_search_main_doc.hide();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_doc.disable();
+                            break;
+                        };
+                        case 1: {
+                            // На вагон осутсвуют ЭПД (выбор: Без ЭПД, Поиск по номеру и времени)
+                            this.elements.checkbox_not_epd.enable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.show();
+                            this.elements.button_search_main_doc.hide();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_doc.disable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_1', App.Langs));
+                            break;
+                        };
+                        case 2: {
+                            // На вагон осутсвуют основной ЭПД но есть досылка (выбор: Без ЭПД-неактивно, Поиск по номеру и документу)
+                            this.elements.checkbox_not_epd.disable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.hide();
+                            this.elements.button_search_main_doc.show();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_doc.disable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_2', App.Langs));
+                            break;
+                        };
+                        case 3: {
+                            // На вагон осутсвуют основной ЭПД проверка 2 была (выбор: Без ЭПД-неактивно, ручной режим)
+                            this.edit(); // режим ручной ЭПД
+                            this.elements.checkbox_not_epd.disable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.hide();
+                            this.elements.button_search_main_doc.hide();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_doc.disable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_3', App.Langs));
+                            break;
+                        };
+                        case 4: {
+                            // На вагон осутсвуют ЭПД, но выбор по номеру вагона и времени уже был (выбор: Без ЭПД, Поиск по номеру и накладной)
+                            this.elements.checkbox_not_epd.enable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.show();
+                            this.elements.button_search_main_doc.show();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.enable();
+                            this.elements.input_text_document_nom_doc.disable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_4', App.Langs));
+                            break;
+                        };
+                        case 5: {
+                            // На вагон осутсвуют ЭПД, но выбор по номеру вагона и времени уже был (выбор: Без ЭПД, Поиск по номеру и накладной)
+                            this.edit(); // режим ручной ЭПД
+                            this.elements.checkbox_not_epd.enable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.hide();
+                            this.elements.button_search_main_doc.hide();
+                            this.elements.button_search_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.enable();
+                            this.elements.input_text_document_nom_doc.enable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_5', App.Langs));
+                            break;
+                        };
+                        case null: {
+                            break;
+                        };
+                    }
+                    nom_main_doc = this.wagon_settings.main_otpr_num; //this.epd.nom_main_doc;
+                    nom_doc = this.wagon_settings.otpr_num; //this.epd.nom_doc
+                }
             }
-            nom_doc = this.wagon_settings.otpr_num; //this.epd.nom_doc
-        }
-        // Общая информация
-        this.elements.input_number_num_car.val(wagon.num);
-        this.elements.input_number_position_arrival.val(this.wagon_settings.type === 1 ? this.wagon_settings.position : wagon.arrival_car_position_arrival);
-        this.elements.input_datetime_date_adoption_act.val(wagon.arrival_sostav_date_adoption);
-        // Сделать не активным окно номер основной накладной
-        //this.elements.input_text_document_nom_main_doc.disable();
-        this.elements.input_text_document_nom_main_doc.val(nom_main_doc);
-        if (nom_doc) {
-            this.elements.input_text_document_nom_doc.enable();
+            // Общая информация
+            this.elements.input_number_num_car.val(wagon.num);
+            this.elements.input_number_position_arrival.val(this.wagon_settings.type === 1 ? this.wagon_settings.position : wagon.arrival_car_position_arrival);
+            this.elements.input_datetime_date_adoption_act.val(wagon.arrival_sostav_date_adoption);
+            // Сделать не активным окно номер основной накладной
+            //
+            this.elements.input_text_document_nom_main_doc.val(nom_main_doc);
             this.elements.input_text_document_nom_doc.val(nom_doc);
-        } else {
-            this.elements.input_text_document_nom_doc.disable();
+            if (this.wagon_settings.type === 1) { this.validation_epd(false); }
+            // МАРШРУТЫ И КЛИЕНТЫ
+            this.view_wagon_detali_station_from();      // станция отправки
+            this.view_wagon_detali_station_on();        // станция прибытия
+            this.view_wagon_detali_border_crossing();   // станция погран-перехода
+            this.view_wagon_detali_shipper();           // грузоотправмтель
+            this.view_wagon_detali_consignee();         // грузополучатель
+            // КАРТОЧКА ВАГОНА
+            this.view_wagon_detali_wagon_card();        // карточку вагона
+            // ОПЛАТА
+            this.view_wagon_detali_payer_sender();      // Платильщик по отправке
+            // ГРУЗ
+            this.view_wagon_detali_cargo_etsng();       // Груз ЕТ СНГ
+            this.view_wagon_detali_cargo_gng();         // Груз ГНГ
+            this.view_wagon_detali_cargo_detali();      // Груз детали
+            this.view_wagon_detali_hazard();            // Груз опасность
+            this.view_wagon_detali_conts();             // Контейнера
+            // САП
+            this.view_wagon_detali_sap();               // SAP
         }
-        // МАРШРУТЫ И КЛИЕНТЫ
-        this.view_wagon_detali_station_from();      // станция отправки
-        this.view_wagon_detali_station_on();        // станция прибытия
-        this.view_wagon_detali_border_crossing();   // станция погран-перехода
-        this.view_wagon_detali_shipper();           // грузоотправмтель
-        this.view_wagon_detali_consignee();         // грузополучатель
-        // КАРТОЧКА ВАГОНА
-        this.view_wagon_detali_wagon_card();        // карточку вагона
-        // ОПЛАТА
-        this.view_wagon_detali_payer_sender();      // Платильщик по отправке
-        // ГРУЗ
-        this.view_wagon_detali_cargo_etsng();       // Груз ЕТ СНГ
-        this.view_wagon_detali_cargo_gng();         // Груз ГНГ
-        this.view_wagon_detali_cargo_detali();      // Груз детали
-        this.view_wagon_detali_hazard();            // Груз опасность
-        this.view_wagon_detali_conts();             // Контейнера
-        // САП
-        this.view_wagon_detali_sap();               // SAP
         LockScreenOff();
     }
     // Показать детали станция отправления
@@ -4625,13 +4773,13 @@
                 // кол осей 
                 kol_os = dir_wagon ? dir_wagon.kol_os : kol_os;
                 // Грузоподъемность ЭПД
-                gruzp = this.epd.vagon.gruzp ? this.epd.vagon.gruzp : gruzp;
+                gruzp = this.epd.vagon && this.epd.vagon.gruzp ? this.epd.vagon.gruzp : gruzp;
                 // Грузоподъемность и тара по УЗ
                 gruzp_uz = this.wagon_settings.info && this.wagon_settings.info.carrying_capacity ? Number(this.wagon_settings.info.carrying_capacity) : null;
                 tara_uz = this.wagon_settings.info && this.wagon_settings.info.tara ? Number(this.wagon_settings.info.tara) : null;
                 // Вес тары ЭПД
-                var u_tara = this.epd.vagon.u_tara ? this.epd.vagon.u_tara : u_tara;
-                var ves_tary_arc = this.epd.vagon.ves_tary_arc ? this.epd.vagon.ves_tary_arc : ves_tary_arc;
+                var u_tara = this.epd.vagon && this.epd.vagon.u_tara ? this.epd.vagon.u_tara : u_tara;
+                var ves_tary_arc = this.epd.vagon && this.epd.vagon.ves_tary_arc ? this.epd.vagon.ves_tary_arc : ves_tary_arc;
                 // Дата ремонта вагона УЗ
                 date_rem_uz = this.wagon_settings.info && this.wagon_settings.info.repair_date ? moment(this.wagon_settings.info.repair_date).format(format_date) : null;
                 // Владелец
@@ -5570,17 +5718,42 @@
     //-- Функции валидации
     //-----------------------------------------------------------------------------
     // Очистить сообщения валидации
-    form_incoming_cars_detali.prototype.clear_out_validation = function (not_alert) {
-        if (!not_alert) this.out_clear();
-        this.form.validation_common.clear_all();
-        this.form.validation_wagon_card.clear_all();
-        this.form.validation_payment.clear_all();
-        this.form.validation_cargo.clear_all();
-        this.form.validation_sap.clear_all();
+    form_incoming_cars_detali.prototype.clear_out_validation = function (not_alert, not_alert_epd) {
+        //if (!not_alert) this.out_clear();
+        this.form.validation_common.clear_all(not_alert);
+        this.form.validation_epd.clear_all(not_alert_epd); // стираем только при смене режима
+        this.form.validation_wagon_card.clear_all(not_alert);
+        this.form.validation_payment.clear_all(not_alert);
+        this.form.validation_cargo.clear_all(not_alert);
+        this.form.validation_sap.clear_all(not_alert);
+    };
+    // Валидация формы ЭПД документов (наличие номера и считанного эпд)
+    form_incoming_cars_detali.prototype.validation_epd = function (out_message) {
+        var valid = true;
+        if (this.elements.checkbox_not_epd.val() !== true) {
+            // Проверим основной документ
+            valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_nom_main_doc', App.Langs), '', out_message)
+            if (valid) {
+                valid = valid & this.form.validation_common.check_control_condition(!isNaN(Number(this.elements.input_text_document_nom_main_doc.val())), this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_number_nom_main_doc', App.Langs), '', out_message);
+                // Проверим соответсвие номер эпд и наличие самого ЭПД
+                if (this.mode_epd === 1 || this.mode_epd === 2 || this.mode_epd === 4) {
+                    valid = valid & this.form.validation_common.check_control_condition(this.wagon_settings.main_otpr_num && this.wagon_settings.main_otpr, this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_epd_main_doc', App.Langs), '', out_message);
+                }
+            }
+            // Проверим досылочный документ
+            if (this.elements.input_text_document_nom_doc.val() && this.elements.input_text_document_nom_doc.val() !== '') {
+                if (this.mode_epd !== 3 && this.mode_epd !== 5) {
+                    valid = valid & this.form.validation_common.check_control_condition(this.wagon_settings.otpr_num && this.wagon_settings.otpr, this.elements.input_text_document_nom_doc, langView('ficcd_mess_valid_not_epd_doc', App.Langs), '', out_message);
+                }
+            }
+        } else {
+
+        }
+        return valid
     };
     // Валидация формы детально
     form_incoming_cars_detali.prototype.validation_wagon_detali = function () {
-        this.clear_out_validation(); // очистить все сообщения
+        this.clear_out_validation(false, true); // очистить все сообщения
         var valid = true;
         // Проверка номера
         var num = this.elements.input_number_num_car.val();
@@ -5617,7 +5790,8 @@
                 // нет списка предъявленных вагонов
             }
         }
-        valid = valid & valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_nom_main_doc', App.Langs), '', true)
+        // Проверка ЭПД
+        valid = valid & this.validation_epd(true);
         valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_station_from_name, langView('ficcd_mess_valid_station_from_name', App.Langs), '', langView('ficcd_mess_valid_not_station_from_name', App.Langs), true);
         valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_station_on_name, langView('ficcd_mess_valid_station_on_name', App.Langs), '', langView('ficcd_mess_valid_not_station_on_name', App.Langs), true);
         // Проверка погран перехода
@@ -5689,45 +5863,102 @@
     //-----------------------------------------------------------------------------
     //-- Функции обработки ОПЕРАЦИЙ
     //-----------------------------------------------------------------------------
+    // Выполнить операцию поиска документа по номеру вагона и дате прибытия
+    form_incoming_cars_detali.prototype.action_search_car = function () {
+        this.out_clear();
+        this.elements.button_search_car.prop("disabled", true); // сделаем не активной
+        var current_mode_epd = this.mode_epd
+        var operation = {
+            num: this.wagon.num,
+            dt_arrival: this.wagon.arrival_sostav_date_arrival,
+            add: true,
+            search_sms: false, // Поищем позже через кнопку
+        };
+        // Вопрос по использованию СМС
+        this.modal_confirm_form.view(langView('fogcd_form_search_epd', App.Langs), langView('fogcd_form_search_car_uz_epd_message', App.Langs), function (res) {
+            if (res) {
+                operation.search_sms = true;
+            };
+            LockScreen(langView('ficcd_mess_run_operation_searsh_doc_of_num_dt', App.Langs).format(this.wagon.num, this.wagon.arrival_sostav_date_arrival));
+            this.ids_wsd.postOperationUpdateUZ_DOC_Num_DT(operation, function (result) {
+                if (result && result.obj) {
+                    this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
+                        if (!main_otpr) {
+                            this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
+                        }
+                        this.mode_epd = main_otpr ? 0 : 4; // Режим ЭПД
+                        this.wagon_settings.main_otpr_num = main_otpr ? main_otpr.nom_doc : null;
+                        this.wagon_settings.main_otpr = main_otpr;
+                        this.wagon_settings.otpr_num = null;    // обнуляем досылочный номер
+                        this.wagon_settings.otpr = null;        // обнуляем досылочный
+
+                        // уточним информацию по основному документу если это досылка
+                        this.update_wagon_of_main_epd(function (main_otpr) {
+                            this.update_wagon_of_epd(function () {
+                                this.view_wagon_detali(this.wagon);
+                                this.elements.button_search_car.prop("disabled", false); // сделаем активной
+                            }.bind(this));
+                        }.bind(this));
+                    }.bind(this));
+                } else {
+                    // Иногда нет данных, сообщаем!
+                    this.mode_epd = 4; // Режим ЭПД
+                    this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
+                    this.wagon_settings.main_otpr = null;
+                    this.update_wagon_of_epd(function () {
+                        this.view_wagon_detali(this.wagon);
+                        this.elements.button_search_car.prop("disabled", false); // сделаем активной
+                    }.bind(this));
+                }
+            }.bind(this));
+        }.bind(this));
+    };
     // Выполнить операцию поиска основного документа
     form_incoming_cars_detali.prototype.action_search_main_doc = function () {
         this.out_clear();
-        var valid = this.form.validation_common.check_control_input_not_null(this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_nom_main_doc', App.Langs), '', true)
+        var valid = true;
+        valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_nom_main_doc', App.Langs), '', false)
+        if (valid) {
+            //var dd = isNaN(Number(this.elements.input_text_document_nom_main_doc.val()));
+            valid = valid & this.form.validation_common.check_control_condition(!isNaN(Number(this.elements.input_text_document_nom_main_doc.val())), this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_not_number_nom_main_doc', App.Langs), '', false);
+        }
         if (valid) {
             this.elements.button_search_main_doc.prop("disabled", true); // сделаем не активной
             // Выполнить операцию
             LockScreen(langView('ficcd_mess_run_operation_searsh_main_doc', App.Langs).format(this.elements.input_text_document_nom_main_doc.val(), this.wagon.num));
             // Получим ЭПД по основной накладной № накладной
+            var current_mode_epd = this.mode_epd
             var operation = {
                 num_doc: this.elements.input_text_document_nom_main_doc.val(),
                 num: this.wagon.num,
                 add: true,
                 search_sms: true, // Поищем позже через кнопку
             };
-            this.ids_wsd.postOperationUpdateUZ_DOC(operation, function (result) {
+            this.ids_wsd.postOperationUpdateUZ_DOC_Doc_Num(operation, function (result) {
                 if (result && result.obj) {
                     this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
+                        main_otpr = null; //TODO: !!!!! тест убрать
                         if (!main_otpr) {
                             this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
                         }
-                        options.otpr = options.main_otpr; // переопределяем основной как досылочный
-                        options.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
-                        this.update_wagon_of_epd(options, function (options) {
-                            this.view_wagon_detali(this.wagon, options);
+                        this.mode_epd = main_otpr ? 0 : (current_mode_epd == 4 ? 5 : (current_mode_epd == 2 ? 3 : current_mode_epd)); // Режим ЭПД
+                        this.wagon_settings.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
+                        this.update_wagon_of_epd(function () {
+                            this.view_wagon_detali(this.wagon);
+                            this.elements.button_search_main_doc.prop("disabled", false); // сделаем активной
                         }.bind(this));
                     }.bind(this));
                 } else {
                     // Иногда нет данных, сообщаем!
+                    this.mode_epd = (current_mode_epd == 4 ? 5 : (current_mode_epd == 2 ? 3 : current_mode_epd)); // Режим ЭПД
                     this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
-                    options.otpr = options.main_otpr; // переопределяем основной как досылочный
-                    options.main_otpr = null;
-                    this.update_wagon_of_epd(options, function (options) {
-                        this.view_wagon_detali(this.wagon, options);
+                    this.wagon_settings.main_otpr = null;
+                    this.update_wagon_of_epd(function () {
+                        this.view_wagon_detali(this.wagon);
+                        this.elements.button_search_main_doc.prop("disabled", false); // сделаем активной
                     }.bind(this));
                 }
-
             }.bind(this));
-            this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
         }
     };
     // Выполнить операцию добавить станцию отправления

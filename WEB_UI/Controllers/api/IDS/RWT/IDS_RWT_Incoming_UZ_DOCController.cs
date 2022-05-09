@@ -13,10 +13,18 @@ using IDSLogs.Enum;
 
 namespace WEB_UI.Controllers.api
 {
-    public class OperationUZ_DOC
+    public class OperationUZ_DOC_Doc_Num
     {
         public string num_doc { get; set; }
         public int num { get; set; }
+        public bool add { get; set; }
+        public bool search_sms { get; set; }
+    }
+
+    public class OperationUZ_DOC_Num_DT
+    {
+        public int num { get; set; }
+        public DateTime? dt_arrival { get; set; }
         public bool add { get; set; }
         public bool search_sms { get; set; }
     }
@@ -197,16 +205,37 @@ namespace WEB_UI.Controllers.api
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        // POST api/ids/rwt/uz_doc/operation/update_num_doc/
+        // POST api/ids/rwt/uz_doc/operation/update/document/num/
         [HttpPost]
-        [Route("operation/update_num_doc")]
+        [Route("operation/update/document/num")]
         [ResponseType(typeof(ResultObject))]
-        public IHttpActionResult PostOperationUpdateUZ_DOC([FromBody] OperationUZ_DOC value)
+        public IHttpActionResult PostOperationUpdateUZ_DOC_Doc_Num([FromBody] OperationUZ_DOC_Doc_Num value)
         {
             try
             {
                 IDS_WIR ids_dir = new IDS_WIR(service.WebAPI_IDS);
                 ResultObject result = ids_dir.OperationUpdateUZ_DOC(value.num_doc, value.num, value.add, value.search_sms);
+                if (result.obj != null) {
+                    result.obj = ((UZ_DOC)result.obj).GetUZ_DOC();
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/uz_doc/operation/update/num/dt_arrival/
+        [HttpPost]
+        [Route("operation/update/num/dt_arrival")]
+        [ResponseType(typeof(ResultObject))]
+        public IHttpActionResult PostOperationUpdateUZ_DOC_Num_DT([FromBody] OperationUZ_DOC_Num_DT value)
+        {
+            try
+            {
+                IDS_WIR ids_dir = new IDS_WIR(service.WebAPI_IDS);
+                ResultObject result = ids_dir.OperationUpdateUZ_DOC(value.num, value.dt_arrival, value.add, value.search_sms);
                 if (result.obj != null) {
                     result.obj = ((UZ_DOC)result.obj).GetUZ_DOC();
                 }
