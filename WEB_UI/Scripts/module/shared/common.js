@@ -4538,6 +4538,19 @@
         return true;
     };
     // --------------------------------------------------------------------------
+
+    // Установить признак ошибка
+    validation_form.prototype.set_form_element_error = function (o, mes_error, out_message) {
+        this.set_control_error(o.$element, mes_error);
+        if (out_message) this.out_error_message(mes_error);
+        return false;
+    };
+    // Установить признак ок
+    validation_form.prototype.set_form_element_ok = function (o, mes_ok, out_message) {
+        this.set_control_ok(o.$element, mes_ok);
+        if (out_message) this.out_info_message(mes_ok);
+        return true;
+    };
     // Проверка на условие если true-Ок, false - error
     validation_form.prototype.check_control_condition = function (result, o, mes_error, mes_ok, out_message) {
         if (result) {

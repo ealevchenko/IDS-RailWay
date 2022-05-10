@@ -45,7 +45,10 @@
             'ficcd_title_search_car': 'Найти ЭПД по номеру вагона',
             'ficcd_title_manual_car': 'Ввести данные в ручную',
             'ficcd_title_search_main_doc': 'Найти основной документ на УЗ',
+            'ficcd_title_change_main_doc': 'Править № основной накладной',
             'ficcd_title_search_doc': 'Найти досылочный документ на УЗ',
+            'ficcd_title_change_doc': 'Править № досылочной накладной',
+
             'ficcd_label_num': '№ Вагона:',
             'ficcd_title_num': 'Номер вагона',
             'ficcd_label_position_arrival': '№ в поезде:',
@@ -300,6 +303,7 @@
             'ficcd_mess_valid_not_number_nom_main_doc': 'Номер накладной должен состоять из цифр',
             'ficcd_mess_valid_not_epd_main_doc': 'Основной ЭПД – не найден!',
             'ficcd_mess_valid_not_epd_doc': 'Досылочный ЭПД – не найден!',
+            'ficcd_mess_valid_epd_equal': 'Основной и досылочный № накладной - одинаковы!',
 
             'ficcd_mess_valid_not_station_from_name': 'Укажите станцию отправления',
             'ficcd_mess_valid_station_from_name': 'Указанной станции отправления нет в справочнике ИДС',
@@ -576,7 +580,7 @@
                     id: 'arrival_car',
                     label: langView('ficcd_label_arrival_car', App.Langs),
                     title: '',
-                    icon_left: 'fa fa-arrow-circle-left',
+                    icon_left: 'fas fa-arrow-circle-left',
                     icon_right: null,
                     click: function (event) {
                         event.preventDefault();
@@ -594,7 +598,7 @@
                     label: langView('ficcd_label_return_car', App.Langs),
                     title: '',
                     icon_left: null,
-                    icon_right: 'fa fa-arrow-circle-right',
+                    icon_right: 'fas fa-arrow-circle-right',
                     click: function (event) {
                         event.preventDefault();
                         this.action_return_wagon();
@@ -645,7 +649,7 @@
                     label: null,
                     title: langView('ficcd_title_search_car', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-search',
+                    icon_right: 'fas fa-search',
                     click: function (event) {
                         event.preventDefault();
                         this.action_search_car();
@@ -662,7 +666,7 @@
             //        label: null,
             //        title: langView('ficcd_title_manual_car', App.Langs),
             //        icon_left: null,
-            //        icon_right: 'fa fa-edit',
+            //        icon_right: 'fas fa-edit',
             //        click: function (event) {
             //            event.preventDefault();
             //            //this.action_remove_wagon();
@@ -805,27 +809,27 @@
                     label: null,
                     title: langView('ficcd_title_search_main_doc', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-search',
+                    icon_right: 'fas fa-search',
                     click: function (event) {
                         event.preventDefault();
                         this.action_search_main_doc();
                     }.bind(this),
                 }
             };
-            var bt_search_doc = {
+            var bt_change_main_doc = {
                 obj: 'bs_button',
                 options: {
-                    color: 'warning',
+                    color: 'danger',
                     size: 'sm',
                     class: null,
-                    id: 'search_doc',
+                    id: 'change_main_doc',
                     label: null,
-                    title: langView('ficcd_title_search_doc', App.Langs),
+                    title: langView('ficcd_title_change_main_doc', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-search',
+                    icon_right: 'fas fa-delete-left',
                     click: function (event) {
                         event.preventDefault();
-                        //this.action_search_doc();
+                        this.action_change_main_doc();
                     }.bind(this),
                 }
             };
@@ -848,9 +852,43 @@
                     input_group_prepend_class: null,
                     input_group_prepend_objs: [],
                     input_group_append_class: null,
-                    input_group_append_objs: [bt_search_main_doc],
+                    input_group_append_objs: [bt_search_main_doc, bt_change_main_doc],
                 },
                 childs: []
+            };
+            var bt_search_doc = {
+                obj: 'bs_button',
+                options: {
+                    color: 'warning',
+                    size: 'sm',
+                    class: null,
+                    id: 'search_doc',
+                    label: null,
+                    title: langView('ficcd_title_search_doc', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fas fa-search',
+                    click: function (event) {
+                        event.preventDefault();
+                        //this.action_search_doc();
+                    }.bind(this),
+                }
+            };
+            var bt_change_doc = {
+                obj: 'bs_button',
+                options: {
+                    color: 'danger',
+                    size: 'sm',
+                    class: null,
+                    id: 'change_doc',
+                    label: null,
+                    title: langView('ficcd_title_change_doc', App.Langs),
+                    icon_left: null,
+                    icon_right: 'fas fa-delete-left',
+                    click: function (event) {
+                        event.preventDefault();
+                        this.action_change_doc();
+                    }.bind(this),
+                }
             };
             var form_input_document_nom_doc = {
                 obj: 'bs_input_text',
@@ -871,7 +909,7 @@
                     input_group_prepend_class: null,
                     input_group_prepend_objs: [],
                     input_group_append_class: null,
-                    input_group_append_objs: [bt_search_doc],
+                    input_group_append_objs: [bt_search_doc, bt_change_doc],
                 },
                 childs: []
             };
@@ -995,7 +1033,7 @@
                     label: null,
                     title: langView('ficcd_title_add_station_from', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_station_from();
@@ -1136,7 +1174,7 @@
                     label: null,
                     title: langView('ficcd_title_add_station_on', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_station_on();
@@ -1230,7 +1268,7 @@
                     label: null,
                     title: langView('ficcd_title_add_stn_border', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_border_checkpoint();
@@ -1348,7 +1386,7 @@
                     label: null,
                     title: langView('ficcd_title_add_shipper', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_shipper();
@@ -1648,7 +1686,7 @@
                     label: null,
                     title: langView('fogcd_title_wagon_card_save', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         //this.action_save_detention();
@@ -1665,7 +1703,7 @@
                     label: null,
                     title: langView('fogcd_title_wagon_card_edit', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-edit',
+                    icon_right: 'fas fa-edit',
                     click: function (event) {
                         event.preventDefault();
                         //this.action_edit_detention();
@@ -2248,7 +2286,7 @@
                     header_id: 'headingOne',
                     header_class: 'text-left',
                     header_title: langView('fogcd_title_docs', App.Langs),
-                    header_icon: 'fa fa-file',
+                    header_icon: 'fas fa-file',
                     header_text: langView('fogcd_text_docs', App.Langs),
                     header_badge: true,
                     header_badge_id: 'count-docs',
@@ -2277,7 +2315,7 @@
                     header_id: 'headingTwo',
                     header_class: 'text-left',
                     header_title: langView('fogcd_title_acts', App.Langs),
-                    header_icon: 'fa fa-file-code',
+                    header_icon: 'fas fa-file-code',
                     header_text: langView('fogcd_text_acts', App.Langs),
                     header_badge: true,
                     header_badge_id: 'count-acts',
@@ -2306,7 +2344,7 @@
                     header_id: 'headingThree',
                     header_class: 'text-left',
                     header_title: langView('fogcd_title_acts_wagon', App.Langs),
-                    header_icon: 'fa fa-file-code',
+                    header_icon: 'fas fa-file-code',
                     header_text: langView('fogcd_text_acts_wagon', App.Langs),
                     header_badge: true,
                     header_badge_id: 'count-acts-wagon',
@@ -2340,7 +2378,7 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'kod_plat',
-                    validation_group: 'payment',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2366,7 +2404,7 @@
                     label: null,
                     title: langView('ficcd_title_add_name_plat', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_payer_sender();
@@ -2377,7 +2415,7 @@
                 obj: 'bs_autocomplete',
                 options: {
                     id: 'name_plat',
-                    validation_group: 'payment',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 4,
                     form_group_class: 'text-left',
@@ -2425,7 +2463,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'distance_way',
-                    validation_group: 'payment',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2445,7 +2483,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'vagon_pay_v_summa',
-                    validation_group: 'payment',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2483,7 +2521,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'kod_etsng',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2509,7 +2547,7 @@
                     label: null,
                     title: langView('ficcd_title_add_cargo_etsng', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_cargo_etsng();
@@ -2520,7 +2558,7 @@
                 obj: 'bs_autocomplete',
                 options: {
                     id: 'name_etsng',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 9,
                     form_group_class: 'text-left',
@@ -2579,7 +2617,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'kod_gng',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2605,7 +2643,7 @@
                     label: null,
                     title: langView('ficcd_title_add_cargo_gng', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_cargo_gng();
@@ -2616,7 +2654,7 @@
                 obj: 'bs_autocomplete',
                 options: {
                     id: 'name_gng',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 9,
                     form_group_class: 'text-left',
@@ -2675,7 +2713,7 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'group_cargo',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 4,
                     form_group_class: 'text-left',
@@ -2695,7 +2733,7 @@
                 obj: 'bs_select',
                 options: {
                     id: 'certificate_data',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 4,
                     form_group_class: 'text-left',
@@ -2726,7 +2764,7 @@
                 obj: 'bs_select',
                 options: {
                     id: 'commercial_condition',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 4,
                     form_group_class: 'text-left',
@@ -2765,7 +2803,7 @@
                 obj: 'bs_textarea',
                 options: {
                     id: 'cargo_analysis',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 12,
                     form_group_class: 'text-left',
@@ -2795,7 +2833,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'kol_pac',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2815,7 +2853,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'vesg',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2835,7 +2873,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'vesg_reweighing',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 3,
                     form_group_class: 'text-left',
@@ -2855,7 +2893,7 @@
                 obj: 'bs_input_number',
                 options: {
                     id: 'vesg_difference',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2875,7 +2913,7 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'nom_zpu',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2903,7 +2941,7 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'danger_class',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2923,7 +2961,7 @@
                 obj: 'bs_select',
                 options: {
                     id: 'danger_name',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 8,
                     form_group_class: 'text-left',
@@ -2954,7 +2992,7 @@
                 obj: 'bs_input_text',
                 options: {
                     id: 'danger_kod',
-                    validation_group: 'cargo',
+                    validation_group: 'common',
                     form_group_size: 'xl',
                     form_group_col: 2,
                     form_group_class: 'text-left',
@@ -2997,7 +3035,7 @@
                     header_id: 'headingFour',
                     header_class: 'text-left',
                     header_title: langView('fogcd_title_wagon_cont', App.Langs),
-                    header_icon: 'fa fa-file',
+                    header_icon: 'fas fa-file',
                     header_text: langView('fogcd_text_wagon_cont', App.Langs),
                     header_badge: true,
                     header_badge_id: 'count-conts',
@@ -3046,7 +3084,7 @@
                     label: null,
                     title: langView('ficcd_title_add_inbound_delivery', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-archive',
+                    icon_right: 'fas fa-archive',
                     click: function (event) {
                         event.preventDefault();
                         this.action_add_incoming_supply();
@@ -3101,7 +3139,7 @@
                 obj: 'bs_input_datetime',
                 options: {
                     id: 'incoming_supply_date',
-                    validation_group: 'common',
+                    validation_group: 'sap',
                     form_group_size: 'xl',
                     form_group_col: 4,
                     form_group_class: 'text-left',
@@ -3793,7 +3831,9 @@
         this.elements.button_search_car.hide();
         //this.elements.button_manual_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_change_main_doc.hide();
         this.elements.button_search_doc.hide();
+        this.elements.button_change_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3818,12 +3858,8 @@
         this.form.obj_form.validations[2].$elements.each(function () {
             this.prop('disabled', true);
         });
-        // Платильщики (payment)
+        // Платильщики (sap)
         this.form.obj_form.validations[3].$elements.each(function () {
-            this.prop('disabled', true);
-        });
-        // Груз (cargo)
-        this.form.obj_form.validations[4].$elements.each(function () {
             this.prop('disabled', true);
         });
     };
@@ -3841,7 +3877,9 @@
         this.elements.button_search_car.hide();
         //this.elements.button_manual_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_change_main_doc.hide();
         this.elements.button_search_doc.hide();
+        this.elements.button_change_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3864,12 +3902,8 @@
         this.form.obj_form.validations[2].$elements.each(function () {
             this.prop('disabled', true);
         });
-        // Платильщики (payment)
+        // Платильщики (sap)
         this.form.obj_form.validations[3].$elements.each(function () {
-            this.prop('disabled', true);
-        });
-        // Груз (cargo)
-        this.form.obj_form.validations[4].$elements.each(function () {
             this.prop('disabled', true);
         });
     };
@@ -3883,7 +3917,9 @@
         this.elements.button_search_car.hide();
         //this.elements.button_return_car.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_change_main_doc.hide();
         this.elements.button_search_doc.hide();
+        this.elements.button_change_doc.hide();
         // кнопки дабовления в БД ИДС
         this.elements.button_add_station_from.hide();
         this.elements.button_add_station_on.hide();
@@ -3949,7 +3985,7 @@
                 this.prop('disabled', false);
             };
         });
-        // Платильщики (payment)
+        // Платильщики (sap)
         this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', true);
@@ -3963,24 +3999,6 @@
         });
         // активировать элементы ручного ввода
         this.form.obj_form.validations[3].$elements.each(function () {
-            if (this.is('.inp-manual')) {
-                this.prop('disabled', false);
-            };
-        });
-        // Груз (cargo)
-        this.form.obj_form.validations[4].$elements.each(function () {
-            if (this.is('.inp-manual-epd')) {
-                this.prop('disabled', true);
-            };
-        });
-        // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[4].$elements.each(function () {
-            if (this.is('.inp-uz')) {
-                this.prop('disabled', true);
-            };
-        });
-        // активировать элементы ручного ввода
-        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
@@ -3998,7 +4016,9 @@
         this.elements.button_add_cargo_etsng.hide();
         this.elements.button_add_cargo_gng.hide();
         this.elements.button_search_main_doc.hide();
+        this.elements.button_change_main_doc.hide();
         this.elements.button_search_doc.hide();
+        this.elements.button_change_doc.hide();
         // Переведем все компоненты в режим disabled
         // Общие компоненты
         if (this.wagon && this.wagon.arrival_sostav_status <= 1) {
@@ -4063,7 +4083,7 @@
                 this.prop('disabled', false);
             };
         });
-        // Оплата
+        // SAP
         this.form.obj_form.validations[3].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
                 this.prop('disabled', false);
@@ -4077,24 +4097,6 @@
         });
         // активировать элементы ручного ввода
         this.form.obj_form.validations[3].$elements.each(function () {
-            if (this.is('.inp-manual')) {
-                this.prop('disabled', false);
-            };
-        });
-        // Груз
-        this.form.obj_form.validations[4].$elements.each(function () {
-            if (this.is('.inp-manual-epd')) {
-                this.prop('disabled', false);
-            };
-        });
-        // деактивировать элементы базы данных УЗ
-        this.form.obj_form.validations[4].$elements.each(function () {
-            if (this.is('.inp-uz')) {
-                this.prop('disabled', false);
-            };
-        });
-        // активировать элементы ручного ввода
-        this.form.obj_form.validations[4].$elements.each(function () {
             if (this.is('.inp-manual')) {
                 this.prop('disabled', false);
             };
@@ -4120,7 +4122,7 @@
             this.ids_wsd.postOperationUpdateUZ_DOC_Doc_Num(operation, function (result) {
                 if (result && result.obj) {
                     this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
-                        main_otpr = null; //TODO: !!!!! тест убрать
+                        //main_otpr = null; //TODO: !!!!! тест убрать
                         if (!main_otpr) {
                             this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
                         }
@@ -4341,7 +4343,9 @@
                     this.edit(); // режим ручной ЭПД
                     this.elements.button_search_car.hide();
                     this.elements.button_search_main_doc.hide();
+                    this.elements.button_change_main_doc.hide();
                     this.elements.button_search_doc.hide();
+                    this.elements.button_change_doc.hide();
                     this.elements.input_text_document_nom_main_doc.disable();
                     this.elements.input_text_document_nom_doc.disable();
                     nom_main_doc = 0;
@@ -4349,6 +4353,8 @@
                     this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_null', App.Langs));
                 } else {
                     this.view_epd(); // режим авто ЭПД
+                    nom_main_doc = this.wagon_settings.main_otpr_num; //this.epd.nom_main_doc;
+                    nom_doc = this.wagon_settings.otpr_num; //this.epd.nom_doc
                     switch (this.mode_epd) {
                         case 0: {
                             //Ок ЭПД определены
@@ -4356,7 +4362,9 @@
                             //this.elements.checkbox_not_epd.val(false);
                             this.elements.button_search_car.hide();
                             this.elements.button_search_main_doc.hide();
+                            if (nom_main_doc) this.elements.button_change_main_doc.show(); else this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
+                            if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
                             this.elements.input_text_document_nom_main_doc.disable();
                             this.elements.input_text_document_nom_doc.disable();
                             break;
@@ -4379,7 +4387,9 @@
                             //this.elements.checkbox_not_epd.val(false);
                             this.elements.button_search_car.hide();
                             this.elements.button_search_main_doc.show();
+                            if (nom_main_doc) this.elements.button_change_main_doc.show(); else this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
+                            if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
                             this.elements.input_text_document_nom_main_doc.disable();
                             this.elements.input_text_document_nom_doc.disable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_2', App.Langs));
@@ -4392,7 +4402,9 @@
                             //this.elements.checkbox_not_epd.val(false);
                             this.elements.button_search_car.hide();
                             this.elements.button_search_main_doc.hide();
+                            if (nom_main_doc) this.elements.button_change_main_doc.show(); else this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
+                            if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
                             this.elements.input_text_document_nom_main_doc.disable();
                             this.elements.input_text_document_nom_doc.disable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_3', App.Langs));
@@ -4404,7 +4416,9 @@
                             //this.elements.checkbox_not_epd.val(false);
                             this.elements.button_search_car.show();
                             this.elements.button_search_main_doc.show();
+                            this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
+                            this.elements.button_change_doc.hide();
                             this.elements.input_text_document_nom_main_doc.enable();
                             this.elements.input_text_document_nom_doc.disable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_4', App.Langs));
@@ -4417,18 +4431,16 @@
                             //this.elements.checkbox_not_epd.val(false);
                             this.elements.button_search_car.hide();
                             this.elements.button_search_main_doc.hide();
+                            this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
+                            this.elements.button_change_doc.hide();
                             this.elements.input_text_document_nom_main_doc.enable();
                             this.elements.input_text_document_nom_doc.enable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_5', App.Langs));
                             break;
                         };
-                        case null: {
-                            break;
-                        };
                     }
-                    nom_main_doc = this.wagon_settings.main_otpr_num; //this.epd.nom_main_doc;
-                    nom_doc = this.wagon_settings.otpr_num; //this.epd.nom_doc
+
                 }
             }
             // Общая информация
@@ -5723,8 +5735,8 @@
         this.form.validation_common.clear_all(not_alert);
         this.form.validation_epd.clear_all(not_alert_epd); // стираем только при смене режима
         this.form.validation_wagon_card.clear_all(not_alert);
-        this.form.validation_payment.clear_all(not_alert);
-        this.form.validation_cargo.clear_all(not_alert);
+        //this.form.validation_payment.clear_all(not_alert);
+        //this.form.validation_cargo.clear_all(not_alert);
         this.form.validation_sap.clear_all(not_alert);
     };
     // Валидация формы ЭПД документов (наличие номера и считанного эпд)
@@ -5748,6 +5760,13 @@
             }
         } else {
 
+        }
+        if (this.elements.input_text_document_nom_doc.val() && this.elements.input_text_document_nom_doc.val() !== '' &&
+            this.elements.input_text_document_nom_main_doc.val() && this.elements.input_text_document_nom_main_doc.val() !== '') {
+            if (Number(this.elements.input_text_document_nom_doc.val()) === Number(this.elements.input_text_document_nom_main_doc.val())) {
+                valid = valid & this.form.validation_common.set_form_element_error(this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_epd_equal', App.Langs), out_message);
+                valid = valid & this.form.validation_common.set_form_element_error(this.elements.input_text_document_nom_doc, langView('ficcd_mess_valid_epd_equal', App.Langs), out_message);
+            }
         }
         return valid
     };
@@ -5863,11 +5882,21 @@
     //-----------------------------------------------------------------------------
     //-- Функции обработки ОПЕРАЦИЙ
     //-----------------------------------------------------------------------------
+    // Править № основного документа
+    form_incoming_cars_detali.prototype.action_change_main_doc = function () {
+        //this.elements.input_text_document_nom_main_doc.enable();
+        this.mode_epd = 4;
+        this.view_wagon_detali(this.wagon);
+    };
+    // Править № досылочного документа    
+    form_incoming_cars_detali.prototype.action_change_doc = function () {
+        
+    };
     // Выполнить операцию поиска документа по номеру вагона и дате прибытия
     form_incoming_cars_detali.prototype.action_search_car = function () {
         this.out_clear();
         this.elements.button_search_car.prop("disabled", true); // сделаем не активной
-        var current_mode_epd = this.mode_epd
+        //var current_mode_epd = this.mode_epd
         var operation = {
             num: this.wagon.num,
             dt_arrival: this.wagon.arrival_sostav_date_arrival,
@@ -5924,6 +5953,7 @@
         }
         if (valid) {
             this.elements.button_search_main_doc.prop("disabled", true); // сделаем не активной
+            this.wagon_settings.main_otpr_num = Number(this.elements.input_text_document_nom_main_doc.val());
             // Выполнить операцию
             LockScreen(langView('ficcd_mess_run_operation_searsh_main_doc', App.Langs).format(this.elements.input_text_document_nom_main_doc.val(), this.wagon.num));
             // Получим ЭПД по основной накладной № накладной
@@ -5937,7 +5967,7 @@
             this.ids_wsd.postOperationUpdateUZ_DOC_Doc_Num(operation, function (result) {
                 if (result && result.obj) {
                     this.ids_wsd.postOTPR_UZ_DOCOfXML(result.obj.xml_doc, function (main_otpr) {
-                        main_otpr = null; //TODO: !!!!! тест убрать
+                        //main_otpr = null; //TODO: !!!!! тест убрать
                         if (!main_otpr) {
                             this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
                         }

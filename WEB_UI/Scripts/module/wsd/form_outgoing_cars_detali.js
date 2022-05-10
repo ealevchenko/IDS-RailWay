@@ -576,7 +576,7 @@
                     id: 'present_car',
                     label: 'Предъявить вагон',
                     title: '',
-                    icon_left: 'fa fa-arrow-circle-left',
+                    icon_left: 'fas fa-arrow-circle-left',
                     icon_right: null,
                     click: function (event) {
                         event.preventDefault();
@@ -594,7 +594,7 @@
                     label: 'Вернуть вагон',
                     title: '',
                     icon_left: null,
-                    icon_right: 'fa fa-arrow-circle-right',
+                    icon_right: 'fas fa-arrow-circle-right',
                     click: function (event) {
                         event.preventDefault();
                         this.action_return_wagon();
@@ -645,7 +645,7 @@
                     label: null,
                     title: '',
                     icon_left: null,
-                    icon_right: 'fa fa-retweet',
+                    icon_right: 'fas fa-retweet',
                     click: function (event) {
                         event.preventDefault();
                         this.action_remove_wagon();
@@ -1085,7 +1085,7 @@
                     label: null,
                     title: langView('fogcd_title_button_save', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_save_detention();
@@ -1102,7 +1102,7 @@
                     label: null,
                     title: langView('fogcd_title_button_edit', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-edit',
+                    icon_right: 'fas fa-edit',
                     click: function (event) {
                         event.preventDefault();
                         this.action_edit_detention();
@@ -1268,7 +1268,7 @@
                     label: null,
                     title: langView('fogcd_title_button_return_open', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-save',
+                    icon_right: 'fas fa-save',
                     click: function (event) {
                         event.preventDefault();
                         this.action_return_open();
@@ -1285,7 +1285,7 @@
                     label: null,
                     title: langView('fogcd_title_button_return_close', App.Langs),
                     icon_left: null,
-                    icon_right: 'fa fa-times',
+                    icon_right: 'fas fa-times',
                     click: function (event) {
                         event.preventDefault();
                         this.action_return_close();
