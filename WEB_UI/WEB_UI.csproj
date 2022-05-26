@@ -1500,6 +1500,7 @@
     <Content Include="Content\fontawesome-free\svgs\solid\rectangle-list.svg" />
     <Content Include="Content\fontawesome-free\svgs\solid\rectangle-xmark.svg" />
     <Content Include="Content\fontawesome-free\svgs\solid\repeat.svg" />
+    <Content Include="Content\fontawesome-free\svgs\solid\retweet-solid.svg" />
     <Content Include="Content\fontawesome-free\svgs\solid\right-from-bracket.svg" />
     <Content Include="Content\fontawesome-free\svgs\solid\right-left.svg" />
     <Content Include="Content\fontawesome-free\svgs\solid\right-long.svg" />
@@ -1889,6 +1890,12 @@
     <Content Include="Content\fontawesome-free\scss\_sizing.scss" />
     <Content Include="Content\fontawesome-free\webfonts\fa-v4compatibility.ttf" />
     <Content Include="Content\fontawesome-free\webfonts\fa-v4compatibility.woff2" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-brands-400.ttf" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-brands-400.woff2" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.ttf" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.woff2" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.ttf" />
+    <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.woff2" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
