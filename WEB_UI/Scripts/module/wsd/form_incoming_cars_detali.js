@@ -4177,7 +4177,9 @@
                         }
                         this.mode_epd = main_otpr ? 0 : 2; // Режим ЭПД
                         this.wagon_settings.otpr = this.wagon_settings.main_otpr; // переопределяем основной как досылочный
+                        this.wagon_settings.otpr_id = this.wagon_settings.main_otpr_id;
                         this.wagon_settings.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
+                        this.wagon_settings.main_otpr_id = result.obj.num_doc;
                         if (typeof callback === 'function') {
                             callback(main_otpr);
                         }
@@ -4187,6 +4189,7 @@
                     this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
                     this.wagon_settings.otpr = this.wagon_settings.main_otpr; // переопределяем основной как досылочный
                     this.wagon_settings.main_otpr = null;
+                    this.wagon_settings.main_otpr_id = null;
                     this.mode_epd = 2; // Режим ЭПД
                     if (typeof callback === 'function') {
                         callback(null);
@@ -4305,8 +4308,10 @@
             dir_wagon_mode: 0,      // 
             main_otpr_num: null,    // ЭПД - № основного документа
             main_otpr: null,        // ЭПД - основного документа
+            main_otpr_id: null,        // ЭПД - код УЗ основного документа
             otpr_num: null,         // ЭПД - № документа
             otpr: null,             // ЭПД - документа
+            otpr_id: null,             // ЭПД - код УЗ документа
             arrival_wagons: null,   // Список принятых вагонов(используется в режиме правка)
             code_stn_from: null,          // Станция отправления (для ручного режима)
             code_stn_to: null,            // Станция назаначения (для ручного режима)
@@ -4363,9 +4368,11 @@
                                 // Иногда нет данных, сообщаем!
                                 this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
                                 this.wagon_settings.main_otpr_num = null;
+                                this.wagon_settings.main_otpr_id = null;
                                 this.mode_epd = 1; // Режим ЭПД
                             } else {
                                 this.wagon_settings.main_otpr_num = otpr.nom_doc;
+                                this.wagon_settings.main_otpr_id = this.wagon.arrival_car_num_doc;
                                 this.mode_epd = 0; // Режим ЭПД
                             }
                             this.wagon_settings.main_otpr = otpr;   // делаем пока как основной
@@ -6113,6 +6120,7 @@
                         this.mode_epd = main_otpr ? 0 : 4; // Режим ЭПД
                         this.wagon_settings.main_otpr_num = main_otpr ? main_otpr.nom_doc : null;
                         this.wagon_settings.main_otpr = main_otpr;
+                        this.wagon_settings.main_otpr_id = result.obj.num_doc;
                         this.wagon_settings.otpr_num = null;    // обнуляем досылочный номер
                         this.wagon_settings.otpr = null;        // обнуляем досылочный
 
@@ -6168,6 +6176,7 @@
                         }
                         this.mode_epd = main_otpr ? 0 : (current_mode_epd == 4 ? 5 : (current_mode_epd == 2 ? 3 : current_mode_epd)); // Режим ЭПД
                         this.wagon_settings.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
+                        this.wagon_settings.main_otpr_id = result.obj.num_doc;
                         this.update_wagon_of_epd(function () {
                             this.view_wagon_detali(this.wagon);
                             this.elements.button_search_main_doc.prop("disabled", false); // сделаем активной
@@ -6473,7 +6482,9 @@
                                     var md_en = this.elements.input_text_document_nom_main_doc.$element.prop("disabled");
                                     var d_en = this.elements.input_text_document_nom_doc.$element.prop("disabled");
                                     this.wagon_settings.main_otpr = null;
+                                    this.wagon_settings.main_otpr_id = null;
                                     this.wagon_settings.otpr = null;
+                                    this.wagon_settings.otpr_id = null;
                                     mode = 1;
                                     break;
                                 };
@@ -6499,6 +6510,7 @@
                         };
                         // Основной документ
                         var arrival_main_doc = {
+                            id_doc: this.wagon_settings.main_otpr_id,
                             nom_doc: this.wagon_settings.main_otpr_num,
                             epd_code_from: this.elements.input_number_shipper_code.val(),
                             epd_code_on: this.elements.input_number_consignee_code.val(),
@@ -6583,6 +6595,7 @@
                         if (mode !== null && this.wagon_settings.otpr_num > 0) {
                             // Досылочный документ
                             arrival_doc = {
+                                id_doc: this.wagon_settings.otpr_id,
                                 nom_doc: this.wagon_settings.otpr_num,
                                 epd_code_from: this.elements.input_number_shipper_code.val(),
                                 epd_code_on: this.elements.input_number_consignee_code.val(),

@@ -521,6 +521,7 @@ namespace IDS
     /// </summary>
     public class Arrival_Doc
     {
+        public string id_doc { get; set; }      
         public string nom_doc { get; set; }
         public string epd_code_from { get; set; }
         public string epd_code_on { get; set; }
@@ -1917,13 +1918,13 @@ namespace IDS
                                 // Определим наличие досылки
                                 if (arrival_doc != null && !String.IsNullOrWhiteSpace(arrival_doc.nom_doc))
                                 {
-                                    int i_nom_doc = int.Parse(arrival_doc.nom_doc);
-                                    epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                    //int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                    epd = ef_uz_doc.Context.Where(d => d.num_doc == arrival_doc.id_doc).FirstOrDefault();
                                     if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
                                 }
                                 // Основной документ
-                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
-                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                //int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_doc == arrival_main_doc.id_doc).FirstOrDefault();
                                 if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует основной ЭПД 
                                 // Продолжим
                                 break;
@@ -1997,8 +1998,8 @@ namespace IDS
                                 // Проверим досылку должна быть обязательно (основной проверили ранее)
                                 if (arrival_doc == null || String.IsNullOrWhiteSpace(arrival_doc.nom_doc)) return (int)errors_base.arrival_cars_num_doc;   // По вагону неопределен досылочный докумен уз
                                 // Определтм основной (автомат)                                                                   // Основной документ
-                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
-                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                //int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_doc == arrival_main_doc.id_doc).FirstOrDefault();
                                 if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует основной ЭПД 
                                 // определим досылку (ручном)
                                 int i_nom_doc = int.Parse(arrival_doc.nom_doc);
@@ -2059,8 +2060,8 @@ namespace IDS
                                     ef_uz_doc.Add(epd_main);
                                 }
                                 // определим досылку (атомат)
-                                int i_nom_doc = int.Parse(arrival_doc.nom_doc);
-                                epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                //int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                epd = ef_uz_doc.Context.Where(d => d.num_doc == arrival_doc.id_doc).FirstOrDefault();
                                 if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
                                 break;
                             };

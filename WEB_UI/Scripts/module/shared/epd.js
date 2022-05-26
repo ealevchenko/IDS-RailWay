@@ -149,7 +149,7 @@
                 // Раздел VAGON/ZPU_V
                 if (epd.vagon.zpu_v && epd.vagon.zpu_v.length > 0) {
                     // Номер ЗПУ
-                    epd.vagon_nom_zpu = vagon.zpu_v[0].nom_zpu;
+                    epd.vagon_nom_zpu = epd.vagon.zpu_v[0].nom_zpu;
                 };
                 // Определим груз ! далее если есть контейнеры уточним по ним
                 epd.cargo = this.get_epd_cargo_vagon(epd.vagon);

@@ -15,7 +15,7 @@ namespace IDS
     public class IDS_Directory : IDS_Base
     {
         private eventID eventID = eventID.IDS_Direct;
-        private bool select_uz_info = true;
+        private bool select_uz_info = false;
 
         public IDS_Directory()
             : base()
