@@ -32,7 +32,7 @@
     var ves_tary_arc_max_value = 51.0;             // Минимальное значение
     var u_tara_min_value = 15.0;                     // Минимальное значение
     var u_tara_max_value = 51.0;                   // Минимальное значение
-    var select_uz_info = true;                     // Делать запрос в УЗ
+    var select_uz_info = false;                     // Делать запрос в УЗ
     var list_groups_cargo = [11, 20];               // Список id групп груза с порожними вагонами
 
     // Массив текстовых сообщений 

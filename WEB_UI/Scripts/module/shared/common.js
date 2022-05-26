@@ -2404,9 +2404,9 @@
             var alist = [];
             $.each(data, function (i, el) {
                 if (this.settings.out_value) {
-                    alist.push({ value: el.text, label: el.value + '-' + el.text, disabled: el.disabled ? el.disabled : null });
+                    alist.push({ value: el.text !== null ? $.trim(el.text) : el.text, label: el.value + '-' + el.text !== null ? $.trim(el.text) : el.text, disabled: el.disabled ? el.disabled : null });
                 } else {
-                    alist.push({ value: el.text, label: el.text, disabled: el.disabled ? el.disabled : null });
+                    alist.push({ value: el.text !== null ? $.trim(el.text) : el.text, label: el.text !== null ? $.trim(el.text) : el.text, disabled: el.disabled ? el.disabled : null });
                 }
 
             }.bind(this));
@@ -2476,7 +2476,7 @@
                     }.bind(this));
                     text_out = select ? select.text : null;
                 }
-                this.$element.val(text_out);
+                this.$element.val(text_out !== null ? $.trim(text_out): text_out);
             } else {
                 var select = this.settings.data.find(function (o) {
                     return o.text === $.trim(this.$element.val());
@@ -4582,6 +4582,7 @@
     validation_form.prototype.check_control_autocomplete = function (o, mes_error, mes_ok, mes_null, out_message) {
         if (o.text()) {
             var s = o.val();
+            var s1 = o.text();
             if (o.val()) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
