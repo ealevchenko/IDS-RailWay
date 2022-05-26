@@ -361,6 +361,7 @@ namespace UZ
         public int? podkod_exp { get; set; }	        //	Підкод платника (експедитора) 
         public int? sector_num { get; set; }	        //	Номер ділянки
         public string type { get; set; }	            //	Тип платника
+
         public PAY[] pay = new PAY[] { }; // (~)
         public PL_LOC pl_loc { get; set; } // (1)
     }

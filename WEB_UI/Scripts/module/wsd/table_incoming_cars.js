@@ -19,7 +19,7 @@
             'ticc_field_arrival_car_id': 'id вагона',
             'ticc_field_arrival_car_position_arrival': '№ поз.',
             'ticc_field_num': '№ вагона',
-            'ticc_field_arrival_uz_document_nom_doc': '№ накл.',
+            'ticc_field_arrival_uz_document_nom_doc': '№ дос. накл.',
             'ticc_field_arrival_uz_document_nom_main_doc': '№ осн. накл.',
             'ticc_field_arrival_uz_vagon_wagon_adm': 'Код Адм.',
             'ticc_field_arrival_uz_vagon_wagon_adm_name': 'Адм.',
@@ -70,9 +70,12 @@
             'ticc_field_arrival_uz_vagon_name_division': 'Цех получатель',
             'ticc_field_arrival_uz_vagon_division_abbr': 'Цех получатель',
             'ticc_field_arrival_uz_vagon_commercial_condition': 'Ком состояние',
+            'ticc_field_arrival_uz_vagon_sertification_data': 'Серт. данные',
 
             'ticc_title_yes': 'Да',
             'ticc_title_all': 'Все',
+            'ticc_title_not_epd': 'Без ЭПД',
+
             'ticc_title_button_export': 'Экспорт',
             'ticc_title_button_buffer': 'Буфер',
             'ticc_title_button_excel': 'Excel',
@@ -82,7 +85,13 @@
             'ticc_title_button_field_view_all': 'Показать все',
             'ticc_title_button_field_clear': 'Сбросить',
             'ticc_title_button_hand_arrival_sostav': 'Принять состав',
-            'ticc_title_button_dislocation_over_sostav': 'Перем. состав',
+            'ticc_title_button_cancel_arrival_sostav': 'Отмена приема на АМКР',
+            'ticc_form_cancel_arrival_sostav': 'Отменить прием на АМКР',
+            'ticc_form_return_message_cancel_arrival_sostav': 'Вы хотите отменить прием состава {0} принятого на АМКР {1}? Внимание! Данная операция будет возможна если все вагоны состава не перемещались.',
+            'ticc_mess_run_operation_cancel_arrival_sostav': 'Выполняю операцию "ОТМЕНА ПРИЕМА СОСТАВА НА АМКР"',
+            'ticc_mess_cancel_operation_cancel_arrival_sostav': 'Отмена выполнения операции "ОТМЕНА ПРИЕМА СОСТАВА НА АМКР"',
+
+
             'ticc_mess_init_module': 'Инициализация модуля (table_incoming_cars)...',
             'ticc_mess_load_sostav': 'Загружаю вагоны...',
             'ticc_mess_update_sostav': 'Обновляю вагоны...',
@@ -91,12 +100,17 @@
             'ticc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'ticc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'ticc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
+            'ticc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «в работе»!',
             'ticc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
             'ticc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'ticc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
             'ticc_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", статус выполнения не определён!',
             'ticc_mess_ok_operation_outgoing_dislocation': 'Операция "Сменить дислокацию предъявленного состава" - выполнена',
             'ticc_mess_error_operation_outgoing_dislocation': 'Ошибка выполнения операции "Сменить дислокацию предъявленного состава"',
+            'ticc_mess_ok_operation_incoming_sostav': 'Операция "ПРИНЯТЬ СОСТАВ НА АМКР" - выполнена',
+            'ticc_mess_error_operation_incoming_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР"',
+            'ticc_mess_ok_operation_cancel_arrival_sostav': 'Операция "ОТМЕНА ПРИЕМА СОСТАВА НА АМКР" - выполнена',
+            'ticc_mess_error_operation_cancel_arrival_sostav': 'Ошибка выполнения операции "ОТМЕНА ПРИЕМА СОСТАВА НА АМКР"',
         },
         'en':  //default language: English
         {
@@ -109,7 +123,9 @@
     var wsd = App.ids_wsd;
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
-    //var FHOOGS = App.form_ho_outgoing_sostav; // форма отправить состав
+    // Модуль инициализаии компонентов формы
+    var FC = App.form_control;
+    var FHIIGS = App.form_hi_incoming_sostav; // форма Добавления и изменения состава
     //var FHDOGS = App.form_hd_outgoing_sostav; // форма перенести состав
 
     // Перечень полей
@@ -159,7 +175,7 @@
         {
             field: 'arrival_uz_document_nom_main_doc',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_document_nom_main_doc;
+                return row.arrival_uz_document_nom_main_doc < 0 ? langView('ticc_title_not_epd', App.Langs) : row.arrival_uz_document_nom_main_doc;
             },
             className: 'dt-body-center',
             title: langView('ticc_field_arrival_uz_document_nom_main_doc', App.Langs), width: "30px", orderable: true, searchable: true
@@ -573,6 +589,15 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ticc_field_arrival_uz_vagon_commercial_condition', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Ком сертиыикационные данные
+        {
+            field: 'arrival_uz_vagon_sertification_data',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_sertification_data_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ticc_field_arrival_uz_vagon_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -625,11 +650,11 @@
             text: langView('ticc_title_button_hand_arrival_sostav', App.Langs),
             enabled: false
         },
-        //{
-        //    button: 'hand_dislocation_sostav',
-        //    text: langView('ticc_title_button_dislocation_over_sostav', App.Langs),
-        //    enabled: true
-        //},
+        {
+            button: 'hand_cancel_arrival_sostav',
+            text: langView('ticc_title_button_cancel_arrival_sostav', App.Langs),
+            enabled: false
+        },
         {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
@@ -665,8 +690,8 @@
         var collums = [];
         //collums.push({ field: 'id', title: null, class: null });
         collums.push({ field: 'arrival_car_position_arrival', title: null, class: 'fixed-column' });
-        collums.push({ field: 'arrival_uz_document_nom_doc', title: null, class: 'fixed-column' });
         collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: 'fixed-column' });
+        collums.push({ field: 'arrival_uz_document_nom_doc', title: null, class: 'fixed-column' });
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'arrival_uz_vagon_wagon_adm', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_rod_abbr', title: null, class: null });
@@ -700,6 +725,7 @@
         collums.push({ field: 'arrival_uz_vagon_station_amkr_abbr', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_division_abbr', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_commercial_condition', title: null, class: null });
+        collums.push({ field: 'arrival_uz_vagon_sertification_data', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
@@ -722,12 +748,12 @@
                 this.action_hand_arrival_sostav(); // выполнить операцию "Принять состав"
             }.bind(this)
         });
-        //buttons.push({
-        //    name: 'hand_dislocation_sostav',
-        //    action: function (e, dt, node, config) {
-        //        this.action_hand_dislocation_sostav_sostav(); // выполнить операцию
-        //    }.bind(this)
-        //});
+        buttons.push({
+            name: 'hand_cancel_arrival_sostav',
+            action: function (e, dt, node, config) {
+                this.action_hand_cancel_arrival_sostav(); // выполнить операцию "Оменить принятие состава"
+            }.bind(this)
+        });
         buttons.push({
             name: 'refresh',
             action: function (e, dt, node, config) {
@@ -798,7 +824,7 @@
         this.init_type_report();
 
         // Запускаем 2 процесса инициализации (паралельно)
-        var process = 0;
+        var process = 1;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -870,34 +896,34 @@
             }
         }.bind(this);
         out_init(process); // Временно!
-        //
-        //// Форма отправить состав ===============================================================================
-        //this.fhoogs = new FHOOGS();
-        //this.fhoogs.init({
-        //    alert: this.settings.alert,
-        //    ids_wsd: this.ids_wsd,
-        //    fn_init: function (init) {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    }.bind(this),
-        //    fn_add: function (result) {
+        // Форма принять или править состав ===============================================================================
+        this.fhiigs = new FHIIGS();
+        this.fhiigs.init({
+            mode: 1,
+            alert: this.settings.alert,
+            ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                // На проверку окончания инициализации
+                //----------------------------------
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+                //----------------------------------
+            }.bind(this),
+            fn_add: function (result) {
 
-        //    }.bind(this),
-        //    fn_edit: function (result) {
-        //        this.update();
-        //        this.out_clear();
-        //        if (result && result.data) {
-        //            if (result.data.status < 2) {
-        //                this.out_info(langView('ticc_mess_ok_operation_return_present', App.Langs));
-        //            } else {
-        //                this.out_info(langView('ticc_mess_update_operation_return_present', App.Langs));
-        //            }
-        //        } else {
-        //            this.out_info(langView('ticc_mess_error_operation_return_present', App.Langs));
-        //        }
-        //    }.bind(this),
-        //});
+            }.bind(this),
+            fn_edit: function (result) {
+                //this.out_clear();
+                this.action_refresh(function () {
+                    if (result && result.result > 0) {
+                        this.out_info(langView('ticc_mess_ok_operation_incoming_sostav', App.Langs));
+                    } else {
+                        this.out_info(langView('ticc_mess_error_operation_incoming_sostav', App.Langs));
+                    }
+                }.bind(this));
+            }.bind(this),
+        });
         ////
         //// Форма дислокации состав ===============================================================================
         //this.fhdogs = new FHDOGS();
@@ -993,7 +1019,7 @@
     table_incoming_cars.prototype.update = function (cb_load) {
         if (this.id_sostav !== null) {
             LockScreen(langView('ticc_mess_update_sostav', App.Langs));
-            this.ids_wsd.getViewOutgoingCarsOfIDSostav(this.id_sostav, function (wagons) {
+            this.ids_wsd.getViewIncomingCarsOfIDSostav(this.id_sostav, function (wagons) {
                 this.wagons = this.filter_wagons(wagons);
                 LockScreenOff();
                 if (typeof cb_load === 'function') {
@@ -1022,78 +1048,146 @@
     // Отображение кнопки добавить
     table_incoming_cars.prototype.enable_button = function () {
         switch (this.settings.type_report) {
-            //case 'incoming_sostav': {
-            //    if (this.select_rows_wagons && this.select_rows_wagons.length > 0) {
-            //        this.obj_t_cars.button(4).enable(true);
-            //        if (this.select_rows_wagons[0].status < 1) {
-            //            this.obj_t_cars.button(2).enable(true);
-            //            this.obj_t_cars.button(3).enable(false); // отмена сдачи состава
-            //            this.obj_t_cars.button(4).text(langView('ticc_title_button_wagon_accept', App.Langs));
-            //        } else {
-            //            // Если статус в работе принят или удален 
-            //            this.obj_t_cars.button(2).enable(false);
-            //            if (this.select_rows_wagons[0].status === 2) { this.obj_t_cars.button(3).enable(true); } else { this.obj_t_cars.button(3).enable(false); }
-            //            this.obj_t_cars.button(4).text(langView('ticc_title_button_wagon_view', App.Langs));
-            //        }
-            //    } else {
-            //        this.obj_t_cars.button(2).enable(false);
-            //        this.obj_t_cars.button(3).enable(false);
-            //        this.obj_t_cars.button(4).enable(false);
-            //    }
-            //    break;
-            //};
+            case 'incoming_cars': {
+                if (this.wagons && this.wagons.length > 0) {
+                    if (this.wagons[0].arrival_sostav_status === 1) {
+                        this.obj_t_cars.button(2).enable(true);
+                        this.obj_t_cars.button(3).enable(false);
+                    } else {
+                        if (this.wagons[0].arrival_sostav_status === 2) {
+                            this.obj_t_cars.button(2).enable(false);
+                            this.obj_t_cars.button(3).enable(true);
+                        } else {
+                            this.obj_t_cars.button(2).enable(false);
+                            this.obj_t_cars.button(3).enable(false);
+                        }
+                    }
+                } else {
+                    this.obj_t_cars.button(2).enable(false);
+                    this.obj_t_cars.button(3).enable(false);
+                }
+                break;
+            };
         };
     };
     // Выполнить операцию обновить
-    table_incoming_cars.prototype.action_refresh = function () {
+    table_incoming_cars.prototype.action_refresh = function (cb_refresh) {
         this.out_clear();
+        // Перезагрузка полная
         if (typeof this.settings.fn_refresh === 'function') {
-            this.settings.fn_refresh();
+            this.settings.fn_refresh(function () {
+                if (typeof cb_refresh === 'function') {
+                    cb_refresh();
+                }
+            }.bind(this));
         } else {
+            // Перезагрузка вагонов слева
             this.update(function (wagons) {
                 this.view(wagons, this.id_station, this.id_sostav);
                 LockScreenOff();
+                if (typeof cb_refresh === 'function') {
+                    cb_refresh();
+                }
             }.bind(this));
         }
 
     };
     // Выполнить операцию Принять состав
     table_incoming_cars.prototype.action_hand_arrival_sostav = function () {
-        //this.out_clear();
-        //LockScreen(langView('ticc_mess_run_operation', App.Langs));
-        //if (this.id_sostav !== null) {
-        //    this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
-        //        if (sostav) {
-        //            if (sostav.status < 4) {
-        //                if (sostav.status < 2) {
-        //                    // Сдать состав
-        //                    LockScreenOff();
-        //                    this.fhoogs.add(sostav);
-        //                } else {
-        //                    // Править сданный состав
-        //                    LockScreenOff();
-        //                    this.fhoogs.edit(sostav);
-        //                };
-        //            } else {
-        //                // Ошибка, состав откланен 
-        //                this.out_warning(langView('ticc_mess_warning_sostav_status_4', App.Langs).format(this.id_sostav));
-        //                LockScreenOff();
-        //            };
-        //        } else {
-        //            // Ошибка, состав не найден 
-        //            this.out_warning(langView('ticc_mess_error_sostav_null', App.Langs).format(this.id_sostav));
-        //            LockScreenOff();
-        //        };
-        //    }.bind(this));
+        this.out_clear();
+        LockScreen(langView('ticc_mess_run_operation', App.Langs));
+        if (this.id_sostav !== null) {
+            this.ids_wsd.getIncomingSostavOfID(this.id_sostav, function (sostav) {
+                if (sostav) {
+                    if (sostav.status < 3) {
+                        if (sostav.status == 2) {
+                            // Сдать состав
+                            LockScreenOff();
+                            this.fhiigs.add(sostav);
+                        } else {
+                            // Править сданный состав
+                            LockScreenOff();
+                            this.fhiigs.edit(sostav);
+                        };
+                    } else {
+                        // Ошибка, состав откланен 
+                        this.out_warning(langView('ticc_mess_warning_sostav_status_4', App.Langs).format(this.id_sostav));
+                        LockScreenOff();
+                    };
+                } else {
+                    // Ошибка, состав не найден 
+                    this.out_warning(langView('ticc_mess_error_sostav_null', App.Langs).format(this.id_sostav));
+                    LockScreenOff();
+                };
+            }.bind(this));
 
-        //} else {
-        //    // Ошибка id не определено
-        //    this.out_warning(langView('ticc_mess_warning_id_sostav_null', App.Langs));
-        //    LockScreenOff();
-        //}
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('ticc_mess_warning_id_sostav_null', App.Langs));
+            LockScreenOff();
+        }
     };
-    // Выполнить операцию переместить состав
-    table_incoming_cars.prototype.action_hand_dislocation_sostav_sostav = function () {
+    // Выполнить операцию отмена
+    table_incoming_cars.prototype.action_hand_cancel_arrival_sostav = function () {
+        this.out_clear();
+        LockScreen(langView('ticc_mess_run_operation', App.Langs));
+        if (this.id_sostav !== null) {
+            this.ids_wsd.getIncomingSostavOfID(this.id_sostav, function (sostav) {
+                if (sostav) {
+                    if (sostav.status < 3) {
+                        if (sostav.status == 2) {
+                            LockScreenOff();
+                            this.modal_confirm_form.view(langView('ticc_form_cancel_arrival_sostav', App.Langs), langView('ticc_form_return_message_cancel_arrival_sostav', App.Langs).format(sostav.composition_index, sostav.date_adoption.format(format_datetime)), function (res) {
+                                if (res) {
+                                    // Выполнить операцию
+                                    LockScreen(langView('ticc_mess_run_operation_cancel_arrival_sostav', App.Langs));
+                                    // Подготовим операцию
+                                    var operation_cancel = {
+                                        id_arrival_sostav: this.id_sostav,
+                                        user: App.User_Name,
+                                    };
+                                    // Выполним предъявить
+                                    this.ids_wsd.postOperationCancelIncomingSostav(operation_cancel, function (result_operation) {
+                                        this.action_refresh(function () {
+                                            if (result_operation > 0) {
+                                                this.out_info(langView('ticc_mess_ok_operation_cancel_arrival_sostav', App.Langs));
+                                            } else {
+                                                this.out_info(langView('ticc_mess_error_operation_cancel_arrival_sostav', App.Langs));
+                                            }
+                                        }.bind(this));
+                                    }.bind(this));
+                                } else {
+                                    // Отмена операции
+                                    this.out_warning(langView('ticc_mess_cancel_operation_cancel_arrival_sostav', App.Langs).format(this.id_sostav));
+                                    LockScreenOff();
+                                }
+                            }.bind(this));
+                        } else {
+                            // Ошибка, состав откланен 
+                            this.out_warning(langView('ticc_mess_warning_sostav_status_6', App.Langs).format(this.id_sostav));
+                            LockScreenOff();
+                        };
+                    } else {
+                        // Ошибка, состав откланен 
+                        this.out_warning(langView('ticc_mess_warning_sostav_status_4', App.Langs).format(this.id_sostav));
+                        LockScreenOff();
+                    };
+                } else {
+                    // Ошибка, состав не найден 
+                    this.out_warning(langView('ticc_mess_error_sostav_null', App.Langs).format(this.id_sostav));
+                    LockScreenOff();
+                };
+            }.bind(this));
+
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('ticc_mess_warning_id_sostav_null', App.Langs));
+            LockScreenOff();
+        }
+
+
+
+
         //this.out_clear();
         //LockScreen(langView('ticc_mess_run_operation', App.Langs));
         //if (this.id_sostav !== null) {

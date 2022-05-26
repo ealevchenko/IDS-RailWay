@@ -663,6 +663,7 @@
         // Форма править состав по приему ===============================================================================
         this.fhiigs = new FHIIGS();
         this.fhiigs.init({
+            mode : 0,
             alert: this.settings.alert,
             ids_wsd: this.ids_wsd,
             fn_init: function (init) {
@@ -674,7 +675,6 @@
                 //----------------------------------
             }.bind(this),
             fn_add: function (result) {
-
                 this.out_clear();
                 this.action_refresh(function () {
                     if (result && result.result > 0) {
@@ -683,7 +683,6 @@
                         this.out_info(langView('tis_mess_error_operation_add_sostav', App.Langs));
                     }
                 }.bind(this));
-
             }.bind(this),
             fn_edit: function (result) {
                 this.out_clear();

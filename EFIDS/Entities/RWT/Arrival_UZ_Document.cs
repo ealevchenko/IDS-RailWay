@@ -67,6 +67,8 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string change_user { get; set; }
 
+        public bool? manual { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Document_Acts> Arrival_UZ_Document_Acts { get; set; }
 

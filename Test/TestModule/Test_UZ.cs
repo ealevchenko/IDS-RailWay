@@ -41,7 +41,7 @@ namespace Test.TestModule
             WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
-            UZWagonInfo info = client.GetInfoWagonOfNum(56964851);
+            UZWagonInfo info = client.GetInfoWagonOfNum(56969470);
         }
         /// <summary>
         /// Тест нового запроса по коду станции
@@ -105,7 +105,7 @@ namespace Test.TestModule
         public void UZ_SMS_GetOutgoingDocumentOfDB_NumShipper()
         {
             UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_NumShipper(55120554, new int[] { 7932}, new DateTime(2021,04,13,2,15,00));
+            UZ_DOC doc = sms.GetDocumentOfDB_NumShipper(55120554, new int[] { 7932 }, new DateTime(2021, 04, 13, 2, 15, 00));
         }
 
         public void UZ_SMS_GetDocumentOfDB_NumConsignees()

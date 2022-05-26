@@ -458,7 +458,6 @@ namespace IDS
         public DateTime? close { get; set; }
         public string close_message { get; set; }
     }
-
     public class UZ_DOC_Sending
     {
         public long id_sostav { get; set; }
@@ -476,6 +475,167 @@ namespace IDS
         public DateTime? dt { get; set; }
         public int? num_uz { get; set; }
     }
+
+    #region 
+    /// <summary>
+    /// Класс описание платильщиков по ЭПД прибытию
+    /// </summary>
+    public class Doc_Pay
+    {
+        public int code_payer { get; set; }
+
+        public int type_payer { get; set; }
+        public string kod { get; set; }
+
+        public long summa { get; set; }
+    }
+    /// <summary>
+    /// Класс описание актов по ЭПД прибытию
+    /// </summary>
+    public class Doc_Acts
+    {
+        public DateTime? date_akt { get; set; }
+        public DateTime? date_dved { get; set; }
+        public string nom_akt { get; set; }
+        public int? nom_dved { get; set; }
+        public string prichina_akt { get; set; }
+        public int? stn_akt { get; set; }
+        public string stn_name_akt { get; set; }
+        public int? type { get; set; }
+        public int? vagon_nom { get; set; }
+    }
+    /// <summary>
+    /// Класс описание документов по ЭПД прибытию
+    /// </summary>
+    public class Doc_Docs
+    {
+        public string id_doc { get; set; }
+        public string description { get; set; }
+        public DateTime? doc_date { get; set; }
+        public string doc_type { get; set; }
+        public string doc_type_name { get; set; }
+        public byte[] doc { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа по прибытию
+    /// </summary>
+    public class Arrival_Doc
+    {
+        public string nom_doc { get; set; }
+        public string epd_code_from { get; set; }
+        public string epd_code_on { get; set; }
+        public int? code_stn_from { get; set; }
+        public int? code_stn_to { get; set; }
+        public int? code_border_checkpoint { get; set; }
+        public DateTime? cross_time { get; set; }
+        public int? code_shipper { get; set; }
+        public int? code_consignee { get; set; }
+        public bool? klient { get; set; }
+        public string code_payer_sender { get; set; }
+        public string code_payer_arrival { get; set; }
+        public int? distance_way { get; set; }
+        public string note { get; set; }
+        public List<Doc_Pay> doc_pays { get; set; }
+        public List<Doc_Acts> doc_acts { get; set; }
+        public List<Doc_Docs> doc_docs { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа тарифы по контейнерам
+    /// </summary>
+    public class Doc_Cont_Pay
+    {
+        public string kod { get; set; } // StringLength(3)
+        public long summa { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа контейнера по прибытию на вагонах
+    /// </summary>
+    public class Doc_Vagon_Cont
+    {
+        public string nom_cont { get; set; } //StringLength(11)
+        public string kod_tiporazmer { get; set; } //StringLength(4)
+        public int? gruzp { get; set; }
+        public int? ves_tary_arc { get; set; }
+        public int? id_cargo { get; set; }
+        public int? id_cargo_gng { get; set; }
+        public int? kol_pac { get; set; }
+        public string pac { get; set; }
+        public int? vesg { get; set; }
+        public double? vesg_reweighing { get; set; }
+        public string nom_zpu { get; set; } //StringLength(20)
+        public List<Doc_Cont_Pay> pays { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа акты по прибытию на вагон
+    /// </summary>
+    public class Doc_Vagon_Acts
+    {
+        public DateTime? date_akt { get; set; }
+        public DateTime? date_dved { get; set; }
+        public string nom_akt { get; set; }
+        public int? nom_dved { get; set; }
+        public string prichina_akt { get; set; }
+        public int? stn_akt { get; set; }
+        public string stn_name_akt { get; set; }
+        public int? type { get; set; }
+        public int? vagon_nom { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа тарифа по прибытию на вагонах
+    /// </summary>
+    public class Doc_Vagon_Pay
+    {
+        public string kod { get; set; } // StringLength(3)
+        public long summa { get; set; }
+    }
+    /// <summary>
+    /// Класс описания документа на вагон по прибытию
+    /// </summary>
+    public class Arrival_Doc_Vagon
+    {
+        public int num { get; set; }
+        public long id_arrival { get; set; }
+        public int id_car { get; set; }
+        public int? id_condition { get; set; }
+        public int? id_type { get; set; }
+        public double? gruzp { get; set; }
+        public int? u_tara { get; set; }
+        public int? ves_tary_arc { get; set; }
+        public bool? route { get; set; }
+        public string note_vagon { get; set; } // StringLength(200)
+        public int? id_cargo { get; set; }
+        public int? id_cargo_gng { get; set; }
+        public int? id_certification_data { get; set; }
+        public int? id_commercial_condition { get; set; }
+        public int? kol_pac { get; set; }
+        public string pac { get; set; } // StringLength(3)
+        public int? vesg { get; set; }
+        public double? vesg_reweighing { get; set; }
+        public string nom_zpu { get; set; } // StringLength(20)
+        public string danger { get; set; } // StringLength(3)
+        public string danger_kod { get; set; } // StringLength(4)
+        public bool? cargo_returns { get; set; }
+        public int? id_station_on_amkr { get; set; }
+        public int? id_division_on_amkr { get; set; }
+        public bool? empty_car { get; set; }
+        public int? kol_conductor { get; set; }
+        public int? id_owner { get; set; }
+        public int? id_countrys { get; set; }
+        public int? id_genus { get; set; }
+        public int? kol_os { get; set; }
+        public string usl_tip { get; set; }
+        public DateTime? date_rem_uz { get; set; }
+        public DateTime? date_rem_vag { get; set; }
+        public int? id_type_ownership { get; set; }
+        public double? gruzp_uz { get; set; }
+        public double? tara_uz { get; set; }
+        public string zayava { get; set; } //StringLength(100)
+        public int? pay_summa { get; set; }
+        public List<Doc_Vagon_Cont> conts { get; set; }
+        public List<Doc_Vagon_Pay> pays { get; set; }
+        public List<Doc_Vagon_Acts> acts { get; set; }
+    }
+    #endregion
 
     public class IDS_WIR : IDS_Base
     {
@@ -506,6 +666,7 @@ namespace IDS
         }
 
         #region ПРИБЫТИЕ ВАГОНОВ (АРМ ДИСПЕТЧЕРА)
+        //TODO: !!!Удалить старое прибытие
         /// <summary>
         /// Принять вагон
         /// </summary>
@@ -560,6 +721,7 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: !!!Удалить старое прибытие
         /// <summary>
         /// Принять вагоны
         /// </summary>
@@ -601,6 +763,8 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        //----------------------------------------------------------          
         /// <summary>
         /// Операция удалить состав введенный вручную
         /// </summary>
@@ -638,57 +802,1640 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Обрезать поле для сохранения
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public string getSubstringField(string field, int size)
+        {
+            if (!string.IsNullOrWhiteSpace(field))
+            {
+                return field.Substring(0, field.Length > size ? size : field.Length).Trim();
+            }
+            return null;
+        }
 
-        public int OperationIncomingWagon(long id_arrival_car, int mode, string nom_main_doc, string nom_doc, string user)
+        #region Arrival_UZ_Document_Pay
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Document_Pay
+        /// </summary>
+        /// <param name="doc_pays"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Document_Pay> CreateArrival_UZ_Document_Pay(List<Doc_Pay> doc_pays)
         {
             try
             {
+                List<Arrival_UZ_Document_Pay> list_doc_pays = new List<Arrival_UZ_Document_Pay>();
+                foreach (Doc_Pay pay in doc_pays)
+                {
+                    Arrival_UZ_Document_Pay arr_pay = new Arrival_UZ_Document_Pay()
+                    {
+                        id = 0,
+                        id_document = 0,
+                        code_payer = pay.code_payer,
+                        type_payer = pay.type_payer,
+                        kod = pay.kod,
+                        summa = pay.summa
+                    };
+                    list_doc_pays.Add(arr_pay);
+                }
+                return list_doc_pays;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Document_Pay(doc_pays={0})",
+                    doc_pays), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Document_Pay (платильщиков) в документе
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_doc"></param>
+        /// <param name="list_doc_pays"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Document_Pay(ref EFDbContext context, Arrival_UZ_Document arr_uz_doc, List<Arrival_UZ_Document_Pay> list_doc_pays, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Document_Pay arr_uz_doc_pay = new EFArrival_UZ_Document_Pay(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Pay по данным документа
+                if (list_doc_pays == null) return (int)errors_base.error_update_arr_doc_pay; // Ошибка обновления документов (платильщик на документ) 
+                if (arr_uz_doc.id == 0)
+                {
+                    // Документ только создали, добавим pay
+                    foreach (Arrival_UZ_Document_Pay doc_pay in list_doc_pays)
+                    {
+                        arr_uz_doc.Arrival_UZ_Document_Pay.Add(doc_pay);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Document_Pay> old_list_doc_pay = arr_uz_doc.Arrival_UZ_Document_Pay.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Document_Pay doc_pay in list_doc_pays)
+                    {
+                        Arrival_UZ_Document_Pay exist_doc_pay = arr_uz_doc_pay.Context.Where(p => p.id_document == arr_uz_doc.id && p.code_payer == doc_pay.code_payer && p.kod == doc_pay.kod).FirstOrDefault();
+                        if (exist_doc_pay != null)
+                        {
+                            // есть - обновить
+                            exist_doc_pay.summa = doc_pay.summa;
+                            arr_uz_doc_pay.Update(exist_doc_pay);
+                            old_list_doc_pay.Remove(exist_doc_pay);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_doc.Arrival_UZ_Document_Pay.Add(doc_pay);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    arr_uz_doc_pay.Delete(old_list_doc_pay.Select(p => p.id));
+                }
+                return list_doc_pays.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Document_Pay(context={0}, arr_uz_doc={1}, list_doc_pays={2}, user={3})",
+                    context, arr_uz_doc, list_doc_pays, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Document_Acts
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Document_Acts
+        /// </summary>
+        /// <param name="doc_acts"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Document_Acts> CreateArrival_UZ_Document_Acts(List<Doc_Acts> doc_acts)
+        {
+            try
+            {
+                List<Arrival_UZ_Document_Acts> list = new List<Arrival_UZ_Document_Acts>();
+                foreach (Doc_Acts obj in doc_acts)
+                {
+                    Arrival_UZ_Document_Acts arr_act = new Arrival_UZ_Document_Acts()
+                    {
+                        id = 0,
+                        id_document = 0,
+                        date_akt = obj.date_akt,
+                        date_dved = obj.date_dved,
+                        nom_akt = obj.nom_akt,
+                        nom_dved = obj.nom_dved,
+                        prichina_akt = obj.prichina_akt,
+                        stn_akt = obj.stn_akt,
+                        stn_name_akt = obj.stn_name_akt,
+                        type = obj.type,
+                        vagon_nom = obj.vagon_nom,
+                    };
+                    list.Add(arr_act);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Document_Acts(doc_acts={0})", doc_acts), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Document_Acts (акты) в документе
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_doc"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Document_Acts(ref EFDbContext context, Arrival_UZ_Document arr_uz_doc, List<Arrival_UZ_Document_Acts> list, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Document_Acts arr_uz_doc_act = new EFArrival_UZ_Document_Acts(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Acts по данным документа
+                if (list == null) return (int)errors_base.error_update_arr_doc_act; // Ошибка обновления документов (акты) 
+                if (arr_uz_doc.id == 0)
+                {
+                    // Документ только создали, добавим акты
+                    foreach (Arrival_UZ_Document_Acts act in list)
+                    {
+                        arr_uz_doc.Arrival_UZ_Document_Acts.Add(act);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Document_Acts> old_list = arr_uz_doc.Arrival_UZ_Document_Acts.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Document_Acts obj in list)
+                    {
+                        Arrival_UZ_Document_Acts exist_act = arr_uz_doc_act.Context.Where(p => p.id_document == arr_uz_doc.id && p.nom_akt == obj.nom_akt && p.date_akt == obj.date_akt).FirstOrDefault();
+                        if (exist_act != null)
+                        {
+                            // есть - обновить
+                            exist_act.date_dved = obj.date_dved;
+                            exist_act.nom_dved = obj.nom_dved;
+                            exist_act.prichina_akt = obj.prichina_akt;
+                            exist_act.stn_akt = obj.stn_akt;
+                            exist_act.stn_name_akt = obj.stn_name_akt;
+                            exist_act.type = obj.type;
+                            exist_act.vagon_nom = obj.vagon_nom;
+                            arr_uz_doc_act.Update(exist_act);
+                            old_list.Remove(exist_act);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_doc.Arrival_UZ_Document_Acts.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    arr_uz_doc_act.Delete(old_list.Select(p => p.id));
+                }
+                return list.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Document_Acts(context={0}, arr_uz_doc={1}, list={2}, user={3})",
+                    context, arr_uz_doc, list, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Document_Docs
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Document_Docs
+        /// </summary>
+        /// <param name="doc_docs"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Document_Docs> CreateArrival_UZ_Document_Docs(List<Doc_Docs> doc_docs)
+        {
+            try
+            {
+                List<Arrival_UZ_Document_Docs> list = new List<Arrival_UZ_Document_Docs>();
+                foreach (Doc_Docs obj in doc_docs)
+                {
+                    Arrival_UZ_Document_Docs arr_doc = new Arrival_UZ_Document_Docs()
+                    {
+                        id = 0,
+                        id_document = 0,
+                        id_doc = obj.id_doc,
+                        description = obj.description,
+                        doc_date = obj.doc_date,
+                        doc_type = obj.doc_type,
+                        doc_type_name = obj.doc_type_name,
+                        doc = obj.doc,
+                    };
+                    list.Add(arr_doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Document_Docs(doc_acts={0})", doc_docs), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Document_Docs (документы) в документе
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_doc"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Document_Docs(ref EFDbContext context, Arrival_UZ_Document arr_uz_doc, List<Arrival_UZ_Document_Docs> list, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Document_Docs arr_uz_doc_doc = new EFArrival_UZ_Document_Docs(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Docs по данным документа
+                if (list == null) return (int)errors_base.error_update_arr_doc_doc; // Ошибка обновления документов (документы)
+                if (arr_uz_doc.id == 0)
+                {
+                    // Документ только создали, добавим акты
+                    foreach (Arrival_UZ_Document_Docs doc in list)
+                    {
+                        arr_uz_doc.Arrival_UZ_Document_Docs.Add(doc);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Document_Docs> old_list = arr_uz_doc.Arrival_UZ_Document_Docs.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Document_Docs obj in list)
+                    {
+                        Arrival_UZ_Document_Docs exist_doc = arr_uz_doc_doc.Context.Where(p => p.id_document == arr_uz_doc.id && p.id_doc == obj.id_doc && p.doc_date == obj.doc_date).FirstOrDefault();
+                        if (exist_doc != null)
+                        {
+                            // есть - обновить
+                            exist_doc.description = obj.description;
+                            exist_doc.doc_type = obj.doc_type;
+                            exist_doc.doc_type_name = obj.doc_type_name;
+                            exist_doc.doc = obj.doc;
+                            arr_uz_doc_doc.Update(exist_doc);
+                            old_list.Remove(exist_doc);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_doc.Arrival_UZ_Document_Docs.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    arr_uz_doc_doc.Delete(old_list.Select(p => p.id));
+                }
+                return list.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Document_Docs(context={0}, arr_uz_doc={1}, list={2}, user={3})",
+                    context, arr_uz_doc, list, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Document
+        /// <summary>
+        /// Создать или обновить (update = true) строку документ по прибытию.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="epd"></param>
+        /// <param name="arrival_doc"></param>
+        /// <param name="parent_id"></param>
+        /// <param name="main_num_uz"></param>
+        /// <param name="uz_doc_manual"></param>
+        /// <param name="update"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultObject UpdateArrival_UZ_Document(ref EFDbContext context, EFIDS.Entities.UZ_DOC epd, int? main_num_uz, Arrival_Doc arrival_doc, long? parent_id, bool uz_doc_manual, bool update, string user)
+        {
+            ResultObject res = new ResultObject();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+
+                Arrival_UZ_Document arr_uz_doc = ef_arr_uz_doc.Context.Where(d => d.id_doc_uz == epd.num_doc).FirstOrDefault(); // Основной
+                if (arr_uz_doc == null)
+                {
+                    // нет создать 
+                    arr_uz_doc = new Arrival_UZ_Document()
+                    {
+                        id = 0,
+                        id_doc_uz = epd.num_doc,
+                        nom_doc = main_num_uz != null ? epd.num_uz : null,
+                        nom_main_doc = main_num_uz != null ? main_num_uz : epd.num_uz,
+                        code_stn_from = arrival_doc.code_stn_from,
+                        code_stn_to = arrival_doc.code_stn_to,
+                        code_border_checkpoint = arrival_doc.code_border_checkpoint,
+                        cross_time = arrival_doc.cross_time,
+                        code_shipper = arrival_doc.code_shipper,
+                        code_consignee = arrival_doc.code_consignee,
+                        klient = arrival_doc.klient,
+                        code_payer_sender = arrival_doc.code_payer_sender,
+                        code_payer_arrival = arrival_doc.code_payer_arrival,
+                        distance_way = arrival_doc.distance_way,
+                        note = getSubstringField(arrival_doc.note, 200),
+                        parent_id = parent_id,
+                        create = DateTime.Now,
+                        create_user = user,
+                        change = null,
+                        change_user = null,
+                        manual = uz_doc_manual,
+                    };
+                    res.mode = mode_obj.add;
+                }
+                else
+                {
+                    // есть обновить если установлен признак
+                    if (update)
+                    {
+                        arr_uz_doc.nom_doc = main_num_uz != null ? epd.num_uz : null;
+                        arr_uz_doc.nom_main_doc = main_num_uz != null ? main_num_uz : epd.num_uz;
+                        arr_uz_doc.code_stn_from = arrival_doc.code_stn_from;
+                        arr_uz_doc.code_stn_to = arrival_doc.code_stn_to;
+                        arr_uz_doc.code_border_checkpoint = arrival_doc.code_border_checkpoint;
+                        arr_uz_doc.cross_time = arrival_doc.cross_time;
+                        arr_uz_doc.code_shipper = arrival_doc.code_shipper;
+                        arr_uz_doc.code_consignee = arrival_doc.code_consignee;
+                        arr_uz_doc.klient = arrival_doc.klient;
+                        arr_uz_doc.code_payer_sender = arrival_doc.code_payer_sender;
+                        arr_uz_doc.code_payer_arrival = arrival_doc.code_payer_arrival;
+                        arr_uz_doc.distance_way = arrival_doc.distance_way;
+                        arr_uz_doc.note = getSubstringField(arrival_doc.note, 200);
+                        arr_uz_doc.parent_id = parent_id;
+                        arr_uz_doc.change = DateTime.Now;
+                        arr_uz_doc.change_user = user;
+                        arr_uz_doc.manual = uz_doc_manual;
+                        res.mode = mode_obj.update;
+                    }
+                }
+                // Обновим платильщика
+                int res_upd_pay = UpdateArrival_UZ_Document_Pay(ref context, arr_uz_doc, CreateArrival_UZ_Document_Pay(arrival_doc.doc_pays), user);
+                if (res_upd_pay < 0)
+                {
+                    res.result = res_upd_pay; // Ошибка обновления платильщика
+                    return res;
+                }
+                // Обновим акты
+                int res_upd_act = UpdateArrival_UZ_Document_Acts(ref context, arr_uz_doc, CreateArrival_UZ_Document_Acts(arrival_doc.doc_acts), user);
+                if (res_upd_act < 0)
+                {
+                    res.result = res_upd_act; // Ошибка обновления актов
+                    return res;
+                }
+                // Обновим документы
+                int res_upd_doc = UpdateArrival_UZ_Document_Docs(ref context, arr_uz_doc, CreateArrival_UZ_Document_Docs(arrival_doc.doc_docs), user);
+                if (res_upd_doc < 0)
+                {
+                    res.result = res_upd_doc; // Ошибка обновления документов
+                    return res;
+                }
+                res.obj = arr_uz_doc;
+                return res;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Document(context={0}, epd={1})", context, epd), servece_owner, eventID);
+                res.result = (int)errors_base.global; // Глобальная ошибка
+                return res;
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Cont_Pay
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Cont_Pay
+        /// </summary>
+        /// <param name="doc_pays"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Cont_Pay> CreateArrival_UZ_Cont_Pay(List<Doc_Cont_Pay> doc_pays)
+        {
+            try
+            {
+                List<Arrival_UZ_Cont_Pay> list = new List<Arrival_UZ_Cont_Pay>();
+                foreach (Doc_Cont_Pay obj in doc_pays)
+                {
+                    Arrival_UZ_Cont_Pay doc = new Arrival_UZ_Cont_Pay()
+                    {
+                        id = 0,
+                        id_cont = 0,
+                        kod = obj.kod,
+                        summa = obj.summa
+
+                    };
+                    list.Add(doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Cont_Pay(doc_pays={0})", doc_pays), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Cont_Pay (платильщиков) в документе на контейнера
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_cont"></param>
+        /// <param name="list_doc_pays"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Cont_Pay(ref EFDbContext context, Arrival_UZ_Vagon_Cont arr_uz_cont, List<Arrival_UZ_Cont_Pay> list_doc_pays, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Cont_Pay ef_cont_pay = new EFArrival_UZ_Cont_Pay(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Pay по данным документа
+                if (list_doc_pays == null) return (int)errors_base.error_update_arr_cont_pay; // Ошибка обновления документов (контейнера на вагон) 
+                if (arr_uz_cont.id == 0)
+                {
+                    // Документ только создали, добавим pay
+                    foreach (Arrival_UZ_Cont_Pay doc in list_doc_pays)
+                    {
+                        arr_uz_cont.Arrival_UZ_Cont_Pay.Add(doc);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Cont_Pay> old_list = arr_uz_cont.Arrival_UZ_Cont_Pay.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Cont_Pay obj in list_doc_pays)
+                    {
+                        Arrival_UZ_Cont_Pay exist_doc = ef_cont_pay.Context.Where(p => p.id_cont == arr_uz_cont.id && p.kod == obj.kod).FirstOrDefault();
+                        if (exist_doc != null)
+                        {
+                            // есть - обновить
+                            exist_doc.summa = obj.summa;
+                            ef_cont_pay.Update(exist_doc);
+                            old_list.Remove(exist_doc);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_cont.Arrival_UZ_Cont_Pay.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    ef_cont_pay.Delete(old_list.Select(p => p.id));
+                }
+                return list_doc_pays.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Cont_Pay(context={0}, arr_uz_cont={1}, list_doc_pays={2}, user={3})",
+                    context, arr_uz_cont, list_doc_pays, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Vagon_Cont
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Document_Pay
+        /// </summary>
+        /// <param name="conts"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Vagon_Cont> CreateArrival_UZ_Vagon_Cont(List<Doc_Vagon_Cont> conts)
+        {
+            try
+            {
+                List<Arrival_UZ_Vagon_Cont> list = new List<Arrival_UZ_Vagon_Cont>();
+                foreach (Doc_Vagon_Cont obj in conts)
+                {
+                    List<Arrival_UZ_Cont_Pay> list_pay = CreateArrival_UZ_Cont_Pay(obj.pays);
+                    Arrival_UZ_Vagon_Cont doc = new Arrival_UZ_Vagon_Cont()
+                    {
+                        id = 0,
+                        id_vagon = 0,
+                        nom_cont = obj.nom_cont,
+                        kod_tiporazmer = obj.kod_tiporazmer,
+                        gruzp = obj.gruzp,
+                        ves_tary_arc = obj.ves_tary_arc,
+                        id_cargo = obj.id_cargo,
+                        id_cargo_gng = obj.id_cargo_gng,
+                        kol_pac = obj.kol_pac,
+                        pac = obj.pac,
+                        vesg = obj.vesg,
+                        vesg_reweighing = obj.vesg_reweighing,
+                        nom_zpu = obj.nom_zpu,
+                        Arrival_UZ_Cont_Pay = list_pay,
+                    };
+                    list.Add(doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Vagon_Cont(conts={0})", conts), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Vagon_Cont (контейнера) на вагон
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_vag"></param>
+        /// <param name="list_cont"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Vagon_Cont(ref EFDbContext context, Arrival_UZ_Vagon arr_uz_vag, List<Arrival_UZ_Vagon_Cont> list_cont, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Vagon_Cont ef_arr_cont = new EFArrival_UZ_Vagon_Cont(context);
+                EFArrival_UZ_Cont_Pay ef_cont_pay = new EFArrival_UZ_Cont_Pay(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Vagon_Cont по данным документа
+                if (list_cont == null) return (int)errors_base.error_update_arr_vag_cont; // Ошибка обновления документов (контейнера) 
+                if (arr_uz_vag.id == 0)
+                {
+                    // Документ только создали, добавим контейнера
+                    foreach (Arrival_UZ_Vagon_Cont doc in list_cont)
+                    {
+                        arr_uz_vag.Arrival_UZ_Vagon_Cont.Add(doc);
+                    }
+                }
+                else
+                {
+                    // Список существующих контейнеров
+                    List<Arrival_UZ_Vagon_Cont> old_list = arr_uz_vag.Arrival_UZ_Vagon_Cont.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Vagon_Cont obj in list_cont)
+                    {
+                        Arrival_UZ_Vagon_Cont exist_doc = ef_arr_cont.Context.Where(p => p.id_vagon == arr_uz_vag.id && p.nom_cont == obj.nom_cont).FirstOrDefault();
+                        if (exist_doc != null)
+                        {
+                            // есть - обновить
+                            exist_doc.kod_tiporazmer = obj.kod_tiporazmer;
+                            exist_doc.gruzp = obj.gruzp;
+                            exist_doc.ves_tary_arc = obj.ves_tary_arc;
+                            exist_doc.id_cargo = obj.id_cargo;
+                            exist_doc.id_cargo_gng = obj.id_cargo_gng;
+                            exist_doc.kol_pac = obj.kol_pac;
+                            exist_doc.pac = obj.pac;
+                            exist_doc.vesg = obj.vesg;
+                            exist_doc.vesg_reweighing = obj.vesg_reweighing;
+                            exist_doc.nom_zpu = obj.nom_zpu;
+                            // Обновим платильщика
+                            int res_upd_pay = UpdateArrival_UZ_Cont_Pay(ref context, exist_doc, obj.Arrival_UZ_Cont_Pay.ToList(), user);
+                            if (res_upd_pay < 0) return res_upd_pay; // Ошибка обновления платильщика
+                            ef_arr_cont.Update(exist_doc);
+                            old_list.Remove(exist_doc);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_vag.Arrival_UZ_Vagon_Cont.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки и контейнера
+                    foreach (Arrival_UZ_Vagon_Cont del in old_list)
+                    {
+                        ef_cont_pay.Delete(del.Arrival_UZ_Cont_Pay.Select(p => p.id));
+                    }
+                    ef_arr_cont.Delete(old_list.Select(p => p.id));
+                }
+                return list_cont.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Vagon_Cont(context={0}, arr_uz_vag={1}, list_cont={2}, user={3})",
+                    context, arr_uz_vag, list_cont, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Vagon_Pay
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Vagon_Pay
+        /// </summary>
+        /// <param name="doc_pays"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Vagon_Pay> CreateArrival_UZ_Vagon_Pay(List<Doc_Vagon_Pay> doc_pays)
+        {
+            try
+            {
+                List<Arrival_UZ_Vagon_Pay> list = new List<Arrival_UZ_Vagon_Pay>();
+                foreach (Doc_Vagon_Pay obj in doc_pays)
+                {
+                    Arrival_UZ_Vagon_Pay doc = new Arrival_UZ_Vagon_Pay()
+                    {
+                        id = 0,
+                        id_vagon = 0,
+                        kod = obj.kod,
+                        summa = obj.summa
+
+                    };
+                    list.Add(doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Vagon_Pay(doc_pays={0})", doc_pays), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Vagon_Pay (платильщиков) в документе на вагон
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_vag"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Vagon_Pay(ref EFDbContext context, Arrival_UZ_Vagon arr_uz_vag, List<Arrival_UZ_Vagon_Pay> list, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Vagon_Pay ef_vagon_pay = new EFArrival_UZ_Vagon_Pay(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Pay по данным документа
+                if (list == null) return (int)errors_base.error_update_arr_vag_pay; // Ошибка обновления документов (платник на вагон) 
+                if (arr_uz_vag.id == 0)
+                {
+                    // Документ только создали, добавим 
+                    foreach (Arrival_UZ_Vagon_Pay obj in list)
+                    {
+                        arr_uz_vag.Arrival_UZ_Vagon_Pay.Add(obj);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Vagon_Pay> old_list = arr_uz_vag.Arrival_UZ_Vagon_Pay.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Vagon_Pay obj in list)
+                    {
+                        Arrival_UZ_Vagon_Pay exist_doc = ef_vagon_pay.Context.Where(p => p.id_vagon == arr_uz_vag.id && p.kod == obj.kod).FirstOrDefault();
+                        if (exist_doc != null)
+                        {
+                            // есть - обновить
+                            exist_doc.summa = obj.summa;
+                            ef_vagon_pay.Update(exist_doc);
+                            old_list.Remove(exist_doc);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_vag.Arrival_UZ_Vagon_Pay.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    ef_vagon_pay.Delete(old_list.Select(p => p.id));
+                }
+                return list.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Vagon_Pay(context={0}, arr_uz_vag={1}, list={2}, user={3})",
+                    context, arr_uz_vag, list, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Vagon_Acts
+        /// <summary>
+        /// Метод преобразования в тип Arrival_UZ_Vagon_Acts
+        /// </summary>
+        /// <param name="doc_acts"></param>
+        /// <returns></returns>
+        public List<Arrival_UZ_Vagon_Acts> CreateArrival_UZ_Vagon_Acts(List<Doc_Vagon_Acts> doc_acts)
+        {
+            try
+            {
+                List<Arrival_UZ_Vagon_Acts> list = new List<Arrival_UZ_Vagon_Acts>();
+                foreach (Doc_Vagon_Acts obj in doc_acts)
+                {
+                    Arrival_UZ_Vagon_Acts doc = new Arrival_UZ_Vagon_Acts()
+                    {
+                        id = 0,
+                        id_vagon = 0,
+                        date_akt = obj.date_akt,
+                        date_dved = obj.date_dved,
+                        nom_akt = obj.nom_akt,
+                        nom_dved = obj.nom_dved,
+                        prichina_akt = obj.prichina_akt,
+                        stn_akt = obj.stn_akt,
+                        stn_name_akt = obj.stn_name_akt,
+                        type = obj.type,
+                        vagon_nom = obj.vagon_nom,
+
+                    };
+                    list.Add(doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CreateArrival_UZ_Vagon_Acts(doc_acts={0})", doc_acts), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод обновления информации по Arrival_UZ_Vagon_Acts (акты на вагоны) в документе на вагон
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="arr_uz_vag"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Vagon_Acts(ref EFDbContext context, Arrival_UZ_Vagon arr_uz_vag, List<Arrival_UZ_Vagon_Acts> list, string user)
+        {
+            try
+            {
+                EFArrival_UZ_Vagon_Acts ef_vagon_acts = new EFArrival_UZ_Vagon_Acts(context);
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                // Получим Arrival_UZ_Document_Pay по данным документа
+                if (list == null) return (int)errors_base.error_update_arr_vag_pay; // Ошибка обновления документов (платник на вагон) 
+                if (arr_uz_vag.id == 0)
+                {
+                    // Документ только создали, добавим 
+                    foreach (Arrival_UZ_Vagon_Acts obj in list)
+                    {
+                        arr_uz_vag.Arrival_UZ_Vagon_Acts.Add(obj);
+                    }
+                }
+                else
+                {
+                    // Список существующих платежек
+                    List<Arrival_UZ_Vagon_Acts> old_list = arr_uz_vag.Arrival_UZ_Vagon_Acts.ToList();
+                    // Сравнить
+                    foreach (Arrival_UZ_Vagon_Acts obj in list)
+                    {
+                        Arrival_UZ_Vagon_Acts exist_act = ef_vagon_acts.Context.Where(p => p.id_vagon == arr_uz_vag.id && p.nom_akt == obj.nom_akt && p.date_akt == obj.date_akt).FirstOrDefault();
+                        if (exist_act != null)
+                        {
+                            // есть - обновить
+                            exist_act.date_dved = obj.date_dved;
+                            exist_act.nom_dved = obj.nom_dved;
+                            exist_act.prichina_akt = obj.prichina_akt;
+                            exist_act.stn_akt = obj.stn_akt;
+                            exist_act.stn_name_akt = obj.stn_name_akt;
+                            exist_act.type = obj.type;
+                            exist_act.vagon_nom = obj.vagon_nom;
+                            ef_vagon_acts.Update(exist_act);
+                            old_list.Remove(exist_act);
+                        }
+                        else
+                        {
+                            // нет - добавить
+                            arr_uz_vag.Arrival_UZ_Vagon_Acts.Add(obj);
+                        }
+                    }
+                    // Удалим исключенные платежки
+                    ef_vagon_acts.Delete(old_list.Select(p => p.id));
+                }
+                return list.Count();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Vagon_Acts(context={0}, arr_uz_vag={1}, list={2}, user={3})",
+                    context, arr_uz_vag, list, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
+        #region Arrival_UZ_Vagon
+        /// <summary>
+        /// Создать или обновить (update = true) строку документ по прибытию вагона.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_document"></param>
+        /// <param name="arrival_doc_vag"></param>
+        /// <param name="uz_doc_manual"></param>
+        /// <param name="update"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultObject UpdateArrival_UZ_Vagon(ref EFDbContext context, long id_document, Arrival_Doc_Vagon arrival_doc_vag, bool uz_doc_manual, bool update, string user)
+        {
+            ResultObject res = new ResultObject();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext();
+                }
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
+                // Проверим документ создан 
+                Arrival_UZ_Vagon arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(d => d.id_document == id_document && d.num == arrival_doc_vag.num).FirstOrDefault();
+                if (arr_uz_doc_vag == null)
+                {
+                    // нет создать 
+                    arr_uz_doc_vag = new Arrival_UZ_Vagon()
+                    {
+                        id = 0,
+                        id_document = id_document,
+                        num = arrival_doc_vag.num,
+                        id_arrival = arrival_doc_vag.id_arrival,
+                        id_car = arrival_doc_vag.id_car,
+                        id_condition = arrival_doc_vag.id_condition,
+                        id_type = arrival_doc_vag.id_type,
+                        gruzp = arrival_doc_vag.gruzp,
+                        u_tara = arrival_doc_vag.u_tara,
+                        ves_tary_arc = arrival_doc_vag.ves_tary_arc,
+                        route = arrival_doc_vag.route,
+                        note_vagon = getSubstringField(arrival_doc_vag.note_vagon, 200),
+                        id_cargo = arrival_doc_vag.id_cargo,
+                        id_cargo_gng = arrival_doc_vag.id_cargo_gng,
+                        id_certification_data = arrival_doc_vag.id_certification_data,
+                        id_commercial_condition = arrival_doc_vag.id_commercial_condition,
+                        kol_pac = arrival_doc_vag.kol_pac,
+                        pac = getSubstringField(arrival_doc_vag.pac, 3),
+                        vesg = arrival_doc_vag.vesg,
+                        vesg_reweighing = arrival_doc_vag.vesg_reweighing,
+                        nom_zpu = getSubstringField(arrival_doc_vag.nom_zpu, 20),
+                        danger = getSubstringField(arrival_doc_vag.danger, 3),
+                        danger_kod = getSubstringField(arrival_doc_vag.danger_kod, 4),
+                        cargo_returns = arrival_doc_vag.cargo_returns,
+                        id_station_on_amkr = arrival_doc_vag.id_station_on_amkr,
+                        id_division_on_amkr = arrival_doc_vag.id_division_on_amkr,
+                        empty_car = arrival_doc_vag.empty_car,
+                        kol_conductor = arrival_doc_vag.kol_conductor,
+                        date_rem_uz = arrival_doc_vag.date_rem_uz,
+                        date_rem_vag = arrival_doc_vag.date_rem_vag,
+                        gruzp_uz = arrival_doc_vag.gruzp_uz,
+                        id_countrys = arrival_doc_vag.id_countrys,
+                        id_genus = arrival_doc_vag.id_genus,
+                        id_owner = arrival_doc_vag.id_owner,
+                        id_type_ownership = arrival_doc_vag.id_type_ownership,
+                        kol_os = arrival_doc_vag.kol_os,
+                        manual = uz_doc_manual,
+                        pay_summa = arrival_doc_vag.pay_summa,
+                        tara_uz = arrival_doc_vag.tara_uz,
+                        usl_tip = arrival_doc_vag.usl_tip,
+                        zayava = getSubstringField(arrival_doc_vag.zayava, 100),
+                        create = DateTime.Now,
+                        create_user = user,
+                        change = null,
+                        change_user = null,
+                    };
+                    res.mode = mode_obj.add;
+                }
+                else
+                {
+                    // есть обновить если установлен признак
+                    if (update)
+                    {
+                        arr_uz_doc_vag.id_arrival = arrival_doc_vag.id_arrival;
+                        arr_uz_doc_vag.id_car = arrival_doc_vag.id_car;
+                        arr_uz_doc_vag.id_condition = arrival_doc_vag.id_condition;
+                        arr_uz_doc_vag.id_type = arrival_doc_vag.id_type;
+                        arr_uz_doc_vag.gruzp = arrival_doc_vag.gruzp;
+                        arr_uz_doc_vag.u_tara = arrival_doc_vag.u_tara;
+                        arr_uz_doc_vag.ves_tary_arc = arrival_doc_vag.ves_tary_arc;
+                        arr_uz_doc_vag.route = arrival_doc_vag.route;
+                        arr_uz_doc_vag.note_vagon = getSubstringField(arrival_doc_vag.note_vagon, 200);
+                        arr_uz_doc_vag.id_cargo = arrival_doc_vag.id_cargo;
+                        arr_uz_doc_vag.id_cargo_gng = arrival_doc_vag.id_cargo_gng;
+                        arr_uz_doc_vag.id_certification_data = arrival_doc_vag.id_certification_data;
+                        arr_uz_doc_vag.id_commercial_condition = arrival_doc_vag.id_commercial_condition;
+                        arr_uz_doc_vag.kol_pac = arrival_doc_vag.kol_pac;
+                        arr_uz_doc_vag.pac = getSubstringField(arrival_doc_vag.pac, 3);
+                        arr_uz_doc_vag.vesg = arrival_doc_vag.vesg;
+                        arr_uz_doc_vag.vesg_reweighing = arrival_doc_vag.vesg_reweighing;
+                        arr_uz_doc_vag.nom_zpu = getSubstringField(arrival_doc_vag.nom_zpu, 20);
+                        arr_uz_doc_vag.danger = getSubstringField(arrival_doc_vag.danger, 3);
+                        arr_uz_doc_vag.danger_kod = getSubstringField(arrival_doc_vag.danger_kod, 4);
+                        arr_uz_doc_vag.cargo_returns = arrival_doc_vag.cargo_returns;
+                        arr_uz_doc_vag.id_station_on_amkr = arrival_doc_vag.id_station_on_amkr;
+                        arr_uz_doc_vag.id_division_on_amkr = arrival_doc_vag.id_division_on_amkr;
+                        arr_uz_doc_vag.empty_car = arrival_doc_vag.empty_car;
+                        arr_uz_doc_vag.kol_conductor = arrival_doc_vag.kol_conductor;
+                        arr_uz_doc_vag.date_rem_uz = arrival_doc_vag.date_rem_uz;
+                        arr_uz_doc_vag.date_rem_vag = arrival_doc_vag.date_rem_vag;
+                        arr_uz_doc_vag.gruzp_uz = arrival_doc_vag.gruzp_uz;
+                        arr_uz_doc_vag.id_countrys = arrival_doc_vag.id_countrys;
+                        arr_uz_doc_vag.id_genus = arrival_doc_vag.id_genus;
+                        arr_uz_doc_vag.id_owner = arrival_doc_vag.id_owner;
+                        arr_uz_doc_vag.id_type_ownership = arrival_doc_vag.id_type_ownership;
+                        arr_uz_doc_vag.kol_os = arrival_doc_vag.kol_os;
+                        arr_uz_doc_vag.manual = uz_doc_manual;
+                        arr_uz_doc_vag.tara_uz = arrival_doc_vag.tara_uz;
+                        arr_uz_doc_vag.usl_tip = arrival_doc_vag.usl_tip;
+                        arr_uz_doc_vag.zayava = getSubstringField(arrival_doc_vag.zayava, 100);
+                        arr_uz_doc_vag.change = DateTime.Now;
+                        arr_uz_doc_vag.change_user = user;
+                        arr_uz_doc_vag.manual = uz_doc_manual;
+                        res.mode = mode_obj.update;
+                    }
+                }
+                // Обновим контейнера и платильщиков
+                int res_upd_conts = UpdateArrival_UZ_Vagon_Cont(ref context, arr_uz_doc_vag, CreateArrival_UZ_Vagon_Cont(arrival_doc_vag.conts), user);
+                if (res_upd_conts < 0)
+                {
+                    res.result = res_upd_conts; // Ошибка обновления контейнера или платильщиков
+                    return res;
+                }
+                // Обновим платильщиков на вагоны
+                int res_upd_pay = UpdateArrival_UZ_Vagon_Pay(ref context, arr_uz_doc_vag, CreateArrival_UZ_Vagon_Pay(arrival_doc_vag.pays), user);
+                if (res_upd_pay < 0)
+                {
+                    res.result = res_upd_pay; // Ошибка обновления платильщиков на вагоны
+                    return res;
+                }
+                // Обновим акты
+                int res_upd_act = UpdateArrival_UZ_Vagon_Acts(ref context, arr_uz_doc_vag, CreateArrival_UZ_Vagon_Acts(arrival_doc_vag.acts), user);
+                if (res_upd_act < 0)
+                {
+                    res.result = res_upd_act; // Ошибка обновления актов
+                    return res;
+                }
+                res.obj = arr_uz_doc_vag;
+                return res;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Vagon(context={0}, id_document={1}, arrival_doc_vag={2}, uz_doc_manual={3}, update={5}, user={6})", context, id_document, arrival_doc_vag, uz_doc_manual, update, user), servece_owner, eventID);
+                res.result = (int)errors_base.global; // Глобальная ошибка
+                return res;
+            }
+        }
+        #endregion
+
+        public int OperationIncomingWagon(long id_arrival_car, int position, DateTime? date_adoption_act, int? mode, Arrival_Doc arrival_main_doc, Arrival_Doc arrival_doc, Arrival_Doc_Vagon arrival_vagon_main_doc, Arrival_Doc_Vagon arrival_vagon_doc, string user)
+        {
+            try
+            {
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
                 EFDbContext context = new EFDbContext();
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
                 EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
                 EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 ArrivalCars car = ef_arr_car.Context.Where(c => c.id == id_arrival_car).FirstOrDefault();
                 if (car == null) return (int)errors_base.not_arrival_cars_db;                               // Ошибка, нет записи вагона по прибытию  
-                if (car.arrival == null) return (int)errors_base.arrival_cars_arrival;                      // Запрет операции вагон уже принят                
-                if (String.IsNullOrWhiteSpace(car.num_doc)) return (int)errors_base.arrival_cars_num_doc;   // Запрет по вагону нет документа уз                
-                // Вагон проверен
-                EFIDS.Entities.UZ_DOC doc_uz = ef_uz_doc.Context.Where(d => d.num_doc == car.num_doc).FirstOrDefault();
-                if (doc_uz == null) return (int)errors_base.not_inp_uz_vag_db;                                // Запрет в базе данных нет документа уз  
-                // Получим документ на вагон (если уже создали)
-                Arrival_UZ_Document arr_uz_doc = ef_arr_uz_doc.Context.Where(d => d.id_doc_uz == doc_uz.num_doc).FirstOrDefault();
-                if (arr_uz_doc == null)
+                if (car.arrival != null) return (int)errors_base.arrival_cars_arrival;                      // Запрет операции вагон уже принят                
+
+                bool main_uz_doc_manual = false;
+                bool uz_doc_manual = false;
+
+
+
+                #region ОБНОВИМ EFIDS.Entities.UZ_DOC
+                EFIDS.Entities.UZ_DOC epd_main = null;// ЭПД Основного документа
+                EFIDS.Entities.UZ_DOC epd = null;// ЭПД досылочного документа
+                if (mode == null)
                 {
-                    //// Документ не создан, создадим
-                    //arr_uz_doc = new Arrival_UZ_Document()
-                    //{
-                    //  id = 0,
-                    //  id_doc_uz = ,
-                    //    nom_doc = ,
-                    //    nom_main_doc = ,
-                    //    code_stn_from = ,
-                    //    code_stn_to = ,
-                    //    code_border_checkpoint = ,
-                    //    cross_time = ,
-                    //    code_shipper = ,
-                    //    code_consignee = ,
-                    //    klient = ,
-                    //    code_payer_sender = ,
-                    //    code_payer_arrival = ,
-                    //    distance_way = ,
-                    //    note = ,
-                    //    parent_id = , // сылка на основной
-                    //    create = DateTime.Now,
-                    //    create_user = user,
-                    //    change = ,
-                    //    change_user = ,
-                    //};
+                    main_uz_doc_manual = true;
+                    uz_doc_manual = false;
+                    // Режим автоматического ручного ЭПД
+                    // Определим последний номер и создадим ручной автоматически
+                    int auto_num_manual = ef_uz_doc.Database.SqlQuery<int>("select [IDS].[get_last_manual_epd]();").FirstOrDefault();
+                    if (auto_num_manual > 0)
+                    {
+                        string num_doc = "MA:" + auto_num_manual.ToString();
+                        epd_main = ef_uz_doc.Context.Where(d => d.num_doc == num_doc).FirstOrDefault();
+                        if (epd_main != null) return (int)errors_base.exist_manual_epd;     // Ошибка ЭПД автоматического ручного документа MA:xxxxx - уже существует
+                        // Создадим 
+                        epd_main = new EFIDS.Entities.UZ_DOC()
+                        {
+                            num_doc = num_doc,
+                            revision = 0,
+                            status = 6,
+                            num_uz = (auto_num_manual * -1), // сохраняем отрицательный номер что-бы не путать с оригиналами
+                            code_from = "0",
+                            code_on = "7932",
+                            dt = DateTime.Now,
+                            xml_doc = null,
+                            close = DateTime.Now,
+                            close_message = "Документ создан автоматически"
+                        };
+                        ef_uz_doc.Add(epd_main);
+                        car.UZ_DOC = epd_main;
+                    }
+                    else
+                    {
+                        return (int)errors_base.not_last_manual_epd; // Ошибка не получен последний номер автоматического ручного документа MA:xxxxx 
+                    }
+
                 }
-                return 0;
+                else
+                {
+                    if (String.IsNullOrWhiteSpace(arrival_main_doc.nom_doc)) return (int)errors_base.arrival_cars_num_main_doc;   // Запрет по вагону нет документа уз 
+                    // Проверка режима
+                    switch (mode)
+                    {
+                        case 0:
+                            {
+                                // Проверим оригиналы
+                                main_uz_doc_manual = false;
+                                uz_doc_manual = false;
+                                // Определим наличие досылки
+                                if (arrival_doc != null && !String.IsNullOrWhiteSpace(arrival_doc.nom_doc))
+                                {
+                                    int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                    epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                    if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
+                                }
+                                // Основной документ
+                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует основной ЭПД 
+                                // Продолжим
+                                break;
+                            };
+                        case 1:
+                            {
+                                // Проверим и создадим ручные но с номерами
+                                main_uz_doc_manual = true;
+                                uz_doc_manual = true;
+                                // Определим наличие досылки
+                                if (arrival_doc != null && !String.IsNullOrWhiteSpace(arrival_doc.nom_doc))
+                                {
+                                    int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                    epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                    // Это оригинальный документ, тогда выходим
+                                    if (epd != null && epd.xml_doc != null) return (int)errors_base.exist_not_manual_uz_doc_db; // Ошибка в базе данных указаный ЭПД введен не ручном режиме
+                                    if (epd == null)
+                                    {
+                                        // Создадим 
+                                        string num_doc = "MN:" + arrival_doc.nom_doc;
+                                        epd = new EFIDS.Entities.UZ_DOC()
+                                        {
+                                            num_doc = num_doc,
+                                            revision = 0,
+                                            status = 6,
+                                            num_uz = i_nom_doc,
+                                            code_from = arrival_doc.epd_code_from,
+                                            code_on = arrival_doc.epd_code_on,
+                                            dt = DateTime.Now,
+                                            xml_doc = null,
+                                            // Оставил открытым, вдруг потом зайдет
+                                            //close = DateTime.Now,
+                                            //close_message = "Документ создан вручную"
+                                        };
+                                        ef_uz_doc.Add(epd);
+                                    }
+                                    // досылка уже создана, далее
+                                }
+                                // Основной документ
+                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                if (epd_main != null && epd_main.xml_doc != null) return (int)errors_base.exist_not_manual_main_uz_doc_db; // Ошибка в базе данных указаный основной ЭПД введен не ручном режиме
+                                if (epd_main == null)
+                                {
+                                    // Создадим 
+                                    string num_doc = "MN:" + arrival_main_doc.nom_doc;
+                                    epd_main = new EFIDS.Entities.UZ_DOC()
+                                    {
+                                        num_doc = num_doc,
+                                        revision = 0,
+                                        status = 6,
+                                        num_uz = i_nom_main_doc,
+                                        code_from = arrival_main_doc.epd_code_from,
+                                        code_on = arrival_main_doc.epd_code_on,
+                                        dt = DateTime.Now,
+                                        xml_doc = null,
+                                        // Оставил открытым, вдруг потом зайдет
+                                        //close = DateTime.Now,
+                                        //close_message = "Документ создан вручную"
+                                    };
+                                    ef_uz_doc.Add(epd_main);
+                                }
+                                // Продолжим
+                                break;
+                            };
+                        case 2:
+                            {
+                                // Основной оригинал, а досылка ручной
+                                main_uz_doc_manual = false;
+                                uz_doc_manual = true;
+                                // Проверим досылку должна быть обязательно (основной проверили ранее)
+                                if (arrival_doc == null || String.IsNullOrWhiteSpace(arrival_doc.nom_doc)) return (int)errors_base.arrival_cars_num_doc;   // По вагону неопределен досылочный докумен уз
+                                // Определтм основной (автомат)                                                                   // Основной документ
+                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует основной ЭПД 
+                                // определим досылку (ручном)
+                                int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                // Это оригинальный документ, тогда выходим
+                                if (epd != null && epd.xml_doc != null) return (int)errors_base.exist_not_manual_uz_doc_db; // Ошибка в базе данных указаный ЭПД введен не ручном режиме
+                                if (epd == null)
+                                {
+                                    // Создадим 
+                                    string num_doc = "MN:" + arrival_doc.nom_doc;
+                                    epd = new EFIDS.Entities.UZ_DOC()
+                                    {
+                                        num_doc = num_doc,
+                                        revision = 0,
+                                        status = 6,
+                                        num_uz = i_nom_doc,
+                                        code_from = arrival_doc.epd_code_from,
+                                        code_on = arrival_doc.epd_code_on,
+                                        dt = DateTime.Now,
+                                        xml_doc = null,
+                                        // Оставил открытым, вдруг потом зайдет
+                                        //close = DateTime.Now,
+                                        //close_message = "Документ создан вручную"
+                                    };
+                                    ef_uz_doc.Add(epd);
+                                }
+                                break;
+                            };
+                        case 3:
+                            {
+                                // Основной ручной, а досылка оригинал
+                                main_uz_doc_manual = true;
+                                uz_doc_manual = false;
+                                // Проверим досылку должна быть обязательно (основной проверили ранее)
+                                if (arrival_doc == null || String.IsNullOrWhiteSpace(arrival_doc.nom_doc)) return (int)errors_base.arrival_cars_num_doc;   // По вагону неопределен досылочный докумен уз
+                                // Основной документ (ручном)
+                                int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_main_doc).FirstOrDefault();
+                                if (epd_main != null && epd_main.xml_doc != null) return (int)errors_base.exist_not_manual_main_uz_doc_db; // Ошибка в базе данных указаный основной ЭПД введен не ручном режиме
+                                if (epd_main == null)
+                                {
+                                    // Создадим 
+                                    string num_doc = "MN:" + arrival_main_doc.nom_doc;
+                                    epd_main = new EFIDS.Entities.UZ_DOC()
+                                    {
+                                        num_doc = num_doc,
+                                        revision = 0,
+                                        status = 6,
+                                        num_uz = i_nom_main_doc,
+                                        code_from = arrival_main_doc.epd_code_from,
+                                        code_on = arrival_main_doc.epd_code_on,
+                                        dt = DateTime.Now,
+                                        xml_doc = null,
+                                        // Оставил открытым, вдруг потом зайдет
+                                        //close = DateTime.Now,
+                                        //close_message = "Документ создан вручную"
+                                    };
+                                    ef_uz_doc.Add(epd_main);
+                                }
+                                // определим досылку (атомат)
+                                int i_nom_doc = int.Parse(arrival_doc.nom_doc);
+                                epd = ef_uz_doc.Context.Where(d => d.num_uz == i_nom_doc).FirstOrDefault();
+                                if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
+                                break;
+                            };
+                    };
+                };
+                // Привяжем к ArrivalCars правильную ссылку EFIDS.Entities.UZ_DOC
+                // Если нет ссылки на документ или ссылка не равна выбранному документу по № накладной переопределим ссылку на документ
+                if (car.num_doc == null || (car.num_doc != null && epd == null && car.num_doc != epd_main.num_doc) || (car.num_doc != null && epd != null && car.num_doc != epd.num_doc))
+                {
+                    car.UZ_DOC = epd == null ? epd_main : epd; // если есть дасылка тогда привяжем досылку (через досылку будет ссылка на основной) иначе основной
+                }
+                #endregion
+
+                #region ОБНОВИМ SAPIncomingSupply
+                IDS_SAP ids_sap = new IDS_SAP(this.servece_owner);
+                IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
+                Directory_BorderCheckpoint dir_border_checkpoint = null;
+                if (arrival_main_doc.code_border_checkpoint != null)
+                {
+                    dir_border_checkpoint = ids_dir.GetDirectory_BorderCheckpoint((int)arrival_main_doc.code_border_checkpoint, null, false, user);
+                }
+                SAPIncomingSupply sap_is = ids_sap.GetSAPIncomingSupply(ref context, id_arrival_car, car.num, epd_main.num_uz.ToString(), epd_main.dt, dir_border_checkpoint != null ? dir_border_checkpoint.code.ToString() : null, dir_border_checkpoint != null ? dir_border_checkpoint.station_name_ru : null, arrival_main_doc.cross_time, true, user);
+
+                #endregion
+
+                if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
+
+
+
+                #region ОБНОВИМ Arrival_UZ_Document, Arrival_UZ_Vagon ОСНОВНОГО И ДОСЫЛОЧНОГО ДОКУМЕНТА
+                // --------------------------------------------------------------------------------------
+                // Получим основой документ существующий  или создадим новый (обновление отключено)
+                ResultObject res_arr_main_uz_doc = UpdateArrival_UZ_Document(ref context, epd_main, null, arrival_main_doc, null, main_uz_doc_manual, false, user);
+                if (res_arr_main_uz_doc.result < 0 || res_arr_main_uz_doc.obj == null) return res_arr_main_uz_doc.result; // Была ошибка вернем код
+                Arrival_UZ_Document arr_main_uz_doc = (Arrival_UZ_Document)res_arr_main_uz_doc.obj;
+
+                ResultObject res_arr_main_uz_doc_vag = UpdateArrival_UZ_Vagon(ref context, arr_main_uz_doc.id, arrival_vagon_main_doc, main_uz_doc_manual, false, user);
+                if (res_arr_main_uz_doc_vag.result < 0 || res_arr_main_uz_doc_vag.obj == null) return res_arr_main_uz_doc_vag.result; // Была ошибка вернем код
+                Arrival_UZ_Vagon arr_main_uz_doc_vag = (Arrival_UZ_Vagon)res_arr_main_uz_doc_vag.obj;
+                // Добавим основной вагон если стоит add (Обновлять не будем - стоит update=false)
+                if (res_arr_main_uz_doc_vag.mode == mode_obj.add)
+                {
+                    arr_main_uz_doc.Arrival_UZ_Vagon.Add(arr_main_uz_doc_vag);
+                }
+                // Досылка --------------------------------------------------------------------------------
+                Arrival_UZ_Document arr_uz_doc = null;
+                Arrival_UZ_Vagon arr_uz_doc_vag = null;
+                // проверим есть досылка
+                if (epd != null)
+                {
+                    ResultObject res_arr_uz_doc = UpdateArrival_UZ_Document(ref context, epd, epd_main.num_uz, arrival_doc, (arr_main_uz_doc.id > 0 ? arr_main_uz_doc.id : (long?)null), uz_doc_manual, false, user);
+                    if (res_arr_uz_doc.result < 0 || res_arr_uz_doc.obj == null) return res_arr_uz_doc.result; // Была ошибка вернем код
+                    arr_uz_doc = (Arrival_UZ_Document)res_arr_uz_doc.obj;
+                    // Если основной документ только создан, тогда добавим ссылку
+                    if (arr_main_uz_doc.id == 0)
+                    {
+                        arr_uz_doc.Arrival_UZ_Document2 = arr_main_uz_doc;
+                    };
+                    ResultObject res_arr_uz_doc_vag = UpdateArrival_UZ_Vagon(ref context, arr_uz_doc.id, arrival_vagon_doc, uz_doc_manual, false, user);
+                    if (res_arr_uz_doc_vag.result < 0 || res_arr_uz_doc_vag.obj == null) return res_arr_uz_doc_vag.result; // Была ошибка вернем код
+                    arr_uz_doc_vag = (Arrival_UZ_Vagon)res_arr_uz_doc_vag.obj;
+                    // Добавим вагон если стоит add (Обновлять не будем - стоит update=false)
+                    if (res_arr_uz_doc_vag.mode == mode_obj.add)
+                    {
+                        arr_uz_doc.Arrival_UZ_Vagon.Add(arr_uz_doc_vag);
+                    }
+
+                }
+
+                #endregion
+
+                // Добавим основной документ
+                if (arr_main_uz_doc != null && arr_main_uz_doc.id == 0)
+                {
+                    ef_arr_uz_doc.Add(arr_main_uz_doc);
+                }
+                // Добавим досылочный документ
+                if (arr_uz_doc != null && arr_uz_doc.id == 0)
+                {
+                    ef_arr_uz_doc.Add(arr_uz_doc);
+                }
+                // Обновим информацию по ArrivalCars
+                car.position_arrival = position;
+                car.date_adoption_act = date_adoption_act;
+                car.arrival = DateTime.Now;
+                car.arrival_user = user;
+                car.change = DateTime.Now;
+                car.change_user = user;
+                car.Arrival_UZ_Vagon = arr_uz_doc_vag != null ? arr_uz_doc_vag : arr_main_uz_doc_vag;
+                if (car.SAPIncomingSupply.Count() == 0)
+                {
+                    car.SAPIncomingSupply.Add(sap_is);
+                }
+                if (car.ArrivalSostav.status == 0)
+                {
+                    car.ArrivalSostav.status = 1;
+                }
+                ef_arr_car.Update(car);
+
+                int result = context.SaveChanges();
+                return result;
             }
 
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("OperationIncomingWagon(id_arrival_car={0}, user={1})", id_arrival_car, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        public int OperationReturnIncomingWagon(long id_arrival_car, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                EFArrival_UZ_Document_Pay ef_arr_uz_doc_pay = new EFArrival_UZ_Document_Pay(context);
+                EFArrival_UZ_Document_Docs ef_arr_uz_doc_doc = new EFArrival_UZ_Document_Docs(context);
+                EFArrival_UZ_Document_Acts ef_arr_uz_doc_act = new EFArrival_UZ_Document_Acts(context);
+
+                EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+                EFArrival_UZ_Cont_Pay ef_arr_uz_vag_cont_pay = new EFArrival_UZ_Cont_Pay(context);
+                EFArrival_UZ_Vagon_Cont ef_arr_uz_vag_cont = new EFArrival_UZ_Vagon_Cont(context);
+                EFArrival_UZ_Vagon_Acts ef_arr_uz_vag_act = new EFArrival_UZ_Vagon_Acts(context);
+                EFArrival_UZ_Vagon_Pay ef_arr_uz_vag_pay = new EFArrival_UZ_Vagon_Pay(context);
+
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+
+                ArrivalCars car = ef_arr_car.Context.Where(c => c.id == id_arrival_car).FirstOrDefault();
+                if (car == null) return (int)errors_base.not_arrival_cars_db;                               // Ошибка, нет записи вагона по прибытию  
+                if (car.ArrivalSostav.status != 1) return (int)errors_base.error_status_arrival_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                                                                                                            // Проверим наличие созданного внутреннего перемещения
+                WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_arrival_car == id_arrival_car).FirstOrDefault();
+                if (wir != null) return (int)errors_base.arrival_cars_wir; // Записи по WagonInternalRoutes - уже имеет ссылку на прибытие (Состав уже принят)
+                // Удалим информацию по документам
+                // Проверим запись на вагон
+                Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == car.id_arrival_uz_vagon).FirstOrDefault();
+                if (arr_uz_vag != null)
+                {
+                    // Удалим информацию по контейнерам
+                    List<Arrival_UZ_Vagon_Cont> list = ef_arr_uz_vag_cont.Context.Where(c => c.id_vagon == arr_uz_vag.id).ToList();
+                    foreach (Arrival_UZ_Vagon_Cont cont in list)
+                    {
+                        List<Arrival_UZ_Cont_Pay> list_cont_pay = ef_arr_uz_vag_cont_pay.Context.Where(c => c.id_cont == cont.id).ToList();
+                        ef_arr_uz_vag_cont_pay.Delete(list_cont_pay.Select(n => n.id).ToList()); // Удалим pay по контейнерам
+                    }
+                    ef_arr_uz_vag_cont.Delete(list.Select(n => n.id).ToList()); // удалим контейнера
+                    // Удалим Акты
+                    List<Arrival_UZ_Vagon_Acts> list_act = ef_arr_uz_vag_act.Context.Where(a => a.id_vagon == arr_uz_vag.id).ToList();
+                    ef_arr_uz_vag_act.Delete(list_act.Select(n => n.id).ToList()); // удалим акты
+                    // Удалим pay
+                    List<Arrival_UZ_Vagon_Pay> list_pay = ef_arr_uz_vag_pay.Context.Where(p => p.id_vagon == arr_uz_vag.id).ToList();
+                    ef_arr_uz_vag_pay.Delete(list_pay.Select(n => n.id).ToList()); // удалим акты
+                    // Обработаем документ
+                    Arrival_UZ_Document arr_uz_doc = ef_arr_uz_doc.Context.Where(d => d.id == arr_uz_vag.id_document).FirstOrDefault();
+                    if (arr_uz_doc != null)
+                    {
+                        // Проверка количества вагонов в документе если = 1 или меньше удалить документ и Pay документа
+                        // если это последний вагон?
+                        if (arr_uz_doc.Arrival_UZ_Vagon.Count() <= 1)
+                        {
+                            arr_uz_doc.Arrival_UZ_Vagon.Clear();
+                            // Тогда удалим документ
+                            // Удалим pay по документу
+                            List<Arrival_UZ_Document_Pay> list_doc_pay = ef_arr_uz_doc_pay.Context.Where(c => c.id_document == arr_uz_doc.id).ToList();
+                            ef_arr_uz_doc_pay.Delete(list_doc_pay.Select(n => n.id).ToList());
+                            // Удалим Акты по документу
+                            List<Arrival_UZ_Document_Acts> list_doc_act = ef_arr_uz_doc_act.Context.Where(a => a.id_document == arr_uz_doc.id).ToList();
+                            ef_arr_uz_doc_act.Delete(list_doc_act.Select(n => n.id).ToList()); // удалим акты
+                            // Удалим документы по документу
+                            List<Arrival_UZ_Document_Docs> list_doc_doc = ef_arr_uz_doc_doc.Context.Where(a => a.id_document == arr_uz_doc.id).ToList();
+                            ef_arr_uz_doc_doc.Delete(list_doc_doc.Select(n => n.id).ToList()); // удалим акты
+                            // Удалим сам документ
+                            ef_arr_uz_doc.Delete(arr_uz_doc.id);
+                            // Если докуменит был создан в ручную убрать на него сылку, а если нет привязок документ удалить
+                            if (car.UZ_DOC !=null && car.UZ_DOC.xml_doc == null)
+                            {
+                                EFIDS.Entities.UZ_DOC epd = ef_uz_doc.Context.Where(d => d.num_uz == car.UZ_DOC.num_uz).FirstOrDefault();
+                                car.UZ_DOC = null;
+                                if (epd.ArrivalCars.Count() <= 1)
+                                {
+                                    ef_uz_doc.Delete(epd.num_doc);
+                                };
+                            }
+                        }
+                        else
+                        {
+                            arr_uz_doc.Arrival_UZ_Vagon.Remove(arr_uz_vag);
+                        }
+                    }
+                    // Удалим сам документ на вагон
+                    ef_arr_uz_vag.Delete(arr_uz_vag.id);
+                }
+                // Обновим информацию о вагоне
+                car.id_arrival_uz_vagon = null;
+                car.position_arrival = null;
+                car.date_adoption_act = null;
+                car.note = null;
+                car.arrival = null;
+                car.arrival_user = null;
+                car.change = DateTime.Now;
+                car.change_user = user;
+                // Если докуменит был создан в ручную убрать на него сылку
+                if (car.UZ_DOC != null && car.UZ_DOC.xml_doc == null)
+                {
+                    car.UZ_DOC = null;
+                }
+                // Состав
+                ArrivalSostav sostav = ef_arr_sostav.Context.Where(s => s.id == car.id_arrival).FirstOrDefault();
+                //int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                if (sostav != null && sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList().Count == 0)
+                {
+                    car.ArrivalSostav.status = 0;
+                }
+                car.ArrivalSostav.change = DateTime.Now;
+                car.ArrivalSostav.change_user = user;
+                ef_arr_car.Update(car);// Обновим  вагон
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationReturnIncomingWagon(id_arrival_car={0}, user={1})", id_arrival_car, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        public int OperationIncomingSostav(long id_arrival_sostav, int train, string composition_index, DateTime date_arrival,
+            DateTime date_adoption, DateTime? date_adoption_act, int id_station_from, int id_station_on, int id_way, bool? numeration,
+            int count, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+                EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+
+
+                ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
+                if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправки
+                if (sostav.date_adoption != null) return (int)errors_base.arrival_cars_arrival; // Запрет операции вагон уже принят
+                if (sostav.ArrivalCars.Count() == 0) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
+                List<ArrivalCars> list_car = sostav.ArrivalCars.Where(c => c.position_arrival != null).ToList();
+                if (list_car == null || list_car.Count() == 0) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию
+                long? parent_id = null;
+                int position = context.GetNextPosition(id_way);
+                foreach (ArrivalCars car in numeration == true ? list_car.OrderByDescending(w => w.position_arrival) : list_car.OrderBy(w => w.position_arrival))
+                {
+                    Arrival_UZ_Vagon arr_vag_doc = ef_arr_uz_vag.Context.Where(d => d.id == car.id_arrival_uz_vagon).FirstOrDefault();
+                    if (arr_vag_doc == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
+                    WagonInternalRoutes last_wir = context.GetLastWagon(car.num);
+                    // Проверим детально запись внутреннего перемещения
+                    if (last_wir != null)
+                    {
+                        if (last_wir.id_arrival_car == car.id) return (int)errors_base.arrival_cars_wir;    // Записи по WagonInternalRoutes - уже имеет ссылку на прибытие (Состав уже принят)
+                        if (last_wir.close != null) return (int)errors_base.open_wir;                      // Записи по WagonInternalRoutes - открыта
+                        parent_id = last_wir.id;
+                    }
+
+                    SAPIncomingSupply sap_is = ef_sap.Context.Where(c => c.id_arrival_car == car.id && c.num == car.num).FirstOrDefault();
+
+                    // Создадим строку внутреннего перемещения
+                    WagonInternalRoutes new_wir = new WagonInternalRoutes()
+                    {
+                        id = 0,
+                        num = car.num,
+                        id_arrival_car = car.id,
+                        id_sap_incoming_supply = sap_is != null ? (long?)sap_is.id : null,
+                        create = DateTime.Now,
+                        create_user = user,
+                        parent_id = parent_id
+
+                    };
+                    new_wir.SetStationWagon_old(id_station_on, id_way, date_arrival, position, null, user);
+                    new_wir.SetOpenOperation(1, date_arrival, (int)arr_vag_doc.id_condition, arr_vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_arrival, null, user);
+                    ef_wir.Add(new_wir);
+                    position++;
+                }
+
+                // Обновим информацию о составе
+
+                sostav.train = train;
+                sostav.composition_index = composition_index;
+                sostav.date_arrival = date_arrival;
+                sostav.date_adoption = date_adoption;
+                sostav.date_adoption_act = date_adoption_act;
+                sostav.id_station_from = id_station_from;
+                sostav.id_station_on = id_station_on;
+                sostav.id_way = id_way;
+                sostav.numeration = numeration;
+                sostav.count = count;
+                sostav.status = 2;
+                //sostav.note = note;
+                sostav.change = DateTime.Now;
+                sostav.change_user = user;
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationIncomingSostav(id_arrival_sostav={0}, user={1})", id_arrival_sostav, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        public int OperationCancelIncomingSostav(long id_arrival_sostav, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+                EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
+                EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
+
+                ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
+                if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправки
+                if (sostav.date_adoption == null) return (int)errors_base.not_arrival_cars_arrival; // Запрет операции вагон еще не принят
+                if (sostav.ArrivalCars.Count() == 0) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагонов по прибытию 
+                List<ArrivalCars> list_car = sostav.ArrivalCars.Where(c => c.arrival != null).ToList();
+                if (list_car == null || list_car.Count() == 0) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию
+                foreach (ArrivalCars car in list_car.OrderBy(w => w.position_arrival))
+                {
+                    Arrival_UZ_Vagon arr_vag_doc = ef_arr_uz_vag.Context.Where(d => d.id == car.id_arrival_uz_vagon).FirstOrDefault();
+                    if (arr_vag_doc == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
+
+                    WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_arrival_car == car.id).FirstOrDefault();
+                    if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    WagonInternalRoutes wir_next = ef_wir.Context.Where(w => w.parent_id == wir.id).FirstOrDefault();
+                    if (wir_next != null) return (int)errors_base.close_wir; // Записи по WagonInternalRoutes - закрыта есть следущее внутреннее перемещение
+                    List<WagonInternalOperation> list_wio = ef_wio.Context.Where(w => w.id_wagon_internal_routes == wir.id).ToList();
+                    if (list_wio.Count() > 1) return (int)errors_base.not_arrival_operation; // Операция вагона текущая операция вагона не "Прибытие с УЗ"
+                    if (list_wio[0].id_operation != 1) return (int)errors_base.not_arrival_operation; // Операция вагона текущая операция вагона не "Прибытие с УЗ"
+                    // Все проверки закончены, удаляем
+                    List<WagonInternalMovement> list_wim = ef_wim.Context.Where(w => w.id_wagon_internal_routes == wir.id).ToList();
+                    //
+                    ef_wio.Delete(list_wio.Select(w => w.id).ToList());
+                    ef_wim.Delete(list_wim.Select(w => w.id).ToList());
+                    ef_wir.Delete(wir.id);
+                }
+                // Обновим информацию о составе
+                sostav.date_adoption = null;
+                sostav.date_adoption_act = null;
+                sostav.id_station_on = null;
+                sostav.id_way = null;
+                sostav.numeration = null;
+                sostav.status = 1;
+                sostav.change = DateTime.Now;
+                sostav.change_user = user;
+                return context.SaveChanges(); // Применить операции
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationCancelIncomingSostav(id_arrival_sostav={0}, user={1})", id_arrival_sostav, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
@@ -4008,7 +5755,8 @@ namespace IDS
                 int doc_num = int.Parse(num_doc);
                 // Найдем документ в БД ИДС
                 EFIDS.Entities.UZ_DOC uz_doc = ef_uz_doc.Context.Where(d => d.num_uz == doc_num).FirstOrDefault();
-                if (uz_doc != null) {
+                if (uz_doc != null)
+                {
                     uz_doc = IsWagonOfUZ_DOC(num, uz_doc) ? uz_doc : null;
                 }
                 if (uz_doc == null)
@@ -4276,7 +6024,8 @@ namespace IDS
 
         public bool IsWagonOfUZ_DOC(int num, EFIDS.Entities.UZ_DOC uz_doc)
         {
-            try {
+            try
+            {
                 UZ_SMS uz_sms = new UZ_SMS();
                 OTPR otpr = uz_sms.GetOTPROfXML(uz_doc.xml_doc);
                 if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)

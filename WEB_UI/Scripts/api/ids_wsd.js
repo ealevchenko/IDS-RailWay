@@ -603,7 +603,106 @@
             },
         });
     };
-
+    // Операция принять вагон (перенести в левую часть)
+    ids_wsd.prototype.postOperationIncomingWagon = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/incoming/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationIncomingWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция вернуть принятый вагон (вернуть в правую часть)
+    ids_wsd.prototype.postOutgoingReturnIncomingWagon = function (operation_return, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/return_incoming/wagon/',
+            type: 'POST',
+            data: JSON.stringify(operation_return),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOutgoingReturnIncomingWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция принять состав на АМКР
+    ids_wsd.prototype.postOperationIncomingSostav = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/incoming/sostav/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationIncomingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Операция отмена принятия состава на АМКР
+    ids_wsd.prototype.postOperationCancelIncomingSostav = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/cancel_incoming/sostav/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationCancelIncomingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ СДАЧА СОСТАВОВ НА УЗ
     //=============================================================================================================
@@ -1046,7 +1145,6 @@
             },
         });
     };
-
     //=============================================================================================================
     //                                  РАЗДЕЛ ДОКУМЕНТЫ ЭПД
     //=============================================================================================================
@@ -1115,6 +1213,30 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_wsd.postOTPR_UZ_DOCOfXML", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+    // Получить дату последнего документа введенного в ручную по № накладной УЗ
+    ids_wsd.prototype.getDateTimeUZ_DOC_Of_manual_num_uz = function (num_uz, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/uz_doc/manual/date/num_uz/' + num_uz,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getDateTimeUZ_DOC_Of_manual_num_uz", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

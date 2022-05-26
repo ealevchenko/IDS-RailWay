@@ -56,6 +56,22 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/rwt/uz_doc/manual/date/num_uz/1
+        [Route("manual/date/num_uz/{num_uz}")]
+        [ResponseType(typeof(DateTime?))]
+        public DateTime? GetDateTimeUZ_DOC_Of_manual_num_uz(string num_uz)
+        {
+            try
+            {
+                DateTime? date = this.ef_ids.Database.SqlQuery<DateTime?>("select [IDS].[get_date_manual_epd]("+ num_uz.Trim()+");").FirstOrDefault();
+                return date;
+            }
+            catch (Exception e)
+            {
+                return null;// BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/uz_doc/num/32000000000518049746
         [Route("num/{num}")]
         [ResponseType(typeof(UZ_DOC))]

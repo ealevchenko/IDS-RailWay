@@ -2112,45 +2112,70 @@
         }
     };
     //---------------- ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ ----------------------
-    // Инициализация компонента "SELECT"
+    // Инициализация поля дата "INPUT" типа SELECT
     form_element.prototype.init_select = function (element, options) {
         //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
-        this.settings = $.extend({
-            data: null,
-            default_value: null,
-            fn_option: null,
-            fn_change: null,
-        }, options);
-
         this.$element = element;
         var $default_option = $('<option></option>', {
             'value': '-1',
             'text': langView('title_select', App.Langs),
         });
+        this.settings = $.extend({
+            data: [],
+            default_value: null,
+            fn_change: null,
+            check: null,
+        }, options);
         this.init = function () {
-            this.update(this.settings.data, this.settings.default_value, this.settings.fn_option);
+            this.update(this.settings.data, this.settings.default_value);
             if (typeof this.settings.fn_change === 'function') {
-                this.$element.on("change", this.settings.fn_change.bind(this));
+                this.$element.on("change", function (event) {
+                    //this.settings.fn_change.bind(this);
+                    if (typeof this.settings.fn_change) {
+                        this.settings.fn_change(event);
+                    }
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    };
+                }.bind(this));
             }
-
         };
         this.val = function (value) {
             if (value !== undefined) {
+                var disabled = this.$element.prop("disabled");
+                if (disabled) {
+                    this.$element.prop("disabled", false);
+                }
                 this.$element.val(value);
-                //this.$element.change();
+                if (disabled) {
+                    this.$element.prop("disabled", true);
+                }
             } else {
                 return this.$element.val();
             };
         };
-        this.update = function (data, default_value, fn_option) {
+        this.getNumber = function () {
+            return this.$element.val() === null ? null : Number(this.$element.val());
+        };
+        this.getNumberNull = function () {
+            return this.$element.val() === null || Number(this.$element.val()) === -1 ? null : Number(this.$element.val());
+        };
+        this.text = function (text) {
+            if (text !== undefined) {
+                this.$element.text(text);
+            } else {
+                return this.$element.text();
+            };
+        };
+        this.update = function (data, default_value) {
             this.$element.empty();
             element.append($default_option);
-            if (this.settings.data) {
-                $.each(this.settings.data, function (i, el) {
+            //if (default_value === -1) {
+            //    element.append($default_option);
+            //}
+            if (data) {
+                $.each(data, function (i, el) {
                     // Преобразовать формат
-                    if (typeof fn_option === 'function') {
-                        el = fn_option(el);
-                    }
                     if (el) {
                         var $option = $('<option></option>', {
                             'value': el.value,
@@ -2492,83 +2517,6 @@
         this.disable = function (clear) {
             this.$element.autocomplete("disable");
             if (clear) this.$element.val('');
-            this.$element.prop("disabled", true);
-        };
-        this.init();
-    };
-    // Инициализация поля дата "INPUT" типа SELECT
-    form_element.prototype.init_select = function (element, options) {
-        this.$element = element;
-        var $default_option = $('<option></option>', {
-            'value': '-1',
-            'text': langView('title_select', App.Langs),
-        });
-        this.settings = $.extend({
-            data: [],
-            default_value: null,
-            fn_change: null,
-            check: null,
-        }, options);
-        this.init = function () {
-            this.update(this.settings.data, this.settings.default_value);
-            if (typeof this.settings.fn_change === 'function') {
-                this.$element.on("change", function (event) {
-                    //this.settings.fn_change.bind(this);
-                    if (typeof this.settings.fn_change) {
-                        this.settings.fn_change(event);
-                    }
-                    if (typeof this.settings.check === 'function') {
-                        this.settings.check(element.val());
-                    };
-                }.bind(this));
-            }
-        };
-        this.val = function (value) {
-            if (value !== undefined) {
-                this.$element.val(value);
-            } else {
-                return this.$element.val();
-            };
-        };
-        this.text = function (text) {
-            if (text !== undefined) {
-                this.$element.text(text);
-            } else {
-                return this.$element.text();
-            };
-        };
-        this.update = function (data, default_value) {
-            this.$element.empty();
-            element.append($default_option);
-            //if (default_value === -1) {
-            //    element.append($default_option);
-            //}
-            if (data) {
-                $.each(data, function (i, el) {
-                    // Преобразовать формат
-                    if (el) {
-                        var $option = $('<option></option>', {
-                            'value': el.value,
-                            'text': el.text,
-                            'disabled': el.disabled,
-                        });
-                        this.$element.append($option);
-                    }
-                }.bind(this));
-            };
-            this.$element.val(default_value);
-        };
-        this.show = function () {
-            this.$element.show();
-        };
-        this.hide = function () {
-            this.$element.hide();
-        };
-        this.enable = function () {
-            this.$element.prop("disabled", false);
-        };
-        this.disable = function (clear) {
-            if (clear) this.$element.val(-1);
             this.$element.prop("disabled", true);
         };
         this.init();
@@ -3257,6 +3205,8 @@
             input_group_append_class: null,
             input_group_append_objs: null,
             input_group_obj_form: null,
+            element_default: null,
+            element_fn_change: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3304,7 +3254,7 @@
         /*        this.element = new this.fc.init_input(input.$input, '', null);*/
         this.element = new this.fe.init_input(input.$input, {
             default_value: '',
-            fn_change: null,
+            fn_change: this.settings.element_fn_change,
         });
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -3759,6 +3709,7 @@
             input_placeholder: null,
             input_multiple: null,
             input_required: null,
+            input_readonly: null,
             input_group: false,
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
@@ -3806,6 +3757,7 @@
             size: this.settings.input_size,
             multiple: this.settings.input_multiple,
             required: this.settings.input_required,
+            readonly: this.settings.input_readonly,
         });
         add_class(select.$select, this.settings.input_class);
         this.element = new this.fe.init_select(select.$select, {

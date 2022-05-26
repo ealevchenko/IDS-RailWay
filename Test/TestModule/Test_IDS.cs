@@ -52,12 +52,12 @@ namespace Test.TestModule
             int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
         }
 
-        public void IDSTransfer_IncomingArrivalSostav_All()
-        {
+        //public void IDSTransfer_IncomingArrivalSostav_All()
+        //{
 
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav();
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.IncomingArrivalSostav();
+        //}
         //public void IDSTransfer_SetStationOutgoingWagonsOfKIS()
         //{
 
@@ -438,7 +438,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationIncomingWagon()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            //ids.OperationIncomingWagon(1427183, @"EUROPE\test");
+            //ids.OperationIncomingWagon(1283802, 0, "675011", "31688709", "0", "7932", @"EUROPE\test");
         }
         /// <summary>
         /// Тест поиска документа по номеру накладной и номеру вагона

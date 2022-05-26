@@ -2,6 +2,10 @@
 (function (window) {
     'use strict';
 
+    var format_date = "YYYY-MM-DD";
+    var format_time = "HH:mm:ss";
+    var format_datetime = "YYYY-MM-DD HH:mm:ss";
+
     var App = window.App || {};
     var $ = window.jQuery;
     // Определим язык
@@ -25,6 +29,9 @@
             'vicc_mess_init_panel': 'Выполняю инициализацию модуля(view_incoming_cars)...',
             'vicc_mess_load_sostav': 'Загружаю информацию по выбранному составу...',
             'vicc_mess_load_vagon_detali': 'Загружаю информацию по вагону',//
+
+            'vicc_title_disable_wagon_out_way': 'Вагон находится на перегоне: "{0}" начало: {1} конец: {2}',
+            'vicc_title_disable_wagon_way': 'Вагон находится на станции: {0}, путь {1} начало: {2} конец: {3}',
         },
         'en':  //default language: English
         {
@@ -265,9 +272,13 @@
                 process--;
                 out_init(process);
             },
-            fn_refresh: function () {
+            fn_refresh: function (cb_refresh) {
                 this.out_clear();
-                this.update();
+                this.update(function () {
+                    if (typeof cb_refresh === 'function') {
+                        cb_refresh();
+                    }
+                }.bind(this));
             }.bind(this),
         });
         // Создадим и добавим макет формы (Принимаемый вагон детально)
@@ -278,12 +289,16 @@
             ids_wsd: null,
             ids_dir: null,
             fn_init: function (init) {
-                 //На проверку окончания инициализации
+                //На проверку окончания инициализации
                 process--;
                 out_init(process);
             }.bind(this),
-            fn_update: function (wagon) {
-                this.update();
+            fn_update: function (cb_refresh) {
+                this.update(function () {
+                    if (typeof cb_refresh === 'function') {
+                        cb_refresh();
+                    }
+                }.bind(this));
             }.bind(this),
         });
     };
@@ -294,7 +309,7 @@
         this.update();
     };
     // Обновить информацию по модуль
-    view_incoming_cars.prototype.update = function () {
+    view_incoming_cars.prototype.update = function (cb_refresh) {
         this.tablist.empty();
         this.table_incoming_cars.clear();
         if (this.id_sostav) {
@@ -318,11 +333,16 @@
                 this.view_cars_incoming(this.wagons)
                 // Закрыть форму детально
                 this.form_incoming_cars_detali.close();
-
                 LockScreenOff();
+                if (typeof cb_refresh === 'function') {
+                    cb_refresh();
+                }
             }.bind(this));
         } else {
             this.out_warning(langView('vicc_mess_not_id_sostav', App.Langs));
+            if (typeof cb_refresh === 'function') {
+                cb_refresh();
+            }
         }
     };
     // Показать вагоны не перенесеные влево
@@ -344,7 +364,7 @@
                 }
             }
 
-            var $icon_doc = $('<i class="far fa-file-alt" aria-hidden="true" title="' + langView('vicc_title_icon_doc', App.Langs)+'"></i>');
+            var $icon_doc = $('<i class="far fa-file-alt" aria-hidden="true" title="' + langView('vicc_title_icon_doc', App.Langs) + '"></i>');
 
             var $link = new this.fe_ui.a({
                 id: el.arrival_car_id,
@@ -359,18 +379,33 @@
                 $link.$alink.attr('data-toggle', 'list');
                 $link.$alink.attr('role', 'tab');
                 $link.$alink.attr('aria-controls', '');
-                if (el.arrival_car_consignee === 7932) {
-                    $link.$alink.addClass('list-group-item-success');
-                }
                 $link.$alink.prepend(' ').prepend($icon_arrival);
-                if (el.arrival_car_num_doc!==null) {
+                if (el.arrival_car_num_doc !== null) {
                     $link.$alink.prepend(' ').prepend($icon_doc);
                 }
+                // Проверка если вагон на АМКР
+                if (el.arrival_car_wim_cur_id) {
+                    //$link.$alink.addClass('disabled');
+                    var mess = null;
+                    if (el.arrival_car_wim_cur_id_outer_way) {
+                        // На перегоне
+                        mess = langView('vicc_title_disable_wagon_out_way', App.Langs).format(el['arrival_car_wim_cur_name_outer_way_' + App.Lang], el.arrival_car_wim_cur_outer_way_start.format(format_datetime), el.arrival_car_wim_cur_outer_way_end ? el.arrival_car_wim_cur_outer_way_end.format(format_datetime) : '');
+                    } else {
+                        // На пути станции
+                        mess = langView('vicc_title_disable_wagon_way', App.Langs).format(el['arrival_car_wim_cur_station_name_' + App.Lang], el['arrival_car_wim_cur_way_num_' + App.Lang] + '-' + el['arrival_car_wim_cur_way_name_' + App.Lang], el.arrival_car_wim_cur_way_start.format(format_datetime), el.arrival_car_wim_cur_way_end ? el.arrival_car_wim_cur_way_end.format(format_datetime) : '');
+                    }
+                    $link.$alink.attr('title', mess);
+                    $link.$alink.addClass('list-group-item-danger');
+                } else {
+                    if (el.arrival_car_consignee === 7932) {
+                        $link.$alink.addClass('list-group-item-success');
+                    }
+                };
                 $link.$alink.on('click', function (event) {
                     event.preventDefault();
                     // Обработать выбор
                     var id = Number($(event.currentTarget).attr('id'));
-                    this.view_car_detali(id, { type: 1 }); // Показать выбраный вагон в режиме "правка"
+                    this.view_car_detali(id, { type: (el.arrival_car_wim_cur_id ? 2 : 1) }); // Показать выбраный вагон в режиме "правка"
                 }.bind(this));
                 this.tablist.append($link.$alink);
             }
@@ -399,13 +434,27 @@
                 }.bind(this));
                 // Берем последнюю запись по вагону о подставляем значения
                 if (wagons && wagons.length) {
+
+                    // Преобразуем для понятия под погрузку (null=0)
+                    var id_station_on_amkr = wagons[0].arrival_uz_vagon_id_station_on_amkr === null ? 0 : wagons[0].arrival_uz_vagon_id_station_on_amkr;
+                    //
                     options.position = wagons[0].arrival_car_position_arrival + 1;
-                    //options.id_cargo = wagons[0].outgoing_uz_vagon_id_cargo;
-                    //options.laden = wagons[0].outgoing_uz_vagon_laden;
-                    //options.id_division = wagons[0].outgoing_uz_vagon_id_division;
-                    //options.code_division = wagons[0].outgoing_uz_vagon_id_division;
-                    //options.division_code = wagons[0].outgoing_uz_vagon_division_code;
-                    //options.station_uz_code = wagons[0].outgoing_uz_vagon_to_station_uz_code;
+                    options.code_stn_from = wagons[0].arrival_uz_document_code_stn_from                 // Станция отправления (для ручного режима)
+                    options.code_stn_to = wagons[0].arrival_uz_document_code_stn_to;                    // Станция назаначения (для ручного режима)
+                    options.station_code = wagons[0].arrival_uz_document_code_border_checkpoint;        // Станция погран перехода (для ручного режима)
+                    options.cross_time = wagons[0].arrival_uz_document_cross_time;                      // Время погран перехода (для ручного режима)
+                    options.id_station_on_amkr = id_station_on_amkr;         // Станция АМКР
+                    options.id_division_on_amkr = wagons[0].arrival_uz_vagon_id_division_on_amkr;       // Цех АМКР
+                    options.division_code = wagons[0].arrival_uz_vagon_division_code;                   // Цех АМКР
+                    options.code_payer_sender = wagons[0].arrival_uz_document_code_payer_sender;        // Платильщик по отправке  (для ручного режима)
+                    options.distance_way = wagons[0].arrival_uz_document_distance_way;                  // Тарифное расстояние  (для ручного режима)
+                    options.cargo_etsng_code = wagons[0].arrival_uz_vagon_cargo_etsng_code;             // Груз будет найден через етснг по отправке  (для ручного режима)
+                    options.cargo_gng_code = wagons[0].arrival_uz_vagon_cargo_gng_code;                 // Груз ГНГ (для ручного режима)
+
+                    options.code_shipper = wagons[0].arrival_uz_document_code_shipper;                  // Грузоотправитель  (для ручного режима)
+                    options.code_consignee = wagons[0].arrival_uz_document_code_consignee;              // Грузополучатель  (для ручного режима)
+                    options.id_certification_data = wagons[0].arrival_uz_vagon_id_certification_data;   // Сертификационные данные
+                    //
                     options.arrival_wagons = arrival_wagons;
                 } else {
                     options.position = 1;

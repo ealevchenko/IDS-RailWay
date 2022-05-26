@@ -20,6 +20,34 @@ namespace WEB_UI.Controllers.api
         public int? num { get; set; }
         public int? arrival_car_position_arrival { get; set; }
         public long? id_wir { get; set; }
+        // Добавил 10-05-2022
+        public long? arrival_car_wim_cur_id { get; set; }
+        public long? arrival_car_wim_cur_id_wagon_internal_routes { get; set; }
+        public int? arrival_car_wim_cur_id_station { get; set; }
+        public string arrival_car_wim_cur_station_name_ru { get; set; }
+        public string arrival_car_wim_cur_station_name_en { get; set; }
+        public string arrival_car_wim_cur_station_abbr_ru { get; set; }
+        public string arrival_car_wim_cur_station_abbr_en { get; set; }
+        public int? arrival_car_wim_cur_id_way { get; set; }
+        public int? arrival_car_wim_cur_way_on_id_park { get; set; }
+        public string arrival_car_wim_cur_way_num_ru { get; set; }
+        public string arrival_car_wim_cur_way_num_en { get; set; }
+        public string arrival_car_wim_cur_way_name_ru { get; set; }
+        public string arrival_car_wim_cur_way_name_en { get; set; }
+        public string arrival_car_wim_cur_way_abbr_ru { get; set; }
+        public string arrival_car_wim_cur_way_abbr_en { get; set; }
+        public DateTime? arrival_car_wim_cur_way_start { get; set; }
+        public DateTime? arrival_car_wim_cur_way_end { get; set; }
+        public int? arrival_car_wim_cur_id_outer_way { get; set; }
+        public string arrival_car_wim_cur_name_outer_way_ru { get; set; }
+        public string arrival_car_wim_cur_name_outer_way_en { get; set; }
+        public DateTime? arrival_car_wim_cur_outer_way_start { get; set; }
+        public DateTime? arrival_car_wim_cur_outer_way_end { get; set; }
+        public int? arrival_car_wim_cur_position { get; set; }
+        public string arrival_car_wim_cur_note { get; set; }
+        public long? arrival_car_wim_cur_parent_id { get; set; }
+        public long? arrival_car_wim_cur_id_wio { get; set; }
+        public string arrival_car_wim_cur_num_sostav { get; set; }
         public int? arrival_car_position { get; set; }
         public int? arrival_car_consignee { get; set; }
         public string arrival_car_num_doc { get; set; }
@@ -172,6 +200,10 @@ namespace WEB_UI.Controllers.api
         public int? arrival_uz_vagon_id_type_devision { get; set; }
         public bool? arrival_uz_vagon_empty_car { get; set; }
         public int? arrival_uz_vagon_kol_conductor { get; set; }
+        // добавил 10-05-2022
+        public bool? arrival_uz_vagon_manual { get; set; }
+        // добавил 22-05-2022
+        public int? arrival_uz_vagon_pay_summa { get; set; }
         public DateTime? arrival_uz_vagon_create { get; set; }
         public string arrival_uz_vagon_create_user { get; set; }
         public DateTime? arrival_uz_vagon_change { get; set; }
@@ -218,6 +250,8 @@ namespace WEB_UI.Controllers.api
         public int? arrival_uz_document_distance_way { get; set; }
         public string arrival_uz_document_note { get; set; }
         public long? arrival_uz_document_parent_id { get; set; }
+        // добавил 10-05-2022
+        public bool? arrival_uz_document_manual { get; set; }
         // Исправил 27.04.2022
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }
@@ -365,7 +399,7 @@ namespace WEB_UI.Controllers.api
                     .Context
                     .Where(s => s.num == num)
                     .ToList()
-                    .OrderBy(s=>s.id_arrival)
+                    .OrderBy(s => s.id_arrival)
                     .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
                 return Ok(list);
             }
@@ -411,7 +445,7 @@ namespace WEB_UI.Controllers.api
         [HttpPost]
         [Route("period")]
         [ResponseType(typeof(ArrivalCars))]
-        public IHttpActionResult PostArrivalCarsOfPeriodNums([FromBody]OperationPeriodNums value)
+        public IHttpActionResult PostArrivalCarsOfPeriodNums([FromBody] OperationPeriodNums value)
         {
             try
             {
@@ -427,9 +461,9 @@ namespace WEB_UI.Controllers.api
                     .Select(c => c.GetArrivalCars_ArrivalSostav()).ToList();
                 foreach (ArrivalCars car in list)
                 {
-                    int num = value.nums.Find(n=>n == car.num);
+                    int num = value.nums.Find(n => n == car.num);
 
-                    if (num>0)
+                    if (num > 0)
                     {
                         list_result.Add(car);
                     }
@@ -445,7 +479,7 @@ namespace WEB_UI.Controllers.api
         // POST api/ids/rwt/arrival_cars/
         [HttpPost]
         [Route("")]
-        public long PostArrivalCars([FromBody]ArrivalCars value)
+        public long PostArrivalCars([FromBody] ArrivalCars value)
         {
             try
             {
@@ -462,7 +496,7 @@ namespace WEB_UI.Controllers.api
         // PUT api/ids/rwt/arrival_cars/id
         [HttpPut]
         [Route("id/{id:long}")]
-        public long PutArrivalCars(long id, [FromBody]ArrivalCars value)
+        public long PutArrivalCars(long id, [FromBody] ArrivalCars value)
         {
             try
             {
@@ -506,7 +540,8 @@ namespace WEB_UI.Controllers.api
                     .Select(c => c.GetArrivalCars()).ToList();
                 List<long> list_del = new List<long>();
 
-                foreach (ArrivalCars car in list) {
+                foreach (ArrivalCars car in list)
+                {
                     list_del.Add(car.id);
                 }
 
