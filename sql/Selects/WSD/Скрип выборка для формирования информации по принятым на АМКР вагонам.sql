@@ -1,6 +1,6 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-Test-Railway]
 
-declare @id_sostav int = 171189
+declare @id_sostav int = 149632--171467 --171467
 
 
 	select 
@@ -8,6 +8,36 @@ declare @id_sostav int = 171189
 		,arr_car.[num]
 		,arr_car.[position_arrival] as arrival_car_position_arrival
 		,wir.id as id_wir
+		-- Добавил 10-05-2022
+		-->================================= ТЕКУЩАЯ ПОЗИЦИЯ ВАГОНА========================
+		,wim_cur.id as arrival_car_wim_cur_id
+		,wim_cur.[id_wagon_internal_routes] as arrival_car_wim_cur_id_wagon_internal_routes
+		,wim_cur.[id_station] as arrival_car_wim_cur_id_station
+		,wim_cur_station.station_name_ru as arrival_car_wim_cur_station_name_ru
+		,wim_cur_station.station_name_en as arrival_car_wim_cur_station_name_en
+		,wim_cur_station.station_abbr_ru as arrival_car_wim_cur_station_abbr_ru
+		,wim_cur_station.station_abbr_en as arrival_car_wim_cur_station_abbr_en
+		,wim_cur.[id_way] as arrival_car_wim_cur_id_way
+		,wim_cur_way.[id_park] as arrival_car_wim_cur_way_on_id_park
+		,wim_cur_way.[way_num_ru] as arrival_car_wim_cur_way_num_ru
+		,wim_cur_way.[way_num_en] as arrival_car_wim_cur_way_num_en
+		,wim_cur_way.[way_name_ru] as arrival_car_wim_cur_way_name_ru
+		,wim_cur_way.[way_name_en] as arrival_car_wim_cur_way_name_en
+		,wim_cur_way.[way_abbr_ru] as arrival_car_wim_cur_way_abbr_ru
+		,wim_cur_way.[way_abbr_en] as arrival_car_wim_cur_way_abbr_en
+		,wim_cur.[way_start] as arrival_car_wim_cur_way_start
+		,wim_cur.[way_end] as arrival_car_wim_cur_way_end
+		,wim_cur.[id_outer_way] as arrival_car_wim_cur_id_outer_way
+		,wim_cur_outer_way.[name_outer_way_ru] as arrival_car_wim_cur_name_outer_way_ru
+		,wim_cur_outer_way.[name_outer_way_en] as arrival_car_wim_cur_name_outer_way_en
+		,wim_cur.[outer_way_start] as arrival_car_wim_cur_outer_way_start
+		,wim_cur.[outer_way_end] as arrival_car_wim_cur_outer_way_end
+		,wim_cur.[position] as arrival_car_wim_cur_position
+		,wim_cur.[note] as arrival_car_wim_cur_note
+		,wim_cur.[parent_id] as arrival_car_wim_cur_parent_id
+		,wim_cur.[id_wio] as arrival_car_wim_cur_id_wio
+		,wim_cur.[num_sostav] as arrival_car_wim_cur_num_sostav
+		--
 		-->================================= ПРИБЫТИЕ =====================================
 		--> ПРИБЫТИЕ ВАГОНОВ [IDS].[ArrivalCars]
 		--,arr_car.[id_arrival]
@@ -187,6 +217,9 @@ declare @id_sostav int = 171189
 		,arr_dir_divis_amkr.[id_type_devision] as arrival_uz_vagon_id_type_devision	-- id типа подразделения [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,arr_doc_vag.[empty_car] as arrival_uz_vagon_empty_car
 		,arr_doc_vag.[kol_conductor] as arrival_uz_vagon_kol_conductor
+		-- добавил 10-05-2022
+		,arr_doc_vag.[manual] as arrival_uz_vagon_manual
+		,arr_doc_vag.[pay_summa] as arrival_uz_vagon_pay_summa
 		,arr_doc_vag.[create] as arrival_uz_vagon_create
 		,arr_doc_vag.[create_user] as arrival_uz_vagon_create_user
 		,arr_doc_vag.[change] as arrival_uz_vagon_change
@@ -244,6 +277,8 @@ declare @id_sostav int = 171189
 		,arr_doc_uz.[distance_way]  as arrival_uz_document_distance_way
 		,arr_doc_uz.[note]  as arrival_uz_document_note
 		,arr_doc_uz.[parent_id]  as arrival_uz_document_parent_id
+		-- добавил 10-05-2022
+		,arr_doc_uz.[manual] as arrival_uz_document_manual
 		--,arr_doc_uz.[create]
 		--,arr_doc_uz.[create_user]
 		--,arr_doc_uz.[change]
@@ -279,6 +314,9 @@ declare @id_sostav int = 171189
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON arr_car.id = wir.[id_arrival_car]
+		-- Добавил 10-05-2022
+		--> Текущее место нахождения
+		Left JOIN IDS.[WagonInternalMovement] as wim_cur ON wim_cur.id = (SELECT top(1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes] = (SELECT TOP (1) [id]  FROM [IDS].[WagonInternalRoutes] where [num] = arr_car.[num] order by 1 desc) and [close] is null order by 1 desc)
 		--> Текущая операция
         --Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
@@ -287,7 +325,8 @@ declare @id_sostav int = 171189
 		 --> Документы на группу вагонов (состав) по принятию ваг она на АМКР
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Документы SAP Входящая поставка
-		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
+		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
+		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON arr_car.id = sap_is.id_arrival_car
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
 		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
@@ -298,7 +337,7 @@ declare @id_sostav int = 171189
 		--Left JOIN IDS.Directory_Wagons as dir_wagon ON arr_car.num = dir_wagon.num
 		--> Справочник аренд
 		--Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and rent_end is null order by [id] desc)	
-		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and [rent_start]<=arr_sost.[date_adoption] order by [rent_start] desc)	
+		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and [rent_start]<=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and [rent_start]<=arr_sost.[date_adoption])) order by [rent_start] desc)	
 		----> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
 		----> Справочник Ограничение погрузки по прибытию
@@ -339,6 +378,13 @@ declare @id_sostav int = 171189
 		Left JOIN [IDS].[Directory_Ways] as arr_dir_way_on ON arr_sost.[id_way] =  arr_dir_way_on.id
 		--> Справочник Подразделений АМКР (по отправке)
 		Left JOIN [IDS].[Directory_Divisions] as arr_dir_divis_amkr ON arr_doc_vag.[id_division_on_amkr] = arr_dir_divis_amkr.id
+		-- Добавил 10-05-2022
+		--> Справочник Станции АМКР (станция текущего местаположения)
+		Left JOIN IDS.Directory_Station as wim_cur_station ON wim_cur.[id_station] =  wim_cur_station.id
+		--> Справочник Путь АМКР (путь текущего местаположения)
+		Left JOIN [IDS].[Directory_Ways] as wim_cur_way ON wim_cur.[id_way] =  wim_cur_way.id
+		--> Справочник Перегонов АМКР (перегон текущего местаположения)
+		Left JOIN [IDS].[Directory_OuterWays] as wim_cur_outer_way ON wim_cur.[id_outer_way] =  wim_cur_outer_way.id
 		--..............
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs

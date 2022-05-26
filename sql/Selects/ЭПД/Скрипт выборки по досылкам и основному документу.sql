@@ -91,6 +91,8 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-Test-Railway].[IDS].[ArrivalCars]
   where [id_arrival_uz_vagon]=446653
+
+
   SELECT TOP (1000) [id]
       ,[id_arrived]
       ,[id_sostav]
