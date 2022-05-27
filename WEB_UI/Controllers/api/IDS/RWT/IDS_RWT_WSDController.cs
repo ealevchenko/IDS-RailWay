@@ -768,6 +768,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     public class OperationIncomingSostav
     {
         public long id_arrival_sostav { get; set; }
+        public int num_doc { get; set; }
         public int train { get; set; }
         public string composition_index { get; set; }
         public DateTime date_arrival { get; set; }
@@ -1637,7 +1638,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationIncomingSostav(value.id_arrival_sostav, value.train, value.composition_index, value.date_arrival, value.date_adoption, value.date_adoption_act, value.id_station_from, value.id_station_on, value.id_way, value.numeration, value.count, value.user);
+                int result = ids_wir.OperationIncomingSostav(value.id_arrival_sostav, value.num_doc, value.train, value.composition_index, value.date_arrival, value.date_adoption, value.date_adoption_act, value.id_station_from, value.id_station_on, value.id_way, value.numeration, value.count, value.user);
                 return Ok(result);
             }
             catch (Exception e)

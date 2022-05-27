@@ -703,6 +703,29 @@
             },
         });
     };
+    // Получить последний номер по станции за текущий год
+    ids_wsd.prototype.getCurrentNumArrivalSostavOfStation = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_sostav/current_num/station/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getCurrentNumArrivalSostavOfStation", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ СДАЧА СОСТАВОВ НА УЗ
     //=============================================================================================================

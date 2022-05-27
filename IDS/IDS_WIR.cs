@@ -2294,7 +2294,7 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
-        public int OperationIncomingSostav(long id_arrival_sostav, int train, string composition_index, DateTime date_arrival,
+        public int OperationIncomingSostav(long id_arrival_sostav, int num_doc, int train, string composition_index, DateTime date_arrival,
             DateTime date_adoption, DateTime? date_adoption_act, int id_station_from, int id_station_on, int id_way, bool? numeration,
             int count, string user)
         {
@@ -2331,7 +2331,7 @@ namespace IDS
                     if (last_wir != null)
                     {
                         if (last_wir.id_arrival_car == car.id) return (int)errors_base.arrival_cars_wir;    // Записи по WagonInternalRoutes - уже имеет ссылку на прибытие (Состав уже принят)
-                        if (last_wir.close != null) return (int)errors_base.open_wir;                      // Записи по WagonInternalRoutes - открыта
+                        //if (last_wir.id_arrival_car == car.id && last_wir.close != null) return (int)errors_base.open_wir;                      // Записи по WagonInternalRoutes - открыта
                         parent_id = last_wir.id;
                     }
 
@@ -2356,7 +2356,7 @@ namespace IDS
                 }
 
                 // Обновим информацию о составе
-
+                sostav.num_doc = num_doc;
                 sostav.train = train;
                 sostav.composition_index = composition_index;
                 sostav.date_arrival = date_arrival;
@@ -2424,6 +2424,7 @@ namespace IDS
                     ef_wir.Delete(wir.id);
                 }
                 // Обновим информацию о составе
+                sostav.num_doc = null;
                 sostav.date_adoption = null;
                 sostav.date_adoption_act = null;
                 sostav.id_station_on = null;

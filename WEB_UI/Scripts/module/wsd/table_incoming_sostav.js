@@ -45,7 +45,7 @@
 
             'tis_title_yes': 'Да',
             'tis_title_yellow': 'В работе',
-            'tis_title_green': 'Сдан',
+            'tis_title_green': 'Принят',
             'tis_title_red': 'Отмена',
             'tis_title_all': 'Все',
             'tis_title_button_export': 'Экспорт',

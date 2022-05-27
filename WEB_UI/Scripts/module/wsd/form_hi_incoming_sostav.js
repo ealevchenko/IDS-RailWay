@@ -495,6 +495,11 @@
                     if (id > 0) {
                         this.form.disabled('id_way', false);
                         this.list_station_on = this.ids_dir.getListWays2('id', 'way_num', 'way_name', App.Lang, function (i) { return !i.way_delete && i.id_station === id && i.crossing_uz });
+                        if (this.settings.mode === 1) {
+                            this.ids_wsd.getCurrentNumArrivalSostavOfStation(id, function (current_num) {
+                                this.form.set('num_doc', Number(current_num) + 1);
+                            }.bind(this))
+                        }
                     } else {
                         this.form.disabled('id_way', true);
                         this.list_station_on = [];
@@ -593,7 +598,7 @@
                 label: langView('fhiis_title_label_num_doc', App.Langs),
                 placeholder: langView('fhiis_title_placeholder_num_doc', App.Langs),
                 maxlength: null,
-                required: null,
+                required: true,
                 control: null,
                 list: null,
                 select: null,
@@ -843,7 +848,6 @@
                     if (this.form && this.form.$form_add && this.form.$form_edit) {
                         this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
                     }
-
                     if (typeof this.settings.fn_init === 'function') {
                         this.settings.fn_init(this.init);
                     }
@@ -994,6 +998,7 @@
         if (this.settings.mode === 1) {
             var operation = {
                 id_arrival_sostav: data.new.id,
+                num_doc : Number(data.new.num_doc),
                 train: data.new.train,
                 composition_index: data.new.composition_index,
                 date_arrival: data.new.date_arrival,

@@ -306,6 +306,7 @@
             'ficcd_title_update': 'обновлена',
             'ficcd_title_uz_epd': 'с БД УЗ и ЭПД',
             'ficcd_title_uz': 'только с БД УЗ.',
+            'ficcd_title_on_the_road': 'На дорогу',
 
             'fogcd_form_search_epd': 'Найти ЭПД',
             'fogcd_form_search_car_uz_epd_message': 'Если ЭПД не будет найден в БД ИДС, включить в поиск документа систему «УЗ Клиент»?. Внимание! Поиск ЭПД в системе «УЗ Клиент» может занять несколько минут!',
@@ -729,7 +730,7 @@
                     label: langView('ficcd_label_position_arrival', App.Langs),
                     label_class: 'mb-1',
                     input_size: null,
-                    input_class: 'inp-manual-epd',
+                    input_class: 'inp-manual',
                     input_title: langView('ficcd_title_position_arrival', App.Langs),
                     input_placeholder: null,
                     input_required: true,
@@ -1622,7 +1623,7 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_data: this.list_divisions,
+                    element_data: [{ value: 9999, text: langView('ficcd_title_on_the_road', App.Langs) }].concat(this.list_divisions),
                     element_minLength: 0,
                     element_out_value: true,
                     element_val_inp: 'value',
@@ -5229,7 +5230,7 @@
             // Настроем отображение если окно в режиме редактирования
             if (this.wagon_settings.type === 1) {
                 // Прочесть текущее
-                id_certification_data = null;
+                id_certification_data = this.wagon_settings.id_certification_data !== null ? this.wagon_settings.id_certification_data : -1;
                 id_commercial_condition = null;
                 zayava = this.epd.zayava ? this.epd.zayava : zayava;
                 kol_pac = this.epd.cargo.kol_pac ? this.epd.cargo.kol_pac : kol_pac;

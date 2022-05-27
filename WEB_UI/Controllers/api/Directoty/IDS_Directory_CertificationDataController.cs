@@ -32,7 +32,7 @@ namespace WEB_UI.Controllers.api
             try
             {
                 List<Directory_CertificationData> list = this.ef_dir.Context.ToList()
-                    .Select(m => m.GetDirectory_CertificationData()).ToList();
+                    .Select(m => m.GetDirectory_CertificationData()).OrderBy(c=>c.certification_data_ru).ToList();
                 return Ok(list);
             }
             catch (Exception e)
