@@ -5094,6 +5094,7 @@
                     function (value) {
                         code = value.code;
                         name = value.name;
+                        if (this.mode_epd === 0) this.elements.autocomplete_name_plat.disable();
                         this.elements.button_add_payer_sender.hide();
                         this.form.set_validation_object_ok(null, 'name_plat', "ok", true);
                     }.bind(this),
@@ -5104,6 +5105,7 @@
                     }.bind(this),
                     function (value) {
                         // нет входных данных данных
+                        if (this.mode_epd === 0) this.elements.autocomplete_name_plat.enable();
                         this.elements.button_add_payer_sender.hide();
                         this.form.set_validation_object_error(null, 'name_plat', langView('ficcd_mess_valid_not_name_plat', App.Langs), true);
                     }.bind(this)
