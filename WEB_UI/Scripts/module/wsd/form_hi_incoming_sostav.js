@@ -174,6 +174,7 @@
 
                 //},
             });
+            this.mf_edit.modal.$modal_bt_ok
             // Создадим форму правки операторов
             var FIF = App.form_infield;
             this.form = new FIF();

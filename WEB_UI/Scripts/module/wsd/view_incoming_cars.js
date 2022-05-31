@@ -220,7 +220,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                //this.action_present_wagon();
+                this.action_car_manual();
             }.bind(this),
         });
         panelElement.$list_cars_header.append($div_bt_list_cars_header.append(bt_search_epd.$button).append(' ').append(bt_car_manual.$button));
@@ -241,7 +241,7 @@
         // Покажем элементы на форме
         this.$panel.append(panelElement.$element);
         // Запускаем 2 процесса инициализации (паралельно)
-        var process = 2;
+        var process = 3;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -301,6 +301,34 @@
                 }.bind(this));
             }.bind(this),
         });
+        // Создадим и добавим макет формы (Ручной ввод вагонов)
+        var FMIC = App.form_manual_incoming_cars;
+        this.form_manual_incoming_cars = new FMIC();
+        this.form_manual_incoming_cars.init({
+            alert: this.alert,
+            ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                // На проверку окончания инициализации
+                //----------------------------------
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+                //----------------------------------
+            }.bind(this),
+            fn_add: function (result) {
+                //this.out_clear();
+                //this.action_refresh(function () {
+                //    if (result && result.result > 0) {
+                //        this.out_info(langView('ticc_mess_ok_operation_incoming_sostav', App.Langs));
+                //    } else {
+                //        this.out_info(langView('ticc_mess_error_operation_incoming_sostav', App.Langs));
+                //    }
+                //}.bind(this));
+            }.bind(this),
+            fn_db_update: function () {
+
+            }.bind(this),
+        });
     };
     // Открыть модуль 
     view_incoming_cars.prototype.open = function (id_sostav) {
@@ -354,62 +382,64 @@
         }).sort(function (a, b) {
             return Number(a.arrival_car_position) - Number(b.arrival_car_position);
         });
-        $.each(wagons, function (i, el) {
-            var $icon_arrival = $('<i class="fas fa-train" aria-hidden="true"></i>');
-            if (el.arrival_car_id_transfer) {
-                $icon_arrival = $('<i class="far fa-share" aria-hidden="true"></i>');
-            } else {
-                if (el.arrival_car_note) {
-                    $icon_arrival = $('<i class="far fa-hand-paper" aria-hidden="true"></i>');
-                }
-            }
-
-            var $icon_doc = $('<i class="far fa-file-alt" aria-hidden="true" title="' + langView('vicc_title_icon_doc', App.Langs) + '"></i>');
-
-            var $link = new this.fe_ui.a({
-                id: el.arrival_car_id,
-                class: 'list-group-item list-group-item-action',
-                href: '#',
-                text: el.num,
-                target: null,
-                title: null,
-            });
-            //el.outgoing_car_id, 'list-group-item list-group-item-action', '#', el.num, null, null
-            if ($link && $link.$alink && $link.$alink.length > 0) {
-                $link.$alink.attr('data-toggle', 'list');
-                $link.$alink.attr('role', 'tab');
-                $link.$alink.attr('aria-controls', '');
-                $link.$alink.prepend(' ').prepend($icon_arrival);
-                if (el.arrival_car_num_doc !== null) {
-                    $link.$alink.prepend(' ').prepend($icon_doc);
-                }
-                // Проверка если вагон на АМКР
-                if (el.arrival_car_wim_cur_id) {
-                    //$link.$alink.addClass('disabled');
-                    var mess = null;
-                    if (el.arrival_car_wim_cur_id_outer_way) {
-                        // На перегоне
-                        mess = langView('vicc_title_disable_wagon_out_way', App.Langs).format(el['arrival_car_wim_cur_name_outer_way_' + App.Lang], el.arrival_car_wim_cur_outer_way_start.format(format_datetime), el.arrival_car_wim_cur_outer_way_end ? el.arrival_car_wim_cur_outer_way_end.format(format_datetime) : '');
-                    } else {
-                        // На пути станции
-                        mess = langView('vicc_title_disable_wagon_way', App.Langs).format(el['arrival_car_wim_cur_station_name_' + App.Lang], el['arrival_car_wim_cur_way_num_' + App.Lang] + '-' + el['arrival_car_wim_cur_way_name_' + App.Lang], el.arrival_car_wim_cur_way_start.format(format_datetime), el.arrival_car_wim_cur_way_end ? el.arrival_car_wim_cur_way_end.format(format_datetime) : '');
-                    }
-                    $link.$alink.attr('title', mess);
-                    $link.$alink.addClass('list-group-item-danger');
+        if (wagons !== null && wagons.length > 0) {
+            $.each(wagons, function (i, el) {
+                var $icon_arrival = $('<i class="fas fa-train" aria-hidden="true"></i>');
+                if (el.arrival_car_id_transfer) {
+                    $icon_arrival = $('<i class="far fa-share" aria-hidden="true"></i>');
                 } else {
-                    if (el.arrival_car_consignee === 7932) {
-                        $link.$alink.addClass('list-group-item-success');
+                    if (el.arrival_car_note) {
+                        $icon_arrival = $('<i class="far fa-hand-paper" aria-hidden="true"></i>');
                     }
-                };
-                $link.$alink.on('click', function (event) {
-                    event.preventDefault();
-                    // Обработать выбор
-                    var id = Number($(event.currentTarget).attr('id'));
-                    this.view_car_detali(id, { type: (el.arrival_car_wim_cur_id ? 2 : 1) }); // Показать выбраный вагон в режиме "правка"
-                }.bind(this));
-                this.tablist.append($link.$alink);
-            }
-        }.bind(this));
+                }
+
+                var $icon_doc = $('<i class="far fa-file-alt" aria-hidden="true" title="' + langView('vicc_title_icon_doc', App.Langs) + '"></i>');
+
+                var $link = new this.fe_ui.a({
+                    id: el.arrival_car_id,
+                    class: 'list-group-item list-group-item-action',
+                    href: '#',
+                    text: el.num,
+                    target: null,
+                    title: null,
+                });
+                //el.outgoing_car_id, 'list-group-item list-group-item-action', '#', el.num, null, null
+                if ($link && $link.$alink && $link.$alink.length > 0) {
+                    $link.$alink.attr('data-toggle', 'list');
+                    $link.$alink.attr('role', 'tab');
+                    $link.$alink.attr('aria-controls', '');
+                    $link.$alink.prepend(' ').prepend($icon_arrival);
+                    if (el.arrival_car_num_doc !== null) {
+                        $link.$alink.prepend(' ').prepend($icon_doc);
+                    }
+                    // Проверка если вагон на АМКР
+                    if (el.arrival_car_wim_cur_id) {
+                        //$link.$alink.addClass('disabled');
+                        var mess = null;
+                        if (el.arrival_car_wim_cur_id_outer_way) {
+                            // На перегоне
+                            mess = langView('vicc_title_disable_wagon_out_way', App.Langs).format(el['arrival_car_wim_cur_name_outer_way_' + App.Lang], el.arrival_car_wim_cur_outer_way_start.format(format_datetime), el.arrival_car_wim_cur_outer_way_end ? el.arrival_car_wim_cur_outer_way_end.format(format_datetime) : '');
+                        } else {
+                            // На пути станции
+                            mess = langView('vicc_title_disable_wagon_way', App.Langs).format(el['arrival_car_wim_cur_station_name_' + App.Lang], el['arrival_car_wim_cur_way_num_' + App.Lang] + '-' + el['arrival_car_wim_cur_way_name_' + App.Lang], el.arrival_car_wim_cur_way_start.format(format_datetime), el.arrival_car_wim_cur_way_end ? el.arrival_car_wim_cur_way_end.format(format_datetime) : '');
+                        }
+                        $link.$alink.attr('title', mess);
+                        $link.$alink.addClass('list-group-item-danger');
+                    } else {
+                        if (el.arrival_car_consignee === 7932) {
+                            $link.$alink.addClass('list-group-item-success');
+                        }
+                    };
+                    $link.$alink.on('click', function (event) {
+                        event.preventDefault();
+                        // Обработать выбор
+                        var id = Number($(event.currentTarget).attr('id'));
+                        this.view_car_detali(id, { type: (el.arrival_car_wim_cur_id ? 2 : 1) }); // Показать выбраный вагон в режиме "правка"
+                    }.bind(this));
+                    this.tablist.append($link.$alink);
+                }
+            }.bind(this));
+        };
     };
     // Показать вагоны перенесеные влево
     view_incoming_cars.prototype.view_cars_incoming = function (wagons) {
@@ -465,6 +495,12 @@
             }
             this.form_incoming_cars_detali.wagon_detali(id, options);
         }
+    };
+    //--------------------------------------------------------------------------------
+    view_incoming_cars.prototype.action_car_manual = function () {
+        this.out_clear();
+        //this.id_sostav
+        this.form_manual_incoming_cars.add();
     };
     //--------------------------------------------------------------------------------
     // Показать

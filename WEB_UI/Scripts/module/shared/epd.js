@@ -80,7 +80,7 @@
             //----------------------------------------------------------
             // Раздел ROUTE станции отправки и прибытия и коды администрации отпр и прибытия
             if (main_otpr.route && main_otpr.route.length > 0) {
-                var route = main_otpr.route[0];
+                var route = main_otpr.route[main_otpr.route.length-1];
                 // Данные по умолчанию
                 epd.route.stn_from = route.stn_from; //887500;
                 epd.route.name_from = route.name_from; //'АБАЗА'

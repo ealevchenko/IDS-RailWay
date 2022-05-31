@@ -2271,7 +2271,7 @@
             };
         };
         this.update = function (default_value) {
-            this.$element.val(default_value);
+            this.val(default_value);
         };
         this.show = function () {
             this.$element.show();
@@ -3402,7 +3402,7 @@
             checkbox_class: null,
             checkbox_title: null,
             checkbox_required: null,
-            checkbox_readonly: true,
+            checkbox_readonly: false,
             element_default: null,
             element_change: null,
         }, options);
@@ -3479,6 +3479,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_obj_form: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3528,7 +3529,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3537,7 +3539,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3642,20 +3645,7 @@
                 break;
             };
         }
-        //// Input
-        //var input = new this.fe.input({
-        //    id: this.settings.id,
-        //    type: 'text',
-        //    class: 'form-control',
-        //    title: this.settings.input_title,
-        //    placeholder: this.settings.input_placeholder,
-        //    required: this.settings.input_required,
-        //    maxlength: this.settings.input_maxlength,
-        //    pattern: this.settings.input_pattern,
-        //    min: this.settings.input_min,
-        //    max: this.settings.input_max,
-        //    step: this.settings.input_step,
-        //});
+        //
         add_class(obj_el, this.settings.input_class);
         this.element = new this.fe.init_autocomplete(obj_el, {
             data: this.settings.element_data,
@@ -3666,7 +3656,7 @@
         });
         //
         var ifb = new this.fe.bs_invalid_feedback();
-
+        //
         if (this.settings.input_group) {
             var ig = new this.fe.bs_input_group();
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
@@ -3951,6 +3941,7 @@
                     add_element(checkbox.$element, content, obj);
                 };
                 if (obj.obj === 'bs_textarea') {
+                    obj.options.input_group_obj_form = obj_form;
                     var textarea = new this.bs_textarea(obj.options);
                     if (textarea && textarea.element) {
                         obj_form.views.push({
@@ -4302,15 +4293,17 @@
             } else {
                 this.alert = this.settings.alert;
             };
-
-            // Привяжим события кнопок
+            // Привяжим события кнопок и кнопки
             modal.$modal_bt_ok.on('click', this.settings.ok_click);
             modal.$modal_bt_close.on('click', this.settings.close_click);
+            this.$bt_ok = modal.$modal_bt_ok;
+            this.$bt_close = modal.$modal_bt_close;
             //if (this.settings.form) {
             //    this.form_add = this.settings.form.$form_add;
             //    this.form_edit = this.settings.form.$form_edit;
             //    modal.$modal_body.append(this.form_add).append(this.form_edit);
             //}
+
             // Привяжим html модальной формы
             this.$modal = modal.$modal;
             this.$body = modal.$modal_body;

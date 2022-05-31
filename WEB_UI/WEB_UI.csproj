@@ -1700,6 +1700,7 @@
     <Content Include="Content\module\directory\table_dir_way.css" />
     <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\module\wsd\form_hd_outgoing_sostav.css" />
+    <Content Include="Content\module\wsd\form_manual_incoming_cars.css" />
     <Content Include="Content\module\wsd\form_hi_incoming_sostav.css" />
     <Content Include="Content\module\wsd\form_ho_outgoing_sostav.css" />
     <Content Include="Content\module\wsd\form_incoming_cars_detali.css" />
@@ -1802,6 +1803,7 @@
     <Content Include="Scripts\module\wsd\form_hd_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\form_hi_incoming_sostav.js" />
     <Content Include="Scripts\module\wsd\form_incoming_cars_detali.js" />
+    <Content Include="Scripts\module\wsd\form_manual_incoming_cars.js" />
     <Content Include="Scripts\module\wsd\form_outgoing_cars_detali.js" />
     <Content Include="Scripts\module\wsd\form_ho_outgoing_sostav.js" />
     <Content Include="Scripts\module\wsd\table_incoming_cars.js" />
