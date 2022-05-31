@@ -1,6 +1,6 @@
 /****** Script for SelectTopNRows command from SSMS  ******/
-declare @id_document_dos int = 296580
-declare @id_document int = 0--296580
+declare @id_document_dos int = 296607--296580
+declare @id_document int = 296580--296580
 
 SELECT TOP (1000) [id]
       ,[id_doc_uz]
