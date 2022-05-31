@@ -200,8 +200,8 @@ namespace UZ
                 HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url+ url_api + api_comand);
                 //request.Proxy =  myProxy;
                 request.Method = metod;
-                request.PreAuthenticate = true;
-                request.Credentials = CredentialCache.DefaultCredentials;
+                //request.PreAuthenticate = true;
+                //request.Credentials = CredentialCache.DefaultCredentials;
                 request.Accept = accept;
                 request.ContentType = content_type;
                 if (!String.IsNullOrWhiteSpace(postData)) {
