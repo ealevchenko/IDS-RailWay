@@ -121,6 +121,7 @@
         // Создадим ссылку на модуль работы с базой данных
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.elements = {}; // Все элементы формы
+        this.id_sostav = null;
         // Загрузим справочные данные, определим поля формы правки
         //this.load_db([], false, function (result) {
         // Подгрузили списки
@@ -455,10 +456,11 @@
             }.bind(this));
             // Продолжим 
             if (valid) {
-                //var operation = {
-                //    id_arrival_sostav:
-                //    cars:car_out,
-                //};
+                var operation = {
+                    id_arrival_sostav: this.id_sostav,
+                    check: check,
+                    cars: car_out,
+                };
 
                 //// Сохраним номера вагонов для выбора
                 //pn_search.num_cars_valid = car_out;
@@ -477,7 +479,8 @@
         }
     };
     // Открыть форму добавить
-    form_manual_incoming_cars.prototype.add = function () {
+    form_manual_incoming_cars.prototype.add = function (id_sostav) {
+        this.id_sostav = id_sostav;
         this.out_clear();
         this.mf_edit.open(langView('fmic_title_form_add', App.Langs));
     };

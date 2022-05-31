@@ -499,8 +499,7 @@
     //--------------------------------------------------------------------------------
     view_incoming_cars.prototype.action_car_manual = function () {
         this.out_clear();
-        //this.id_sostav
-        this.form_manual_incoming_cars.add();
+        this.form_manual_incoming_cars.add(this.id_sostav);
     };
     //--------------------------------------------------------------------------------
     // Показать
