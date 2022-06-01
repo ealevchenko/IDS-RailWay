@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using UZ;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using EFIDS.Helper;
 
 namespace IDS
 {
@@ -644,8 +645,8 @@ namespace IDS
         public int num { get; set; }
         public int position { get; set; }
         public ArrivalCars car { get; set; }
-        public ArrivalSostav sostav { get; set; }
         public EFIDS.Entities.UZ_DOC new_uz_doc { get; set; }
+        public WagonInternalRoutes wir { get; set; }
         public int type_update { get; set; }
     }
 
@@ -2454,8 +2455,16 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
-
-        public ResultObject OperationManualSearchIncomingWagon(long id_arrival_sostav, bool check, List<int> num_cars, string user)
+        /// <summary>
+        /// Метод поиска информации по вагонам введенным вручную 
+        /// </summary>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="check"></param>
+        /// <param name="num_cars"></param>
+        /// <param name="as_client"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultObject OperationManualSearchIncomingWagon(long id_arrival_sostav, bool check, List<int> num_cars, bool as_client, string user)
         {
             ResultObject res = new ResultObject();
             try
@@ -2471,12 +2480,7 @@ namespace IDS
                 EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
                 EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
-                //EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
-                //EFSAPIncomingSupply ef_sap = new EFSAPIncomingSupply(context);
-                //EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
-                //EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
-                //EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
-
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
 
                 if (num_cars == null || num_cars.Count() == 0)
                 {
@@ -2496,8 +2500,8 @@ namespace IDS
                     return res;
                 }
                 DateTime curr_date = sostav.date_arrival;
-                DateTime start_date = sostav.date_arrival.AddDays(-1);
-                DateTime stop_date = sostav.date_arrival.AddDays(1);
+                DateTime start_date = sostav.date_arrival.AddDays(-2);
+                DateTime stop_date = sostav.date_arrival.AddDays(2);
 
                 List<ArrivalCars> period_car = new List<ArrivalCars>();
 
@@ -2506,62 +2510,60 @@ namespace IDS
                 foreach (int num in num_cars)
                 {
                     position++;
+                    int type_update = 0;
+                    ResultObject res_epd = OperationUpdateUZ_DOC(num, sostav.date_arrival, true, as_client);
                     ArrivalCars car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
+
                     if (car != null)
                     {
-
+                        if (car.ArrivalSostav.status == 2)
+                        {
+                            type_update = 4; // Состав принят, запрет
+                        }
+                        else
+                        {
+                            if (car.ArrivalSostav.status == 1)
+                            {
+                                if (car.arrival != null)
+                                {
+                                    // Состав в работе вагон принят
+                                    type_update = 3; // Состав в работе вагон принят, запрет
+                                }
+                                else
+                                {
+                                    // Состав в работе вагон не принят принят
+                                    type_update = 2; // Состав в работе вагон не принят, выбор
+                                }
+                            }
+                            else
+                            {
+                                // Вагон свободен для переноса
+                                type_update = 1; // Состав не обработан или отклонен вагон можно переносить
+                            }
+                        }
                     }
-
-
+                    WagonInternalRoutes wir = ef_wir.Context.Where(w => w.num == num && w.close == null).FirstOrDefault();
+                    type_update = wir != null ? 5 : type_update; // Запрет есть незакрыток внутреннее перемещение
                     Manual_Search_Vagon msv = new Manual_Search_Vagon()
                     {
                         num = num,
                         position = position,
-                        car = null,
-                        sostav = null,
-                        new_uz_doc = null,
-                        type_update = 0,
+                        car = car != null ? car.GetArrivalCars_ArrivalSostav() : null,
+                        new_uz_doc = res_epd != null && res_epd.obj != null ? ((EFIDS.Entities.UZ_DOC)res_epd.obj).GetUZ_DOC() : null,
+                        wir = wir.GetWagonInternalRoutes(),
+                        type_update = type_update,
                     };
                     list_msv.Add(msv);
                 }
-
-
-                //foreach (ArrivalCars car in list_car.OrderBy(w => w.position_arrival))
-                //{
-                //    Arrival_UZ_Vagon arr_vag_doc = ef_arr_uz_vag.Context.Where(d => d.id == car.id_arrival_uz_vagon).FirstOrDefault();
-                //    if (arr_vag_doc == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
-
-                //    WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_arrival_car == car.id).FirstOrDefault();
-                //    if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
-                //    WagonInternalRoutes wir_next = ef_wir.Context.Where(w => w.parent_id == wir.id).FirstOrDefault();
-                //    if (wir_next != null) return (int)errors_base.close_wir; // Записи по WagonInternalRoutes - закрыта есть следущее внутреннее перемещение
-                //    List<WagonInternalOperation> list_wio = ef_wio.Context.Where(w => w.id_wagon_internal_routes == wir.id).ToList();
-                //    if (list_wio.Count() > 1) return (int)errors_base.not_arrival_operation; // Операция вагона текущая операция вагона не "Прибытие с УЗ"
-                //    if (list_wio[0].id_operation != 1) return (int)errors_base.not_arrival_operation; // Операция вагона текущая операция вагона не "Прибытие с УЗ"
-                //    // Все проверки закончены, удаляем
-                //    List<WagonInternalMovement> list_wim = ef_wim.Context.Where(w => w.id_wagon_internal_routes == wir.id).ToList();
-                //    //
-                //    ef_wio.Delete(list_wio.Select(w => w.id).ToList());
-                //    ef_wim.Delete(list_wim.Select(w => w.id).ToList());
-                //    ef_wir.Delete(wir.id);
-                //}
-                //// Обновим информацию о составе
-                //sostav.num_doc = null;
-                //sostav.date_adoption = null;
-                //sostav.date_adoption_act = null;
-                //sostav.id_station_on = null;
-                //sostav.id_way = null;
-                //sostav.numeration = null;
-                //sostav.status = 1;
-                //sostav.change = DateTime.Now;
-                //sostav.change_user = user;
-                return context.SaveChanges(); // Применить операции
+                res.result = list_msv.Count();
+                res.obj = list_msv;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationCancelIncomingSostav(id_arrival_sostav={0}, user={1})", id_arrival_sostav, user), servece_owner, eventID);
-                return (int)errors_base.global; // Глобальная ошибка
+                e.ExceptionMethodLog(String.Format("OperationManualSearchIncomingWagon(id_arrival_sostav={0}, check={1}, num_cars={2}, as_client={3}, user={4})", id_arrival_sostav, check, num_cars, as_client, user), servece_owner, eventID);
+                res.result = (int)errors_base.global; // Глобальная ошибка
             }
+            return res;
         }
 
         #endregion

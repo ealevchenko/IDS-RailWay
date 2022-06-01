@@ -786,6 +786,14 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long id_arrival_sostav { get; set; }
         public string user { get; set; }
     }
+    public class OperationManualSearchIncomingWagon
+    {
+        public long id_arrival_sostav { get; set; }
+        public bool check { get; set; }
+        public List<int> num_cars { get; set; }
+        public bool as_client { get; set; }
+        public string user { get; set; }
+    }
     #endregion
 
     public class view_arrival_sostav
@@ -1662,6 +1670,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.OperationCancelIncomingSostav(value.id_arrival_sostav, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/operation/incoming/wagon/searsh/manual
+        /// <summary>
+        /// Операция отменить принятие состава на АМКР
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/incoming/wagon/searsh/manual")]
+        [ResponseType(typeof(ResultObject))]
+        public IHttpActionResult PostOperationManualSearchIncomingWagon([FromBody] OperationManualSearchIncomingWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultObject result = ids_wir.OperationManualSearchIncomingWagon(value.id_arrival_sostav, value.check, value.num_cars, value.as_client, value.user);
                 return Ok(result);
             }
             catch (Exception e)
