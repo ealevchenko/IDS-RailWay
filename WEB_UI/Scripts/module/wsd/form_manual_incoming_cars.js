@@ -32,6 +32,9 @@
             'fmic_label_list_nums': 'Добавте номера вагонов',
             'fmic_title_list_nums': 'xxxxxxxx;xxxxxxxx;',
 
+            'fmic_field_num': '№Вагона',
+            'fmic_field_position': 'Позиция',
+
             'fmic_title_search_cars': 'Поиск и проверка вагонов',
 
             //'fmic_title_label_num_doc': '№ Документа:',
@@ -73,6 +76,7 @@
             'fmic_mess_error_input_num_cars_duble': 'Ошибка ввода, введеный номер :{0} - повторяется!',
             'fmic_mess_error_info': 'Исправьте указанные номера в указанных позициях и попробуйте заново.',
 
+            'fmic_mess_error_search_cars': 'Ошибка выполнения операции "Поиск информации по вагонам введеным вручную, код ошибки:{0}"',
             //'fmic_error_date_arrival': 'Укажите правильно дату и время',
             //'fmic_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             //'fmic_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
@@ -91,10 +95,11 @@
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
+    var FC = App.form_control;
     var wsd = App.ids_wsd;
 
     function form_manual_incoming_cars() {
-
+        this.fc_ui = new FC();
     }
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     form_manual_incoming_cars.prototype.load_db = function (list, update, callback) {
@@ -151,6 +156,9 @@
             //close_click: function () {
 
             //},
+            form_open: function () {
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            }.bind(this),
         });
         this.mf_edit.$bt_ok.prop('disabled', true);
         // Создадим форму добавления вагонов
@@ -277,6 +285,21 @@
             },
             childs: []
         };
+        var form_row_input3 = {
+            obj: 'bs_form_row',
+            options: {
+                class: null,
+            },
+            childs: []
+        };
+        var form_div_result_cars = {
+            obj: 'div',
+            options: {
+                id: 'result-cars',
+                class: 'col-md-12',
+            },
+            childs: []
+        };
         //Соберем форму
         form_row_input.childs.push(form_checkbox_route_flag);
         fieldset_input.childs.push(form_row_input);
@@ -286,6 +309,9 @@
         //
         form_row_input2.childs.push(form_alert_search);
         fieldset_input.childs.push(form_row_input2);
+        //
+        form_row_input3.childs.push(form_div_result_cars);
+        fieldset_input.childs.push(form_row_input3);
 
         col_input.childs.push(fieldset_input);
         row_input.childs.push(col_input);
@@ -317,6 +343,28 @@
                 // Показать информацию
                 this.form.validation_search.out_warning_message(langView('fmic_mess_input_wagon', App.Langs));
 
+                var TMC = App.table_manual_cars; // Отправленные вагоны
+                this.table_manual_cars = new TMC('div#result-cars');                         // Создадим экземпляр
+                this.table_manual_cars.init({
+                    type_report: 'table-searsh-cars',
+                    alert: this.alert,
+                    fn_select_rows: function (rows) {
+                        if (rows && rows.length > 0) {
+
+                        }
+                    }.bind(this),
+                    fn_init: function (init) {
+                        // На проверку окончания инициализации
+                        //process--;
+                        //out_init(process);
+                    },
+                    fn_refresh: function () {
+                        //this.out_clear();
+                        //this.update();
+                    }.bind(this),
+                });
+                this.table_manual_cars.view([]);
+                //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                 // Инициализация закончена
                 if (typeof this.settings.fn_init === 'function') {
                     this.settings.fn_init(this.init);
@@ -459,15 +507,20 @@
                 var operation = {
                     id_arrival_sostav: this.id_sostav,
                     check: check,
-                    cars: car_out,
+                    num_cars: car_out,
+                    as_client: false,
+                    user: App.User_Name,
                 };
-
-                //// Сохраним номера вагонов для выбора
-                //pn_search.num_cars_valid = car_out;
-                //pn_search.view_cars();
-                this.mf_edit.out_clear();
-                this.elements.button_search_car.prop("disabled", false); // сделаем активной
-                LockScreenOff();
+                this.ids_wsd.postOperationManualSearchIncomingWagon(operation, function (result) {
+                    this.mf_edit.out_clear();
+                    if (result.result > 0) {
+                        this.table_manual_cars.view(result.obj);
+                    } else {
+                        this.mf_edit.out_warning(langView('fmic_mess_error_search_cars', App.Langs).format(result.result));
+                    }
+                    this.elements.button_search_car.prop("disabled", false); // сделаем активной
+                    LockScreenOff();
+                }.bind(this));
             } else {
                 this.mf_edit.out_warning(langView('fmic_mess_error_info', App.Langs));
                 this.elements.button_search_car.prop("disabled", false); // сделаем активной
@@ -590,6 +643,13 @@
             this.modal_confirm_form.destroy();
             this.modal_confirm_form = null;
         }
+
+        // Очистить таблицы
+        if (this.obj_t_result) {
+            this.obj_t_result.destroy(true);
+            this.obj_t_result = null;
+        }
+
         if (this.mf_edit) {
             this.mf_edit.destroy();
             this.mf_edit = null;
