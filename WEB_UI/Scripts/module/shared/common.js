@@ -4274,6 +4274,7 @@
 
                 this.close();
             }.bind(this),
+            form_open: null,
         }, options);
         var modal = new this.fc.el_modal_form(
 
@@ -4314,9 +4315,13 @@
             this.modal = this.$modal.modal({
                 keyboard: false,
                 show: false
-            }).on('show.bs.modal', function (event) {
-                // do something...
-            });
+            }).on('shown.bs.modal', function (event) {
+                //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                // Форма открыта
+                if (typeof this.settings.form_open === 'function') {
+                    this.settings.form_open();
+                }
+            }.bind(this));
 
         } else {
             throw new Error('Не удалось создать модальную форму ' + this.settings.id);
