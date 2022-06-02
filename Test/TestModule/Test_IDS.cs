@@ -479,7 +479,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> nums = new List<int>() { 64907751, 57925752, 72851330 };
-            ids.OperationManualSearchIncomingWagon(171648, true, nums, false, "test");
+            ids.OperationManualSearchArrivalWagon(171648, true, nums, false, "test");
 
         }
         #endregion

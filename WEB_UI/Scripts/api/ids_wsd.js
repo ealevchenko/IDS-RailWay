@@ -727,9 +727,9 @@
         });
     };
     // Операция поиска информации о вагонах введеных вручную
-    ids_wsd.prototype.postOperationManualSearchIncomingWagon = function (operation, callback) {
+    ids_wsd.prototype.postOperationManualSearchArrivalWagon = function (operation, callback) {
         $.ajax({
-            url: '../../api/ids/rwt/wsd/operation/incoming/wagon/searsh/manual/',
+            url: '../../api/ids/rwt/wsd/operation/arrival/wagon/searsh/manual/',
             type: 'POST',
             data: JSON.stringify(operation),
             contentType: "application/json;charset=utf-8",
@@ -744,14 +744,38 @@
             },
             error: function (x, y, z) {
                 LockScreenOff();
-                OnAJAXError("ids_wsd.postOperationManualSearchIncomingWagon", x, y, z);
+                OnAJAXError("ids_wsd.postOperationManualSearchArrivalWagon", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
             },
         });
     };
-
+    // Операция добавить вагоны введенные в ручную
+    ids_wsd.prototype.postOperationManualAddArrivalWagon = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/arrival/wagon/add/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationManualAddArrivalWagon", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ СДАЧА СОСТАВОВ НА УЗ
     //=============================================================================================================

@@ -68,6 +68,9 @@
             'fmic_mess_init_module': 'Инициализация модуля(form_manual_incoming_cars)...',
             'fmic_mess_operation_run': 'Выполняю операцию...',
 
+            'fmic_form_add_cars': 'Добавить?',
+            'fmic_form_add_cars_message': 'Добавить вагоны в количестве {0} шт. в состав?',
+
             'fmic_mess_input_wagon': 'Введите номера вагонов через разделитель “;”, и нажмите кнопку проверка. Внимание! Вагоны будут проверены на системную нумерацию введённого номера вагона(чтобы этот режим отключить - уберите галочку “Проверка системной нумерации”)',
             'fmic_mess_error_not_cars': 'Введите номер вагона или несколько вагонов, разделитель номеров ";"',
             'fmic_mess_error_input_num_cars': 'Ошибка ввода, номер позиции :{0}, введен неправильный номер :{1}',
@@ -77,6 +80,7 @@
             'fmic_mess_error_info': 'Исправьте указанные номера в указанных позициях и попробуйте заново.',
 
             'fmic_mess_error_search_cars': 'Ошибка выполнения операции "Поиск информации по вагонам введеным вручную, код ошибки:{0}"',
+            'fmic_mess_run_operation_add_wagon': 'Выполняю операцию "ДОБАВИТЬ ВАГОНЫ В СОСТАВ"',
             //'fmic_error_date_arrival': 'Укажите правильно дату и время',
             //'fmic_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             //'fmic_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
@@ -127,6 +131,7 @@
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.elements = {}; // Все элементы формы
         this.id_sostav = null;
+        this.rows = []; // Выбранные поля
         // Загрузим справочные данные, определим поля формы правки
         //this.load_db([], false, function (result) {
         // Подгрузили списки
@@ -149,9 +154,16 @@
             label_close: langView('fmic_title_cancel', App.Langs),
             ok_click: function (e) {
                 e.preventDefault();
-                if (this.form) {
-                    this.form['$form_' + this.form.mode].submit();
-                }
+                this.mf_edit.close();
+                // Вопрос перенести вагоны
+                this.modal_confirm_form.view(langView('fmic_form_add_cars', App.Langs), langView('fmic_form_add_cars_message', App.Langs).format(this.rows.length), function (res) {
+                    if (res) {
+                        // Выполним перенос
+                        this.action_add_cars();
+                    } else {
+                        this.mf_edit.open(langView('fmic_title_form_add', App.Langs));
+                    };
+                }.bind(this));
             }.bind(this),
             //close_click: function () {
 
@@ -161,6 +173,7 @@
             }.bind(this),
         });
         this.mf_edit.$bt_ok.prop('disabled', true);
+
         // Создадим форму добавления вагонов
         var FDL = App.form_dialog;
         this.form = new FDL();
@@ -350,7 +363,11 @@
                     alert: this.alert,
                     fn_select_rows: function (rows) {
                         if (rows && rows.length > 0) {
-
+                            this.rows = rows;
+                            this.mf_edit.$bt_ok.prop('disabled', false);
+                        } else {
+                            this.mf_edit.$bt_ok.prop('disabled', true);
+                            this.rows = [];
                         }
                     }.bind(this),
                     fn_init: function (init) {
@@ -531,6 +548,29 @@
             this.elements.button_search_car.prop("disabled", false); // сделаем активной
         }
     };
+
+    form_manual_incoming_cars.prototype.action_add_cars = function () {
+        var cars = []; var position = 1;
+        $.each(this.rows, function (index, value) {
+            cars.push(value.num);
+            position++;
+        }.bind(this));
+        var operation = {
+            id_sostav: this.id_sostav,
+            num_cars: cars,
+            user: App.User_Name,
+        }
+        LockScreen(langView('fmic_mess_run_operation_add_wagon', App.Langs));
+
+        this.ids_wsd.PostOperationManualAddArrivalWagon(operation, function (result) {
+            if (result>0) {
+
+            } else {
+
+            }
+        }.bind(this));
+    }
+
     // Открыть форму добавить
     form_manual_incoming_cars.prototype.add = function (id_sostav) {
         this.id_sostav = id_sostav;

@@ -19,6 +19,16 @@
             'tmc_field_searsh_num': '№ вагона',
             'tmc_field_searsh_position': 'позиция',
             'tmc_field_searsh_type_update': 'Статус',
+            'tmc_field_new_uz_doc': '№ Накладной (найденый)',
+            'tmc_field_new_id_doc': 'id док УЗ (найденый)',
+            'tmc_field_arrival_id_doc': 'id док УЗ (существующий)',
+            'tmc_field_sostav_arrival': 'Состав прибыл',
+            'tmc_field_composition_index': 'Индекс',
+            'tmc_field_train': 'Поезд',
+            'tmc_field_sostav_status': 'Статус состава',
+            'tmc_field_car_arrival': 'Вагон принят',
+            'tmc_field_wir_status': 'Вагон на АМКР',
+
 
             'tmc_mess_init_module': 'Инициализация модуля(table_manual_cars)...',
             //'tmc_title_yes': 'Да',
@@ -29,6 +39,14 @@
             'tmc_title_type_update_3': 'Запрет! (Состав в работе вагон принят)',
             'tmc_title_type_update_4': 'Запрет! (Состав принят)',
             'tmc_title_type_update_5': 'Запрет! (Вагон на АМКР)',
+
+            'tmc_title_ststus_0': 'Не принят',
+            'tmc_title_ststus_1': 'В работе',
+            'tmc_title_ststus_2': 'Принят',
+            'tmc_title_ststus_3': 'Отклонен',
+
+            'tmc_title_way': 'Стоит на станции: {0} на пути: {1}',
+            'tmc_title_out_way': 'Стоит на перегоне :{0}',
 
             'tmc_title_button_export': 'Экспорт',
             'tmc_title_button_buffer': 'Буфер',
@@ -62,7 +80,14 @@
             case 5: return langView('tmc_title_type_update_5', App.Langs);
         }
     };
-
+    var get_status = function (status) {
+        switch (status) {
+            case 0: return langView('tmc_title_ststus_0', App.Langs);
+            case 1: return langView('tmc_title_ststus_1', App.Langs);
+            case 2: return langView('tmc_title_ststus_2', App.Langs);
+            case 3: return langView('tmc_title_ststus_3', App.Langs);
+        }
+    };
     // Перечень полей
     var list_collums = [
         {
@@ -98,6 +123,86 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('tmc_field_searsh_type_update', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_new_uz_doc',
+            data: function (row, type, val, meta) {
+                return row.new_uz_doc !== null ? row.new_uz_doc.num_uz : null;
+            },
+            className: 'dt-body-center',
+            title: langView('tmc_field_new_uz_doc', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_new_id_doc',
+            data: function (row, type, val, meta) {
+                return row.new_uz_doc !== null ? row.new_uz_doc.num_doc : null;
+            },
+            className: 'dt-body-center',
+            title: langView('tmc_field_new_id_doc', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_arrival_id_doc',
+            data: function (row, type, val, meta) {
+                return row.car !== null ? row.car.num_doc : null;
+            },
+            className: 'dt-body-center',
+            title: langView('tmc_field_arrival_id_doc', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_sostav_arrival',
+            data: function (row, type, val, meta) {
+                return row.car !== null ? row.car.ArrivalSostav.date_arrival : null;
+            },
+            className: 'dt-body-center shorten mw-150',
+            title: langView('tmc_field_sostav_arrival', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_composition_index',
+            data: function (row, type, val, meta) {
+                return row.car !== null ? row.car.ArrivalSostav.composition_index : null;
+            },
+            className: 'dt-body-center shorten mw-150',
+            title: langView('tmc_field_composition_index', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_train',
+            data: function (row, type, val, meta) {
+                return row.car !== null ? row.car.ArrivalSostav.train : null;
+            },
+            className: 'dt-body-center',
+            title: langView('tmc_field_train', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_sostav_status',
+            data: function (row, type, val, meta) {
+                return row.car !== null ? get_status(row.car.ArrivalSostav.status) : null;
+            },
+            className: 'dt-body-center shorten mw-100',
+            title: langView('tmc_field_sostav_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'searsh_wir_status',
+            data: function (row, type, val, meta) {
+                var wir_status = null;
+                if (row.wir !== null) {
+                    var wim = row.wir.WagonInternalMovement.find(function (o) {
+                        return o.close == null;
+                    })
+                    if (wim !== null) {
+                        var station = wim.Directory_Station != null ? wim.Directory_Station['station_name_' + App.Lang] : null;
+                        var way = wim.Directory_Ways != null ? wim.Directory_Ways['way_num_' + App.Lang] : null;
+                        var out_way = wim.Directory_OuterWays != null ? wim.Directory_OuterWays['name_outer_way_' + App.Lang] : null;
+                        if (out_way === null) {
+                            wir_status = langView('tmc_title_way', App.Langs).format(station, way);
+                        } else {
+                            wir_status = langView('tmc_title_out_way', App.Langs).format(out_way);
+                        }
+                    }
+                }
+                return wir_status;
+            },
+            className: 'dt-body-center shorten mw-300',
+            title: langView('tmc_field_wir_status', App.Langs), width: "300px", orderable: true, searchable: true
         },
     ];
     // Перечень кнопок
@@ -179,9 +284,18 @@
     // инициализация полей epd_docs
     table_manual_cars.prototype.init_columns_searsh_cars = function () {
         var collums = [];
-        collums.push({ field: 'searsh_num', title: null, class: null });
-        collums.push({ field: 'searsh_position', title: null, class: null });
+        collums.push({ field: 'searsh_num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'searsh_position', title: null, class: 'fixed-column' });
         collums.push({ field: 'searsh_type_update', title: null, class: null });
+        collums.push({ field: 'searsh_new_uz_doc', title: null, class: null });
+        collums.push({ field: 'searsh_new_id_doc', title: null, class: null });
+        collums.push({ field: 'searsh_arrival_id_doc', title: null, class: null });
+        collums.push({ field: 'searsh_sostav_arrival', title: null, class: null });
+        collums.push({ field: 'searsh_composition_index', title: null, class: null });
+        collums.push({ field: 'searsh_train', title: null, class: null });
+        collums.push({ field: 'searsh_sostav_status', title: null, class: null });
+        collums.push({ field: 'searsh_wir_status', title: null, class: null });
+
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
@@ -209,11 +323,13 @@
     table_manual_cars.prototype.init_type_report = function () {
         switch (this.settings.type_report) {
             case 'table-searsh-cars': {
-                this.fixedHeader = false;            // вкл. фикс. заголовка
-                this.leftColumns = 0;
-                this.order_column = [0, 'asc'];
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 2;
+                this.order_column = [1, 'asc'];
                 this.type_select_rows = 1; // Выбирать одну
-                this.table_select = true;
+                this.table_select = {
+                    style: 'multi'
+                };
                 this.table_columns = this.init_columns_searsh_cars();
                 this.table_buttons = this.init_button_searsh_cars();
                 break;
@@ -296,7 +412,7 @@
                     select: this.table_select,
                     "autoWidth": false,
                     //"filter": true,
-                    //"scrollY": "600px",
+                    "scrollY": "300px",
                     sScrollX: "100%",
                     scrollX: true,
                     //"responsive": true,
@@ -304,13 +420,12 @@
                     language: language_table(App.Langs),
                     jQueryUI: false,
                     "createdRow": function (row, data, index) {
-
                         switch (this.settings.type_report) {
                             case 'table-searsh-cars': {
                                 $(row).attr('id', data.num);
                                 if (data.type_update < 3) {
                                     $(row).addClass('green');
-                                   } else {
+                                } else {
                                     if (data.type_update > 3) {
                                         $(row).addClass('red');
                                     } else {
@@ -330,7 +445,13 @@
                 // Обработка события выбора
                 switch (this.settings.type_report) {
                     case 'table-searsh-cars': {
-                        this.obj_t_manual.on('select deselect', function (e, dt, type, indexes) {
+                        this.obj_t_manual.on('user-select', function (e, dt, type, cell, originalEvent) {
+                            var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
+                            var row = this.obj_t_manual.rows(indexes).data().toArray();
+                            if (row && row.length > 0 && row[0].type_update && row[0].type_update > 2) {
+                                e.preventDefault();
+                            }
+                        }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                             this.select_rows(); // определим строку
                             this.enable_button();
                             // Обработать событие выбрана строка
@@ -394,26 +515,14 @@
     };
     table_manual_cars.prototype.enable_button = function () {
         switch (this.settings.type_report) {
-            //case 'incoming_sostav': {
-            //    if (this.selected_rows && this.selected_rows.length > 0) {
-            //        this.obj_t_manual.button(4).enable(true);
-            //        if (this.selected_rows[0].status < 1) {
-            //            this.obj_t_manual.button(2).enable(true);
-            //            this.obj_t_manual.button(3).enable(false); // отмена сдачи состава
-            //            this.obj_t_manual.button(4).text(langView('ticc_title_button_wagon_accept', App.Langs));
-            //        } else {
-            //            // Если статус в работе принят или удален 
-            //            this.obj_t_manual.button(2).enable(false);
-            //            if (this.selected_rows[0].status === 2) { this.obj_t_manual.button(3).enable(true); } else { this.obj_t_manual.button(3).enable(false); }
-            //            this.obj_t_manual.button(4).text(langView('ticc_title_button_wagon_view', App.Langs));
-            //        }
-            //    } else {
-            //        this.obj_t_manual.button(2).enable(false);
-            //        this.obj_t_manual.button(3).enable(false);
-            //        this.obj_t_manual.button(4).enable(false);
-            //    }
-            //    break;
-            //};
+            case 'table-searsh-cars': {
+                if (this.selected_rows && this.selected_rows.length > 0) {
+
+                } else {
+
+                }
+                break;
+            };
         };
     };
     // Выполнить операцию обновить

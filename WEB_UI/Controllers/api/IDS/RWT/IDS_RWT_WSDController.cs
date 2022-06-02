@@ -786,7 +786,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long id_arrival_sostav { get; set; }
         public string user { get; set; }
     }
-    public class OperationManualSearchIncomingWagon
+    public class OperationManualSearchArrivalWagon
     {
         public long id_arrival_sostav { get; set; }
         public bool check { get; set; }
@@ -794,6 +794,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool as_client { get; set; }
         public string user { get; set; }
     }
+    public class OperationManualAddArrivalWagon
+    {
+        public long id_arrival_sostav { get; set; }
+        public List<int> num_cars { get; set; }
+        public string user { get; set; }
+    }
+
     #endregion
 
     public class view_arrival_sostav
@@ -1678,21 +1685,21 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-        // POST api/ids/rwt/wsd/operation/incoming/wagon/searsh/manual
+        // POST api/ids/rwt/wsd/operation/arrival/wagon/searsh/manual
         /// <summary>
         /// Операция отменить принятие состава на АМКР
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("operation/incoming/wagon/searsh/manual")]
+        [Route("operation/arrival/wagon/searsh/manual")]
         [ResponseType(typeof(ResultObject))]
-        public IHttpActionResult PostOperationManualSearchIncomingWagon([FromBody] OperationManualSearchIncomingWagon value)
+        public IHttpActionResult PostOperationManualSearchArrivalWagon([FromBody] OperationManualSearchArrivalWagon value)
         {
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                ResultObject result = ids_wir.OperationManualSearchIncomingWagon(value.id_arrival_sostav, value.check, value.num_cars, value.as_client, value.user);
+                ResultObject result = ids_wir.OperationManualSearchArrivalWagon(value.id_arrival_sostav, value.check, value.num_cars, value.as_client, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -1700,7 +1707,28 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-
+        // POST api/ids/rwt/wsd/operation/arrival/wagon/add
+        /// <summary>
+        /// Операция отменить принятие состава на АМКР
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("operation/arrival/wagon/add")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostOperationManualAddArrivalWagon([FromBody] OperationManualAddArrivalWagon value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.OperationManualAddArrivalWagon(value.id_arrival_sostav, value.num_cars, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
 

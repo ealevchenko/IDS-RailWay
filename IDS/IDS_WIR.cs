@@ -12,6 +12,7 @@ using UZ;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using EFIDS.Helper;
+using IDS;
 
 namespace IDS
 {
@@ -644,6 +645,7 @@ namespace IDS
     {
         public int num { get; set; }
         public int position { get; set; }
+        public bool sys_num { get; set; } // соответсвует системной нумерации
         public ArrivalCars car { get; set; }
         public EFIDS.Entities.UZ_DOC new_uz_doc { get; set; }
         public WagonInternalRoutes wir { get; set; }
@@ -2464,7 +2466,7 @@ namespace IDS
         /// <param name="as_client"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultObject OperationManualSearchIncomingWagon(long id_arrival_sostav, bool check, List<int> num_cars, bool as_client, string user)
+        public ResultObject OperationManualSearchArrivalWagon(long id_arrival_sostav, bool check, List<int> num_cars, bool as_client, string user)
         {
             ResultObject res = new ResultObject();
             try
@@ -2481,6 +2483,7 @@ namespace IDS
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
                 EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
 
                 if (num_cars == null || num_cars.Count() == 0)
                 {
@@ -2511,6 +2514,7 @@ namespace IDS
                 {
                     position++;
                     int type_update = 0;
+                    bool sys_num = ids_dir.IsCorrectNumCar(num);
                     ResultObject res_epd = OperationUpdateUZ_DOC(num, sostav.date_arrival, true, as_client);
                     ArrivalCars car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
 
@@ -2548,6 +2552,7 @@ namespace IDS
                     {
                         num = num,
                         position = position,
+                        sys_num = sys_num,
                         car = car != null ? car.GetArrivalCars_ArrivalSostav() : null,
                         new_uz_doc = res_epd != null && res_epd.obj != null ? ((EFIDS.Entities.UZ_DOC)res_epd.obj).GetUZ_DOC() : null,
                         wir = wir.GetWagonInternalRoutes(),
@@ -2560,10 +2565,93 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationManualSearchIncomingWagon(id_arrival_sostav={0}, check={1}, num_cars={2}, as_client={3}, user={4})", id_arrival_sostav, check, num_cars, as_client, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationManualSearchArrivalWagon(id_arrival_sostav={0}, check={1}, num_cars={2}, as_client={3}, user={4})", id_arrival_sostav, check, num_cars, as_client, user), servece_owner, eventID);
                 res.result = (int)errors_base.global; // Глобальная ошибка
             }
             return res;
+        }
+
+        public int OperationManualAddArrivalWagon(long id_arrival_sostav, List<int> num_cars, string user)
+        {
+            try
+            {
+                List<Manual_Search_Vagon> list_msv;
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
+                ResultObject res;
+                int res_upd = 0;
+                res = OperationManualSearchArrivalWagon(id_arrival_sostav, true, num_cars, false, user);
+                if (res.obj != null)
+                {
+                    list_msv = (List<Manual_Search_Vagon>)res.obj;
+                    ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
+
+                    if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для прибытия
+                    if (sostav.status >1) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)                                                                                      // 
+                    int position = sostav.ArrivalCars.Count() > 1 ? sostav.ArrivalCars.Count() + 1 : 1;
+                    foreach (Manual_Search_Vagon sv in list_msv)
+                    {
+                        if (sv.type_update > 2) return (int)errors_base.error_status_arrival_sostav; // Статус состава не позволяет сделать эту операцию
+                        if (sv.type_update == 0)
+                        {
+                            // создадим прибытие
+                            ArrivalCars arr_car = new ArrivalCars()
+                            {
+                                id = 0,
+                                id_arrival = id_arrival_sostav,
+                                num = sv.num,
+                                position = position,
+                                position_arrival = null,
+                                consignee = sv.new_uz_doc != null && sv.new_uz_doc.code_on != null ? int.Parse(sv.new_uz_doc.code_on) : 0,
+                                num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : null,
+                                id_transfer = null,
+                                note = "Добавлен (ручной режим)",
+                                date_adoption_act = null,
+                                arrival = null,
+                                arrival_user = null,
+                                create = DateTime.Now,
+                                create_user = user,
+                            };
+                            sostav.ArrivalCars.Add(arr_car);
+                        }
+                        else
+                        {
+                            // перенести 
+                            ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == sv.car.id).FirstOrDefault();
+                            if (arr_car == null) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
+
+                            // Перенос вагона
+                            arr_car.id_transfer = sv.car.id_arrival;
+                            arr_car.id_arrival = id_arrival_sostav;
+                            arr_car.position = position;
+                            arr_car.note = "Перенесен (ручной режим)";
+                            arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : null;
+                            arr_car.change = DateTime.Now;
+                            arr_car.change_user = user;
+                            ef_arr_car.Update(arr_car);
+                        } 
+                        position++;
+                    }
+                    res_upd = context.SaveChanges();
+                }
+                return res_upd;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationManualAddArrivalWagon(id_arrival_sostav={0}, num_cars={1},  user={2})", id_arrival_sostav, num_cars, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+
         }
 
         #endregion
@@ -2997,7 +3085,7 @@ namespace IDS
                 if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;
                 // Проверим вагон уже стоит ?
                 if (wim.id_outer_way == id_outer_ways && wim.position == position_on) return 0; // Вагон отправлен пропустить операцию
-                // Вагон не стоит, переставим.
+                                                                                                // Вагон не стоит, переставим.
                 string note_sostav = "Состав №" + num_sostav.ToString();
                 wagon.SetSendingWagon_old(id_outer_ways, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
@@ -3169,13 +3257,13 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 if (wagon == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
-                // Получим текущее положение вагона
+                                                                       // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_base.not_open_wir;                  // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
                 if (wim.id_way != id_way_from) return (int)errors_base.wagon_not_way;   // Вагон не стоит на пути
-                // Проверим вагон уже стоит ?
+                                                                                        // Проверим вагон уже стоит ?
                 if (wim.id_outer_way == id_outer_ways && wim.position == position_on) return 0; // Вагон отправлен пропустить операцию
-                // Вагон не стоит, переставим.
+                                                                                                // Вагон не стоит, переставим.
 
                 // Установим и закроем операцию отправления -5              
                 WagonInternalOperation new_operation = wagon.SetOpenOperation(5, lead_time.AddMinutes(-10), null, null, locomotive1, locomotive2, "Состав:" + num_sostav, user).SetCloseOperation(lead_time, null, user);
@@ -3184,7 +3272,7 @@ namespace IDS
                 // Установим и вагон на внешний путь
                 WagonInternalMovement new_movement = wagon.SetSendingWagon(id_outer_ways, lead_time, position_on, num_sostav, null, user);
                 if (new_movement == null) return (int)errors_base.err_create_wim_db;   // Ошибка создания новой позиции вагона.
-                // Зададим сылку на операцию
+                                                                                       // Зададим сылку на операцию
                 new_movement.WagonInternalOperation = new_operation;
                 return 1;
             }
@@ -3369,7 +3457,7 @@ namespace IDS
                 if (wim.id_outer_way != id_outer_way) return (int)errors_base.wagon_not_outerway;
                 // Проверим вагон уже стоит ?
                 if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон принят пропустить операцию
-                // Вагон не принят, принять.
+                                                                                      // Вагон не принят, принять.
                 string note_sostav = wim.note + "- принят";
                 wagon.SetStationWagon_old(id_station_on, id_way_on, lead_time, position_on, note_sostav, user);
                 // Установим и закроем операцию отправления -5              
@@ -3526,7 +3614,7 @@ namespace IDS
             try
             {
                 if (wagon == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
-                // Определим станцию и путь приема
+                                                                       // Определим станцию и путь приема
                 Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
                 if (way == null) return (int)errors_base.not_dir_way_of_db;         // В базе данных нет записи указанной строки пути
                 if (way.way_delete != null) return (int)errors_base.way_is_delete;  // Путь удален
@@ -3536,9 +3624,9 @@ namespace IDS
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_base.not_open_wir;                  // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
                 if (wim.id_outer_way != id_outer_way) return (int)errors_base.wagon_not_outerway; // вагон  не стоит на указаном перегоне
-                // Проверим вагон уже стоит ?
+                                                                                                  // Проверим вагон уже стоит ?
                 if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон уже принят пропустить операцию
-                // Вагон не принят, принять.
+                                                                                      // Вагон не принят, принять.
                 string note_sostav = "Состав:" + wim.num_sostav + "- принят";
 
                 // Установим и закроем операцию принять -6              
@@ -3549,7 +3637,7 @@ namespace IDS
                 WagonInternalMovement new_movement = wagon.SetStationWagon(id_station_on, id_way_on, lead_time, position_on, null, user, true);
 
                 if (new_movement == null) return (int)errors_base.err_create_wim_db;   // Ошибка создания новой позиции вагона.
-                // Зададим сылку на операцию
+                                                                                       // Зададим сылку на операцию
                 new_movement.WagonInternalOperation = new_operation;
                 //context.Update(wagon); // Обновим контекст
                 return 1;
@@ -3661,7 +3749,7 @@ namespace IDS
             {
                 if (type_return == false && lead_time == null) return (int)errors_base.error_date; // режим возврата и неуказана дата (дата не указывается если отмена)
                 if (wagon == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
-                // Определим станцию и путь приема
+                                                                       // Определим станцию и путь приема
                 Directory_Ways way = context.Directory_Ways.Where(w => w.id == id_way_on).FirstOrDefault();
                 if (way == null) return (int)errors_base.not_dir_way_of_db;         // В базе данных нет записи указанной строки пути
                 if (way.way_delete != null) return (int)errors_base.way_is_delete;  // Путь удален
@@ -3674,8 +3762,8 @@ namespace IDS
                 WagonInternalOperation wio = wagon.GetLastOperation();
                 if (wio == null) return (int)errors_base.not_wio_db;    // В базе данных нет записи по WagonInternalOperation (Внутреннее перемещение вагонов)
                 if (wio.id_operation == 11 || wio.id_operation == 12) return (int)errors_base.already_wio; // вагон  не стоит на указаном перегоне
-                // Проверим вагон уже стоит ?
-                //if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон уже принят пропустить операцию
+                                                                                                           // Проверим вагон уже стоит ?
+                                                                                                           //if (wim.id_way == id_way_on && wim.position == position_on) return 0; // Вагон уже принят пропустить операцию
 
                 // Вагон не принят, принять.
                 string note_sostav = "Состав:" + wim.num_sostav + "-" + (type_return ? " отмена" : " возврат");
@@ -3703,7 +3791,7 @@ namespace IDS
                 WagonInternalMovement new_movement = wagon.SetStationWagon(id_station_on, id_way_on, lead_time_stop, position_on, null, user, false);
 
                 if (new_movement == null) return (int)errors_base.err_create_wim_db;   // Ошибка создания новой позиции вагона.
-                // Зададим сылку на операцию
+                                                                                       // Зададим сылку на операцию
                 new_movement.WagonInternalOperation = new_operation;
                 //context.Update(wagon); // Обновим контекст
                 return 1;
@@ -4010,10 +4098,10 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 if (wagon == null) return (int)errors_base.not_wir_db;  // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
-                // Получим текущее положение вагона
+                                                                        // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
                 if (wim == null) return (int)errors_base.not_wim_db;    // В базе данных нет записи по WagonInternalMovement (Внутреняя дислокация вагонов)
-                // Проверим вагон уже стоит ?
+                                                                        // Проверим вагон уже стоит ?
                 if (wim.id_way == id_way_on && wim.position == position) return 0; // Вагон стоит на станции на пути и в позиции, пропустить операцию
                 WagonInternalOperation wio = wagon.GetLastOperation();
                 if (wio == null) return (int)errors_base.not_wio_db;
@@ -4219,7 +4307,7 @@ namespace IDS
 
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
-                //if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                                                                                          //if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
 
                 // Проверим наличие задержания и удалим его
                 if (car.id_outgoing_detention != null)
@@ -4402,7 +4490,7 @@ namespace IDS
 
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
-                //TODO: Отменили, вернуть всегда if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                                                                                          //TODO: Отменили, вернуть всегда if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
 
                 int result = OperationReturnProvideWagon(ref context, car, car.OutgoingSostav.id_way_from, user);
                 if (result > 0)
@@ -4525,7 +4613,7 @@ namespace IDS
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
                 if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                // Создать возврат
+                                                                                                          // Создать возврат
                 OutgoingDetentionReturn outgoingreturn = new OutgoingDetentionReturn()
                 {
                     id = 0,
@@ -4541,17 +4629,17 @@ namespace IDS
                     create_user = user
                 };
                 ef_out_dr.Add(outgoingreturn); // Добавим строку
-                // Получим строку внутреннего перемещения
+                                               // Получим строку внутреннего перемещения
                 WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
                 if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутренее перемещение вагонов)
                 if (wir.close != null) return (int)errors_base.close_wir; // Запись закрыта (операции не возможны)
-                // Применить операцию ВОЗВРАТ
+                                                                          // Применить операцию ВОЗВРАТ
                 wir.SetOpenOperation(10, date_start.AddMinutes(-1), null, null, null, null, note, user).SetCloseOperation(date_start, note, user);
                 // Убрать вагон из предъявления
                 wir.id_outgoing_car = null;
                 ef_wir.Update(wir); // обновим
-                //ef_out_car.Delete(car.id); // Удалим запись вогона в предъявлении
-                // Сбросим информацию о вагоне
+                                    //ef_out_car.Delete(car.id); // Удалим запись вогона в предъявлении
+                                    // Сбросим информацию о вагоне
                 car.position_outgoing = null;
                 car.date_outgoing_act = null;
                 car.id_reason_discrepancy_amkr = null;
@@ -4607,11 +4695,11 @@ namespace IDS
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.outgoing != null) return (int)errors_base.outgoing_cars_outgoing; // Запрет операции вагон отправлен
                 if (car.OutgoingSostav.status == 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                // Найдем возврат
+                                                                                                          // Найдем возврат
                 OutgoingDetentionReturn outgoin_greturn = ef_out_dr.Context.Where(r => r.id == id_outgoin_return).FirstOrDefault();
                 if (outgoin_greturn == null) { return (int)errors_base.not_outgoing_detention_return_db; } // Ошибка в базе нет задержания
                 if (outgoin_greturn.date_stop != null) { return (int)errors_base.close_outgoing_detention_return; } // Ошибка в запись задержания закрыта
-                // Закроем задержание
+                                                                                                                    // Закроем задержание
                 outgoin_greturn.date_stop = date_stop;
                 outgoin_greturn.num_act = num_act;
                 outgoin_greturn.date_act = date_act;
@@ -4879,13 +4967,13 @@ namespace IDS
                         ef_out_uz_vag_cont_pay.Delete(list_cont_pay.Select(n => n.id).ToList()); // Удалим pay по контейнерам
                     }
                     ef_out_uz_vag_cont.Delete(list.Select(n => n.id).ToList()); // удалим контейнера
-                    // Удалим Акты
+                                                                                // Удалим Акты
                     List<Outgoing_UZ_Vagon_Acts> list_act = ef_out_uz_vag_act.Context.Where(a => a.id_vagon == out_uz_vag.id).ToList();
                     ef_out_uz_vag_act.Delete(list_act.Select(n => n.id).ToList()); // удалим акты
-                    // Удалим pay
+                                                                                   // Удалим pay
                     List<Outgoing_UZ_Vagon_Pay> list_pay = ef_out_uz_vag_pay.Context.Where(p => p.id_vagon == out_uz_vag.id).ToList();
                     ef_out_uz_vag_pay.Delete(list_pay.Select(n => n.id).ToList()); // удалим акты
-                    //TODO: ! добавить проверку количества вагонов в документе если = 1 или меньше удалить документ и Pay документа
+                                                                                   //TODO: ! добавить проверку количества вагонов в документе если = 1 или меньше удалить документ и Pay документа
 
                     // Удалим сам документ
                     ef_out_uz_vag.Delete(out_uz_vag.id);
@@ -4952,9 +5040,9 @@ namespace IDS
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
                 if (sostav == null) return (int)errors_base.not_outgoing_sostav_db;                     //В базе данных нет записи состава для оправки
-                // Проверим состав откланен
+                                                                                                        // Проверим состав откланен
                 if (sostav.status == 4) return (int)errors_base.error_status_outgoing_sostav;           // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                // Сдается впервые?
+                                                                                                        // Сдается впервые?
                 if (sostav.status < 2)
                 {
                     sostav.status = 2;
@@ -4962,7 +5050,7 @@ namespace IDS
                     int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
                     List<OutgoingCars> list_not_out_car = sostav.OutgoingCars.Where(c => c.outgoing == null).ToList();
                     if (count_car == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отпправки
-                    // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
+                                                                                      // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
                     if (list_not_out_car != null && list_not_out_car.Count() > 0)
                     {
                         foreach (OutgoingCars car in list_not_out_car)
@@ -5080,7 +5168,7 @@ namespace IDS
 
                 if (car == null) return (int)errors_base.not_outgoing_cars_db; // В базе нет вагона для предявдения
                 if (car.OutgoingSostav.status != 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                // найдем запись внутреннего перемещения
+                                                                                                          // найдем запись внутреннего перемещения
                 WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
                 if (wir == null) return (int)errors_base.not_wir_db;
                 // Получим текущее положение вагона
@@ -5822,8 +5910,8 @@ namespace IDS
                         DateTime date_exceeded = DateTime.Now.AddDays(-1 * this.day_arhive_epd_arrival);
                         List<UZ_DOC_Arrival> uz_doc_ids_open_exceeded = uz_doc_ids_open.Where(d => d.dt < date_exceeded).ToList(); // выбрать раскредитованых с датой обновления ниже мак даты хранения на сервере
                         List<UZ_DOC_Arrival> uz_doc_ids_open_not_reached = uz_doc_ids_open.Where(d => d.dt >= date_exceeded).ToList(); // выбрать раскредитованых с датой обновления в диапазоне периода хранения данных на сервере.
-                        // -----------------------------------------------------------------------------------------
-                        // Начнем обработку раскредитованых с датой обновления пусто
+                                                                                                                                       // -----------------------------------------------------------------------------------------
+                                                                                                                                       // Начнем обработку раскредитованых с датой обновления пусто
                         Update_List_UZ_DOC(ref context_ids, ref res, uz_doc_ids_open_null, false, 0);
                         // -----------------------------------------------------------------------------------------
                         // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
@@ -7439,12 +7527,12 @@ namespace IDS
                 int count = group_uz_doc != null ? group_uz_doc.Count() : 0;
                 int upd_cars = 0; // Количество обновленных вагонов в составах
                 int all_cars = 0; // Количество общее вагонов в составах
-                // Пройдемся по составам
+                                  // Пройдемся по составам
                 foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.OrderBy(c => c.Key))
                 {
                     List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
                     all_cars += list_cars != null ? list_cars.Count() : 0; // Добавим общее количество вагонов
-                    // Выполним обновление всего пула документов
+                                                                           // Выполним обновление всего пула документов
                     OperationResultID result = OperationUpdateEPDSendingSostav(ref context_ids, uz_doc_sostav.Key, user);
                     if (result.result > 0)
                     {
