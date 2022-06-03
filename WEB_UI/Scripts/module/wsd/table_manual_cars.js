@@ -39,6 +39,7 @@
             'tmc_title_type_update_3': 'Запрет! (Состав в работе вагон принят)',
             'tmc_title_type_update_4': 'Запрет! (Состав принят)',
             'tmc_title_type_update_5': 'Запрет! (Вагон на АМКР)',
+            'tmc_title_type_update_6': 'Запрет! (Вагон уже находится в составе)',
 
             'tmc_title_ststus_0': 'Не принят',
             'tmc_title_ststus_1': 'В работе',
@@ -78,6 +79,7 @@
             case 3: return langView('tmc_title_type_update_3', App.Langs);
             case 4: return langView('tmc_title_type_update_4', App.Langs);
             case 5: return langView('tmc_title_type_update_5', App.Langs);
+            case 6: return langView('tmc_title_type_update_6', App.Langs);
         }
     };
     var get_status = function (status) {

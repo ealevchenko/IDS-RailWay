@@ -2491,6 +2491,7 @@ namespace IDS
                     return res;
                 }
                 ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
+                List<ArrivalCars> list_car_exist = sostav.ArrivalCars.ToList();
 
                 if (sostav == null)
                 {
@@ -2518,31 +2519,39 @@ namespace IDS
                     ResultObject res_epd = OperationUpdateUZ_DOC(num, sostav.date_arrival, true, as_client);
                     ArrivalCars car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
 
-                    if (car != null)
+                    ArrivalCars car_exist = list_car_exist.Where(c => c.num == num).FirstOrDefault();
+                    if (car_exist != null)
                     {
-                        if (car.ArrivalSostav.status == 2)
+                        type_update = 6; // Попытка добавить вагон в состав в котором стоит вагон
+                    }
+                    else
+                    {
+                        if (car != null)
                         {
-                            type_update = 4; // Состав принят, запрет
-                        }
-                        else
-                        {
-                            if (car.ArrivalSostav.status == 1)
+                            if (car.ArrivalSostav.status == 2)
                             {
-                                if (car.arrival != null)
-                                {
-                                    // Состав в работе вагон принят
-                                    type_update = 3; // Состав в работе вагон принят, запрет
-                                }
-                                else
-                                {
-                                    // Состав в работе вагон не принят принят
-                                    type_update = 2; // Состав в работе вагон не принят, выбор
-                                }
+                                type_update = 4; // Состав принят, запрет
                             }
                             else
                             {
-                                // Вагон свободен для переноса
-                                type_update = 1; // Состав не обработан или отклонен вагон можно переносить
+                                if (car.ArrivalSostav.status == 1)
+                                {
+                                    if (car.arrival != null)
+                                    {
+                                        // Состав в работе вагон принят
+                                        type_update = 3; // Состав в работе вагон принят, запрет
+                                    }
+                                    else
+                                    {
+                                        // Состав в работе вагон не принят принят
+                                        type_update = 2; // Состав в работе вагон не принят, выбор
+                                    }
+                                }
+                                else
+                                {
+                                    // Вагон свободен для переноса
+                                    type_update = 1; // Состав не обработан или отклонен вагон можно переносить
+                                }
                             }
                         }
                     }
@@ -2597,7 +2606,7 @@ namespace IDS
                     ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
 
                     if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для прибытия
-                    if (sostav.status >1) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)                                                                                      // 
+                    if (sostav.status > 1) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)                                                                                      // 
                     int position = sostav.ArrivalCars.Count() > 1 ? sostav.ArrivalCars.Count() + 1 : 1;
                     foreach (Manual_Search_Vagon sv in list_msv)
                     {
@@ -2622,6 +2631,7 @@ namespace IDS
                                 create = DateTime.Now,
                                 create_user = user,
                             };
+                            ef_arr_car.Add(arr_car);
                             sostav.ArrivalCars.Add(arr_car);
                         }
                         else
@@ -2639,7 +2649,7 @@ namespace IDS
                             arr_car.change = DateTime.Now;
                             arr_car.change_user = user;
                             ef_arr_car.Update(arr_car);
-                        } 
+                        }
                         position++;
                     }
                     res_upd = context.SaveChanges();

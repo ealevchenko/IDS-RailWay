@@ -81,6 +81,8 @@
 
             'fmic_mess_error_search_cars': 'Ошибка выполнения операции "Поиск информации по вагонам введеным вручную, код ошибки:{0}"',
             'fmic_mess_run_operation_add_wagon': 'Выполняю операцию "ДОБАВИТЬ ВАГОНЫ В СОСТАВ"',
+            'fmic_mess_run_error_operation_add_wagon': 'Ошибка выполнения операции "ДОБАВИТЬ ВАГОНЫ В СОСТАВ", код ошибки :{0}',
+            
             //'fmic_error_date_arrival': 'Укажите правильно дату и время',
             //'fmic_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             //'fmic_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
@@ -528,7 +530,7 @@
                     as_client: false,
                     user: App.User_Name,
                 };
-                this.ids_wsd.postOperationManualSearchIncomingWagon(operation, function (result) {
+                this.ids_wsd.postOperationManualSearchArrivalWagon(operation, function (result) {
                     this.mf_edit.out_clear();
                     if (result.result > 0) {
                         this.table_manual_cars.view(result.obj);
@@ -548,25 +550,30 @@
             this.elements.button_search_car.prop("disabled", false); // сделаем активной
         }
     };
-
+    // Добавить вагоны в состав
     form_manual_incoming_cars.prototype.action_add_cars = function () {
-        var cars = []; var position = 1;
+        var cars = [];
         $.each(this.rows, function (index, value) {
             cars.push(value.num);
-            position++;
         }.bind(this));
         var operation = {
-            id_sostav: this.id_sostav,
+            id_arrival_sostav: this.id_sostav,
             num_cars: cars,
             user: App.User_Name,
         }
         LockScreen(langView('fmic_mess_run_operation_add_wagon', App.Langs));
-
-        this.ids_wsd.PostOperationManualAddArrivalWagon(operation, function (result) {
+        this.ids_wsd.postOperationManualAddArrivalWagon(operation, function (result) {
             if (result>0) {
-
+                //Обновим данные полностью
+                this.mf_edit.close(); // закроем форму
+                if (typeof this.settings.fn_add === 'function') {
+                    this.settings.fn_add(result);
+                }
+                LockScreenOff();
             } else {
-
+                this.mf_edit.open(langView('fmic_title_form_add', App.Langs));
+                this.mf_edit.out_error(langView('fmic_mess_run_error_operation_add_wagon', App.Langs).format(result));
+                LockScreenOff();
             }
         }.bind(this));
     }

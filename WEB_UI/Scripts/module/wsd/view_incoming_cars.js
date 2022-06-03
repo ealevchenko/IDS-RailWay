@@ -29,6 +29,7 @@
             'vicc_mess_init_panel': 'Выполняю инициализацию модуля(view_incoming_cars)...',
             'vicc_mess_load_sostav': 'Загружаю информацию по выбранному составу...',
             'vicc_mess_load_vagon_detali': 'Загружаю информацию по вагону',//
+            'vicc_mess_run_operation_add_car': 'Операция "ДОБАВИТЬ ВАГОНЫ В СОСТАВ" - выполнена!',//
 
             'vicc_title_disable_wagon_out_way': 'Вагон находится на перегоне: "{0}" начало: {1} конец: {2}',
             'vicc_title_disable_wagon_way': 'Вагон находится на станции: {0}, путь {1} начало: {2} конец: {3}',
@@ -316,14 +317,9 @@
                 //----------------------------------
             }.bind(this),
             fn_add: function (result) {
-                //this.out_clear();
-                //this.action_refresh(function () {
-                //    if (result && result.result > 0) {
-                //        this.out_info(langView('ticc_mess_ok_operation_incoming_sostav', App.Langs));
-                //    } else {
-                //        this.out_info(langView('ticc_mess_error_operation_incoming_sostav', App.Langs));
-                //    }
-                //}.bind(this));
+                this.update(function () {
+                    this.form_manual_incoming_cars.out_info(langView('vicc_mess_run_operation_add_car', App.Langs))
+                }.bind(this));
             }.bind(this),
             fn_db_update: function () {
 

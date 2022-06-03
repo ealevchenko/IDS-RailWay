@@ -969,7 +969,7 @@
                     if (result > 0) {
                         this.mf_edit.close(); // закроем форму
                         if (typeof this.settings.fn_edit === 'function') {
-                            this.settings.fn_add({ data: data, result: result });
+                            this.settings.fn_edit({ data: data, result: result });
                         }
                         LockScreenOff();
                     } else {
