@@ -565,6 +565,7 @@
         this.ids_wsd.postOperationManualAddArrivalWagon(operation, function (result) {
             if (result>0) {
                 //Обновим данные полностью
+                this.clear(); // очистить форму
                 this.mf_edit.close(); // закроем форму
                 if (typeof this.settings.fn_add === 'function') {
                     this.settings.fn_add(result);
@@ -583,6 +584,14 @@
         this.id_sostav = id_sostav;
         this.out_clear();
         this.mf_edit.open(langView('fmic_title_form_add', App.Langs));
+    };
+    // Очистить форму
+    form_manual_incoming_cars.prototype.clear = function (data) {
+        this.out_clear();
+        this.mf_edit.out_clear();
+        this.elements.checkbox_check_sys_num.val(true);
+        this.elements.textarea_list_nums.val('');
+        this.table_manual_cars.clear();
     };
     // Сохранить объект
     form_manual_incoming_cars.prototype.save = function (data) {

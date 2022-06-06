@@ -254,6 +254,20 @@
             autoClose: true
         },
         {
+            button: 'select_all',
+            text: 'Select all',
+            //action: function () {
+            //    this.obj_t_manual.rows().select();
+            //}
+        },
+        {
+            button: 'select_none',
+            text: 'Select none',
+            //action: function () {
+            //    this.obj_t_manual.rows().deselect();
+            //}
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -318,6 +332,17 @@
                 this.action_refresh();
             }.bind(this)
         });
+        buttons.push({
+            name: 'select_all',
+            action: function (e, dt, node, config) {
+                this.action_select_all();
+            }.bind(this) });
+        buttons.push({
+            name: 'select_none',
+            action: function (e, dt, node, config) {
+                this.action_select_none();
+            }.bind(this) });
+
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -527,6 +552,7 @@
             };
         };
     };
+    //-------------------------------------------------------------------------------------------
     // Выполнить операцию обновить
     table_manual_cars.prototype.action_refresh = function () {
         //this.out_clear();
@@ -539,8 +565,12 @@
         //    }.bind(this));
         //}
     };
-    //-------------------------------------------------------------------------------------------
-
+    table_manual_cars.prototype.action_select_all = function () {
+        this.obj_t_manual.rows(':not(.red)').select();
+    };
+    table_manual_cars.prototype.action_select_none = function () {
+        this.obj_t_manual.rows().deselect();
+    };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     table_manual_cars.prototype.out_clear = function () {

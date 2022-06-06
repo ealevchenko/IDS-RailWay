@@ -268,6 +268,9 @@
 
             'ficcd_form_return_arrival_car': 'Добавить в справочник ИДС?',
             'ficcd_form_return_message_arrival_car': 'Вы уверены что хотите отменить прием вагона {0} на АМКР?',
+            'ficcd_form_continue': 'Отменить проверку?',
+            'ficcd_form_continue_not_check_numeration': 'Вагон {0} не прошёл проверку системной нумерации! Продолжить выполнение операции с отключенной проверкой?',
+            'ficcd_form_cancel_continue_not_check_numeration': 'Отмена выполнения проверки с отключеной системной нумерацией',
 
 
             'ficcd_mess_run_add_db_ids': 'Выполняю операцию "ДОБАВИТЬ {0} В СПРАВОЧНИК ИДС"...',
@@ -389,6 +392,7 @@
             'ficcd_mess_init_panel': 'Инициализация модуля (form_incoming_cars_detali) ...',
             'ficcd_mess_load_wagon': 'Обновляю информацию по вагону...', //
             'ficcd_mess_update_wagon': 'Обновляю информацию по вагону в БД ИДС по данным ЭПД', //
+            'ficcd_mess_error_update_wagon': 'Ошибка обновления информации по вагону в БД ИДС, код ошибки: {0}', //
             'ficcd_mess_load_db_uz': 'Обновляю информацию о вагоне с БД УЗ...', //
             'ficcd_mess_update_sap': 'Обновляю информацию по входящей поставке', //
 
@@ -4155,6 +4159,30 @@
     //-----------------------------------------------------------------------------
     //-- Функции отображения информации в форме
     //-----------------------------------------------------------------------------
+    // Проверить на соответсвие системной нумерации и вернуть признак проверки
+    form_incoming_cars_detali.prototype.valid_num_wagon = function (callback) {
+        var num_val = is_valid_num_wagon(this.wagon.num)
+        if (!num_val) {
+            LockScreenOff();
+            this.modal_confirm_form.view(langView('ficcd_form_continue', App.Langs), langView('ficcd_form_continue_not_check_numeration', App.Langs).format(this.wagon.num), function (res) {
+                if (res) {
+                    if (typeof callback === 'function') {
+                        callback(true);
+                    }
+                } else {
+                    this.form.validation_wagon_card.out_error_message(langView('ficcd_form_cancel_continue_not_check_numeration', App.Langs));
+                    if (typeof callback === 'function') {
+                        callback(false);
+                    }
+                };
+            }.bind(this));
+        }
+        else {
+            if (typeof callback === 'function') {
+                callback(false);
+            }
+        }
+    };
     // Обновить информацию по вагонам по по основному epd если в документе есть ссылка на него
     form_incoming_cars_detali.prototype.update_wagon_of_main_epd = function (callback) {
         // Проверим если есть ссылка на основной документ, тогда ищем его
@@ -4207,6 +4235,7 @@
     form_incoming_cars_detali.prototype.update_wagon_of_epd = function (callback) {
         // Получить все необходимые поля ЭПД
         this.epd = this.epd_uz.get_all_field_epd(this.wagon_settings.main_otpr, this.wagon_settings.otpr, this.wagon.num);
+
         this.wagon_settings.dir_wagon = null; // сбросим информацию о вагоне
         var info_operation = null;
         this.form.validation_wagon_card.clear_all();
@@ -4237,40 +4266,43 @@
                 user: App.User_Name,
             }
         }
-        // Выполним обновление
-        LockScreen(langView('ficcd_mess_update_wagon', App.Langs));
-        this.ids_dir.postOperationCreateUpdateWagons(option, function (result) {
-            if (result !== null && result.result >= 0) {
-                var mode_operation = langView('ficcd_title_not', App.Langs);
-
-                switch (result.mode) {
-                    case 1: {
-                        mode_operation = langView('ficcd_title_add', App.Langs);
-                        break;
-                    };
-                    case 2: {
-                        mode_operation = langView('ficcd_title_update', App.Langs);
-                        break;
-                    };
-                }
-                this.wagon_settings.dir_wagon = result.obj;
-                this.wagon_settings.dir_wagon_mode = result.mode;
-                var message = langView('ficcd_mess_ok_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), mode_operation, info_operation);
-                if (this.epd && this.epd.vagon && this.epd.vagon.nomer) {
-                    this.form.validation_wagon_card.out_info_message(message);
+        // Проверим на системную нумерацию
+        this.valid_num_wagon(function (not_check_numeration) {
+            option.not_check_numeration = not_check_numeration;
+            // Выполним обновление
+            LockScreen(langView('ficcd_mess_update_wagon', App.Langs));
+            this.ids_dir.postOperationCreateUpdateWagons(option, function (result) {
+                if (result !== null && result.result >= 0) {
+                    var mode_operation = langView('ficcd_title_not', App.Langs);
+                    switch (result.mode) {
+                        case 1: {
+                            mode_operation = langView('ficcd_title_add', App.Langs);
+                            break;
+                        };
+                        case 2: {
+                            mode_operation = langView('ficcd_title_update', App.Langs);
+                            break;
+                        };
+                    }
+                    this.wagon_settings.dir_wagon = result.obj;
+                    this.wagon_settings.dir_wagon_mode = result.mode;
+                    var message = langView('ficcd_mess_ok_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), mode_operation, info_operation);
+                    if (this.epd && this.epd.vagon && this.epd.vagon.nomer) {
+                        this.form.validation_wagon_card.out_info_message(message);
+                    } else {
+                        this.form.validation_wagon_card.out_warning_message(message);
+                    }
+                    if (typeof callback === 'function') {
+                        callback(result.result);
+                    }
                 } else {
-                    this.form.validation_wagon_card.out_warning_message(message);
+                    // Ошибка обновления
+                    this.form.validation_wagon_card.out_error_message(langView('ficcd_mess_error_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), result !== null ? result.result : null));
+                    if (typeof callback === 'function') {
+                        callback(result.result);
+                    }
                 }
-                if (typeof callback === 'function') {
-                    callback(true);
-                }
-            } else {
-                // Ошибка обновления
-                this.form.validation_wagon_card.out_error_message(langView('ficcd_mess_error_update_dir_wagon_db_ids', App.Langs).format(langView('ficcd_title_card_wagon', App.Langs), result !== null ? result.result : null));
-                if (typeof callback === 'function') {
-                    callback(false);
-                }
-            }
+            }.bind(this));
         }.bind(this));
     };
     // Обновить информацию по вагону
@@ -4342,7 +4374,10 @@
                         var out_init = function (process) {
                             if (process === 0) {
                                 this.update_wagon_of_epd(function (result) {
-                                    if (result) this.view_wagon_detali(this.wagon);
+                                    if (result < 0) {
+                                        this.out_error(langView('ficcd_mess_error_update_wagon', App.Langs).format(result));
+                                    }
+                                    this.view_wagon_detali(this.wagon)
                                 }.bind(this));
                             }
                         }.bind(this);
@@ -6129,7 +6164,10 @@
 
                         // уточним информацию по основному документу если это досылка
                         this.update_wagon_of_main_epd(function (main_otpr) {
-                            this.update_wagon_of_epd(function () {
+                            this.update_wagon_of_epd(function (result) {
+                                if (result < 0) {
+                                    this.out_error(langView('ficcd_mess_error_update_wagon', App.Langs).format(result));
+                                }
                                 this.view_wagon_detali(this.wagon);
                                 this.elements.button_search_car.prop("disabled", false); // сделаем активной
                             }.bind(this));
@@ -6140,7 +6178,10 @@
                     this.mode_epd = 4; // Режим ЭПД
                     this.out_warning(langView('ficcd_mess_warning_no_epd_wagon', App.Langs));
                     this.wagon_settings.main_otpr = null;
-                    this.update_wagon_of_epd(function () {
+                    this.update_wagon_of_epd(function (result) {
+                        if (result < 0) {
+                            this.out_error(langView('ficcd_mess_error_update_wagon', App.Langs).format(result));
+                        }
                         this.view_wagon_detali(this.wagon);
                         this.elements.button_search_car.prop("disabled", false); // сделаем активной
                     }.bind(this));
@@ -6180,7 +6221,10 @@
                         this.mode_epd = main_otpr ? 0 : (current_mode_epd == 4 ? 5 : (current_mode_epd == 2 ? 3 : current_mode_epd)); // Режим ЭПД
                         this.wagon_settings.main_otpr = main_otpr;    // и переопределяем основной даже если он не считан будет нуль
                         this.wagon_settings.main_otpr_id = result.obj.num_doc;
-                        this.update_wagon_of_epd(function () {
+                        this.update_wagon_of_epd(function (result) {
+                            if (result < 0) {
+                                this.out_error(langView('ficcd_mess_error_update_wagon', App.Langs).format(result));
+                            }
                             this.view_wagon_detali(this.wagon);
                             this.elements.button_search_main_doc.prop("disabled", false); // сделаем активной
                         }.bind(this));
@@ -6190,7 +6234,10 @@
                     this.mode_epd = (current_mode_epd == 4 ? 5 : (current_mode_epd == 2 ? 3 : current_mode_epd)); // Режим ЭПД
                     this.out_warning(langView('ficcd_mess_warning_no_main_epd_wagon', App.Langs));
                     this.wagon_settings.main_otpr = null;
-                    this.update_wagon_of_epd(function () {
+                    this.update_wagon_of_epd(function (result) {
+                        if (result < 0) {
+                            this.out_error(langView('ficcd_mess_error_update_wagon', App.Langs).format(result));
+                        }
                         this.view_wagon_detali(this.wagon);
                         this.elements.button_search_main_doc.prop("disabled", false); // сделаем активной
                     }.bind(this));
@@ -6557,7 +6604,7 @@
                             id_type: this.elements.select_type_wagon.getNumberNull(),
                             gruzp: this.elements.input_number_gruzp.val(),
                             u_tara: u_tara ? Number(Number(u_tara * 1000).toFixed(0)) : null,
-                            ves_tary_arc: ves_tary_arc ? Number(Number(ves_tary_arc * 1000).toFixed(0))  : null,
+                            ves_tary_arc: ves_tary_arc ? Number(Number(ves_tary_arc * 1000).toFixed(0)) : null,
                             route: this.elements.checkbox_route_flag.val(),
                             note_vagon: this.elements.textarea_wagon_note.val(),
                             id_cargo: id_cargo,

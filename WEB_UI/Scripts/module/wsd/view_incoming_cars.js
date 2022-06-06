@@ -353,7 +353,7 @@
                 }
                 // Показать вагоны которые не сдали.
                 this.view_cars_not_incoming(this.wagons);
-                // Показать вагоны которые не сдали.
+                // Показать вагоны которые сдали.
                 this.view_cars_incoming(this.wagons)
                 // Закрыть форму детально
                 this.form_incoming_cars_detali.close();
@@ -374,7 +374,7 @@
         this.tablist.empty();
         // Фильтр на не принятые вагоны
         var wagons = cars.filter(function (i) {
-            return i.arrival_car_arrival === null ? true : false;
+            return i.arrival_car_arrival === null && i.arrival_car_id !== null ? true : false;
         }).sort(function (a, b) {
             return Number(a.arrival_car_position) - Number(b.arrival_car_position);
         });
