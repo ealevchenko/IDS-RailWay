@@ -57,7 +57,8 @@
             'tmc_title_button_field_select': 'Выбрать',
             'tmc_title_button_field_view_all': 'Показать все',
             'tmc_title_button_field_clear': 'Сбросить',
-
+            'tmc_title_button_select_all': 'Выбрать все',
+            'tmc_title_button_select_none': 'Убрать все',
         },
         'en':  //default language: English
         {
@@ -255,17 +256,11 @@
         },
         {
             button: 'select_all',
-            text: 'Select all',
-            //action: function () {
-            //    this.obj_t_manual.rows().select();
-            //}
+            text: langView('tmc_title_button_select_all', App.Langs),
         },
         {
             button: 'select_none',
-            text: 'Select none',
-            //action: function () {
-            //    this.obj_t_manual.rows().deselect();
-            //}
+            text: langView('tmc_title_button_select_none', App.Langs),
         },
         {
             button: 'refresh',

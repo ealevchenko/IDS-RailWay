@@ -16,6 +16,15 @@
     {
         'default':  //default language: ru
         {
+            'vepd_field_epd_id_doc': 'id-док.',
+            'vepd_field_epd_revision': '№ рев.',
+            'vepd_field_epd_num_uz': '№ нак.',
+            'vepd_field_epd_status': 'Статус',
+            'vepd_field_epd_sender_code': 'Грузоотправитель',
+            'vepd_field_epd_recipient_code': 'Грузополучатель',
+            'vepd_field_epd_dt': 'Обновлен',
+            'vepd_field_epd_xml_final': 'XML',
+
             'vepd_field_doc_id': 'Ідентифікатор документа у базі АТ «Укрзалізниця»',
             'vepd_field_doc_description': 'Опис документа',
             'vepd_field_doc_doc_date': 'Дата документу',
@@ -64,6 +73,21 @@
             'vepd_title_button_field_view_all': 'Показать все',
             'vepd_title_button_field_clear': 'Сбросить',
 
+            'vepd_field_epd_status_unknown': 'Статус невідомий',
+            'vepd_field_epd_status_draft': 'Чернетка',
+            'vepd_field_epd_status_sending': 'Документ передається товарному касиру',
+            'vepd_field_epd_status_registered': 'Документ переданий товарному касиру',
+            'vepd_field_epd_status_reclaiming': 'Документ відкликається від товарного касира',
+            'vepd_field_epd_status_accepted': 'Вантаж прийнято до перевезення',
+            'vepd_field_epd_status_delivered': 'Вантаж прибув',
+            'vepd_field_epd_status_recieved': 'Вантаж отримано одержувачем',
+            'vepd_field_epd_status_uncredited': 'Документ розкредитовано товарним касиром',
+            'vepd_field_epd_status_recieved_draft': 'Вантаж отримано одержувачем і редагується',
+            'vepd_field_epd_status_recieved_sending': 'Вантаж отримано одержувачем і переданий товарному касиру',
+            'vepd_field_epd_status_recieved_reclaiming': 'Вантаж отримано одержувачем і відкликається від товарного касира',
+            'vepd_field_epd_status_canceled': 'Документ зіпсований товарним касиром',
+            'vepd_field_epd_status_locked': 'Документ заблокований',
+
             'vepd_mess_load_epd_docs': 'Загружаю информацию с ЭПД (Сертификаты и другие документы)...',
             'vepd_mess_load_epd_acts': 'Загружаю информацию с ЭПД (Акты на вагоны)...',
             'vepd_mess_load_epd_conts': 'Загружаю информацию с ЭПД (Контейнера)...',
@@ -83,6 +107,26 @@
     var FC = App.form_control;
     var EPD = App.epd;
 
+    var get_status_epd = function (status) {
+        switch (status) {
+            case 0: { return langView('vepd_field_epd_status_unknown', App.Langs) }
+            case 1: { return langView('vepd_field_epd_status_draft', App.Langs) }
+            case 2: { return langView('vepd_field_epd_status_sending', App.Langs) }
+            case 3: { return langView('vepd_field_epd_status_registered', App.Langs) }
+            case 4: { return langView('vepd_field_epd_status_reclaiming', App.Langs) }
+            case 5: { return langView('vepd_field_epd_status_accepted', App.Langs) }
+            case 6: { return langView('vepd_field_epd_status_delivered', App.Langs) }
+            case 7: { return langView('vepd_field_epd_status_recieved', App.Langs) }
+            case 8: { return langView('vepd_field_epd_status_uncredited', App.Langs) }
+            case 9: { return langView('vepd_field_epd_status_recieved_draft', App.Langs) }
+            case 10: { return langView('vepd_field_epd_status_recieved_sending', App.Langs) }
+            case 11: { return langView('vepd_field_epd_status_recieved_reclaiming', App.Langs) }
+            case 12: { return langView('vepd_field_epd_status_canceled', App.Langs) }
+            case 13: { return langView('vepd_field_epd_status_locked', App.Langs) }
+            default: { return null;}
+       }
+    }
+
 
     // Перечень полей
     var list_collums = [
@@ -95,6 +139,74 @@
             width: "30px",
             searchable: false
         },
+        // Поля по ЭПД
+        {
+            field: 'epd_id_doc',
+            data: function (row, type, val, meta) {
+                return row.id_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_id_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_revision',
+            data: function (row, type, val, meta) {
+                return row.revision;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_revision', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_num_uz',
+            data: function (row, type, val, meta) {
+                return row.num_uz;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_num_uz', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_status',
+            data: function (row, type, val, meta) {
+                return get_status_epd(row.status);
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('vepd_field_epd_status', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_sender_code',
+            data: function (row, type, val, meta) {
+                return row.sender_code;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_sender_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_recipient_code',
+            data: function (row, type, val, meta) {
+                return row.recipient_code;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_recipient_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_dt',
+            data: function (row, type, val, meta) {
+                return row.dt ? moment(row.dt).format(format_date) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('vepd_field_epd_dt', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'epd_xml_final',
+            data: function (row, type, val, meta) {
+                return row.xml_final;
+            },
+            className: 'dt-body-center',
+            title: langView('vepd_field_epd_xml_final', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //public string xml { get; set; }
+        //public OTPR otpr { get; set; }
+
         // Поля по документам
         {
             field: 'doc_id',
@@ -498,6 +610,19 @@
         collums.push({ field: 'cont_kod_etsng', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей epd_docs
+    view_epd.prototype.init_columns_epd = function () {
+        var collums = [];
+        collums.push({ field: 'epd_num_uz', title: null, class: null });
+        collums.push({ field: 'epd_id_doc', title: null, class: null });
+        collums.push({ field: 'epd_revision', title: null, class: null });
+        collums.push({ field: 'epd_status', title: null, class: null });
+        collums.push({ field: 'epd_dt', title: null, class: null });
+        collums.push({ field: 'epd_sender_code', title: null, class: null });
+        collums.push({ field: 'epd_recipient_code', title: null, class: null });
+        collums.push({ field: 'epd_xml_final', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     view_epd.prototype.init_button_detali = function () {
@@ -585,6 +710,17 @@
         //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок epd
+    view_epd.prototype.init_button_epd = function () {
+        var buttons = [];
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                this.action_refresh();
+            }.bind(this)
+        });
+        return init_buttons(buttons, list_buttons);
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     view_epd.prototype.init_type_report = function () {
@@ -619,6 +755,17 @@
                 this.table_buttons = this.init_button_epd_conts();
                 break;
             };
+            case 'table-epd': {
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.table_columns = this.init_columns_epd();
+                this.table_buttons = this.init_button_epd();
+                break;
+            };
+
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -717,7 +864,10 @@
                                 $(row).attr('id', data.id);
                                 break;
                             };
-
+                            case 'table-epd': {
+                                $(row).attr('id', data.revision);
+                                break;
+                            };
                         };
                     }.bind(this),
                     columns: this.table_columns,
@@ -736,7 +886,6 @@
                                 this.settings.fn_select_rows(this.selected_rows);
                             }
                         }.bind(this));
-
                         break;
                     };
                     case 'table-epd-acts': {
@@ -761,6 +910,17 @@
                             }
                         }.bind(this));
 
+                        break;
+                    };
+                    case 'table-epd': {
+                        this.obj_t_epd.on('select deselect', function (e, dt, type, indexes) {
+                            this.select_rows(); // определим строку
+                            this.enable_button();
+                            // Обработать событие выбрана строка
+                            if (typeof this.settings.fn_select_rows === 'function') {
+                                this.settings.fn_select_rows(this.selected_rows);
+                            }
+                        }.bind(this));
                         break;
                     };
                 };

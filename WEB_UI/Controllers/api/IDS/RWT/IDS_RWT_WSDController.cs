@@ -2037,6 +2037,33 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/wsd/searsh/epd/num_doc/42948810
+        [Route("searsh/epd/num_doc/{num_doc}")]
+        [ResponseType(typeof(UZ.UZ_DOC_FULL))]
+        public IHttpActionResult Get_UZ_DOC_Of_NumDoc(string num_doc)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(service.WebAPI_UZ);
+                bool res_con = uz_sms.Connection();
+                if (res_con)
+                {
+                    List<UZ.UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc);
+                    return Ok(docs);
+                }
+                else
+                {
+                    return BadRequest("Ошибка подключения к модулю согласования");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         #endregion
 
         #region ПОИСК ВАГОНОВ

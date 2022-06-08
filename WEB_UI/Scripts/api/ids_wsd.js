@@ -1222,6 +1222,33 @@
     //                                  РАЗДЕЛ ДОКУМЕНТЫ ЭПД
     //=============================================================================================================
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
+    // Получить список документов по номеру накладной
+    ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback_ok, callback_err) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/searsh/epd/num_doc/' + num_doc,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback_ok === 'function') {
+                    callback_ok(data);
+                }
+            },
+            error: function (x, y, z) {
+                if (typeof callback_err === 'function') {
+                    callback_err(x);
+                }
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+
     // Получить разпарсеный ЭПД принятого вагона по внутренему num_doc
     ids_wsd.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
         $.ajax({
@@ -1271,7 +1298,7 @@
     // Получить разпарсеный ЭПД принятого вагона по XML
     ids_wsd.prototype.postOTPR_UZ_DOCOfXML = function (xml, callback) {
         $.ajax({
-             url: '../../api/ids/rwt/uz_doc/otpr/xml/',
+            url: '../../api/ids/rwt/uz_doc/otpr/xml/',
             type: 'POST',
             data: JSON.stringify(xml),
             contentType: "application/json;charset=utf-8",
@@ -1292,7 +1319,6 @@
             },
         });
     };
-
     // Получить дату последнего документа введенного в ручную по № накладной УЗ
     ids_wsd.prototype.getDateTimeUZ_DOC_Of_manual_num_uz = function (num_uz, callback) {
         $.ajax({

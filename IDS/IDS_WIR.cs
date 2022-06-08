@@ -5622,10 +5622,25 @@ namespace IDS
                 // Проверим по sms УЗ (если признак искать в SMS - true)
                 if (this.searsh_in_sms_arrival && !String.IsNullOrWhiteSpace(num_doc))
                 {
-                    List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    //List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    List<UZ.UZ_DOC_FULL> list_uz_doc_sms = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc);
                     if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
                     {
-                        result_uz_doc.Add(list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault());
+                        UZ.UZ_DOC_FULL doc_full = list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault();
+                        UZ.UZ_DOC doc = new UZ.UZ_DOC()
+                        {
+                            id_doc = doc_full.id_doc,
+                            revision = doc_full.revision,
+                            status = doc_full.status,
+                            sender_code = doc_full.sender_code,
+                            recipient_code = doc_full.recipient_code,
+                            dt = doc_full.dt,
+                            xml = doc_full.xml,
+                            xml_final = doc_full.xml_final,
+                            otpr = doc_full.otpr,
+
+                        };
+                        result_uz_doc.Add(doc);
                     }
                 }
                 uz_doc = result_uz_doc.OrderByDescending(v => v.revision).FirstOrDefault();
@@ -5656,10 +5671,26 @@ namespace IDS
                 // Проверим по sms УЗ (если признак искать в SMS - true)
                 if (!String.IsNullOrWhiteSpace(num_doc))
                 {
-                    List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    //List<UZ.UZ_DOC> list_uz_doc_sms = uz_sms.GetUZ_DOC_Of_NumDoc(num_doc);
+                    List<UZ.UZ_DOC_FULL> list_uz_doc_sms = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc);
                     if (list_uz_doc_sms != null && list_uz_doc_sms.Count() > 0)
                     {
-                        result_uz_doc.Add(list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault());
+                        //result_uz_doc.Add(list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault());
+                        UZ.UZ_DOC_FULL doc_full = list_uz_doc_sms.Where(d => d.id_doc == id_doc).OrderByDescending(c => c.revision).FirstOrDefault();
+                        UZ.UZ_DOC doc = new UZ.UZ_DOC()
+                        {
+                            id_doc = doc_full.id_doc,
+                            revision = doc_full.revision,
+                            status = doc_full.status,
+                            sender_code = doc_full.sender_code,
+                            recipient_code = doc_full.recipient_code,
+                            dt = doc_full.dt,
+                            xml = doc_full.xml,
+                            xml_final = doc_full.xml_final,
+                            otpr = doc_full.otpr,
+
+                        };
+                        result_uz_doc.Add(doc);
                     }
                 }
                 uz_doc = result_uz_doc.OrderByDescending(v => v.revision).FirstOrDefault();
@@ -5672,7 +5703,7 @@ namespace IDS
             }
         }
         /// <summary>
-        /// Обновить ЭПД
+        /// Обновить и найти ЭПД
         /// </summary>
         /// <param name="context"></param>
         /// <param name="doc"></param>
@@ -6245,7 +6276,6 @@ namespace IDS
                 return null;
             }
         }
-
         public bool IsWagonOfUZ_DOC(int num, EFIDS.Entities.UZ_DOC uz_doc)
         {
             try
@@ -6266,6 +6296,25 @@ namespace IDS
             }
         }
 
+        public ResultObject OperationSearchUpdateUZ_DOC_Of_SMS(string num_doc, bool add) {
+            ResultObject result = new ResultObject();
+            try {
+
+                //// Документа нет в промежуточной базе, продолжим поиск в СМС
+                //List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc); //num_doc
+                //if (docs != null && docs.Count() > 0)
+                //{
+                //    doc = docs[0];
+                //}
+                return result;
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("OperationUpdateUZ_DOC(num_doc={0}, num={1}, add={2}, search_sms={3})", num_doc, num, add, search_sms), servece_owner, eventID);
+                result.result = (int)errors_base.global;// Ошибка
+                return result;
+            }
+        }
         #endregion
 
         #region ОПЕРАЦИИ ОБНОВЛЕНИЯ ДОКУМЕНТОВ ЭПД ПО ОТПРАВКЕ

@@ -27,71 +27,33 @@
         {
             'fmic_title_edit': 'Ок',
             'fmic_title_cancel': 'Отмена',
-
             'fmic_label_check_sys_num': 'Проверка системной нумерации',
             'fmic_label_list_nums': 'Добавте номера вагонов',
             'fmic_title_list_nums': 'xxxxxxxx;xxxxxxxx;',
+            'fmic_label_main_doc': '№ Накладной',
+            'fmic_title_main_doc': '№ Накладной',
 
             'fmic_field_num': '№Вагона',
             'fmic_field_position': 'Позиция',
-
             'fmic_title_search_cars': 'Поиск и проверка вагонов',
-
-            //'fmic_title_label_num_doc': '№ Документа:',
-            //'fmic_title_placeholder_num_doc': '№Документа',
-            //'fmic_title_label_train': '№ Поезда:',
-            //'fmic_title_placeholder_train': '№Поезда',
-            //'fmic_title_label_composition_index': 'Индекс поезда',
-            //'fmic_title_placeholder_composition_index': 'Индекс поезда',
-            //'fmic_title_label_date_arrival': 'Дата и время прибытия:',
-            //'fmic_title_placeholder_date_arrival': 'Время прибытия',
-            //'fmic_title_label_date_adoption': 'Дата и время приема:',
-            //'fmic_title_placeholder_date_adoption': 'Время приема',
-            //'fmic_title_label_date_adoption_act': 'Дата и время приема (акт):',
-            //'fmic_title_placeholder_date_adoption_act': 'Время приема (акт)',
-            //'fmic_title_label_station_from': 'Прибытие со станции:',
-            //'fmic_title_placeholder_station_from': 'Станция прибытия:',
-            //'fmic_title_label_station_on': 'Принять на станцию:',
-            //'fmic_title_placeholder_station_on': 'Принять на станцию:',
-            //'fmic_title_label_way': 'Принять на путь:',
-            //'fmic_title_placeholder_way': 'Принять на путь:',
-            //'fmic_title_label_numeration': 'Начало нумерации с:',
-            //'fmic_title_placeholder_numeration': 'Принять на путь:',
-            //'fmic_title_head': 'Голова',
-            //'fmic_title_tail': 'Хвост',
-
-            //'fmic_title_label_note': 'Примечание:',
-            //'fmic_title_placeholder_note': 'Примечание',
+            'fmic_title_search_main_doc': 'Поиск ЭПД на сервере УЗ Клиент',
             'fmic_title_form_add': 'Добавить вагоны в ручном режиме',
-            //'fmic_title_form_edit': 'Править состав',
-            //'fmic_title_form_arrival': 'Принять состав',
             'fmic_mess_init_module': 'Инициализация модуля(form_manual_incoming_cars)...',
             'fmic_mess_operation_run': 'Выполняю операцию...',
-
+            'fmic_mess_operation_run_searsh_epd': 'Выполняю операцию поиска документа в БД (УЗ Клиент)...',
             'fmic_form_add_cars': 'Добавить?',
             'fmic_form_add_cars_message': 'Добавить вагоны в количестве {0} шт. в состав?',
-
             'fmic_mess_input_wagon': 'Введите номера вагонов через разделитель “;”, и нажмите кнопку проверка. Внимание! Вагоны будут проверены на системную нумерацию введённого номера вагона(чтобы этот режим отключить - уберите галочку “Проверка системной нумерации”)',
             'fmic_mess_error_not_cars': 'Введите номер вагона или несколько вагонов, разделитель номеров ";"',
+            'fmic_mess_error_not_doc': 'Введите номер накладной',
             'fmic_mess_error_input_num_cars': 'Ошибка ввода, номер позиции :{0}, введен неправильный номер :{1}',
             'fmic_mess_error_input_num_cars1': 'Ошибка ввода, номер позиции :{0}, номер не может быть меньше или равен 0 :{1}',
             'fmic_mess_error_input_num_cars2': 'Ошибка ввода, номер позиции :{0}, не системная нумерация (ошибка контрольной суммы) :{1}',
             'fmic_mess_error_input_num_cars_duble': 'Ошибка ввода, введеный номер :{0} - повторяется!',
             'fmic_mess_error_info': 'Исправьте указанные номера в указанных позициях и попробуйте заново.',
-
             'fmic_mess_error_search_cars': 'Ошибка выполнения операции "Поиск информации по вагонам введеным вручную, код ошибки:{0}"',
             'fmic_mess_run_operation_add_wagon': 'Выполняю операцию "ДОБАВИТЬ ВАГОНЫ В СОСТАВ"',
             'fmic_mess_run_error_operation_add_wagon': 'Ошибка выполнения операции "ДОБАВИТЬ ВАГОНЫ В СОСТАВ", код ошибки :{0}',
-            
-            //'fmic_error_date_arrival': 'Укажите правильно дату и время',
-            //'fmic_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
-            //'fmic_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
-            //'fmic_error_date_arrival_not_deff_date_adoption': 'Дата и время прибытия должны быть не меньше {0} мин. и не равно {1} времени приема',
-            //'fmic_error_date_arrival_not_deff_date_adoption_act': 'Дата и время прибытия по акту должны быть не меньше {0} мин. или больше {1} мин. от времени приема.',
-            //'fmic_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
-            //'fmic_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
-            //'fmic_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
-
         },
         'en':  //default language: English
         {
@@ -103,6 +65,9 @@
 
     var FC = App.form_control;
     var wsd = App.ids_wsd;
+
+
+
 
     function form_manual_incoming_cars() {
         this.fc_ui = new FC();
@@ -123,6 +88,7 @@
         LockScreen(langView('fmic_mess_init_module', App.Langs));
         this.settings = $.extend({
             id: 'fmic',
+            mode: 0,
             alert: null,
             ids_wsd: null,
             fn_init: null,
@@ -134,6 +100,7 @@
         this.elements = {}; // Все элементы формы
         this.id_sostav = null;
         this.rows = []; // Выбранные поля
+
         // Загрузим справочные данные, определим поля формы правки
         //this.load_db([], false, function (result) {
         // Подгрузили списки
@@ -148,7 +115,7 @@
         this.mf_edit = new MF();
         this.mf_edit.init({
             alert: null,
-            id: 'mf-fmic-' + this.settings.id,
+            id: 'mf-fmic-' + this.settings.id + this.settings.mode,
             prefix: 'lg',
             cl_modal: null,
             //form: this.form,
@@ -168,15 +135,25 @@
                 }.bind(this));
             }.bind(this),
             //close_click: function () {
-
+            //    this.clear(); // очистить форму
             //},
             form_open: function () {
-                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                if (this.table_manual_cars) {
+                    this.table_manual_cars.obj_t_manual.columns.adjust();
+                }
+                if (this.table_epd) {
+                    this.table_epd.obj_t_epd.columns.adjust();
+                }
+
             }.bind(this),
+            form_close: function () {
+                this.clear();
+            }.bind(this),
+
         });
         this.mf_edit.$bt_ok.prop('disabled', true);
 
-        // Создадим форму добавления вагонов
+        // Создадим форму добавления вагонов или поиска документов
         var FDL = App.form_dialog;
         this.form = new FDL();
         // Создать макет панели
@@ -198,7 +175,7 @@
             },
             childs: []
         };
-        // Общие данные
+        // Общие элементы
         var fieldset_input = {
             obj: 'fieldset',
             options: {
@@ -215,6 +192,21 @@
             },
             childs: []
         };
+        var form_row_input1 = {
+            obj: 'bs_form_row',
+            options: {
+                class: null,
+            },
+            childs: []
+        };
+        var form_row_input2 = {
+            obj: 'bs_form_row',
+            options: {
+                class: null,
+            },
+            childs: []
+        };
+        // Элементы режима 0 - ввод в ручную
         var form_checkbox_route_flag = {
             obj: 'bs_checkbox',
             element: null,
@@ -231,13 +223,6 @@
                 checkbox_readonly: false,
                 element_default: true,
                 element_change: null,
-            },
-            childs: []
-        };
-        var form_row_input1 = {
-            obj: 'bs_form_row',
-            options: {
-                class: null,
             },
             childs: []
         };
@@ -284,19 +269,74 @@
             },
             childs: []
         };
-        var form_row_input2 = {
-            obj: 'bs_form_row',
-            options: {
-                class: null,
-            },
-            childs: []
-        };
         var form_alert_search = {
             obj: 'bs_alert',
             options: {
                 id: null,
                 class: null,
                 validation_group: 'search',
+            },
+            childs: []
+        };
+
+        // Элементы режим 1 - поиск через ЭПД
+        var bt_search_main_doc = {
+            obj: 'bs_button',
+            options: {
+                color: 'warning',
+                size: 'sm',
+                class: null,
+                id: 'search_main_doc',
+                label: null,
+                title: langView('fmic_title_search_main_doc', App.Langs),
+                icon_left: null,
+                icon_right: 'fas fa-search',
+                click: function (event) {
+                    event.preventDefault();
+                    this.action_search_main_doc();
+                }.bind(this),
+            }
+        };
+        var form_input_main_doc = {
+            obj: 'bs_input_text',
+            options: {
+                id: 'main_doc',
+                validation_group: 'epd',
+                form_group_size: 'xl',
+                form_group_col: 5,
+                form_group_class: 'text-left',
+                label: langView('fmic_label_main_doc', App.Langs),
+                label_class: 'mb-1',
+                input_size: null,
+                input_class: 'inp-manual-epd',
+                input_title: langView('fmic_title_main_doc', App.Langs),
+                input_placeholder: null,
+                input_required: null,
+                input_group: true,
+                input_group_prepend_class: null,
+                input_group_prepend_objs: [],
+                input_group_append_class: null,
+                input_group_append_objs: [bt_search_main_doc],
+                element_fn_change: null,
+            },
+            childs: []
+        };
+        var form_div_result_doc = {
+            obj: 'div',
+            options: {
+                id: 'result-docs',
+                class: 'col-md-12',
+            },
+            childs: []
+        };
+
+        // Общая Таблица
+        var fieldset_input3 = {
+            obj: 'fieldset',
+            options: {
+                class: 'border-primary',
+                legend: null,
+                class_legend: null,
             },
             childs: []
         };
@@ -316,19 +356,31 @@
             childs: []
         };
         //Соберем форму
-        form_row_input.childs.push(form_checkbox_route_flag);
-        fieldset_input.childs.push(form_row_input);
-        //
-        form_row_input1.childs.push(form_textarea_list_nums);
-        fieldset_input.childs.push(form_row_input1);
-        //
-        form_row_input2.childs.push(form_alert_search);
-        fieldset_input.childs.push(form_row_input2);
+
+        if (this.settings.mode === 0) {
+            form_row_input.childs.push(form_checkbox_route_flag);
+            fieldset_input.childs.push(form_row_input);
+            //
+            form_row_input1.childs.push(form_textarea_list_nums);
+            fieldset_input.childs.push(form_row_input1);
+            //
+            form_row_input2.childs.push(form_alert_search);
+            fieldset_input.childs.push(form_row_input2);
+        }
+        if (this.settings.mode === 1) {
+            form_row_input.childs.push(form_input_main_doc);
+            fieldset_input.childs.push(form_row_input);
+            //
+            form_row_input1.childs.push(form_div_result_doc);
+            fieldset_input.childs.push(form_row_input1);
+        }
+
         //
         form_row_input3.childs.push(form_div_result_cars);
-        fieldset_input.childs.push(form_row_input3);
+        fieldset_input3.childs.push(form_row_input3);
 
         col_input.childs.push(fieldset_input);
+        col_input.childs.push(fieldset_input3);
         row_input.childs.push(col_input);
         objs.push(row_input);
         // Инициализируем форму
@@ -356,8 +408,57 @@
                 // отобразим форму
                 this.mf_edit.$body.append(this.form.$form);
                 // Показать информацию
-                this.form.validation_search.out_warning_message(langView('fmic_mess_input_wagon', App.Langs));
+                if (this.settings.mode === 0) {
+                    this.form.validation_search.out_warning_message(langView('fmic_mess_input_wagon', App.Langs));
+                }
+                if (this.settings.mode === 1) {
+                    // Создадим и инициализируем модуль информация по ЭПД (Документы)
+                    var VEPD = App.view_epd; // Отправленные вагоны
+                    this.table_epd = new VEPD('div#result-docs');                   // Создадим экземпляр
+                    this.table_epd.init({
+                        type_report: 'table-epd',
+                        alert: this.alert,
+                        fn_select_rows: function (rows) {
+                            if (rows && rows.length > 0 && rows[0].otpr.vagon !== null && rows[0].otpr.vagon.length > 0) {
+                                var vagon = rows[0].otpr.vagon;
+                                var vagons = [];
+                                $.each(vagon, function (index, el) {
+                                    vagons.push(el.nomer);
+                                }.bind(this));
+                                if (vagons.length > 0) {
+                                    LockScreen(langView('fmic_mess_operation_run', App.Langs));
+                                    var operation = {
+                                        id_arrival_sostav: this.id_sostav,
+                                        check: false,
+                                        num_cars: vagons,
+                                        as_client: false,
+                                        user: App.User_Name,
+                                    };
+                                    this.ids_wsd.postOperationManualSearchArrivalWagon(operation, function (result) {
+                                        this.mf_edit.out_clear();
+                                        if (result.result > 0) {
+                                            this.table_manual_cars.view(result.obj);
+                                        } else {
+                                            this.mf_edit.out_warning(langView('fmic_mess_error_search_cars', App.Langs).format(result.result));
+                                        }
+                                        LockScreenOff();
+                                    }.bind(this));
+                                }
 
+                            }
+                        }.bind(this),
+                        fn_init: function (init) {
+                            // На проверку окончания инициализации
+                            //process--;
+                            //out_init(process);
+                        },
+                        fn_refresh: function () {
+                            //this.out_clear();
+                            //this.update();
+                        }.bind(this),
+                    });
+                    this.table_epd.view([]);
+                }
                 var TMC = App.table_manual_cars; // Отправленные вагоны
                 this.table_manual_cars = new TMC('div#result-cars');                         // Создадим экземпляр
                 this.table_manual_cars.init({
@@ -563,7 +664,7 @@
         }
         LockScreen(langView('fmic_mess_run_operation_add_wagon', App.Langs));
         this.ids_wsd.postOperationManualAddArrivalWagon(operation, function (result) {
-            if (result>0) {
+            if (result > 0) {
                 //Обновим данные полностью
                 this.clear(); // очистить форму
                 this.mf_edit.close(); // закроем форму
@@ -577,8 +678,30 @@
                 LockScreenOff();
             }
         }.bind(this));
-    }
-
+    };
+    // проверка поиск документа
+    form_manual_incoming_cars.prototype.action_search_main_doc = function () {
+        this.mf_edit.out_clear();
+        this.elements.button_search_main_doc.prop("disabled", true); // сделаем не активной
+        var doc = this.elements.input_text_main_doc.val();
+        if (doc !== null && doc !== "") {
+            LockScreen(langView('fmic_mess_operation_run_searsh_epd', App.Langs));
+            this.ids_wsd.getUZ_DOC_Of_NumDoc(doc,
+                function (list_doc) {
+                    this.table_epd.view(list_doc);
+                    this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
+                    LockScreenOff();
+                }.bind(this),
+                function (error) {
+                    this.mf_edit.out_warning(langView('fmic_mess_error_searsh_doc', App.Langs).format(error.responseText));
+                    this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
+                    LockScreenOff();
+                }.bind(this))
+        } else {
+            this.mf_edit.out_warning(langView('fmic_mess_error_not_doc', App.Langs));
+            this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
+        }
+    };
     // Открыть форму добавить
     form_manual_incoming_cars.prototype.add = function (id_sostav) {
         this.id_sostav = id_sostav;
@@ -589,8 +712,14 @@
     form_manual_incoming_cars.prototype.clear = function (data) {
         this.out_clear();
         this.mf_edit.out_clear();
-        this.elements.checkbox_check_sys_num.val(true);
-        this.elements.textarea_list_nums.val('');
+        if (this.settings.mode === 0) {
+            this.elements.checkbox_check_sys_num.val(true);
+            this.elements.textarea_list_nums.val('');
+        }
+        if (this.settings.mode === 1) {
+            this.elements.input_text_main_doc.val('');
+            this.table_epd.clear();
+        }
         this.table_manual_cars.clear();
     };
     // Сохранить объект
@@ -699,21 +828,20 @@
             this.modal_confirm_form.destroy();
             this.modal_confirm_form = null;
         }
-
         // Очистить таблицы
         if (this.obj_t_result) {
             this.obj_t_result.destroy(true);
             this.obj_t_result = null;
         }
-
-        if (this.mf_edit) {
-            this.mf_edit.destroy();
-            this.mf_edit = null;
-        }
         if (this.form) {
             this.form.destroy();
             this.form = null;
         }
+        if (this.mf_edit) {
+            this.mf_edit.destroy();
+            this.mf_edit = null;
+        }
+
     };
 
     App.form_manual_incoming_cars = form_manual_incoming_cars;

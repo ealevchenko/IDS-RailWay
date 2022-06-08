@@ -207,7 +207,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                //this.action_present_wagon();
+                this.action_doc_manual();
             }.bind(this),
         });
         var bt_car_manual = new this.fe_ui.bs_button({
@@ -242,7 +242,7 @@
         // Покажем элементы на форме
         this.$panel.append(panelElement.$element);
         // Запускаем 2 процесса инициализации (паралельно)
-        var process = 3;
+        var process = 4;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -307,6 +307,7 @@
         this.form_manual_incoming_cars = new FMIC();
         this.form_manual_incoming_cars.init({
             alert: this.alert,
+            mode: 0, // режим вагоны вручную
             ids_wsd: this.ids_wsd,
             fn_init: function (init) {
                 // На проверку окончания инициализации
@@ -325,6 +326,30 @@
 
             }.bind(this),
         });
+        // Создадим и добавим макет формы (Ручной поиск по номеру эпд)
+        this.form_manual_incoming_cars_epd = new FMIC();
+        this.form_manual_incoming_cars_epd.init({
+            alert: this.alert,
+            mode: 1, // режим вагоны вручную
+            ids_wsd: this.ids_wsd,
+            fn_init: function (init) {
+                // На проверку окончания инициализации
+                //----------------------------------
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+                //----------------------------------
+            }.bind(this),
+            fn_add: function (result) {
+                this.update(function () {
+                    this.form_manual_incoming_cars_epd.out_info(langView('vicc_mess_run_operation_add_car', App.Langs))
+                }.bind(this));
+            }.bind(this),
+            fn_db_update: function () {
+
+            }.bind(this),
+        });
+
     };
     // Открыть модуль 
     view_incoming_cars.prototype.open = function (id_sostav) {
@@ -497,6 +522,10 @@
         this.out_clear();
         this.form_manual_incoming_cars.add(this.id_sostav);
     };
+    view_incoming_cars.prototype.action_doc_manual = function () {
+        this.out_clear();
+        this.form_manual_incoming_cars_epd.add(this.id_sostav);
+    };
     //--------------------------------------------------------------------------------
     // Показать
     view_incoming_cars.prototype.show = function () {
@@ -548,6 +577,16 @@
         if (this.form_incoming_cars_detali) {
             this.form_incoming_cars_detali.destroy();
             this.form_incoming_cars_detali = null;
+        }
+        // Уберем модуль (форма ввода вагонов вручную)
+        if (this.form_manual_incoming_cars) {
+            this.form_manual_incoming_cars.destroy();
+            this.form_manual_incoming_cars = null;
+        }
+        // Уберем модуль (форма ввода вагонов через ЭПД)
+        if (this.form_manual_incoming_cars_epd) {
+            this.form_manual_incoming_cars_epd.destroy();
+            this.form_manual_incoming_cars_epd = null;
         }
 
         this.$panel.empty(); // empty in case the columns change
