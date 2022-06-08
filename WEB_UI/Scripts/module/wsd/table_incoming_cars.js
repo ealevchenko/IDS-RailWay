@@ -30,7 +30,8 @@
             'ticc_field_arrival_uz_vagon_gruzp': 'ГП,т.',
             'ticc_field_arrival_uz_vagon_wagon_kol_os': 'Кол.ос.',
             'ticc_field_arrival_uz_vagon_wagon_usl_tip': 'Тип цс',
-            'ticc_field_arrival_uz_vagon_u_tara': 'Тара,т.',
+            'ticc_field_arrival_uz_vagon_u_tara': 'Тара (ут.),т.',
+            'ticc_field_arrival_uz_vagon_ves_tary_arc': 'Тара,т.',
             'ticc_field_arrival_uz_vagon_wagon_date_rem_uz': 'Рем. УЗ',
             'ticc_field_arrival_uz_vagon_wagon_date_rem_vag': 'Рем. вагон',
             'ticc_field_arrival_uz_vagon_owner_wagon': 'Собственник',
@@ -75,6 +76,7 @@
             'ticc_title_yes': 'Да',
             'ticc_title_all': 'Все',
             'ticc_title_not_epd': 'Без ЭПД',
+            'ticc_title_for_loading': 'Под погрузку',
 
             'ticc_title_button_export': 'Экспорт',
             'ticc_title_button_buffer': 'Буфер',
@@ -265,6 +267,15 @@
             },
             className: 'dt-body-center',
             title: langView('ticc_field_arrival_uz_vagon_u_tara', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Тара
+        {
+            field: 'arrival_uz_vagon_ves_tary_arc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_ves_tary_arc ? Number(Number(row.arrival_uz_vagon_ves_tary_arc) / 1000).toFixed(3) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ticc_field_arrival_uz_vagon_ves_tary_arc', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Ремонт УЗ и вагон
         {
@@ -542,7 +553,7 @@
         {
             field: 'arrival_uz_vagon_station_amkr_name',
             data: function (row, type, val, meta) {
-                return row['arrival_uz_vagon_station_amkr_name_' + App.Lang];
+                return row.arrival_uz_vagon_id_station_on_amkr !== null ? row['arrival_uz_vagon_station_amkr_name_' + App.Lang] : langView('ticc_title_for_loading', App.Langs);
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ticc_field_arrival_uz_vagon_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
@@ -550,7 +561,7 @@
         {
             field: 'arrival_uz_vagon_station_amkr_abbr',
             data: function (row, type, val, meta) {
-                return row['arrival_uz_vagon_station_amkr_abbr_' + App.Lang];
+                return row.arrival_uz_vagon_id_station_on_amkr !== null ? row['arrival_uz_vagon_station_amkr_abbr_' + App.Lang] : langView('ticc_title_for_loading', App.Langs);
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ticc_field_arrival_uz_vagon_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
@@ -698,6 +709,7 @@
         collums.push({ field: 'arrival_uz_vagon_gruzp', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_wagon_kol_os', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_wagon_usl_tip', title: null, class: null });
+        collums.push({ field: 'arrival_uz_vagon_ves_tary_arc', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_u_tara', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_wagon_date_rem_uz', title: null, class: null });
         collums.push({ field: 'arrival_uz_vagon_wagon_date_rem_vag', title: null, class: null });
