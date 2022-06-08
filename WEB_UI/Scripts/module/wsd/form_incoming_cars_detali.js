@@ -1035,7 +1035,7 @@
                     input_group: false,
                     element_data: this.list_external_station,
                     element_minLength: 2,
-                    element_out_value: false,
+                    element_out_value: true,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         this.ids_statin_from = this.get_ids_ext_station(null, text);
@@ -1176,7 +1176,7 @@
                     input_group: false,
                     element_data: this.list_external_station,
                     element_minLength: 2,
-                    element_out_value: false,
+                    element_out_value: true,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         this.ids_statin_on = this.get_ids_ext_station(null, text);
@@ -1338,7 +1338,7 @@
                     input_group_append_objs: [bt_add_stn_border],
                     element_data: this.list_border_checkpoint,
                     element_minLength: 2,
-                    element_out_value: false,
+                    element_out_value: true,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         this.ids_border_crossing = this.get_ids_border_checkpoint(null, text);
@@ -1456,7 +1456,7 @@
                     input_group_append_objs: [bt_add_shipper],
                     element_data: this.list_shipper,
                     element_minLength: 2,
-                    element_out_value: false,
+                    element_out_value: true,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         this.ids_shipper = this.get_ids_shipper(null, text);
