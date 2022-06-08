@@ -2404,11 +2404,10 @@
             var alist = [];
             $.each(data, function (i, el) {
                 if (this.settings.out_value) {
-                    alist.push({ value: el.text !== null ? $.trim(el.text) : el.text, label: el.value + '-' + el.text !== null ? $.trim(el.text) : el.text, disabled: el.disabled ? el.disabled : null });
+                    alist.push({ value: (el.text !== null ? $.trim(el.text) : el.text), label: el.value + '-' + (el.text !== null ? $.trim(el.text) : el.text), disabled: el.disabled ? el.disabled : null });
                 } else {
                     alist.push({ value: el.text !== null ? $.trim(el.text) : el.text, label: el.text !== null ? $.trim(el.text) : el.text, disabled: el.disabled ? el.disabled : null });
                 }
-
             }.bind(this));
             return alist;
         }.bind(this);
@@ -4275,9 +4274,9 @@
                 this.close();
             }.bind(this),
             form_open: null,
+            form_close: null,
         }, options);
         var modal = new this.fc.el_modal_form(
-
             this.settings.id,
             this.settings.prefix,
             this.settings.cl_modal,
@@ -4313,13 +4312,18 @@
             $('body').append(modal.$modal);
             // создадим объект модальная форма
             this.modal = this.$modal.modal({
+                backdrop: false,
                 keyboard: false,
                 show: false
             }).on('shown.bs.modal', function (event) {
-                //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                 // Форма открыта
                 if (typeof this.settings.form_open === 'function') {
                     this.settings.form_open();
+                }
+            }.bind(this)).on('hide.bs.modal', function (event) {
+                // Форма открыта
+                if (typeof this.settings.form_close === 'function') {
+                    this.settings.form_close();
                 }
             }.bind(this));
 
