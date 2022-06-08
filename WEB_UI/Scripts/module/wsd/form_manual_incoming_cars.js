@@ -54,6 +54,7 @@
             'fmic_mess_error_search_cars': 'Ошибка выполнения операции "Поиск информации по вагонам введеным вручную, код ошибки:{0}"',
             'fmic_mess_run_operation_add_wagon': 'Выполняю операцию "ДОБАВИТЬ ВАГОНЫ В СОСТАВ"',
             'fmic_mess_run_error_operation_add_wagon': 'Ошибка выполнения операции "ДОБАВИТЬ ВАГОНЫ В СОСТАВ", код ошибки :{0}',
+            'fmic_mess_error_searsh_doc': 'Ошибка поиска документа в БД УЗ:{0}',
         },
         'en':  //default language: English
         {
