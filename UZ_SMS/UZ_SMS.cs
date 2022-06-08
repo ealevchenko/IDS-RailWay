@@ -282,49 +282,53 @@ namespace UZ
         /// <param name="DocumentNumber"></param>
         /// <returns></returns>
         //TODO: !!! Убрать использую Get_UZ_DOC_SMS_Of_NumDoc(string DocumentNumber)
-        public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
-        {
-            try
-            {
-                List<UZ_DOC> list = new List<UZ_DOC>();
-                List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
-                if (docs == null) return null;
-                foreach (GohubDocument doc in docs)
-                {
+        //public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
+        //{
+        //    try
+        //    {
+        //        List<UZ_DOC> list = new List<UZ_DOC>();
+        //        List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
+        //        if (docs == null) return null;
+        //        foreach (GohubDocument doc in docs)
+        //        {
 
-                    UZ_Convert convert = new UZ_Convert(this.servece_owner);
-                    string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
-                    OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                    string sender_code = null;
-                    string recipient_code = null;
-                    if (otpr != null && otpr.client.Count() == 2)
-                    {
-                        sender_code = otpr.client[0].kod;
-                        recipient_code = otpr.client[1].kod;
-                    }
-                    UZ_DOC uz_doc = new UZ_DOC()
-                    {
-                        id_doc = doc.Id,
-                        revision = doc.Revision,
-                        status = GetStatus(doc.Status.ToString()),
-                        sender_code = sender_code,
-                        recipient_code = recipient_code,
-                        //dt = doc.TimeStamp,
-                        xml = doc.GetXmlText(),
-                        xml_final = xml_final,
-                        otpr = otpr
-                    };
-                    list.Add(uz_doc);
-                }
-                return list;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
-                return null;
-            }
-        }
-
+        //            UZ_Convert convert = new UZ_Convert(this.servece_owner);
+        //            string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
+        //            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+        //            string sender_code = null;
+        //            string recipient_code = null;
+        //            if (otpr != null && otpr.client.Count() == 2)
+        //            {
+        //                sender_code = otpr.client[0].kod;
+        //                recipient_code = otpr.client[1].kod;
+        //            }
+        //            UZ_DOC uz_doc = new UZ_DOC()
+        //            {
+        //                id_doc = doc.Id,
+        //                revision = doc.Revision,
+        //                status = GetStatus(doc.Status.ToString()),
+        //                sender_code = sender_code,
+        //                recipient_code = recipient_code,
+        //                //dt = doc.TimeStamp,
+        //                xml = doc.GetXmlText(),
+        //                xml_final = xml_final,
+        //                otpr = otpr
+        //            };
+        //            list.Add(uz_doc);
+        //        }
+        //        return list;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+        //        return null;
+        //    }
+        //}
+        /// <summary>
+        /// Получитм документ УЗ по номеру документа 
+        /// </summary>
+        /// <param name="DocumentNumber"></param>
+        /// <returns></returns>
         public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumDoc(string DocumentNumber)
         {
             try
@@ -373,7 +377,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SMS_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
                 return null;
             }
         }
