@@ -338,9 +338,9 @@ namespace UZ
                 if (docs == null) return null;
                 foreach (GohubDocument doc in docs)
                 {
-
                     UZ_Convert convert = new UZ_Convert(this.servece_owner);
-                    string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
+                    string xml = doc.GetXmlText();
+                    string xml_final = convert.XMLToFinalXML(xml);
                     OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                     string sender_code = null;
                     string recipient_code = null;
@@ -352,11 +352,18 @@ namespace UZ
                     DateTime? dt;
                     try
                     {
-                        dt = doc.TimeStamp;
+                        if (doc.TimeStamp != null)
+                        {
+                            dt = doc.TimeStamp;
+                        }
+                        else
+                        {
+                            dt = otpr != null ? otpr.date_otpr : null;
+                        }
                     }
                     catch
                     {
-                        dt = null;
+                        dt = otpr != null ? otpr.date_otpr : null;
                     }
                     UZ_DOC_FULL uz_doc = new UZ_DOC_FULL()
                     {
@@ -415,7 +422,7 @@ namespace UZ
                     {
                         id_doc = doc.Id,
                         revision = doc.Revision,
-                        num_uz = otpr!=null ? otpr.nom_doc : null,
+                        num_uz = otpr != null ? otpr.nom_doc : null,
                         status = GetStatus(doc.Status.ToString()),
                         sender_code = sender_code,
                         recipient_code = recipient_code,
@@ -926,7 +933,7 @@ namespace UZ
                                     }
                                 }
                             }
-                    
+
                         }
                     }
                 }

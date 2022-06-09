@@ -1223,7 +1223,7 @@
     //=============================================================================================================
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
     // Получить список документов по номеру накладной
-    ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback_ok, callback_err) {
+    ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/wsd/searsh/epd/num_doc/' + num_doc,
@@ -1233,14 +1233,13 @@
                 AJAXBeforeSend();
             },
             success: function (data) {
-                if (typeof callback_ok === 'function') {
-                    callback_ok(data);
+                if (typeof callback === 'function') {
+                    callback(data);
                 }
             },
             error: function (x, y, z) {
-                if (typeof callback_err === 'function') {
-                    callback_err(x);
-                }
+                LockScreenOff();
+                OnAJAXError("ids_wsd.getUZ_DOC_Of_NumDoc", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

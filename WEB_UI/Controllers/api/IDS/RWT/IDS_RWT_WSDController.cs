@@ -791,6 +791,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long id_arrival_sostav { get; set; }
         public bool check { get; set; }
         public List<int> num_cars { get; set; }
+        public string num_doc { get; set; }
         public bool as_client { get; set; }
         public string user { get; set; }
     }
@@ -798,6 +799,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         public long id_arrival_sostav { get; set; }
         public List<int> num_cars { get; set; }
+        public string num_doc { get; set; }
         public string user { get; set; }
     }
 
@@ -1699,7 +1701,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                ResultObject result = ids_wir.OperationManualSearchArrivalWagon(value.id_arrival_sostav, value.check, value.num_cars, value.as_client, value.user);
+                ResultObject result = ids_wir.OperationManualSearchArrivalWagon(value.id_arrival_sostav, value.check, value.num_cars, value.num_doc, value.as_client, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -1721,7 +1723,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.OperationManualAddArrivalWagon(value.id_arrival_sostav, value.num_cars, value.user);
+                int result = ids_wir.OperationManualAddArrivalWagon(value.id_arrival_sostav, value.num_cars, value.num_doc, value.user);
                 return Ok(result);
             }
             catch (Exception e)
@@ -1940,8 +1942,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
-
-
         #region ОПЕРАЦИЯ СДАТЬ НА УЗ (Обновленный АРМ)
         // POST api/ids/rwt/wsd/operation/present/sostav
         /// <summary>
@@ -2040,22 +2040,15 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         // GET: api/ids/rwt/wsd/searsh/epd/num_doc/42948810
         [Route("searsh/epd/num_doc/{num_doc}")]
-        [ResponseType(typeof(UZ.UZ_DOC_FULL))]
+        [ResponseType(typeof(ResultObject))]
         public IHttpActionResult Get_UZ_DOC_Of_NumDoc(string num_doc)
         {
             try
             {
-                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(service.WebAPI_UZ);
-                bool res_con = uz_sms.Connection();
-                if (res_con)
-                {
-                    List<UZ.UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc);
-                    return Ok(docs);
-                }
-                else
-                {
-                    return BadRequest("Ошибка подключения к модулю согласования");
-                }
+
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                ResultObject result = ids_wir.OperationSearchUpdateUZ_DOC_Of_SMS(num_doc, true);
+                return Ok(result);
             }
             catch (Exception e)
             {

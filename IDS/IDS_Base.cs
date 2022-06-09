@@ -115,9 +115,13 @@ namespace IDS
         not_sap_is_db = -801,                               // В базе данных нет записи по SAPIncomingSupply (SAP Входящая поставка)
         not_sap_os_db = -802,                               // В базе данных нет записи по SAPOutgoingSupply (SAP Исходящая поставка)
 
-        error_convert_epd = -900,                           // Ошибка конвертации данных ЭПД
-        not_epd_document = -901,                            // Нет ЭПД
-        not_vagon_epd_document = -902,                      // Указанного вагона нет в ЭПД
+        // СМС
+        error_connect_sms = -900,                           // Ошибка Подкллючения к модулю согласования
+        
+        error_convert_epd = -950,                           // Ошибка конвертации данных ЭПД
+        not_epd_document = -951,                            // Нет ЭПД
+        not_vagon_epd_document = -952,                      // Указанного вагона нет в ЭПД
+
         // Справочники -1000.....
 
         // Directory_Ways -1100..

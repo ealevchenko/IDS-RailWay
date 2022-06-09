@@ -101,7 +101,7 @@
         this.elements = {}; // Все элементы формы
         this.id_sostav = null;
         this.rows = []; // Выбранные поля
-
+        this.num_doc = null;        // Номер выбранного документа УЗ
         // Загрузим справочные данные, определим поля формы правки
         //this.load_db([], false, function (result) {
         // Подгрузили списки
@@ -421,7 +421,9 @@
                         alert: this.alert,
                         fn_select_rows: function (rows) {
                             if (rows && rows.length > 0 && rows[0].otpr.vagon !== null && rows[0].otpr.vagon.length > 0) {
+                                // выбран документ
                                 var vagon = rows[0].otpr.vagon;
+                                this.num_doc = rows[0].id_doc; // сохраним внутри УЗ-ный номер найденого документа
                                 var vagons = [];
                                 $.each(vagon, function (index, el) {
                                     vagons.push(el.nomer);
@@ -432,6 +434,7 @@
                                         id_arrival_sostav: this.id_sostav,
                                         check: false,
                                         num_cars: vagons,
+                                        num_doc: this.num_doc,
                                         as_client: false,
                                         user: App.User_Name,
                                     };
@@ -445,7 +448,9 @@
                                         LockScreenOff();
                                     }.bind(this));
                                 }
-
+                            } else {
+                                this.table_manual_cars.view([]);
+                                this.mf_edit.$bt_ok.prop('disabled', true);
                             }
                         }.bind(this),
                         fn_init: function (init) {
@@ -559,6 +564,7 @@
     //-------------------------------------------------------------------
     // проверка введенных вагонов
     form_manual_incoming_cars.prototype.action_search_car = function () {
+        this.num_doc = null;
         var isNumeric = function (value) {
             return /^\d+$/.test(value);
         };
@@ -629,6 +635,7 @@
                     id_arrival_sostav: this.id_sostav,
                     check: check,
                     num_cars: car_out,
+                    num_doc: null,
                     as_client: false,
                     user: App.User_Name,
                 };
@@ -661,6 +668,7 @@
         var operation = {
             id_arrival_sostav: this.id_sostav,
             num_cars: cars,
+            num_doc: this.num_doc,
             user: App.User_Name,
         }
         LockScreen(langView('fmic_mess_run_operation_add_wagon', App.Langs));
@@ -688,16 +696,17 @@
         if (doc !== null && doc !== "") {
             LockScreen(langView('fmic_mess_operation_run_searsh_epd', App.Langs));
             this.ids_wsd.getUZ_DOC_Of_NumDoc(doc,
-                function (list_doc) {
-                    this.table_epd.view(list_doc);
-                    this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
-                    LockScreenOff();
-                }.bind(this),
-                function (error) {
-                    this.mf_edit.out_warning(langView('fmic_mess_error_searsh_doc', App.Langs).format(error.responseText));
-                    this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
-                    LockScreenOff();
-                }.bind(this))
+                function (result) {
+                    if (result.result >= 0) {
+                        this.table_epd.view(result.obj !== null ? result.obj : []);
+                        this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
+                        LockScreenOff();
+                    } else {
+                        this.mf_edit.out_warning(langView('fmic_mess_error_searsh_doc', App.Langs).format(result.result));
+                        this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной
+                        LockScreenOff();
+                    }
+                }.bind(this));
         } else {
             this.mf_edit.out_warning(langView('fmic_mess_error_not_doc', App.Langs));
             this.elements.button_search_main_doc.prop("disabled", false); // сделаем не активной

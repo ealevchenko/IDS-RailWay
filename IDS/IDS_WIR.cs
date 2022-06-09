@@ -2466,7 +2466,7 @@ namespace IDS
         /// <param name="as_client"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public ResultObject OperationManualSearchArrivalWagon(long id_arrival_sostav, bool check, List<int> num_cars, bool as_client, string user)
+        public ResultObject OperationManualSearchArrivalWagon(long id_arrival_sostav, bool check, List<int> num_cars, string num_doc, bool as_client, string user)
         {
             ResultObject res = new ResultObject();
             try
@@ -2516,7 +2516,20 @@ namespace IDS
                     position++;
                     int type_update = 0;
                     bool sys_num = ids_dir.IsCorrectNumCar(num);
-                    ResultObject res_epd = OperationUpdateUZ_DOC(num, sostav.date_arrival, true, as_client);
+
+                    EFIDS.Entities.UZ_DOC new_uz_doc = null;
+                    if (string.IsNullOrWhiteSpace(num_doc))
+                    {
+                        ResultObject res_epd = OperationUpdateUZ_DOC(num, sostav.date_arrival, true, as_client);
+                        new_uz_doc = res_epd != null && res_epd.obj != null ? ((EFIDS.Entities.UZ_DOC)res_epd.obj).GetUZ_DOC() : null;
+                    }
+                    else
+                    {
+
+                        new_uz_doc = ef_uz_doc.Context.Where(d => d.num_doc == num_doc).FirstOrDefault();
+                    }
+
+
                     ArrivalCars car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
 
                     ArrivalCars car_exist = list_car_exist.Where(c => c.num == num).FirstOrDefault();
@@ -2563,7 +2576,7 @@ namespace IDS
                         position = position,
                         sys_num = sys_num,
                         car = car != null ? car.GetArrivalCars_ArrivalSostav() : null,
-                        new_uz_doc = res_epd != null && res_epd.obj != null ? ((EFIDS.Entities.UZ_DOC)res_epd.obj).GetUZ_DOC() : null,
+                        new_uz_doc = new_uz_doc.GetUZ_DOC(),
                         wir = wir.GetWagonInternalRoutes(),
                         type_update = type_update,
                     };
@@ -2580,7 +2593,7 @@ namespace IDS
             return res;
         }
 
-        public int OperationManualAddArrivalWagon(long id_arrival_sostav, List<int> num_cars, string user)
+        public int OperationManualAddArrivalWagon(long id_arrival_sostav, List<int> num_cars, string num_doc, string user)
         {
             try
             {
@@ -2599,7 +2612,7 @@ namespace IDS
                 IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
                 ResultObject res;
                 int res_upd = 0;
-                res = OperationManualSearchArrivalWagon(id_arrival_sostav, true, num_cars, false, user);
+                res = OperationManualSearchArrivalWagon(id_arrival_sostav, true, num_cars, num_doc, false, user);
                 if (res.obj != null)
                 {
                     list_msv = (List<Manual_Search_Vagon>)res.obj;
@@ -2645,7 +2658,7 @@ namespace IDS
                             arr_car.id_arrival = id_arrival_sostav;
                             arr_car.position = position;
                             arr_car.note = "Перенесен (ручной режим)";
-                            arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : null;
+                            arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : arr_car.num_doc;
                             arr_car.change = DateTime.Now;
                             arr_car.change_user = user;
                             ef_arr_car.Update(arr_car);
@@ -6247,7 +6260,7 @@ namespace IDS
                         status = (int)uz_doc_full.status,
                         code_from = uz_doc_full.sender_code != null ? uz_doc_full.sender_code : "0",
                         code_on = uz_doc_full.recipient_code,
-                        dt = uz_doc_full.dt,
+                        dt = uz_doc_full.dt, // uz_doc_full.otpr.date_otpr
                         xml_doc = uz_doc_full.xml,
 
                     };
@@ -6295,22 +6308,44 @@ namespace IDS
                 return false;
             }
         }
-
-        public ResultObject OperationSearchUpdateUZ_DOC_Of_SMS(string num_doc, bool add) {
+        /// <summary>
+        /// Метод поиска и обновления документов 
+        /// </summary>
+        /// <param name="num_doc"></param>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        public ResultObject OperationSearchUpdateUZ_DOC_Of_SMS(string num_doc, bool add)
+        {
             ResultObject result = new ResultObject();
-            try {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(service.WebAPI_UZ);
 
-                //// Документа нет в промежуточной базе, продолжим поиск в СМС
-                //List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc); //num_doc
-                //if (docs != null && docs.Count() > 0)
-                //{
-                //    doc = docs[0];
-                //}
+                List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc); //num_doc
+                bool res_con = uz_sms.Connection();
+                if (!res_con)
+                {
+                    result.result = (int)errors_base.error_connect_sms; // Ошибка Подкллючения к модулю согласования
+                    return result;
+                }
+                List<UZ.UZ_DOC_FULL> list_docs = uz_sms.Get_UZ_DOC_SMS_Of_NumDoc(num_doc);
+                if (docs != null && docs.Count() > 0)
+                {
+                    foreach (UZ.UZ_DOC_FULL doc in list_docs)
+                    {
+                        // Обновим документы
+                        UpdateUZ_DOC(ref context, doc, add);
+                    }
+                    result.result = context.SaveChanges();
+                    result.obj = list_docs;
+                }
                 return result;
             }
             catch (Exception e)
             {
-                //e.ExceptionMethodLog(String.Format("OperationUpdateUZ_DOC(num_doc={0}, num={1}, add={2}, search_sms={3})", num_doc, num, add, search_sms), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationSearchUpdateUZ_DOC_Of_SMS(num_doc={0}, add={1})", num_doc, add), servece_owner, eventID);
                 result.result = (int)errors_base.global;// Ошибка
                 return result;
             }
