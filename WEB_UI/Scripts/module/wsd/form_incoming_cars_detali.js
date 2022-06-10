@@ -4429,7 +4429,7 @@
                             var mess = null;
                             if (this.wagon.arrival_car_wim_cur_id_outer_way) {
                                 // На перегоне
-                                mess = langView('vicc_title_disable_wagon_out_way', App.Langs).format(this.wagon['arrival_car_wim_cur_name_outer_way_' + App.Lang], this.wagon.arrival_car_wim_cur_outer_way_start.format(format_datetime), this.wagon.arrival_car_wim_cur_outer_way_end ? this.wagon.arrival_car_wim_cur_outer_way_end.format(format_datetime) : '');
+                                mess = langView('vicc_title_disable_wagon_out_way', App.Langs).format(this.wagon['arrival_car_wim_cur_name_outer_way_' + App.Lang], moment(this.wagon.arrival_car_wim_cur_outer_way_start).format(format_datetime), this.wagon.arrival_car_wim_cur_outer_way_end ? moment(this.wagon.arrival_car_wim_cur_outer_way_end).format(format_datetime) : '');
                             } else {
                                 // На пути станции
                                 mess = langView('vicc_title_disable_wagon_way', App.Langs).format(this.wagon['arrival_car_wim_cur_station_name_' + App.Lang], this.wagon['arrival_car_wim_cur_way_num_' + App.Lang] + '-' + this.wagon['arrival_car_wim_cur_way_name_' + App.Lang], this.wagon.arrival_car_wim_cur_way_start.format(format_datetime), this.wagon.arrival_car_wim_cur_way_end ? this.wagon.arrival_car_wim_cur_way_end.format(format_datetime) : '');

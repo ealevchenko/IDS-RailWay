@@ -2528,48 +2528,58 @@ namespace IDS
 
                         new_uz_doc = ef_uz_doc.Context.Where(d => d.num_doc == num_doc).FirstOrDefault();
                     }
-
-
-                    ArrivalCars car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
-
-                    ArrivalCars car_exist = list_car_exist.Where(c => c.num == num).FirstOrDefault();
-                    if (car_exist != null)
+                    // Ищим вагон в текущем составе
+                    ArrivalCars car = list_car_exist.Where(c => c.num == num).FirstOrDefault();
+                    if (car != null && car.arrival == null && car.ArrivalSostav.status < 2)
                     {
-                        type_update = 6; // Попытка добавить вагон в состав в котором стоит вагон
+                        // Вагон есть не принят и состав не закрыт обновим документ
+                        type_update = 1; // Только обновить ЭПД
+
                     }
                     else
                     {
+                        // 
                         if (car != null)
                         {
-                            if (car.ArrivalSostav.status == 2)
+                            // Вагон есть, но или принят или закрыт состав 
+                            type_update = 7; // Запрет 
+                        }
+                        else
+                        {
+                            // Вагона нет в текущем составе, ищем за указаный период
+                            car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
+                            if (car != null)
                             {
-                                type_update = 4; // Состав принят, запрет
-                            }
-                            else
-                            {
-                                if (car.ArrivalSostav.status == 1)
+                                if (car.ArrivalSostav.status == 2)
                                 {
-                                    if (car.arrival != null)
-                                    {
-                                        // Состав в работе вагон принят
-                                        type_update = 3; // Состав в работе вагон принят, запрет
-                                    }
-                                    else
-                                    {
-                                        // Состав в работе вагон не принят принят
-                                        type_update = 2; // Состав в работе вагон не принят, выбор
-                                    }
+                                    type_update = 5; // Состав принят, запрет
                                 }
                                 else
                                 {
-                                    // Вагон свободен для переноса
-                                    type_update = 1; // Состав не обработан или отклонен вагон можно переносить
+                                    if (car.ArrivalSostav.status == 1)
+                                    {
+                                        if (car.arrival != null)
+                                        {
+                                            // Состав в работе вагон принят
+                                            type_update = 4; // Состав в работе вагон принят, запрет
+                                        }
+                                        else
+                                        {
+                                            // Состав в работе вагон не принят принят
+                                            type_update = 3; // Состав в работе вагон не принят, выбор
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Вагон свободен для переноса
+                                        type_update = 2; // Состав не обработан или отклонен вагон можно переносить
+                                    }
                                 }
                             }
                         }
                     }
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.num == num && w.close == null).FirstOrDefault();
-                    type_update = wir != null ? 5 : type_update; // Запрет есть незакрыток внутреннее перемещение
+                    type_update = wir != null ? 6 : type_update; // Запрет есть незакрыток внутреннее перемещение
                     Manual_Search_Vagon msv = new Manual_Search_Vagon()
                     {
                         num = num,
@@ -2623,7 +2633,7 @@ namespace IDS
                     int position = sostav.ArrivalCars.Count() > 1 ? sostav.ArrivalCars.Count() + 1 : 1;
                     foreach (Manual_Search_Vagon sv in list_msv)
                     {
-                        if (sv.type_update > 2) return (int)errors_base.error_status_arrival_sostav; // Статус состава не позволяет сделать эту операцию
+                        if (sv.type_update > 3) return (int)errors_base.error_status_arrival_sostav; // Статус состава не позволяет сделать эту операцию
                         if (sv.type_update == 0)
                         {
                             // создадим прибытие
@@ -2653,17 +2663,27 @@ namespace IDS
                             ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == sv.car.id).FirstOrDefault();
                             if (arr_car == null) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
 
-                            // Перенос вагона
-                            arr_car.id_transfer = sv.car.id_arrival;
-                            arr_car.id_arrival = id_arrival_sostav;
-                            arr_car.position = position;
-                            arr_car.note = "Перенесен (ручной режим)";
-                            arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : arr_car.num_doc;
+                            if (sv.type_update == 1)
+                            {
+                                // обновим документ
+                                arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : arr_car.num_doc;
+                                arr_car.note = "Обновили ЭПД (ручной режим)";
+                            }
+                            else
+                            {
+                                // Перенос вагона
+                                arr_car.id_transfer = sv.car.id_arrival;
+                                arr_car.id_arrival = id_arrival_sostav;
+                                arr_car.position = position;
+                                arr_car.note = "Перенесен (ручной режим)";
+                                arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : arr_car.num_doc;
+                                position++;
+                            }
                             arr_car.change = DateTime.Now;
                             arr_car.change_user = user;
                             ef_arr_car.Update(arr_car);
                         }
-                        position++;
+                        
                     }
                     res_upd = context.SaveChanges();
                 }

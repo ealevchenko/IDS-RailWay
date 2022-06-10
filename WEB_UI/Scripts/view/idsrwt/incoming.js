@@ -1416,7 +1416,6 @@
                 });
             };
 
-
             if (id) {
                 LockScreen(langView('mess_print', langs));
                 ids_inc.getArrivalSostavOfID(id, function (result_sostav) {

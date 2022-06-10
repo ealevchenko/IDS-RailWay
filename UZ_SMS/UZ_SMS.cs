@@ -840,7 +840,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num)";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
 
@@ -886,7 +886,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by[dt] desc";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
                 if (list_uz_data != null)

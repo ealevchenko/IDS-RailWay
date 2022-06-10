@@ -2475,7 +2475,7 @@
                     }.bind(this));
                     text_out = select ? select.text : null;
                 }
-                this.$element.val(text_out !== null ? $.trim(text_out): text_out);
+                this.$element.val(text_out !== null ? $.trim(text_out) : text_out);
             } else {
                 var select = this.settings.data.find(function (o) {
                     return o.text === $.trim(this.$element.val());
@@ -3016,7 +3016,63 @@
         };
 
     };
+    //  <div class="dropdown">
+    //      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+    //          Dropdown button
+    //      </button>
+    //      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    //          <a class="dropdown-item" href="#">Action</a>
+    //          <a class="dropdown-item" href="#">Another action</a>
+    //          <a class="dropdown-item" href="#">Something else here</a>
+    //      </div>
+    //  </div>
+    form_element.prototype.bs_dropdown = function (options) {
+        this.settings = $.extend({
+            color: 'secondary',
+            size: null,
+            class: null,
+            id: 'dropdownMenuButton',
+            label: null,
+            title: null,
+            list_menu: null,
+        }, options);
+        this.fe = new form_element();
+        var div_dropdown = new this.fe.div({ class: 'dropdown' });
+        this.$element = div_dropdown.$div;
+        add_class(this.$element, this.settings.class);
+        var button = new this.fe.bs_button({
+            color: this.settings.color,
+            size: this.settings.size,
+            class: 'dropdown-toggle',
+            id: this.settings.id,
+            label: this.settings.label,
+            title: this.settings.title,
+        });
+        add_tag(button.$button, 'data-toggle', 'dropdown');
+        add_tag(button.$button, 'aria-expanded', 'false');
+        var div_dropdown_menu = new this.fe.div({ class: 'dropdown-menu' });
+        this.$dropdown_menu = div_dropdown_menu.$div
+        add_tag(this.$dropdown_menu, 'aria-labelledby', this.settings.id);
+        this.$element.append(button.$button).append(this.$dropdown_menu);
+        if (this.settings.list_menu && this.settings.list_menu.length > 0) {
+            $.each(this.settings.list_menu, function (index, element) {
+                var a_link = new this.fe.a({
+                    id: element.id,
+                    class: 'dropdown-item',
+                    href: element.href,
+                    text: element.label,
+                    target: null,
+                    title: null,
+                });
+                add_class(a_link.$alink, element.disable ? 'disabled' : '');
 
+                if (typeof element.click === 'function') {
+                    a_link.$alink.on("click", element.click);
+                }
+                this.$dropdown_menu.append(a_link.$alink);
+            }.bind(this));
+        }
+    };
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {
         this.settings = $.extend({

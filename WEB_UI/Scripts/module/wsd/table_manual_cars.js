@@ -34,12 +34,13 @@
             //'tmc_title_yes': 'Да',
             'tmc_title_all': 'Все',
             'tmc_title_type_update_0': 'Добавить вагон.',
-            'tmc_title_type_update_1': 'Перенести вагон из прибывшего состава.',
-            'tmc_title_type_update_2': 'Перенести? (состав в работе, но вагон не принят!)',
-            'tmc_title_type_update_3': 'Запрет! (Состав в работе вагон принят)',
-            'tmc_title_type_update_4': 'Запрет! (Состав принят)',
-            'tmc_title_type_update_5': 'Запрет! (Вагон на АМКР)',
-            'tmc_title_type_update_6': 'Запрет! (Вагон уже находится в составе)',
+            'tmc_title_type_update_1': 'Только обновить ЭПД.',
+            'tmc_title_type_update_2': 'Перенести вагон из прибывшего состава.',
+            'tmc_title_type_update_3': 'Перенести? (состав в работе, но вагон не принят!)',
+            'tmc_title_type_update_4': 'Запрет! (Состав в работе вагон принят)',
+            'tmc_title_type_update_5': 'Запрет! (Состав принят)',
+            'tmc_title_type_update_6': 'Запрет! (Вагон на АМКР)',
+            'tmc_title_type_update_7': 'Запрет! (Вагон уже находится в составе)',
 
             'tmc_title_ststus_0': 'Не принят',
             'tmc_title_ststus_1': 'В работе',
@@ -445,10 +446,10 @@
                         switch (this.settings.type_report) {
                             case 'table-searsh-cars': {
                                 $(row).attr('id', data.num);
-                                if (data.type_update < 3) {
+                                if (data.type_update < 4) {
                                     $(row).addClass('green');
                                 } else {
-                                    if (data.type_update > 3) {
+                                    if (data.type_update > 4) {
                                         $(row).addClass('red');
                                     } else {
                                         $(row).addClass('yellow');
@@ -470,7 +471,7 @@
                         this.obj_t_manual.on('user-select', function (e, dt, type, cell, originalEvent) {
                             var indexes = cell && cell.length > 0 ? cell[0][0].row : null;
                             var row = this.obj_t_manual.rows(indexes).data().toArray();
-                            if (row && row.length > 0 && row[0].type_update && row[0].type_update > 2) {
+                            if (row && row.length > 0 && row[0].type_update && row[0].type_update > 3) {
                                 e.preventDefault();
                             }
                         }.bind(this)).on('select deselect', function (e, dt, type, indexes) {

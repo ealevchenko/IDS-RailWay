@@ -8,9 +8,23 @@
     {
         'default':  //default language: ru
         {
+
             'mi_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mi_init_main': 'Инициализация формы прибытие...',
+            'mi_title_label_dropdown': 'Отчетная документация',
+            'mi_title_report_fst': 'Натурная ведомость поезда',
+            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра',
+            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР.',
+            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл.',
+            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР.',
+            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл.',
+            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР.',
+            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл.',
+            'mi_title_report_gfa': 'Акт общей формы',
+            'mi_title_report_dg20': 'Накладная предприятия ДГ-20',
+            'mi_title_report_way': 'Путевая',
+            'mi_operation_mess_print': 'Готовлю документ для печати ...',
         },
         'en':  //default language: English
         {
@@ -28,12 +42,12 @@
     var IDS_DIRECTORY = App.ids_directory;
     var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
-    var FC = App.form_control;
-/*    var FE = App.form_element;*/
+    /*    var FC = App.form_control;*/
+    var FE = App.form_element;
 
     var FIL = App.form_inline;
-    var fc_ui = new FC();
-/*    var fe_ui = new FE();*/
+    //var fc_ui = new FC();
+    var fe_ui = new FE();
     var alert = App.alert_form;
 
     var TIS = App.table_incoming_sostav;
@@ -44,6 +58,9 @@
 
     var VICC = App.view_incoming_cars;
     var view_incoming_cars = null;
+
+    var VICR = App.view_incoming_report;
+    var view_incoming_report = new VICR();
 
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
 
@@ -132,14 +149,45 @@
             // Отображение формы выбора 
             div.append(this.form_panel.$form);
             // Инициализация отчетных документов
-            var element_dropdown = new fc_ui.el_div_dropdown(null, 'mr-2 ml-auto', 'sm', 'btn-secondary', 'Отчетная документация');
+            var element_dropdown = new fe_ui.bs_dropdown({
+                color: 'secondary',
+                size: 'sm',
+                class: 'mr-2 ml-auto dropleft',
+                id: 'dd-report',
+                label: langView('mi_title_label_dropdown', App.Langs),
+                title: 'отчеты',
+                list_menu: [
+                    {
+                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function () {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav) {
+                                view_incoming_report.fst(table_incoming_sostav.id_sostav)
+                            }
+                        }.bind(this)
+                    },
+                    { href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled:false, click: function () {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav) {
+                                view_incoming_report.fsci(table_incoming_sostav.id_sostav)
+                            }
+                    }.bind(this)
+                    },
+                    { href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled:false },
+                    { href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled:false },
+                    { href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled:false },
+                    { href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled:false },
+                    { href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled:false },
+                    { href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled:false },
+                    { href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled:false },
+                    { href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled:false },
+                    { href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled:false },
+                ],
+            });
+            
             if (element_dropdown && element_dropdown.$element && element_dropdown.$element.length > 0) {
                 this.form_panel.$form.append(element_dropdown.$element);
-                // Добавить отчеты
-                //<a class="dropdown-item" href="#" id="report_fst">Натурная ведомость поезда</a>
-                //.....
-                //<a class="dropdown-item" href="#" id="report_fsci">Натурная ведомость коммерческого осмотра</a>
-            }
+            };
+
             // Запускаем 3 процесса инициализации (паралельно)
             var process = 3;
             // Выход из инициализации
@@ -152,7 +200,6 @@
                     }.bind(table_incoming_sostav));
                 }
             }.bind(this);
-
             // Инициализация Окно детально
             form_detali.init({
                 alert: alert,//alert,
@@ -188,7 +235,7 @@
                     out_init(process);
                 }.bind(this),
             });
-            // Инициализация модуля "Таблица отправляемых составов"
+            // Инициализация модуля "Таблица прибывающих составов"
             table_incoming_sostav.init({
                 type_report: 'incoming_sostav',
                 alert: alert,
@@ -202,6 +249,11 @@
                 fn_action_view_wagons: function (rows_sostav) {
                     form_detali.open();
                 },
+            });
+            // Инициализация модуля "Отчет принятых составов"
+            view_incoming_report.init({
+                alert: alert,
+                ids_wsd: null,
             });
 
         }.bind(this));
