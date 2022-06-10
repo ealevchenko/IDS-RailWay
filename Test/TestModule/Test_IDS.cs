@@ -446,7 +446,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateUZ_DOC1()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            ids.OperationUpdateUZ_DOC("0675011", 52830882, true, true);
+            ids.OperationUpdateUZ_DOC("500512", 62073481, true, true);
         }
         /// <summary>
         /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
@@ -479,7 +479,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> nums = new List<int>() { 64907751, 57925752, 72851330 };
-            ids.OperationManualSearchArrivalWagon(171648, true, nums, false, "test");
+            ids.OperationManualSearchArrivalWagon(171648, true, nums, null, false, "test");
 
         }
         #endregion

@@ -232,10 +232,10 @@ namespace Test
             //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                       // Тест переноса вагона в левую сторону
-            //tids.IDS_WIR_OperationUpdateUZ_DOC1();                         // Тест поиска документа по номеру накладной и номеру вагона
+            tids.IDS_WIR_OperationUpdateUZ_DOC1();                         // Тест поиска документа по номеру накладной и номеру вагона
             //tids.IDS_WIR_OperationUpdateUZ_DOC2();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
-            tids.IDS_WIR_OperationManualSearchIncomingWagon();          // Тест поиска вагонов введенных в ручную
+            //tids.IDS_WIR_OperationManualSearchIncomingWagon();          // Тест поиска вагонов введенных в ручную
 
             #endregion
 
@@ -272,6 +272,7 @@ namespace Test
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();
             //tuz.UZ_SMS_GetUZ_DOC_Of_NumDoc();  // Поиск в УЗ по номеру документа
+            //tuz.UZ_SMS_GetUZ_DOC_Of_NumWagons();  // Поиск в УЗ по номеру вагона
             //tuz.UZ_SMS_GetOTPROfXML();
             //tuz.UZ_SMS_GetDocumentOfDB_Num();
             //tuz.UZ_SMS_GetArrivalDocumentOfDB_Num();

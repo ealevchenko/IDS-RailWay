@@ -75,11 +75,17 @@ namespace Test.TestModule
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-            List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("74089598");
+            //List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("74089598");
 
 
         }
-
+        // Поиск по номеру вагона
+        public void UZ_SMS_GetUZ_DOC_Of_NumWagons()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            sms.Connection();
+            List<UZ_DOC_FULL> docs = sms.Get_UZ_DOC_SMS_Of_NumWagon("62976527,60300357"); //num_doc;60300357;63260020
+        }
         public void UZ_SMS_GetOTPROfXML()
         {
             XmlDocument xDoc = new XmlDocument();
@@ -87,12 +93,12 @@ namespace Test.TestModule
             UZ_SMS sms = new UZ_SMS();
             OTPR otpr = sms.GetOTPROfXML(xDoc.InnerXml);
         }
-
-        public void UZ_SMS_GetDocumentOfDB_Num()
-        {
-            UZ_SMS sms = new UZ_SMS();
-            UZ_DOC doc = sms.GetDocumentOfDB_Num(55120554);
-        }
+        //TODO: !!! Убрал использую Get_UZ_DOC_SDB_Of_Num(int num)
+        //public void UZ_SMS_GetDocumentOfDB_Num()
+        //{
+        //    UZ_SMS sms = new UZ_SMS();
+        //    UZ_DOC doc = sms.GetDocumentOfDB_Num(55120554);
+        //}
 
         public void UZ_SMS_GetArrivalDocumentOfDB_Num()
         {
