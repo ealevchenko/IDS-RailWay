@@ -86,6 +86,7 @@
             }
         }
     }
+    //
     view_incoming_report.prototype.get_sostav = function (wagons) {
         if (wagons && wagons.length > 0) {
             this.sostav = {};
@@ -212,6 +213,100 @@
         }
         doc.write('</table>');
     };
+    // Вывести вагоны в составе
+    view_incoming_report.prototype.view_table_info_car_fsci = function (doc, wagons) {
+        doc.write('<table class="table-info">');
+        doc.write('<tr>');
+        doc.write('<th scope="col">№</th>');
+        doc.write('<th scope="col">Код</th>');
+        doc.write('<th scope="col">Грузоподъемность</th>');
+        doc.write('<th scope="col">Вес,тн</th>');
+        doc.write('<th scope="col">Род</th>');
+        doc.write('<th scope="col">№ вагона</th>');
+        doc.write('<th scope="col">№ ж.д. накладной</th>');
+        doc.write('<th scope="col">Груз</th>');
+        doc.write('<th scope="col">Станция отправления</th>');
+        doc.write('<th scope="col">Оператор</th>');
+        doc.write('<th scope="col">Собственник</th>');
+        doc.write('<th scope="col">Цех-получатель</th>');
+        doc.write('<th scope="col">Ограничение погрузки</th>');
+        doc.write('<th scope="col">Судно</th>');
+        doc.write('<th scope="col">Ком. состояние груза</th>');
+        doc.write('<th scope="col">Акты</th>');
+        doc.write('</tr>');
+
+        var list_cars = wagons.filter(function (i) {
+            return i.arrival_car_position_arrival
+        }).sort(function (a, b) {
+            return Number(a.arrival_car_position_arrival) - Number(b.arrival_car_position_arrival)
+        });
+
+        var total_vesg = 0;
+        var group_operators = [];
+        // Список вагонов есть
+        if (list_cars) {
+            for (var i = 0; i < list_cars.length; i++) {
+
+                //var vag_acts_uz = vag_uz && vag_uz.Arrival_UZ_Vagon_Acts ? vag_uz.Arrival_UZ_Vagon_Acts : null;
+                //var acts_uz = null;
+                //for (ia = 0; ia < vag_acts_uz.length; ia++) {
+                //    acts_uz += ('id=' + vag_acts_uz[ia].id_document + ' №' + vag_acts_uz[ia].nom_akt + ' от ' + (vag_acts_uz[ia].date_akt ? vag_acts_uz[ia].date_akt.replace(/T/g, ' ') : '') + ' ' + vag_acts_uz[ia].prichina_akt + ' ст.' + vag_acts_uz[ia].stn_name_akt + ';');
+                //}
+
+
+                var gruzp = list_cars[i].arrival_uz_vagon_gruzp ? Number(list_cars[i].arrival_uz_vagon_gruzp) : 0;
+                var id_operator = list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator ? list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator : 0;
+                var operator = list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang];
+                var vesg = list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000) : 0;
+                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang] : '');
+                var acts_uz = '';
+                //this.ids_wsd.getArrival_UZ_Vagon_ActsOfID_Vagon(id_vagon, function (acts) {
+
+                //}.bind(this));
+
+                doc.write('<tr>');
+                doc.write('<th>' + list_cars[i].arrival_car_position_arrival + '</th>');
+                doc.write('<td>' + OutText(list_cars[i].arrival_uz_vagon_wagon_adm) + '</td>');
+                doc.write('<td>' + gruzp.toFixed(2) + '</td>');
+                doc.write('<td>' + vesg.toFixed(2) + '</td>');
+                doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_rod_abbr_' + App.Lang]) + '</td>');
+                doc.write('<td>' + list_cars[i].num + '</td>');
+                doc.write('<td>' + OutText(list_cars[i].arrival_uz_document_nom_main_doc) + (list_cars[i].arrival_uz_document_nom_doc ? '(' + list_cars[i].arrival_uz_document_nom_doc + ')' : '') + '</td>');
+                doc.write('<td>' + list_cars[i]['arrival_uz_vagon_cargo_name_' + App.Lang] + certification_data + '</td>');
+                doc.write('<td>' + list_cars[i]['arrival_uz_document_station_from_name_' + App.Lang] + '</td>');
+                doc.write('<td>' + list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] + '</td>');
+                doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
+                doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_name_division_' + App.Lang]) + '</td>');
+                doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang]) + '</td>');
+                doc.write('<td></td>');
+                doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_commercial_condition_' + App.Lang]) + '</td>');
+                doc.write('<td>' + acts_uz + '</td>');
+                doc.write('</tr>');
+                // Подчет общего веса
+                //total_vesg += vesg;
+                // Группировка операторов
+                //var opr = getObjects(group_operators, 'id', id_operator)
+                //if (opr && opr.length > 0) {
+                //    opr[0].count += 1;
+                //    opr[0].vesg = Number(opr[0].vesg) + vesg;
+                //} else {
+                //    if (operator !== null) {
+                //        group_operators.push({ id: id_operator, operator: operator, count: 1, vesg: vesg });
+                //    } else {
+                //        group_operators.push({ id: 0, operator: 'Не определен', count: 1, vesg: vesg });
+                //    }
+                //};
+            }
+        }
+        doc.write('<tr>');
+        doc.write('<th colspan="3" class="total">Общий вес</th>');
+        doc.write('<td class="total">' + total_vesg.toFixed(2) + '</td>');
+        doc.write('<th class="total"></th>');
+        doc.write('<td class="total">' + list_cars.length + '</td>');
+        doc.write('<th colspan="10"></td>');
+        doc.write('</tr>');
+        doc.write('</table>');
+    };
     // Натурная ведомость
     view_incoming_report.prototype.fst = function (id_sostav) {
         this.load_sostav(id_sostav, function (wagons) {
@@ -245,18 +340,99 @@
                 mywindow.document.write('</head><body>');
                 mywindow.document.write('<h2>Натурная ведомость коммерческого осмотра №' + this.sostav.num_doc + '</h2>');
                 this.title_report(mywindow.document);      // Заголовок
-                //view_table_info_car_fsci(mywindow.document, sostav);     // Вагоны в составе
+                this.view_table_info_car_fsci(mywindow.document, wagons);     // Вагоны в составе
                 mywindow.document.write('<br />');
                 mywindow.document.write('<br />');
                 mywindow.document.write('<div">Подпись приемосдатчика ______________________</div>');
                 mywindow.document.write('</body></html>');
-
+                LockScreenOff();
                 mywindow.document.close(); // necessary for IE >= 10
                 mywindow.focus(); // necessary for IE >= 10
             }
         }.bind(this));
     };
+    // Вывести отчет "Заявка на выдачу коммерческого акта ст. КР."
+    view_incoming_report.prototype.aica = function (id_sostav, station_name) {
+        this.load_sostav(id_sostav, function (wagons) {
+            if (wagons && wagons.length > 0) {
+                var list_cars = wagons.filter(function (i) {
+                    return i.arrival_car_position_arrival;
+                });
+            var nums = getArrOfNameObjArr(list_cars, 'num');
 
+            }
+        }.bind(this));
+        //pn_sel_wagon.Open(nums, function (select_nums) {
+        //     Получить отчет
+        //    if (select_nums && select_nums.length > 0) {
+
+        //        var mywindow = window.open('', 'Заявка на выдачу коммерческого акта ст. ' + station_name);
+        //        mywindow.document.write('<html><head><title>Заявка на выдачу коммерческого акта ст. ' + station_name + '</title>');
+        //        mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_aica.css">');
+        //        mywindow.document.write('</head><body>');
+        //        mywindow.document.write('<div class=WordSection1>');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">Начальнику станції</span></p>');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;text-indent:14.0cm"><span lang=UK style="font-size:14.0pt;line-height:107%;">' + station_name + '</span></p>');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">ЗАЯВКА№________</span></p>');
+        //        mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:center"><span style="font-size:14.0pt;line-height:107%;">на видачу комерційного акту</span></p>');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">від__________ 20     р.</span></p>');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span style="font-size:14.0pt;line-height:107%;">________год.________хв.</span></p>');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Згідно зі ст. 129 Статуту залізниць України прошу скласти та надати комерційний акт на вантаж , що прибув потягом № ­­­­­­­ ­­­­­­­­­­­­­­_______________(дата)</span></p>');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">__________(год./хв.) з невідповідності маси вантажу натурою з даними, зазначеними у залізничній накладній</span></p>');
+
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<table border=1 cellspacing=0 cellpadding=0 width=95% style="border-collapse:collapse;border:none">');
+        //        mywindow.document.write('<tr>');
+        //        mywindow.document.write('<td>Вагон №</td>');
+        //        mywindow.document.write('<td>Найменування вантажу</td>');
+        //        mywindow.document.write('<td>Станція відправлення</td>');
+        //        mywindow.document.write('<td>Відправник</td>');
+        //        mywindow.document.write('</tr>');
+
+        //        select_nums.forEach(function (item, index, array) {
+        //            var wag = getObjOflist(sostav.ArrivalCars, 'num', item);
+
+        //            var doc_uz = wag.Arrival_UZ_Vagon && wag.Arrival_UZ_Vagon.Arrival_UZ_Document ? wag.Arrival_UZ_Vagon.Arrival_UZ_Document : null;
+        //            var vag_uz = wag.Arrival_UZ_Vagon ? wag.Arrival_UZ_Vagon : null;
+        //            var dir_cargo = vag_uz && vag_uz.Directory_Cargo ? vag_uz.Directory_Cargo : null;
+        //            var dir_es = doc_uz && doc_uz.Directory_ExternalStation ? doc_uz.Directory_ExternalStation : null;
+        //            var dir_ship = doc_uz && doc_uz.Directory_Shipper ? doc_uz.Directory_Shipper : null;
+
+        //            mywindow.document.write('<tr>');
+        //            mywindow.document.write('<td>');
+        //            mywindow.document.write(wag.num);
+        //            mywindow.document.write('</td>');
+        //            mywindow.document.write('<td>');
+        //            mywindow.document.write(dir_cargo ? ids_inc.ids_dir.getValueObj(dir_cargo, 'cargo_name', lang) : '');
+        //            mywindow.document.write('</td>');
+        //            mywindow.document.write('<td>');
+        //            mywindow.document.write(dir_es ? ids_inc.ids_dir.getValueObj(dir_es, 'station_name', lang) : '');
+        //            mywindow.document.write('</td>');
+        //            mywindow.document.write('<td class="shipper">');
+        //            mywindow.document.write(dir_ship ? ids_inc.ids_dir.getValueObj(dir_ship, 'shipper_name', lang) : '');
+        //            mywindow.document.write('</td>');
+        //            mywindow.document.write('</tr>');
+
+        //        });
+        //        mywindow.document.write('</table>');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<br />');
+        //        mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Представник</span></p>');
+        //        mywindow.document.write('</div>');
+        //        mywindow.document.write('</body></html>');
+
+        //        mywindow.document.close(); // necessary for IE >= 10
+        //        mywindow.focus(); // necessary for IE >= 10
+        //    }
+        //});
+    };
     //--------------------------------------------------------------------
     // Очистить сообщения
     view_incoming_report.prototype.out_clear = function () {
