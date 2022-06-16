@@ -6067,9 +6067,12 @@ namespace IDS
                     {
                         // преобразуем и обновим в EFIDS.Entities.UZ_DOC
                         uz_doc = UpdateUZ_DOC(ref context, doc, add);
-                        result.obj = uz_doc;
+                        if (uz_doc != null)
+                        {
+                            uz_doc = IsWagonOfUZ_DOC(num, uz_doc) ? uz_doc : null;
+                        }
+                        //result.obj = uz_doc;
                     }
-
                 }
                 // если документ найден и преобразован uz_doc=EFIDS.Entities.UZ_DOC
                 if (uz_doc != null)
