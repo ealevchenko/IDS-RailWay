@@ -145,12 +145,10 @@
                 if (this.table_epd) {
                     this.table_epd.obj_t_epd.columns.adjust();
                 }
-
             }.bind(this),
             form_close: function () {
                 this.clear();
             }.bind(this),
-
         });
         this.mf_edit.$bt_ok.prop('disabled', true);
 

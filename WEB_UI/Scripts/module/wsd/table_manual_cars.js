@@ -29,6 +29,9 @@
             'tmc_field_car_arrival': 'Вагон принят',
             'tmc_field_wir_status': 'Вагон на АМКР',
 
+            'tmc_field_select_num': '№ вагона',
+
+
 
             'tmc_mess_init_module': 'Инициализация модуля(table_manual_cars)...',
             //'tmc_title_yes': 'Да',
@@ -208,6 +211,16 @@
             className: 'dt-body-center shorten mw-300',
             title: langView('tmc_field_wir_status', App.Langs), width: "300px", orderable: true, searchable: true
         },
+        //
+        // Поля по документам
+        {
+            field: 'select_num',
+            data: function (row, type, val, meta) {
+                return row.num;
+            },
+            className: 'dt-body-center',
+            title: langView('tmc_field_select_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -293,7 +306,7 @@
         //collums.push('id');
         return init_columns(collums, list_collums);
     };
-    // инициализация полей epd_docs
+    // инициализация полей searsh_cars
     table_manual_cars.prototype.init_columns_searsh_cars = function () {
         var collums = [];
         collums.push({ field: 'searsh_num', title: null, class: 'fixed-column' });
@@ -310,6 +323,12 @@
 
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей nums_cars
+    table_manual_cars.prototype.init_columns_nums_cars = function () {
+        var collums = [];
+        collums.push({ field: 'select_num', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_manual_cars.prototype.init_button_detali = function () {
@@ -319,7 +338,7 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация кнопок epd_docs
+    // инициализация кнопок searsh_cars
     table_manual_cars.prototype.init_button_searsh_cars = function () {
         var buttons = [];
         buttons.push({
@@ -341,6 +360,29 @@
 
         return init_buttons(buttons, list_buttons);
     };
+    // инициализация кнопок nums_cars
+    table_manual_cars.prototype.init_button_nums_cars = function () {
+        var buttons = [];
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'select_all',
+            action: function (e, dt, node, config) {
+                //this.action_select_all();
+            }.bind(this) });
+        buttons.push({
+            name: 'select_none',
+            action: function (e, dt, node, config) {
+                //this.action_select_none();
+            }.bind(this) });
+
+        return init_buttons(buttons, list_buttons);
+    };
+
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_manual_cars.prototype.init_type_report = function () {
@@ -355,6 +397,19 @@
                 };
                 this.table_columns = this.init_columns_searsh_cars();
                 this.table_buttons = this.init_button_searsh_cars();
+                break;
+            };
+            // Таблица составы по умолчанию (если не выставят тип отчета)
+            case 'table-nums-cars': {
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = {
+                    style: 'multi'
+                };
+                this.table_columns = this.init_columns_nums_cars();
+                this.table_buttons = this.init_button_nums_cars();
                 break;
             };
             // Таблица составы по умолчанию (если не выставят тип отчета)
@@ -457,7 +512,10 @@
                                 }
                                 break;
                             };
-
+                            case 'table-nums-cars': {
+                                $(row).attr('id', data.num);
+                                break;
+                            };
                         };
                     }.bind(this),
                     columns: this.table_columns,
@@ -475,6 +533,18 @@
                                 e.preventDefault();
                             }
                         }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
+                            this.select_rows(); // определим строку
+                            this.enable_button();
+                            // Обработать событие выбрана строка
+                            if (typeof this.settings.fn_select_rows === 'function') {
+                                this.settings.fn_select_rows(this.selected_rows);
+                            }
+                        }.bind(this));
+
+                        break;
+                    };
+                    case 'table-nums-cars': {
+                        this.obj_t_manual.on('select deselect', function (e, dt, type, indexes) {
                             this.select_rows(); // определим строку
                             this.enable_button();
                             // Обработать событие выбрана строка
