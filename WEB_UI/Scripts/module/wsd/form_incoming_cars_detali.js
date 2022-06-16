@@ -382,6 +382,8 @@
             'ficcd_message_mode_3': 'Внимание! По указанному вагону не удалось найти основной ЭПД, карточка переведена в ручной режим ввода, введите в ручную недостающую информацию.',
             'ficcd_message_mode_4': 'Внимание! По указанному вагону неопределен основной ЭПД, для продолжения выберите один из двух режимов: 1-«Ввод информации без накладной УЗ» (Выбрать галочку «Без ЭПД»); 2-«Поиск ЭПД по номеру вагона и номеру накладной» (Введите номер накладной и нажмите кнопку поиска)',
             'ficcd_message_mode_5': 'Внимание! По указанному вагону не удалось найти ЭПД, карточка переведена в ручной режим ввода, для продолжения выберите один из двух режимов: 1-«Ввод информации без накладной УЗ» (Выбрать галочку «Без ЭПД»); 2-«Полный ручной ввод» (Номера накладных и характеристики - вводятся в ручную).',
+            'ficcd_message_mode_6': 'Внимание! По указанному вагону найден основной документ но не определен досылочный,  карточка переведена в ручной режим ввода, введите в ручную недостающую информацию по досылочному документу.',
+
 
             //'ficcd_mess_warning_no_data_dir_wagon': 'По выбранному вагону нет данных в справочнике вагонов ИДС.', //
             'ficcd_mess_warning_no_epd_wagon': 'По выбранному вагону нет перевозочного документа.', //
@@ -4489,7 +4491,8 @@
                             this.elements.button_search_main_doc.hide();
                             if (nom_main_doc && nom_doc === null) this.elements.button_change_main_doc.show(); else this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
-                            if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
+                            //if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
+                            this.elements.button_change_doc.show();
                             this.elements.input_text_document_nom_main_doc.disable();
                             this.elements.input_text_document_nom_doc.disable();
                             break;
@@ -4562,6 +4565,21 @@
                             this.elements.input_text_document_nom_main_doc.enable();
                             this.elements.input_text_document_nom_doc.enable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_5', App.Langs));
+                            break;
+                        };
+                        case 6: {
+                            // На вагон определен основной ЭПД но досылка нет (выбор: Без ЭПД-неактивно, воод в ручную)
+                            this.edit(); // режим ручной ЭПД
+                            this.elements.checkbox_not_epd.disable();
+                            //this.elements.checkbox_not_epd.val(false);
+                            this.elements.button_search_car.hide();
+                            this.elements.button_search_main_doc.hide();
+                            this.elements.button_change_main_doc.show();
+                            this.elements.button_search_doc.hide();
+                            this.elements.button_change_doc.hide();
+                            this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_doc.enable();
+                            this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_6', App.Langs));
                             break;
                         };
                     }
@@ -5957,7 +5975,7 @@
             // Проверим досылочный документ
             if (this.elements.input_text_document_nom_doc.val() && this.elements.input_text_document_nom_doc.val() !== '') {
                 valid = valid & this.form.validation_common.check_control_condition(!isNaN(Number(this.elements.input_text_document_nom_doc.val())), this.elements.input_text_document_nom_doc, langView('ficcd_mess_valid_not_number_nom_main_doc', App.Langs), '', out_message);
-                if (this.mode_epd !== 3 && this.mode_epd !== 5) {
+                if (this.mode_epd !== 3 && this.mode_epd !== 5 && this.mode_epd !== 6) {
                     valid = valid & this.form.validation_common.check_control_condition(this.wagon_settings.otpr_num && this.wagon_settings.otpr, this.elements.input_text_document_nom_doc, langView('ficcd_mess_valid_not_epd_doc', App.Langs), '', out_message);
                 }
             }
@@ -5971,7 +5989,7 @@
                 }
 
             }
-            if (this.mode_epd === 3 || this.mode_epd === 5) {
+            if (this.mode_epd === 3 || this.mode_epd === 5 || this.mode_epd === 6) {
                 if (this.elements.input_text_document_nom_main_doc.val() !== null && this.elements.input_text_document_nom_main_doc.val() !== '') {
                     this.ids_wsd.getDateTimeUZ_DOC_Of_manual_num_uz(this.elements.input_text_document_nom_main_doc.val(), function (date) {
                         valid = valid & this.form.validation_common.check_control_condition(date === null, this.elements.input_text_document_nom_main_doc, langView('ficcd_mess_valid_nom_main_doc_manual_exist', App.Langs).format(date), '', out_message);
@@ -6130,7 +6148,8 @@
     };
     // Править № досылочного документа    
     form_incoming_cars_detali.prototype.action_change_doc = function () {
-
+        this.mode_epd = 6;
+        this.view_wagon_detali(this.wagon);
     };
     // Выполнить операцию поиска документа по номеру вагона и дате прибытия
     form_incoming_cars_detali.prototype.action_search_car = function () {
@@ -6209,7 +6228,7 @@
                 num_doc: this.elements.input_text_document_nom_main_doc.val(),
                 num: this.wagon.num,
                 add: true,
-                search_sms: true, // Поищем позже через кнопку
+                search_sms: true, // 
             };
             this.ids_wsd.postOperationUpdateUZ_DOC_Doc_Num(operation, function (result) {
                 if (result && result.obj) {
@@ -6536,6 +6555,13 @@
                                     this.wagon_settings.otpr = null;
                                     this.wagon_settings.otpr_id = null;
                                     mode = 1;
+                                    break;
+                                };
+                                case 6: {
+                                    this.wagon_settings.otpr_num = Number(this.elements.input_text_document_nom_doc.val());
+                                    this.wagon_settings.otpr = null;
+                                    this.wagon_settings.otpr_id = null;
+                                    mode = 2;
                                     break;
                                 };
                                 default: {
