@@ -1246,8 +1246,6 @@
             },
         });
     };
-
-
     // Получить разпарсеный ЭПД принятого вагона по внутренему num_doc
     ids_wsd.prototype.getOTPR_UZ_DOCOfNum = function (num, callback) {
         $.ajax({
