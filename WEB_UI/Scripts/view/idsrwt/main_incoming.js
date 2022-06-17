@@ -230,8 +230,20 @@
                             }
                         }.bind(this)
                     },
-                    { href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false },
-                    { href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false },
+                    {
+                        href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function () {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav) {
+                                view_incoming_report.move_nums(table_incoming_sostav.id_sostav, 'dg20');
+                            }
+                        }.bind(this)
+                    },
+                    { href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function () {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav) {
+                                view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'way');
+                            }
+                        }.bind(this) },
                 ],
             });
 

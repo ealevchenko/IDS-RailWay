@@ -351,12 +351,14 @@
             name: 'select_all',
             action: function (e, dt, node, config) {
                 this.action_select_all();
-            }.bind(this) });
+            }.bind(this)
+        });
         buttons.push({
             name: 'select_none',
             action: function (e, dt, node, config) {
                 this.action_select_none();
-            }.bind(this) });
+            }.bind(this)
+        });
 
         return init_buttons(buttons, list_buttons);
     };
@@ -372,13 +374,15 @@
         buttons.push({
             name: 'select_all',
             action: function (e, dt, node, config) {
-                //this.action_select_all();
-            }.bind(this) });
+                this.action_select_all(true);
+            }.bind(this)
+        });
         buttons.push({
             name: 'select_none',
             action: function (e, dt, node, config) {
-                //this.action_select_none();
-            }.bind(this) });
+                this.action_select_none();
+            }.bind(this)
+        });
 
         return init_buttons(buttons, list_buttons);
     };
@@ -631,9 +635,16 @@
         //    }.bind(this));
         //}
     };
-    table_manual_cars.prototype.action_select_all = function () {
-        this.obj_t_manual.rows(':not(.red)').select();
+    //
+    table_manual_cars.prototype.action_select_all = function (all) {
+        if (all) {
+            this.obj_t_manual.rows().select();
+        } else {
+            this.obj_t_manual.rows(':not(.red)').select();
+        }
+
     };
+    //
     table_manual_cars.prototype.action_select_none = function () {
         this.obj_t_manual.rows().deselect();
     };

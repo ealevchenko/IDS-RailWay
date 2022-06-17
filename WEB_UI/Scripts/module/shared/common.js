@@ -2521,6 +2521,22 @@
         this.init();
     };
     //---------------- HTML ----------------------------
+    // Элемент <form></form>
+    form_element.prototype.form = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            novalidate: null,
+        }, options);
+        this.$form = $('<form></form>');
+        if (!this.$form || this.$form.length === 0) {
+            throw new Error('Не удалось создать элемент <form></form>');
+        } else {
+            add_class(this.$form, this.settings.class);
+            add_id(this.$form, this.settings.id);
+            add_tag(this.$alink, 'novalidate', this.settings.novalidate);
+        }
+    };
     // Элемент <div></div>
     form_element.prototype.div = function (options) {
         this.settings = $.extend({
