@@ -1,0 +1,167 @@
+﻿body {
+}
+
+/*Коррекция отображения компонента дата и время*/
+.date-picker {
+    z-index: 202;
+}
+
+.date-picker-wrapper {
+    z-index: 201;
+}
+
+    .date-picker-wrapper .gap {
+        z-index: 201;
+    }
+
+        .date-picker-wrapper .gap .gap-line .gap-1 {
+            z-index: 201;
+        }
+
+        .date-picker-wrapper .gap .gap-line .gap-2 {
+            z-index: 202;
+        }
+
+        .date-picker-wrapper .gap .gap-line .gap-3 {
+            z-index: 202;
+        }
+
+        .date-picker-wrapper .gap .gap-top-mask {
+            z-index: 203;
+        }
+
+        .date-picker-wrapper .gap .gap-bottom-mask {
+            z-index: 203;
+        }
+
+/**/
+legend {
+    display: block;
+    width: auto;
+    padding: 0 5px;
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: inherit;
+    border-bottom: none;
+    text-transform: uppercase;
+}
+
+fieldset {
+    border: 2px solid threedface;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+    fieldset fieldset {
+        border: 1px solid threedface;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+        fieldset fieldset legend {
+            text-transform: none;
+        }
+
+    fieldset div div fieldset {
+        border: 1px solid threedface;
+        padding: 5px;
+        border-radius: 3px;
+    }
+
+        fieldset div div fieldset legend {
+            text-transform: none;
+        }
+
+.inp-manual-epd {
+    border-color: blue;
+    border-width: 2px;
+}
+
+.inp-manual {
+    border-color: red;
+    border-width: 2px;
+}
+
+.inp-uz {
+    border-color: orange;
+    border-width: 2px;
+}
+
+.inp-auto {
+    border-color: darkviolet;
+    border-width: 2px;
+}
+
+.inp-sap {
+    border-color: #5aaecd;
+    border-width: 2px;
+}
+
+/**/
+div#accordion > div.card {
+    -moz-box-direction: normal;
+    -moz-box-orient: vertical;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 1px;
+    /*border:none;*/
+}
+
+div#accordion div.card > .card-header:first-child {
+    border-radius: 0;
+}
+
+div#accordion > .card-header{
+    background-color: #f7f7f9;
+    margin-bottom: 0;
+    padding: 20px 1.25rem;
+    border: none;
+}
+
+div#accordion div.card > .card-header a i {
+    float: left;
+    /*font-size: 25px;*/
+    padding: 5px 0;
+    margin: 0 25px 0 0px;
+    color: #195C9D;
+}
+
+div#accordion div.card > .card-header i {
+    float: right;
+    /*font-size: 30px;*/
+    width: 1%;
+    margin-top: 8px;
+    margin-right: 10px;
+}
+
+div#accordion div.card > .card-header a {
+    width: 97%;
+    float: left;
+    color: #565656;
+    text-decoration: none;
+}
+
+div#accordion div.card > .card-header p {
+    margin: 0;
+}
+
+/*div#accordion div.card > .card-header h3 {
+    margin: 0 0 0px;*/
+    /*font-size: 20px;*/
+    /*font-family: 'Slabo 27px', serif;
+    font-weight: bold;
+    color: #3fc199;
+}*/
+
+div#accordion div.card > div > .card-block {
+    -moz-box-flex: 1;
+    flex: 1 1 auto;
+    padding: 0.5rem !important;
+    color: #232323;
+    box-shadow: inset 0px 4px 5px rgba(0,0,0,0.1);
+    border-top: 1px soild #000;
+    border-radius: 0;
+}

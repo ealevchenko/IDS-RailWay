@@ -442,7 +442,7 @@ namespace IDS
                 }
 
                 IDSMORS mors = new IDSMORS(this.servece_owner);                 // Подключим справочник МОРС
-                WebAPIClientUZ client = new WebAPIClientUZ(this.servece_owner); // Подключим WebAPI справочник УЗ
+                WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(this.servece_owner); // Подключим WebAPI справочник УЗ
 
                 // Определим справочные данные из системы МОРС
                 CardsWagons card = mors.GetCardsWagonsOfNum(num);
@@ -2291,6 +2291,7 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
+ 
                 Directory_BorderCheckpoint bc = ef_bord_chek.Context.Where(s => s.code == code).FirstOrDefault();
                 if (bc == null && add)
                 {

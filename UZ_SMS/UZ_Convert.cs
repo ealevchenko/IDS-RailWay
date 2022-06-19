@@ -1,12 +1,10 @@
-﻿using System;
+﻿using IDSLogs;
+using IDSLogs.Enum;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using IDSLogs.Enum;
-using IDSLogs;
 
 namespace UZ
 {
@@ -363,6 +361,7 @@ namespace UZ
         public int? podkod_exp { get; set; }	        //	Підкод платника (експедитора) 
         public int? sector_num { get; set; }	        //	Номер ділянки
         public string type { get; set; }	            //	Тип платника
+
         public PAY[] pay = new PAY[] { }; // (~)
         public PL_LOC pl_loc { get; set; } // (1)
     }

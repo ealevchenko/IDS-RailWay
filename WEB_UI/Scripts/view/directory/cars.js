@@ -397,7 +397,7 @@
                                 }
                             });
                             // Провкерка на повторяющиеся номера
-                            arr_res = [];
+                            var arr_res = [];
                             car_valid.sort();
                             for (var i = 1; i < car_valid.length; i++) {
                                 if (car_valid[i] === car_valid[i - 1]) {

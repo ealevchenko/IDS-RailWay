@@ -253,69 +253,69 @@ namespace WebApiClient
 
     }
 
-    public class WebApiURL
-    {
-        private eventID eventID = eventID.WebApiURL;
-        private string url;
+    //public class WebApiURL
+    //{
+    //    private eventID eventID = eventID.WebApiURL;
+    //    private string url;
 
-        public WebApiURL(string url)
-        {
-            this.url = url;
-        }
-        /// <summary>
-        /// Отправить запрос и получить ответ
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="api_comand"></param>
-        /// <param name="metod"></param>
-        /// <param name="accept"></param>
-        /// <returns></returns>
-        public string Select(string url, string api_comand, string metod, string accept)
-        {
-            try
-            {
-                //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
+    //    public WebApiURL(string url)
+    //    {
+    //        this.url = url;
+    //    }
+    //    /// <summary>
+    //    /// Отправить запрос и получить ответ
+    //    /// </summary>
+    //    /// <param name="url"></param>
+    //    /// <param name="api_comand"></param>
+    //    /// <param name="metod"></param>
+    //    /// <param name="accept"></param>
+    //    /// <returns></returns>
+    //    public string Select(string url, string api_comand, string metod, string accept)
+    //    {
+    //        try
+    //        {
+    //            //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
 
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                       | SecurityProtocolType.Tls11
-                       | SecurityProtocolType.Tls12
-                       | SecurityProtocolType.Ssl3;
+    //            ServicePointManager.Expect100Continue = true;
+    //            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+    //                   | SecurityProtocolType.Tls11
+    //                   | SecurityProtocolType.Tls12
+    //                   | SecurityProtocolType.Ssl3;
 
-                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + api_comand);
-                request.Method = metod;
-                request.PreAuthenticate = true;
-                request.Credentials = CredentialCache.DefaultCredentials;
-                request.Accept = accept;
-                try
-                {
-                    using (System.Net.WebResponse response = request.GetResponse())
-                    {
-                        try
-                        {
-                            using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
-                            {
-                                return rd.ReadToEnd();
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
-                            return null;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("Select(url={0},api_comand={1},metod={2},accept={3})", url, api_comand, metod, accept), this.eventID);
-                return null;
-            }
-        }
-    }
+    //            HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + api_comand);
+    //            request.Method = metod;
+    //            request.PreAuthenticate = true;
+    //            request.Credentials = CredentialCache.DefaultCredentials;
+    //            request.Accept = accept;
+    //            try
+    //            {
+    //                using (System.Net.WebResponse response = request.GetResponse())
+    //                {
+    //                    try
+    //                    {
+    //                        using (System.IO.StreamReader rd = new System.IO.StreamReader(response.GetResponseStream()))
+    //                        {
+    //                            return rd.ReadToEnd();
+    //                        }
+    //                    }
+    //                    catch (Exception e)
+    //                    {
+    //                        e.ExceptionLog(String.Format("Ошибка создания StreamReader ответа, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
+    //                        return null;
+    //                    }
+    //                }
+    //            }
+    //            catch (Exception e)
+    //            {
+    //                e.ExceptionLog(String.Format("Ошибка получения ответа WebResponse, команда {0}, метод {1}, accept {2}", api_comand, metod, accept), this.eventID);
+    //                return null;
+    //            }
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            e.ExceptionMethodLog(String.Format("Select(url={0},api_comand={1},metod={2},accept={3})", url, api_comand, metod, accept), this.eventID);
+    //            return null;
+    //        }
+    //    }
+    //}
 }

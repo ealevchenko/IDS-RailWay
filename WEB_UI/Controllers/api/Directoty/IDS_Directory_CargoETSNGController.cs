@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,6 +129,29 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию добавить груз в справочник ИДС
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/directory/cargo_etsng/operation/add/
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(Directory_CargoETSNG))]
+        public IHttpActionResult PostOperationAddCargoETSNG([FromBody] OperationAddCodeName value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                Directory_CargoETSNG result = ids_dir.GetDirectory_CargoETSNG(value.code, value.name, true, value.user);
+                return Ok(result.GetDirectory_CargoETSNG());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

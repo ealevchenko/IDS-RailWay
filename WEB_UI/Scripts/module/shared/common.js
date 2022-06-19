@@ -1282,6 +1282,7 @@
             case 'autocomplete': { this.add_autocomplete_element_form(el_field, type, col); break; }
             case 'datetime': { this.add_datetime_element_form(el_field, type, col); break; }
             case 'switch': { this.add_switch_element_form(el_field, type, col); break; }
+            case 'textarea': { this.add_textarea_element_form(el_field, type, col); break; }
         }
     };
     // Добавить и иницилизировать элемент SELECT
@@ -1337,6 +1338,35 @@
             }
             // Инициализировать элемент
             el_field['element_' + type] = new this.fc.init_input($form_input.$input, el_field.default, el_field.change);
+
+        } else {
+            throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
+        };
+    };
+    // Добавить и иницилизировать элемент TEXTAREA
+    form_infield.prototype.add_textarea_element_form = function (el_field, type, col) {
+        // Создадим label
+        var $form_label = new this.fc.el_label(el_field.name, null, el_field.label);
+        if ($form_label && $form_label.$label && $form_label.$label.length > 0) {
+            col.append($form_label.$label);
+        } else {
+            throw new Error('Не удалось создать элемент <label class=".." for="...">...</label>');
+        };
+        // Создадим input
+        var cl_inp = 'form-control' + (el_field.prefix && el_field.prefix !== '' ? ' form-control-' + el_field.prefix + ' ' : ' ');
+        var $form_textarea = new this.fc.el_textarea(el_field.name, cl_inp, el_field.placeholder, el_field.required, el_field.maxlength, el_field.pattern);
+        if ($form_textarea && $form_textarea.$textarea && $form_textarea.$textarea.length > 0) {
+            col.append($form_textarea.$textarea); // Добавить элемент на форму
+            // Проверить задана проверка валидации формы
+            if (this.settings.validation) {
+                // добавим контейнер для вывода сообщений
+                var $form_div_if = new this.fc.el_div_invalid_feedback();
+                if ($form_div_if && $form_div_if.$div && $form_div_if.$div.length > 0) {
+                    col.append($form_div_if.$div);
+                }
+            }
+            // Инициализировать элемент
+            el_field['element_' + type] = new this.fc.init_textarea($form_textarea.$textarea, el_field.default, el_field.change);
 
         } else {
             throw new Error('Не удалось создать элемент <select class="..." id=".." name=".." aria-describedby=".." required>');
@@ -1766,9 +1796,9 @@
                                 if (valid.patternMismatch) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
                                 }
-                                if (valid.patternMismatch) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
-                                }
+                                //if (valid.patternMismatch) {
+                                //    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует шаблону.");
+                                //}
                                 if (valid.rangeOverflow) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - больше максимально допустимого (" + $element.max + ").");
                                 }
@@ -1776,10 +1806,10 @@
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - меньше минимально допустимого (" + $element.min + ").");
                                 }
                                 if (valid.tooLong) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxlength + ").");
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - значение превышает лимит (" + $element.maxLength + ").");
                                 }
                                 if (valid.tooShort) {
-                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minlength + ").");
+                                    this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не достигает минимума (" + $element.minLength + ").");
                                 }
                                 if (valid.typeMismatch) {
                                     this.validation.set_object_error($($element), "Значение элемента [" + ($element.placeholder !== "" ? $element.placeholder : $element.id) + "] - не соответствует требуемому синтаксису (" + $element.type + ").");
@@ -2082,45 +2112,70 @@
         }
     };
     //---------------- ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ ----------------------
-    // Инициализация компонента "SELECT"
+    // Инициализация поля дата "INPUT" типа SELECT
     form_element.prototype.init_select = function (element, options) {
         //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
-        this.settings = $.extend({
-            data: null,
-            default_value: null,
-            fn_option: null,
-            fn_change: null,
-        }, options);
-
         this.$element = element;
         var $default_option = $('<option></option>', {
             'value': '-1',
             'text': langView('title_select', App.Langs),
         });
+        this.settings = $.extend({
+            data: [],
+            default_value: null,
+            fn_change: null,
+            check: null,
+        }, options);
         this.init = function () {
-            this.update(this.settings.data, this.settings.default_value, this.settings.fn_option);
+            this.update(this.settings.data, this.settings.default_value);
             if (typeof this.settings.fn_change === 'function') {
-                this.$element.on("change", this.settings.fn_change.bind(this));
+                this.$element.on("change", function (event) {
+                    //this.settings.fn_change.bind(this);
+                    if (typeof this.settings.fn_change) {
+                        this.settings.fn_change(event);
+                    }
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    };
+                }.bind(this));
             }
-
         };
         this.val = function (value) {
             if (value !== undefined) {
+                var disabled = this.$element.prop("disabled");
+                if (disabled) {
+                    this.$element.prop("disabled", false);
+                }
                 this.$element.val(value);
-                //this.$element.change();
+                if (disabled) {
+                    this.$element.prop("disabled", true);
+                }
             } else {
                 return this.$element.val();
             };
         };
-        this.update = function (data, default_value, fn_option) {
+        this.getNumber = function () {
+            return this.$element.val() === null ? null : Number(this.$element.val());
+        };
+        this.getNumberNull = function () {
+            return this.$element.val() === null || Number(this.$element.val()) === -1 ? null : Number(this.$element.val());
+        };
+        this.text = function (text) {
+            if (text !== undefined) {
+                this.$element.text(text);
+            } else {
+                return this.$element.text();
+            };
+        };
+        this.update = function (data, default_value) {
             this.$element.empty();
             element.append($default_option);
-            if (this.settings.data) {
-                $.each(this.settings.data, function (i, el) {
+            //if (default_value === -1) {
+            //    element.append($default_option);
+            //}
+            if (data) {
+                $.each(data, function (i, el) {
                     // Преобразовать формат
-                    if (typeof fn_option === 'function') {
-                        el = fn_option(el);
-                    }
                     if (el) {
                         var $option = $('<option></option>', {
                             'value': el.value,
@@ -2216,7 +2271,7 @@
             };
         };
         this.update = function (default_value) {
-            this.$element.val(default_value);
+            this.val(default_value);
         };
         this.show = function () {
             this.$element.show();
@@ -2275,13 +2330,20 @@
             this.set(default_datetime);
         };
         this.set = function (datetime) {
+            var disabled = this.$element.prop("disabled");
+            if (disabled) {
+                this.$element.prop("disabled", false);
+            }
             if (datetime !== null) {
-                var ms = moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : ''));
+                //var ms = moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : ''));
                 this.$element.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
             } else {
                 // Установить текущую дату и время
                 this.$element.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
                 this.$element.data('dateRangePicker').clear();
+            }
+            if (disabled) {
+                this.$element.prop("disabled", true);
             }
         };
         this.get = function () {
@@ -2341,10 +2403,14 @@
         var get_alist = function (data) {
             var alist = [];
             $.each(data, function (i, el) {
-                alist.push({ value: el.text, label: el.text, disabled: el.disabled ? el.disabled : null });
+                if (this.settings.out_value) {
+                    alist.push({ value: (el.text !== null ? $.trim(el.text) : el.text), label: el.value + '-' + (el.text !== null ? $.trim(el.text) : el.text), disabled: el.disabled ? el.disabled : null });
+                } else {
+                    alist.push({ value: el.text !== null ? $.trim(el.text) : el.text, label: el.text !== null ? $.trim(el.text) : el.text, disabled: el.disabled ? el.disabled : null });
+                }
             }.bind(this));
             return alist;
-        };
+        }.bind(this);
         this.$element = element;
         // Настройки формы правки строк таблицы
         this.settings = $.extend({
@@ -2409,12 +2475,12 @@
                     }.bind(this));
                     text_out = select ? select.text : null;
                 }
-                this.$element.val(text_out);
+                this.$element.val(text_out !== null ? $.trim(text_out) : text_out);
             } else {
                 var select = this.settings.data.find(function (o) {
                     return o.text === $.trim(this.$element.val());
                 }.bind(this));
-                return select ? select.value : null;
+                return select ? select.value : undefined;
             };
         };
         // вернуть техт
@@ -2455,6 +2521,22 @@
         this.init();
     };
     //---------------- HTML ----------------------------
+    // Элемент <form></form>
+    form_element.prototype.form = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            novalidate: null,
+        }, options);
+        this.$form = $('<form></form>');
+        if (!this.$form || this.$form.length === 0) {
+            throw new Error('Не удалось создать элемент <form></form>');
+        } else {
+            add_class(this.$form, this.settings.class);
+            add_id(this.$form, this.settings.id);
+            add_tag(this.$alink, 'novalidate', this.settings.novalidate);
+        }
+    };
     // Элемент <div></div>
     form_element.prototype.div = function (options) {
         this.settings = $.extend({
@@ -2576,6 +2658,7 @@
         this.settings = $.extend({
             id: null,
             rows: null,
+            cols: null,
             class: null,
             title: null,
             placeholder: null,
@@ -2594,6 +2677,7 @@
             add_id(this.$textarea, this.settings.id);
             add_tag(this.$textarea, 'name', this.settings.id);
             add_tag(this.$textarea, 'rows', this.settings.rows);
+            add_tag(this.$textarea, 'cols', this.settings.cols);
             add_tag(this.$textarea, 'title', this.settings.title);
             add_tag(this.$textarea, 'placeholder', this.settings.placeholder);
             add_tag(this.$textarea, 'required', this.settings.required);
@@ -2601,7 +2685,36 @@
             this.$textarea.prop('readonly', this.settings.readonly);
         }
     };
-    // Элемент <textarea rows=".." class=".." id=".." title=".." name="..".></textarea>
+    // Элемент <select type=".." class=".." id="num_car" title=".." name="..".></select>
+    form_element.prototype.select = function (options) {
+        this.settings = $.extend({
+            id: null,
+            class: null,
+            title: null,
+            placeholder: null,
+            required: null,
+            size: null,
+            multiple: null,
+            readonly: false,
+        }, options);
+        this.$select = $('<select></select>', {
+            'type': this.settings.type
+        });
+        if (!this.$select || this.$select.length === 0) {
+            throw new Error('Не удалось создать элемент <select></select>');
+        } else {
+            add_class(this.$select, this.settings.class);
+            add_id(this.$select, this.settings.id);
+            add_tag(this.$select, 'name', this.settings.id);
+            add_tag(this.$select, 'title', this.settings.title);
+            add_tag(this.$select, 'placeholder', this.settings.placeholder);
+            add_tag(this.$select, 'required', this.settings.required);
+            add_tag(this.$select, 'size', this.settings.size);
+            add_tag(this.$select, 'multiple', this.settings.size);
+            this.$select.prop('readonly', this.settings.readonly);
+        }
+    };
+    // Элемент <table class=".." id=".." title=".." name="..".></table>
     form_element.prototype.table = function (options) {
         this.settings = $.extend({
             id: null,
@@ -2748,7 +2861,17 @@
         add_id(this.$alert, this.settings.id);
         this.alert = new alert_form(this.$alert);
     };
-    // 
+    // Элемент <span class="badge badge-light">...</span>
+    form_element.prototype.bs_badge = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+        }, options);
+        this.$badge = $('<span></span>', { class: 'badge' });
+        add_class(this.$badge, this.settings.class);
+        add_id(this.$badge, this.settings.id);
+    };
+    // Элемент card
     //<div class="card border-success mb-3">
     //    <div class="card-header bg-transparent border-success">Header</div>
     //    <div class="card-body text-success"></div>
@@ -2790,6 +2913,180 @@
             this.$footer = div_footer.$div;
             add_class(this.$footer, this.settings.class_footer);
             this.$card.append(this.$footer);
+        }
+    };
+    // Элемент accordion
+    form_element.prototype.bs_accordion = function (options) {
+        this.settings = $.extend({
+            id: null,
+            class: null,
+            multiselectable: true,
+        }, options);
+        this.fe = new form_element();
+        var div_accordion = new this.fe.div({ class: 'accordion' });
+        this.$accordion = div_accordion.$div;
+        add_id(this.$accordion, this.settings.id);
+        add_class(this.$accordion, this.settings.class);
+        add_tag(this.$accordion, 'role', 'tablist');
+        add_tag(this.$accordion, 'aria-multiselectable', this.settings.multiselectable);
+    };
+    // Элемент card accordion
+    //<div class="card border-primary">
+    //    <div class="card-header text-left" role="tab" id="headingOne">
+    //        <div class="mb-0">
+    //            <a data-toggle="collapse" title="..." data-parent="#accordion" href="#epd-cars" aria-expanded="false" aria-controls="epd-cars" class="collapsed">
+    //                <i class="fa fa-file-text-o fa-lg" aria-hidden="true"></i>
+    //                @*<h3>ЭПД</h3>*@
+    //                <p>@IDSRWTResource.title_vagon_doc<span class="badge badge-primary text-white ml-2" id="count-docs"></span></p>
+    //            </a>
+    //            <i class="fa fa-angle-right" aria-hidden="true"></i>
+    //        </div>
+    //    </div>
+    //    <div id="epd-cars" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+    //        <div class="card-block">
+    //            <table class="table table-striped table-sm " id="table-sender-doc" style="width:100%; font-size:0.8rem;"></table>
+    //        </div>
+    //    </div>
+    //</div>
+    form_element.prototype.bs_accordion_card_1 = function (options) {
+        this.settings = $.extend({
+            id: null,
+            accordion_id: null,
+            card_class: null,
+            header_id: null,
+            header_class: null,
+            header_title: null,
+            header_icon: null,
+            header_text: null,
+            header_badge: false,
+            header_badge_id: null,
+            header_badge_class: null,
+            collapse_id: null,
+            body_id: null,
+            body_class: null,
+            body_objs: null,
+            body_obj_form: null,
+        }, options);
+
+        this.fe = new form_element();
+        var div_card = new this.fe.div({ class: 'card' });
+        this.$card = div_card.$div;
+        add_id(this.$card, this.settings.id);
+        add_class(this.$card, this.settings.card_class);
+        // заголовок
+        var div_header = new this.fe.div({ class: 'card-header' });
+        this.$header = div_header.$div;
+        add_id(this.$header, this.settings.header_id);
+        add_class(this.$header, this.settings.header_class);
+        add_tag(this.$header, 'role', 'tab');
+        var div_header_1 = new this.fe.div({ class: 'mb-0' });
+        var div_header_a = new this.fe.a({
+            id: null,
+            class: 'collapsed',
+            href: '#' + this.settings.collapse_id,
+            text: null,
+            target: null,
+            title: this.settings.header_title,
+        });
+        add_tag(div_header_a.$alink, 'data-toggle', 'collapse');
+        add_tag(div_header_a.$alink, 'data-parent', '#' + this.settings.accordion_id);
+        add_tag(div_header_a.$alink, 'aria-expanded', 'false');
+        add_tag(div_header_a.$alink, 'aria-controls', this.settings.collapse_id);
+        var $icon = $('<i></i>', {
+            'class': this.settings.header_icon,
+            'aria-hidden': 'true'
+        });
+        var $icon_collapse = $('<i></i>', {
+            'class': 'fa fa-angle-right',
+            'aria-hidden': 'true'
+        });
+        var $p = $('<p></p>');
+        $p.append(this.settings.header_text);
+        if (this.settings.header_badge) {
+            var div_header_badge = new this.fe.bs_badge({
+                class: this.settings.header_badge_class,
+                id: this.settings.header_badge_id,
+            });
+            $p.append(div_header_badge.$badge);
+        }
+        this.$header.append(div_header_1.$div.append(div_header_a.$alink.append($icon).append($p)).append($icon_collapse));
+
+        var div_collapse = new this.fe.div({ class: 'collapse' });
+
+        add_id(div_collapse.$div, this.settings.collapse_id);
+        add_tag(div_collapse.$div, 'role', 'tabpanel');
+        add_tag(div_collapse.$div, 'aria-labelledby', this.settings.header_id);
+        add_tag(div_collapse.$div, 'aria-expanded', 'false');
+        var div_body = new this.fe.div({ class: 'card-block' });
+        this.$body = div_body.$div;
+        add_id(this.$body, this.settings.body_id);
+        add_class(this.$body, this.settings.body_class);
+        //
+        this.$card.append(this.$header);
+        this.$card.append(div_collapse.$div.append(this.$body));
+        // 
+        if (this.settings.body_objs && this.settings.body_objs !== null) {
+            this.fe.add_obj(this.$body, this.settings.body_objs, this.settings.body_obj_form, function (content) {
+
+            }.bind(this))
+        };
+
+    };
+    //  <div class="dropdown">
+    //      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+    //          Dropdown button
+    //      </button>
+    //      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    //          <a class="dropdown-item" href="#">Action</a>
+    //          <a class="dropdown-item" href="#">Another action</a>
+    //          <a class="dropdown-item" href="#">Something else here</a>
+    //      </div>
+    //  </div>
+    form_element.prototype.bs_dropdown = function (options) {
+        this.settings = $.extend({
+            color: 'secondary',
+            size: null,
+            class: null,
+            id: 'dropdownMenuButton',
+            label: null,
+            title: null,
+            list_menu: null,
+        }, options);
+        this.fe = new form_element();
+        var div_dropdown = new this.fe.div({ class: 'dropdown' });
+        this.$element = div_dropdown.$div;
+        add_class(this.$element, this.settings.class);
+        var button = new this.fe.bs_button({
+            color: this.settings.color,
+            size: this.settings.size,
+            class: 'dropdown-toggle',
+            id: this.settings.id,
+            label: this.settings.label,
+            title: this.settings.title,
+        });
+        add_tag(button.$button, 'data-toggle', 'dropdown');
+        add_tag(button.$button, 'aria-expanded', 'false');
+        var div_dropdown_menu = new this.fe.div({ class: 'dropdown-menu' });
+        this.$dropdown_menu = div_dropdown_menu.$div
+        add_tag(this.$dropdown_menu, 'aria-labelledby', this.settings.id);
+        this.$element.append(button.$button).append(this.$dropdown_menu);
+        if (this.settings.list_menu && this.settings.list_menu.length > 0) {
+            $.each(this.settings.list_menu, function (index, element) {
+                var a_link = new this.fe.a({
+                    id: element.id,
+                    class: 'dropdown-item',
+                    href: element.href,
+                    text: element.label,
+                    target: null,
+                    title: null,
+                });
+                add_class(a_link.$alink, element.disable ? 'disabled' : '');
+
+                if (typeof element.click === 'function') {
+                    a_link.$alink.on("click", element.click);
+                }
+                this.$dropdown_menu.append(a_link.$alink);
+            }.bind(this));
         }
     };
     // Элемент <button>...</button>
@@ -2874,7 +3171,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
-            input_group_prepend_obj_form: null,
+            input_group_obj_form: null,
             element_default: null,
             element_fn_change: null,
 
@@ -2934,7 +3231,7 @@
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
                     objs: this.settings.input_group_prepend_objs,
-                    obj_form: this.settings.input_group_prepend_obj_form
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -2944,7 +3241,7 @@
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
                     objs: this.settings.input_group_append_objs,
-                    obj_form: this.settings.input_group_prepend_obj_form
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -2978,6 +3275,9 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_obj_form: null,
+            element_default: null,
+            element_fn_change: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3022,10 +3322,10 @@
 
         });
         add_class(input.$input, this.settings.input_class);
-/*        this.element = new this.fc.init_input(input.$input, '', null);*/
+        /*        this.element = new this.fc.init_input(input.$input, '', null);*/
         this.element = new this.fe.init_input(input.$input, {
             default_value: '',
-            fn_change: null,
+            fn_change: this.settings.element_fn_change,
         });
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -3035,7 +3335,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3044,7 +3345,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3076,7 +3378,7 @@
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
             input_group_append_class: null,
-            input_group_append_objs: null,
+            input_group_obj_form: null,
             element_time: null,
             element_default: null,
             element_fn_close: null,
@@ -3123,7 +3425,7 @@
             step: this.settings.input_step,
         });
         add_class(input.$input, this.settings.input_class);
-        this.element = new this.fe.init_datetime_input(input.$input, { default_value: this.settings.element_default, fn_close: this.settings.element_fn_close, time: this.settings.element_time});
+        this.element = new this.fe.init_datetime_input(input.$input, { default_value: this.settings.element_default, fn_close: this.settings.element_fn_close, time: this.settings.element_time });
         //
         var ifb = new this.fe.bs_invalid_feedback();
 
@@ -3132,7 +3434,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3141,7 +3444,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3169,7 +3473,7 @@
             checkbox_class: null,
             checkbox_title: null,
             checkbox_required: null,
-            checkbox_readonly: true,
+            checkbox_readonly: false,
             element_default: null,
             element_change: null,
         }, options);
@@ -3234,6 +3538,7 @@
             label_class: null,
             textarea_size: null,
             textarea_rows: null,
+            textarea_cols: null,
             textarea_class: null,
             textarea_title: null,
             textarea_maxlength: null,
@@ -3245,6 +3550,7 @@
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_obj_form: null,
         }, options);
         //
         this.fe = new form_element();
@@ -3276,6 +3582,7 @@
         var textarea = new this.fe.textarea({
             id: this.settings.id,
             rows: this.settings.textarea_rows,
+            cols: this.settings.textarea_cols,
             class: 'form-control',
             title: this.settings.input_title,
             placeholder: this.settings.textarea_placeholder,
@@ -3284,7 +3591,7 @@
             readonly: this.settings.textarea_readonly,
         });
         add_class(textarea.$textarea, this.settings.textarea_class);
-        this.element = new this.fe.init_textarea(textarea.$textarea, {default_value: '', fn_change: null});
+        this.element = new this.fe.init_textarea(textarea.$textarea, { default_value: '', fn_change: null });
         //
         var ifb = new this.fe.bs_invalid_feedback();
 
@@ -3293,7 +3600,8 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
@@ -3302,7 +3610,8 @@
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
@@ -3322,6 +3631,7 @@
             form_group_class: null,
             label: null,
             label_class: null,
+            input_type: 'input',
             input_size: null,
             input_class: null,
             input_title: null,
@@ -3330,11 +3640,15 @@
             input_min: null,
             input_max: null,
             input_step: null,
+            input_readonly: null,
+            textarea_rows: null,
+            textarea_cols: null,
             input_group: false,
             input_group_prepend_class: null,
             input_group_prepend_objs: null,
             input_group_append_class: null,
             input_group_append_objs: null,
+            input_group_obj_form: null,
             element_data: [],
             element_minLength: 0,
             element_out_value: false,
@@ -3367,27 +3681,151 @@
             label: this.settings.label
         });
         this.$element.append(label.$label);
-        // Input
-        var input = new this.fe.input({
-            id: this.settings.id,
-            type: 'text',
-            class: 'form-control',
-            title: this.settings.input_title,
-            placeholder: this.settings.input_placeholder,
-            required: this.settings.input_required,
-            maxlength: this.settings.input_maxlength,
-            pattern: this.settings.input_pattern,
-            min: this.settings.input_min,
-            max: this.settings.input_max,
-            step: this.settings.input_step,
-        });
-        add_class(input.$input, this.settings.input_class);
-        this.element = new this.fe.init_autocomplete(input.$input, {
+        var obj_el = null;
+        switch (this.settings.input_type) {
+            case 'input': {
+                var input = new this.fe.input({
+                    id: this.settings.id,
+                    type: 'text',
+                    class: 'form-control',
+                    title: this.settings.input_title,
+                    placeholder: this.settings.input_placeholder,
+                    required: this.settings.input_required,
+                    maxlength: this.settings.input_maxlength,
+                    pattern: this.settings.input_pattern,
+                    min: this.settings.input_min,
+                    max: this.settings.input_max,
+                    step: this.settings.input_step,
+                });
+                obj_el = input.$input;
+                break;
+            };
+            case 'textarea': {
+                var textarea = new this.fe.textarea({
+                    id: this.settings.id,
+                    rows: this.settings.textarea_rows,
+                    cols: this.settings.textarea_cols,
+                    class: 'form-control',
+                    title: this.settings.input_title,
+                    placeholder: this.settings.input_placeholder,
+                    required: this.settings.input_required,
+                    maxlength: this.settings.input_maxlength,
+                    readonly: this.settings.input_readonly,
+                });
+                obj_el = textarea.$textarea;
+                break;
+            };
+        }
+        //
+        add_class(obj_el, this.settings.input_class);
+        this.element = new this.fe.init_autocomplete(obj_el, {
             data: this.settings.element_data,
             minLength: this.settings.element_minLength,
             out_value: this.settings.element_out_value,
             val_inp: this.settings.element_val_inp,
             check: this.settings.element_check,
+        });
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+        //
+        if (this.settings.input_group) {
+            var ig = new this.fe.bs_input_group();
+            if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
+                var input_group_prepend = new this.fe.bs_input_group_prepend({
+                    class: this.settings.input_group_prepend_class,
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_prepend.$div);
+            };
+            //
+            ig.$div.append(obj_el);
+            if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
+                var input_group_append = new this.fe.bs_input_group_append({
+                    class: this.settings.input_group_append_class,
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_append.$div);
+            };
+            ig.$div.append(ifb.$div);
+            this.$element.append(ig.$div);
+        } else {
+            this.$element.append(obj_el);
+            this.$element.append(ifb.$div);
+        }
+    };
+    //
+    form_element.prototype.bs_select = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            input_size: null,
+            input_class: null,
+            input_title: null,
+            input_placeholder: null,
+            input_multiple: null,
+            input_required: null,
+            input_readonly: null,
+            input_group: false,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: null,
+            input_group_append_class: null,
+            input_group_append_objs: null,
+            input_group_obj_form: null,
+            element_data: [],
+            element_default: -1,
+            element_change: null,
+            element_check: null,
+        }, options);
+        //
+        this.fe = new form_element();
+        //this.fc = new form_control();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        var cl = 'col';
+        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+            cl += '-' + this.settings.form_group_size;
+        }
+        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+            cl += '-' + this.settings.form_group_col;
+        }
+        add_class(this.$element, cl);
+        add_class(this.$element, this.settings.form_group_class);
+        // Подпись
+        var label = new this.fe.label({
+            class: this.settings.label_class,
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        this.$element.append(label.$label);
+        // SELECT
+        var select = new this.fe.select({
+            id: this.settings.id,
+            type: 'text',
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.input_placeholder,
+            size: this.settings.input_size,
+            multiple: this.settings.input_multiple,
+            required: this.settings.input_required,
+            readonly: this.settings.input_readonly,
+        });
+        add_class(select.$select, this.settings.input_class);
+        this.element = new this.fe.init_select(select.$select, {
+            data: this.settings.element_data,
+            default_value: this.settings.element_default,
+            fn_change: this.settings.element_change,
+            check: this.settings.element_check
         });
         //
         var ifb = new this.fe.bs_invalid_feedback();
@@ -3397,23 +3835,25 @@
             if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
                 var input_group_prepend = new this.fe.bs_input_group_prepend({
                     class: this.settings.input_group_prepend_class,
-                    objs: this.settings.input_group_prepend_objs
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_prepend.$div);
             };
             //
-            ig.$div.append(input.$input);
+            ig.$div.append(select.$select);
             if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
                 var input_group_append = new this.fe.bs_input_group_append({
                     class: this.settings.input_group_append_class,
-                    objs: this.settings.input_group_append_objs
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
                 });
                 ig.$div.append(input_group_append.$div);
             };
             ig.$div.append(ifb.$div);
             this.$element.append(ig.$div);
         } else {
-            this.$element.append(input.$input);
+            this.$element.append(select.$select);
             this.$element.append(ifb.$div);
         }
     };
@@ -3451,6 +3891,14 @@
                     var element = new this.fieldset(obj.options);
                     add_element(element.$fieldset, content, obj);
                 };
+                if (obj.obj === 'table') {
+                    var element = new this.table(obj.options);
+                    add_element(element.$table, content, obj);
+                };
+                if (obj.obj === 'div') {
+                    var element = new this.div(obj.options);
+                    add_element(element.$div, content, obj);
+                };
                 if (obj.obj === 'bs_alert') {
                     var element = new this.bs_alert(obj.options);
                     if (element && element.alert) {
@@ -3466,6 +3914,15 @@
                         throw new Error('Не удалось создать элемент ' + obj.obj);
                     }
                     add_element(element.$alert, content, obj);
+                };
+                if (obj.obj === 'bs_accordion') {
+                    var element = new this.bs_accordion(obj.options);
+                    add_element(element.$accordion, content, obj);
+                };
+                if (obj.obj === 'bs_accordion_card_1') {
+                    obj.options.body_obj_form = obj_form;
+                    var element = new this.bs_accordion_card_1(obj.options);
+                    add_element(element.$card, content, obj);
                 };
                 if (obj.obj === 'bs_button') {
                     var element = new this.bs_button(obj.options);
@@ -3484,7 +3941,7 @@
                     add_element(element.$button, content, obj);
                 };
                 if (obj.obj === 'bs_input_number') {
-                    obj.options.input_group_prepend_obj_form = obj_form;
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_number(obj.options);
                     // Включил отображение компонента inputSpinner
                     if (obj.options.input_spinner) {
@@ -3505,6 +3962,7 @@
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_text') {
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_text(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
@@ -3521,6 +3979,7 @@
                     add_element(input.$element, content, obj);
                 };
                 if (obj.obj === 'bs_input_datetime') {
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_input_datetime(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
@@ -3553,6 +4012,7 @@
                     add_element(checkbox.$element, content, obj);
                 };
                 if (obj.obj === 'bs_textarea') {
+                    obj.options.input_group_obj_form = obj_form;
                     var textarea = new this.bs_textarea(obj.options);
                     if (textarea && textarea.element) {
                         obj_form.views.push({
@@ -3569,12 +4029,30 @@
                     add_element(textarea.$element, content, obj);
                 };
                 if (obj.obj === 'bs_autocomplete') {
+                    obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_autocomplete(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
                             name: obj.options.id,
                             validation_group: obj.options.validation_group,
                             type: 'autocomplete',
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: true
+                        });
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
+                    add_element(input.$element, content, obj);
+                };
+                if (obj.obj === 'bs_select') {
+                    obj.options.input_group_obj_form = obj_form;
+                    var input = new this.bs_select(obj.options);
+                    if (input && input.element) {
+                        obj_form.views.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: 'select',
                             element: input.element,
                             $element: input.element.$element,
                             destroy: true
@@ -3758,7 +4236,7 @@
         }
     };
     // Вывести на форме сообщение об ошибке под элементом 
-    form_dialog.prototype.set_validation_object_error = function (validation_name, id, message) {
+    form_dialog.prototype.set_validation_object_error = function (validation_name, id, message, not_alert) {
         var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
@@ -3767,14 +4245,18 @@
                 validation_name = 'common';
             }
             if (this['validation_' + validation_name]) {
-                this['validation_' + validation_name].set_object_error(element.$element, message);
+                if (not_alert) {
+                    this['validation_' + validation_name].set_control_error(element.$element, message);
+                } else {
+                    this['validation_' + validation_name].set_object_error(element.$element, message);
+                }
             }
         } else {
             throw new Error('Не удалось найти элемент ' + id);
         }
     };
     // Вывести на форме сообщение об успехе под элементом 
-    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message) {
+    form_dialog.prototype.set_validation_object_ok = function (validation_name, id, message, not_alert) {
         var element = this.obj_form.views.find(function (o) {
             return o.name === id;
         });
@@ -3783,7 +4265,11 @@
                 validation_name = 'common';
             }
             if (this['validation_' + validation_name]) {
-                this['validation_' + validation_name].set_object_ok(element.$element, message);
+                if (not_alert) {
+                    this['validation_' + validation_name].set_control_ok(element.$element, message);
+                } else {
+                    this['validation_' + validation_name].set_object_ok(element.$element, message);
+                }
             }
         } else {
             throw new Error('Не удалось найти элемент ' + id);
@@ -3859,9 +4345,10 @@
 
                 this.close();
             }.bind(this),
+            form_open: null,
+            form_close: null,
         }, options);
         var modal = new this.fc.el_modal_form(
-
             this.settings.id,
             this.settings.prefix,
             this.settings.cl_modal,
@@ -3878,15 +4365,17 @@
             } else {
                 this.alert = this.settings.alert;
             };
-
-            // Привяжим события кнопок
+            // Привяжим события кнопок и кнопки
             modal.$modal_bt_ok.on('click', this.settings.ok_click);
             modal.$modal_bt_close.on('click', this.settings.close_click);
+            this.$bt_ok = modal.$modal_bt_ok;
+            this.$bt_close = modal.$modal_bt_close;
             //if (this.settings.form) {
             //    this.form_add = this.settings.form.$form_add;
             //    this.form_edit = this.settings.form.$form_edit;
             //    modal.$modal_body.append(this.form_add).append(this.form_edit);
             //}
+
             // Привяжим html модальной формы
             this.$modal = modal.$modal;
             this.$body = modal.$modal_body;
@@ -3895,11 +4384,20 @@
             $('body').append(modal.$modal);
             // создадим объект модальная форма
             this.modal = this.$modal.modal({
+                backdrop: false,
                 keyboard: false,
                 show: false
-            }).on('show.bs.modal', function (event) {
-                // do something...
-            });
+            }).on('shown.bs.modal', function (event) {
+                // Форма открыта
+                if (typeof this.settings.form_open === 'function') {
+                    this.settings.form_open();
+                }
+            }.bind(this)).on('hide.bs.modal', function (event) {
+                // Форма открыта
+                if (typeof this.settings.form_close === 'function') {
+                    this.settings.form_close();
+                }
+            }.bind(this));
 
         } else {
             throw new Error('Не удалось создать модальную форму ' + this.settings.id);
@@ -3975,8 +4473,8 @@
         }
     };
 
-    validation_form.prototype.clear_all = function () {
-        this.clear_message();
+    validation_form.prototype.clear_all = function (not_clear_message) {
+        if (!not_clear_message) this.clear_message();
         this.clear_error();
     };
     // Очистить все ошибки
@@ -4066,10 +4564,119 @@
         return true;
     };
     // --------------------------------------------------------------------------
+
+    // Установить признак ошибка
+    validation_form.prototype.set_form_element_error = function (o, mes_error, out_message) {
+        this.set_control_error(o.$element, mes_error);
+        if (out_message) this.out_error_message(mes_error);
+        return false;
+    };
+    // Установить признак ок
+    validation_form.prototype.set_form_element_ok = function (o, mes_ok, out_message) {
+        this.set_control_ok(o.$element, mes_ok);
+        if (out_message) this.out_info_message(mes_ok);
+        return true;
+    };
+    // Проверка на условие если true-Ок, false - error
+    validation_form.prototype.check_control_condition = function (result, o, mes_error, mes_ok, out_message) {
+        if (result) {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
+    // Проверка на пустое значение "INPUT"
+    validation_form.prototype.check_control_input_not_null = function (o, mes_error, mes_ok, out_message) {
+        var val = o.val();
+        if (o.val() !== null && o.val() !== '') {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
+    // Проверим Input введенное значение входит в диапазон (пустое значение - не допускается)
+    validation_form.prototype.checkInputOfRange = function (o, min, max, mes_error, mes_ok, out_message) {
+        if (o.val() !== '' && o.val() !== null) {
+            var value = Number(o.val());
+            if (isNaN(value) || value > max || value < min) {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            }
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
+    // Проверим Input введенное значение входит в диапазон (пустое значение - допускается)
+    validation_form.prototype.checkInputOfRange_IsNull = function (o, min, max, mes_error, mes_ok, out_message) {
+        if (o.val() !== '' && o.val() !== null) {
+            var value = Number(o.val());
+            if (isNaN(value) || value > max || value < min) {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            } else {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            }
+        } else {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        }
+    };
+    // Проверка на пустое значение "SELECT"
+    validation_form.prototype.check_control_select_not_null = function (o, mes_error, mes_ok, out_message) {
+        if (Number(o.val()) >= 0) {
+            this.set_control_ok(o.$element, mes_ok);
+            if (out_message) this.out_info_message(mes_ok);
+            return true;
+        } else {
+            this.set_control_error(o.$element, mes_error);
+            if (out_message) this.out_error_message(mes_error);
+            return false;
+        }
+    };
     // Проверить элемент "autocomplete" на введенное значение
     validation_form.prototype.check_control_autocomplete = function (o, mes_error, mes_ok, mes_null, out_message) {
         if (o.text()) {
+            var s = o.val();
+            var s1 = o.text();
             if (o.val()) {
+                this.set_control_ok(o.$element, mes_ok);
+                if (out_message) this.out_info_message(mes_ok);
+                return true;
+            } else {
+                this.set_control_error(o.$element, mes_error);
+                if (out_message) this.out_error_message(mes_error);
+                return false;
+            }
+        } else {
+            this.set_control_error(o.$element, mes_null);
+            if (out_message) this.out_error_message(mes_null);
+            return false;
+        }
+    };
+    // Проверить элемент "autocomplete" на введенное значение (c учетом value = null)
+    validation_form.prototype.check_control_autocomplete_is_value_null = function (o, mes_error, mes_ok, mes_null, out_message) {
+        if (o.text()) {
+            var s = o.val();
+            if (o.val() !== undefined) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
                 return true;

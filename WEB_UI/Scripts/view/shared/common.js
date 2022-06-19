@@ -134,7 +134,7 @@ var getObjOflist = function (list, field, value) {
 var getArrOfNameObjArr = function (list, name) {
     var result = [];
     if (!list || !name) return null;
-    for (ia = 0; ia < list.length; ia++) {
+    for (var ia = 0; ia < list.length; ia++) {
         result.push(list[ia][name]);
     };
     return result;

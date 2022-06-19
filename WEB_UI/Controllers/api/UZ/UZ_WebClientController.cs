@@ -22,7 +22,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                WebAPIClientUZ client = new WebAPIClientUZ(service.Null);
+                WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
                 UZWagonInfo wagon_info = client.GetInfoWagonOfNum(num);
                 return Ok(wagon_info);
             }

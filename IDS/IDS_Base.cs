@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
+    public enum mode_obj { 
+      not = 0,
+      add = 1,
+      update = 2,
+    }
     public enum errors_base : int
     {
         global = -1,
@@ -25,7 +30,9 @@ namespace IDS
         not_wir_db = -201,                          // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
         close_wir = -202,                           // Записи по WagonInternalRoutes - закрыта
         outgoing_cars_wir = -203,                   // Записи по WagonInternalRoutes - уже имеет ссылку на отправку
-        not_open_wir = -204,                        // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+        arrival_cars_wir = -204,                    // Записи по WagonInternalRoutes - уже имеет ссылку на прибытие (Состав уже принят)
+        not_open_wir = -205,                        // В базе данных нет открытой записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+        open_wir = -206,                            // Записи по WagonInternalRoutes - открыта
 
         // таблица wim -300...
         not_wim_db = -301,                          // В базе данных нет записи по WagonInternalMovement (Внутренняя дислокация вагонов)
@@ -40,15 +47,38 @@ namespace IDS
         wagon_lock_operation = -404,                // Операция вагона имеет статус блокировки
         err_create_wio_db = -405,                   // Ошибка создания новой операции над вагоном.
         already_wio = -406,                         // Операция уже применена.
+        not_arrival_operation = -407,               // Операция вагона текущая операция вагона не "Прибытие с УЗ"
 
         // таблицы прибытие -500..
         not_arrival_sostav_db = -501,              // В базе данных нет записи состава для оправки
         error_status_arrival_sostav = -502,        // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-        not_arrival_cars_db = -505,                // В базе данных нет записи по вагонам для отправки
-        arrival_cars_arrival = -506,               // Запрет операции вагон уже отправлен
+        not_arrival_cars_db = -505,                // Ошибка, нет записи вагона по прибытию 
+        arrival_cars_arrival = -506,               // Запрет операции вагон уже принят
+        not_arrival_cars_arrival = -507,           // Запрет операции вагон еще не принят
+        arrival_cars_adoption = -508,              // Запрет операции вагон(ы) прибывшего состава уже приняты
+        arrival_cars_num_main_doc = -509,          // По вагону неопределен основной докумен уз
+        arrival_cars_num_doc = -510,               // По вагону неопределен досылочный докумен уз
+        not_arrival_uz_vagon = -511,               // Ошибка, нет записи или ссылки на документ прибывшего вагона  
+        not_last_manual_epd = -512,                // Ошибка не получен последний номер автоматического ручного документа MA:xxxxx 
+        exist_manual_epd = -513,                   // Ошибка ЭПД автоматического ручного документа MA:xxxxx - уже существует
+        not_main_uz_doc_db = -514,                 // Ошибка в базе данных отсутсвует основной ЭПД 
+        not_uz_doc_db = -515,                      // Ошибка в базе данных отсутсвует досылочный ЭПД 
+        exist_not_manual_uz_doc_db = -516,         // Ошибка в базе данных указаный ЭПД введен не ручном режиме
+        exist_not_manual_main_uz_doc_db = -517,    // Ошибка в базе данных указаный основной ЭПД введен не ручном режиме
+
 
         // документы по прибытию
-        not_arrival_uz_vagon = -551,               // Ошибка, нет записи или ссылки на документ прибывшего вагона  
+        not_inp_uz_vag_db = -551,                   // В базе данных нет записи документа на вагон.
+
+        // документы по прибытию
+        error_update_arr_doc_pay = -561,            // Ошибка обновления документов (платильщики)
+        error_update_arr_doc_act = -562,            // Ошибка обновления документов (акты)
+        error_update_arr_doc_doc = -563,            // Ошибка обновления документов (документы)
+        error_update_arr_vag = -564,                // Ошибка обновления документов (на вагон)
+        error_update_arr_vag_pay = -565,            // Ошибка обновления документов (платежки на вагон)
+        error_update_arr_vag_acts = -566,           // Ошибка обновления документов (акты на вагон)
+        error_update_arr_vag_cont = -567,           // Ошибка обновления документов (контейнера на вагон)
+        error_update_arr_cont_pay = -568,           // Ошибка обновления документов (контейнера на вагон)
 
         // таблицы отправки -600..      
         not_outgoing_sostav_db = -601,              // В базе данных нет записи состава для оправки
@@ -64,7 +94,6 @@ namespace IDS
         // документы на отправку
         exist_out_uz_vag = -651,                    // Запрет операции, строка по вагону уже создана.
         not_out_uz_vag_db = -652,                   // В базе данных нет записи документа на вагон.
-
 
         error_update_out_doc = -660,                        // Ошибка обновления документов (документ на группу вагонов)
         error_update_out_doc_pay = -661,                    // Ошибка обновления документов (платежки на документ на группу вагонов)                                                // 
@@ -86,9 +115,13 @@ namespace IDS
         not_sap_is_db = -801,                               // В базе данных нет записи по SAPIncomingSupply (SAP Входящая поставка)
         not_sap_os_db = -802,                               // В базе данных нет записи по SAPOutgoingSupply (SAP Исходящая поставка)
 
-        error_convert_epd = -900,                           // Ошибка конвертации данных ЭПД
-        not_epd_document = -901,                            // Нет ЭПД
-        not_vagon_epd_document = -902,                      // Указанного вагона нет в ЭПД
+        // СМС
+        error_connect_sms = -900,                           // Ошибка Подкллючения к модулю согласования
+        
+        error_convert_epd = -950,                           // Ошибка конвертации данных ЭПД
+        not_epd_document = -951,                            // Нет ЭПД
+        not_vagon_epd_document = -952,                      // Указанного вагона нет в ЭПД
+
         // Справочники -1000.....
 
         // Directory_Ways -1100..
@@ -107,13 +140,39 @@ namespace IDS
 
         // Directory_Wagons -1400..
         not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
-
+        error_sys_numeration_wagon  = -1402,                // Ошибка системной нумерации вагона
+        error_numeration_wagon  = -1403,                    // Ошибка нумерации вагона (- или =0)
         // Directory_OuterWays -1500..
         not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
 
     }
-
+    public class ResultObject
+    {
+        public Object obj { get; set; }
+        public mode_obj mode  { get; set; }
+        public int result { get; set; }
+        public ResultObject()
+        {
+            this.obj = null;
+            this.mode = mode_obj.not;
+            this.result = 0;
+        }
+    }
+    public class ResultTwoObject
+    {
+        public Object obj1 { get; set; }
+        public Object obj2 { get; set; }
+        public mode_obj mode  { get; set; }
+        public int result { get; set; }
+        public ResultTwoObject()
+        {
+            this.obj1 = null;
+            this.obj2 = null;
+            this.mode = mode_obj.not;
+            this.result = 0;
+        }
+    }
     /// <summary>
     /// 
     /// </summary>

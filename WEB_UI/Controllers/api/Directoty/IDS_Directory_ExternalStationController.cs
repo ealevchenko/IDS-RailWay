@@ -1,6 +1,8 @@
 ﻿using EFIDS.Abstract;
 using EFIDS.Entities;
 using EFIDS.Helper;
+using IDS;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,15 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperationAddCodeName
+    {
+        public int code { get; set; }
+        public string name { get; set; }
+        public string user { get; set; }
+    }
+
+
+
     /// <summary>
     /// СПИСОК ВНЕШНИХ СТАНЦИЙ
     /// </summary>
@@ -109,5 +120,27 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Выполнить операцию добавить внешнюю станцию в справочник ИДС (за исходник берем справочник УЗ)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/directory/external_station/operation/add
+        [HttpPost]
+        [Route("operation/add")]
+        [ResponseType(typeof(Directory_ExternalStation))]
+        public IHttpActionResult PostOperationAddExternalStation([FromBody] OperationAddCodeName value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                Directory_ExternalStation result = ids_dir.GetDirectory_ExternalStation(value.code, value.name, true, value.user);
+                return Ok(result.GetDirectory_ExternalStation());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

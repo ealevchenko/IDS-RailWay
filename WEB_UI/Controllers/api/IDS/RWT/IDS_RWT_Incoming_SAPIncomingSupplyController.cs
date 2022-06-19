@@ -8,9 +8,23 @@ using System.Web.Http.Description;
 using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
+using IDS;
+using IDSLogs.Enum;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperationAddSAP {
+        public long id_arrival_car { get; set; }
+        public int num { get; set; }
+        public string doc_uz { get; set; }
+        public DateTime? date_doc_uz { get; set; }
+        public string code_border_checkpoint { get; set; }
+        public string name_border_checkpoint { get; set; }
+        public DateTime? cross_time { get; set; }
+        public bool add { get; set; }
+        public string user { get; set; }
+    }
+
     /// <summary>
     /// ЭПД - по прибытию
     /// </summary>
@@ -148,6 +162,29 @@ namespace WEB_UI.Controllers.api
             catch (Exception e)
             {
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Выполнить операцию добавить или обновить входящую поставку ()
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST api/ids/rwt/sap/incoming_supply/operation/update
+        [HttpPost]
+        [Route("operation/update")]
+        [ResponseType(typeof(SAPIncomingSupply))]
+        public IHttpActionResult PostOperationUpdateSAPIncomingSupply([FromBody] OperationAddSAP value)
+        {
+            try
+            {
+                IDS_SAP ids_dir = new IDS_SAP(service.WebAPI_IDS);
+                SAPIncomingSupply result = ids_dir.GetSAPIncomingSupply(value.id_arrival_car, value.num, value.doc_uz, value.date_doc_uz, value.code_border_checkpoint, value.name_border_checkpoint, value.cross_time, true, value.user);
+                return Ok(result.GetSAPIncomingSupply());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

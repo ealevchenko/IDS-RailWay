@@ -160,6 +160,33 @@
         this.fn_ok = fn_ok;
         this.$modal_obj.modal('show');
     };
+    // Выполнить отображение и обработку результатов диалогового окна
+    modal_confirm_form.prototype.action_view = function (options) {
+        if (!options) { throw new Error('Не указан опции'); }
+        // Настройки формы правки строк таблицы
+        var settings = $.extend({
+            form_name : '',
+            form_message : '',
+            message_operation : '',
+            fn_run : null,
+            fn_cancel : null,
+        }, options);
+        this.view(settings.form_name, settings.form_message, function (res) {
+            if (res) {
+                // Выполнить операцию
+                LockScreen(settings.message_operation);
+                if (typeof settings.fn_run === 'function') {
+                    settings.fn_run();
+                }
+            } else {
+                // Отмена выполнения
+                if (typeof settings.fn_cancel === 'function') {
+                    settings.fn_cancel();
+                }
+            }
+        }.bind(this));
+    };
+
     // Закрыть форму 
     modal_confirm_form.prototype.close = function () {
         this.$modal_obj.modal('hide');

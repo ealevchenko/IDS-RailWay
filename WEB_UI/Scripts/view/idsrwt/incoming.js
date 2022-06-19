@@ -1416,7 +1416,6 @@
                 });
             };
 
-
             if (id) {
                 LockScreen(langView('mess_print', langs));
                 ids_inc.getArrivalSostavOfID(id, function (result_sostav) {
@@ -5232,7 +5231,6 @@
 
                 });
             },
-
             // Обновить информацию о принятом вагоне (перенос влево в окно принятые вагоны, изменение статуса состава "В работе")
             update_arrival_car: function (car, id_vagon, callback) {
                 if (car) {
@@ -5284,7 +5282,6 @@
                     }
                 }
             },
-
             // Принять вагон в системе ИДС
             arrival_vagon: function (id_car, callback) {
                 cars_detali.alert.clear_message();

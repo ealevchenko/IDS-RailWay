@@ -52,12 +52,12 @@ namespace Test.TestModule
             int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
         }
 
-        public void IDSTransfer_IncomingArrivalSostav_All()
-        {
+        //public void IDSTransfer_IncomingArrivalSostav_All()
+        //{
 
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav();
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.IncomingArrivalSostav();
+        //}
         //public void IDSTransfer_SetStationOutgoingWagonsOfKIS()
         //{
 
@@ -175,6 +175,20 @@ namespace Test.TestModule
             IDSDirectory ids = new IDSDirectory(service.Test);
             EFDbContext context = new EFDbContext();
             int res = ids.OperationUp1PositionWayOfPark(ref context, 595, "test_user");
+        }
+        #endregion
+
+        #region IDS_Directory
+
+        /// <summary>
+        /// Тест считования и создания внешней станции
+        /// </summary>
+        public void IDS_GetDirectory_ExternalStation()
+        {
+
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            Directory_ExternalStation station = ids.GetDirectory_ExternalStation(887500, "АБАЗА", true, "test");
+
         }
         #endregion
 
@@ -339,7 +353,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 296214 };
+            List<int> list = new List<int>() { 377878, 448015, 468761, 469337, 482173, 469338, 482821, 482526, 482527, 482529, 468715, 480427, 482177, 482178, 482030, 482028, 482027, 482033, 482162, 482160 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>
@@ -417,6 +431,56 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             int result = ids.UpdateSendingEPD(@"EUROPE\ealevchenko");
+        }
+        /// <summary>
+        /// Тест переноса вагона в левую сторону
+        /// </summary>
+        public void IDS_WIR_OperationIncomingWagon()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            //ids.OperationIncomingWagon(1283802, 0, "675011", "31688709", "0", "7932", @"EUROPE\test");
+        }
+        /// <summary>
+        /// Тест поиска документа по номеру накладной и номеру вагона
+        /// </summary>
+        public void IDS_WIR_OperationUpdateUZ_DOC1()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ids.OperationUpdateUZ_DOC("500512", 62073481, true, true);
+        }
+        /// <summary>
+        /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+        /// </summary>
+        public void IDS_WIR_OperationUpdateUZ_DOC2()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            List<int> consignees = new List<int>() { 7932, 6302, 659 };
+            List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
+            DateTime? dt_arrival = new DateTime(2022, 5, 26, 10, 33, 00);
+            //2021-12-03 11:42:05.133
+            //52830882
+            // 2022-05-06 06:40:00
+            ids.OperationUpdateUZ_DOC(56460728, consignees, stations, dt_arrival, -36, true, true);
+        }
+        /// <summary>
+        /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+        /// </summary>
+        public void IDS_WIR_OperationUpdateUZ_DOC3()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime? dt_arrival = new DateTime(2022, 5, 1, 5, 0, 0);
+            //2021-12-03 11:42:05.133
+            //52830882
+            // 2022-05-06 06:40:00
+            ids.OperationUpdateUZ_DOC(52926623, dt_arrival, true, true);
+        }
+
+        public void IDS_WIR_OperationManualSearchIncomingWagon()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            List<int> nums = new List<int>() { 64907751, 57925752, 72851330 };
+            ids.OperationManualSearchArrivalWagon(171648, true, nums, null, false, "test");
+
         }
         #endregion
 

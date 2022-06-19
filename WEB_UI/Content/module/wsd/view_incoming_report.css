@@ -1,0 +1,37 @@
+﻿#list_nums {
+    border: 1px solid #195C9D;
+}
+
+#report_page1, #report_page2 {
+    border: 1px solid red;
+    min-height: 100px;
+}
+
+#list_nums, #report_page1, #report_page2 {
+    width: 142px;
+    /*min-height: 20px;*/
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+}
+
+    #list_nums li, #report_page1 li, #report_page2 li {
+        margin: 0 5px 5px 5px;
+        padding: 5px;
+        font-size: 1.2em;
+        width: 120px;
+    }
+
+#fs-list-nums, #fs-report-page1, #fs-report-page2 {
+    overflow-y: scroll; /* Добавляем полосу прокрутки */
+    height: 500px; /* Высота блока */
+    margin-right: 10px;
+}
+
+.buttons-error {
+    background-color: red !important;
+    color: white !important;
+    border: 1px outset !important;
+}

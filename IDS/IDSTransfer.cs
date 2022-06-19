@@ -1052,6 +1052,7 @@ namespace IDS
         #endregion
 
         #region IncomingArrivalSostav
+        //TODO: !!!Удалить старое прибытие
         /// <summary>
         /// Принять состав на станцию АМКР примыкающую с УЗ 
         /// </summary>
@@ -1138,6 +1139,7 @@ namespace IDS
                 return -1;// Возвращаем id=-1 , Ошибка
             }
         }
+        //TODO: !!!Удалить старое прибытие
         /// <summary>
         /// Принять все принятые составы оператором на АМКР
         /// </summary>

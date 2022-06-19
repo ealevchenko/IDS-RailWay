@@ -33,10 +33,29 @@ namespace UZ
         locked = 13,	            //	 Документ заблокований
     }
 
+    /// <summary>
+    /// TODO: Удалить после изменения прибытия (!!! Использую в отправках)
+    /// </summary>
     public class UZ_DOC
     {
         public string id_doc { get; set; }
         public int revision { get; set; }
+        public uz_status? status { get; set; }
+        public string sender_code { get; set; }
+        public string recipient_code { get; set; }
+        public DateTime? dt { get; set; }
+        public string xml { get; set; }
+        public string xml_final { get; set; }
+        public OTPR otpr { get; set; }
+    }
+    /// <summary>
+    /// Класс набора данных документов по прибытию из промежуточной базы
+    /// </summary>
+    public class UZ_DOC_FULL
+    {
+        public string id_doc { get; set; }
+        public int revision { get; set; }
+        public int? num_uz { get; set; }
         public uz_status? status { get; set; }
         public string sender_code { get; set; }
         public string recipient_code { get; set; }
@@ -243,17 +262,139 @@ namespace UZ
                 return null;
             }
         }
+        public List<GohubDocument> GetEPD_UZ_Of_NumWagon(string WagonNumber)
+        {
+            try
+            {
+                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(WagonNumber, null, GohubDocumentStatus.Unknown, null, null, null, null, null, null, 0);
+                return docs;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_NumWagon(WagonNumber={0})", WagonNumber), servece_owner, eventID);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Получитм документ УЗ по номеру документа
         /// </summary>
         /// <param name="DocumentNumber"></param>
         /// <returns></returns>
-        public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
+        //TODO: !!! Убрать использую Get_UZ_DOC_SMS_Of_NumDoc(string DocumentNumber)
+        //public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
+        //{
+        //    try
+        //    {
+        //        List<UZ_DOC> list = new List<UZ_DOC>();
+        //        List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
+        //        if (docs == null) return null;
+        //        foreach (GohubDocument doc in docs)
+        //        {
+
+        //            UZ_Convert convert = new UZ_Convert(this.servece_owner);
+        //            string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
+        //            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+        //            string sender_code = null;
+        //            string recipient_code = null;
+        //            if (otpr != null && otpr.client.Count() == 2)
+        //            {
+        //                sender_code = otpr.client[0].kod;
+        //                recipient_code = otpr.client[1].kod;
+        //            }
+        //            UZ_DOC uz_doc = new UZ_DOC()
+        //            {
+        //                id_doc = doc.Id,
+        //                revision = doc.Revision,
+        //                status = GetStatus(doc.Status.ToString()),
+        //                sender_code = sender_code,
+        //                recipient_code = recipient_code,
+        //                //dt = doc.TimeStamp,
+        //                xml = doc.GetXmlText(),
+        //                xml_final = xml_final,
+        //                otpr = otpr
+        //            };
+        //            list.Add(uz_doc);
+        //        }
+        //        return list;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+        //        return null;
+        //    }
+        //}
+        /// <summary>
+        /// Получитм документ УЗ по номеру документа 
+        /// </summary>
+        /// <param name="DocumentNumber"></param>
+        /// <returns></returns>
+        public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumDoc(string DocumentNumber)
         {
             try
             {
-                List<UZ_DOC> list = new List<UZ_DOC>();
+                List<UZ_DOC_FULL> list = new List<UZ_DOC_FULL>();
                 List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
+                if (docs == null) return null;
+                foreach (GohubDocument doc in docs)
+                {
+                    UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                    string xml = doc.GetXmlText();
+                    string xml_final = convert.XMLToFinalXML(xml);
+                    OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                    string sender_code = null;
+                    string recipient_code = null;
+                    if (otpr != null && otpr.client.Count() == 2)
+                    {
+                        sender_code = otpr.client[0].kod;
+                        recipient_code = otpr.client[1].kod;
+                    }
+                    DateTime? dt;
+                    try
+                    {
+                        if (doc.TimeStamp != null)
+                        {
+                            dt = doc.TimeStamp;
+                        }
+                        else
+                        {
+                            dt = otpr != null ? otpr.date_otpr : null;
+                        }
+                    }
+                    catch
+                    {
+                        dt = otpr != null ? otpr.date_otpr : null;
+                    }
+                    UZ_DOC_FULL uz_doc = new UZ_DOC_FULL()
+                    {
+                        id_doc = doc.Id,
+                        revision = doc.Revision,
+                        num_uz = int.Parse(DocumentNumber),
+                        status = GetStatus(doc.Status.ToString()),
+                        sender_code = sender_code,
+                        recipient_code = recipient_code,
+                        dt = dt,
+                        xml = doc.GetXmlText(),
+                        xml_final = xml_final,
+                        otpr = otpr
+                    };
+                    list.Add(uz_doc);
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SMS_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+                return null;
+            }
+        }
+
+        public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumWagon(string WagonNumber)
+        {
+            try
+            {
+                List<UZ_DOC_FULL> list = new List<UZ_DOC_FULL>();
+                List<GohubDocument> docs = GetEPD_UZ_Of_NumWagon(WagonNumber);
                 if (docs == null) return null;
                 foreach (GohubDocument doc in docs)
                 {
@@ -268,14 +409,24 @@ namespace UZ
                         sender_code = otpr.client[0].kod;
                         recipient_code = otpr.client[1].kod;
                     }
-                    UZ_DOC uz_doc = new UZ_DOC()
+                    DateTime? dt;
+                    try
+                    {
+                        dt = doc.TimeStamp;
+                    }
+                    catch
+                    {
+                        dt = null;
+                    }
+                    UZ_DOC_FULL uz_doc = new UZ_DOC_FULL()
                     {
                         id_doc = doc.Id,
                         revision = doc.Revision,
+                        num_uz = otpr != null ? otpr.nom_doc : null,
                         status = GetStatus(doc.Status.ToString()),
                         sender_code = sender_code,
                         recipient_code = recipient_code,
-                        //dt = doc.TimeStamp,
+                        dt = dt,
                         xml = doc.GetXmlText(),
                         xml_final = xml_final,
                         otpr = otpr
@@ -286,12 +437,10 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SMS_Of_NumWagon(WagonNumber={0})", WagonNumber), servece_owner, eventID);
                 return null;
             }
         }
-
-
         #region Работа с промежуточной базой KRR-PA-VIZ-Other_DATA
         /// <summary>
         /// Получить статус по названию в базе
@@ -324,6 +473,7 @@ namespace UZ
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
+        //TODO: !!! Убрать использую Get_UZ_DOC_SDB_Of_Num(int num)
         public UZ_DOC GetDocumentOfDB_Num(int num)
         {
             try
@@ -372,6 +522,7 @@ namespace UZ
         /// <param name="stations"></param>
         /// <param name="dt_arrival"></param>
         /// <returns></returns>
+        //TODO: !!! Убрать использую Get_UZ_DOC_SDB_Of_Num_Date(int num, List<int> consignees, List<int> stations, DateTime? dt_arrival, int period)
         public UZ_DOC GetDocumentOfDB_NumConsigneesStations(int num, int[] consignees, int[] stations, DateTime? dt_arrival)
         {
             try
@@ -481,8 +632,9 @@ namespace UZ
                                 doc.otpr = otpr;
                                 break;
                             }
-                            else { 
-                            
+                            else
+                            {
+
                             }
                         }
                     }
@@ -532,8 +684,6 @@ namespace UZ
                 return null;
             }
         }
-
-
         /// <summary>
         /// Получить документы по вагону по указаным грузополучателям за указаный интервал
         /// </summary>
@@ -639,6 +789,162 @@ namespace UZ
             }
         }
 
+        public List<UZ_DOC_FULL> Get_UZ_DOC_SDB_Of_Num(int num)
+        {
+            try
+            {
+                EFSMSDbContext context = new EFSMSDbContext();
+                List<UZ_DOC_FULL> list_result = new List<UZ_DOC_FULL>();
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                // Сделаем выборку 
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num)";
+                List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
+
+                if (list_uz_data != null)
+                {
+                    foreach (UZ_Data uz_data in list_uz_data)
+                    {
+                        string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
+                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        UZ_DOC_FULL doc = new UZ_DOC_FULL()
+                        {
+                            id_doc = uz_data.doc_Id,
+                            revision = uz_data.doc_Revision,
+                            num_uz = otpr != null ? otpr.nom_doc : null,
+                            status = GetStatus(uz_data.doc_Status),
+                            sender_code = uz_data.depart_code,
+                            recipient_code = uz_data.arrived_code,
+                            dt = uz_data.dt,
+                            xml = uz_data.raw_xml,
+                            xml_final = xml_final,
+                            otpr = otpr,
+                        };
+                        list_result.Add(doc);
+                    }
+                }
+                return list_result;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SDB_Of_Num(num={0})", num), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        public UZ_DOC_FULL Get_UZ_DOC_SDB_Of_Num_NumDoc(int num, int num_doc)
+        {
+            try
+            {
+                UZ_DOC_FULL result = null;
+                EFSMSDbContext context = new EFSMSDbContext();
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                // Сделаем выборку 
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num)";
+                List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
+
+                if (list_uz_data != null)
+                {
+                    foreach (UZ_Data uz_data in list_uz_data)
+                    {
+                        string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
+                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        if (otpr != null && otpr.nom_doc == num_doc)
+                        {
+                            result = new UZ_DOC_FULL()
+                            {
+                                id_doc = uz_data.doc_Id,
+                                revision = uz_data.doc_Revision,
+                                num_uz = otpr != null ? otpr.nom_doc : null,
+                                status = GetStatus(uz_data.doc_Status),
+                                sender_code = uz_data.depart_code,
+                                recipient_code = uz_data.arrived_code,
+                                dt = uz_data.dt,
+                                xml = uz_data.raw_xml,
+                                xml_final = xml_final,
+                                otpr = otpr,
+                            };
+                            break;
+                        }
+
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SDB_Of_Num_NumDoc(num={0}, num_doc={1})", num, num_doc), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        public UZ_DOC_FULL Get_UZ_DOC_SDB_Of_Num_Date(int num, List<int> consignees, List<int> stations, DateTime? dt_arrival, int period)
+        {
+            try
+            {
+                UZ_DOC_FULL result = null;
+                EFSMSDbContext context = new EFSMSDbContext();
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                // Сделаем выборку 
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by[dt] desc";
+                List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
+                if (list_uz_data != null)
+                {
+                    foreach (UZ_Data uz_data in list_uz_data)
+                    {
+                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) ? int.Parse(uz_data.arrived_code) : -1) == true)
+                        {
+                            string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
+                            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                            DateTime? end_date = otpr != null ? otpr.srok_end : null;
+                            // Проверим на время
+                            if ((dt_arrival != null && end_date != null && dt_arrival <= end_date) ||
+                                (dt_arrival != null && uz_data.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uz_data.update_dt) ||
+                                (dt_arrival != null && uz_data.update_dt == null && uz_data.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uz_data.dt))
+                            {
+                                // Проверим есть вагон в этом документе
+                                if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
+                                {
+                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                    if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
+                                    {
+                                        if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
+                                        {
+                                            int res = (stations != null && stations.Count() > 0 ? stations.Where(s => s.ToString() == otpr.route[0].stn_to.ToString()).Count() : 0);
+                                            if (res > 0)
+                                            {
+                                                result = new UZ_DOC_FULL()
+                                                {
+                                                    id_doc = uz_data.doc_Id,
+                                                    revision = uz_data.doc_Revision,
+                                                    num_uz = otpr != null ? otpr.nom_doc : null,
+                                                    status = GetStatus(uz_data.doc_Status),
+                                                    sender_code = uz_data.depart_code,
+                                                    recipient_code = uz_data.arrived_code,
+                                                    dt = uz_data.dt,
+                                                    xml = uz_data.raw_xml,
+                                                    xml_final = xml_final,
+                                                    otpr = otpr,
+                                                };
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SDB_Of_Num_Date(num={0}, consignees={1}, stations={2}, dt_arrival={3}, period={4})", num, consignees, stations, dt_arrival, period), this.servece_owner, eventID);
+                return null;
+            }
+        }
         #endregion
     }
 }

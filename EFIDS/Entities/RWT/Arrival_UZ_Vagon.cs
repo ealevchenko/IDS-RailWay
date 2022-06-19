@@ -16,7 +16,6 @@ namespace EFIDS.Entities
             Arrival_UZ_Vagon_Cont = new HashSet<Arrival_UZ_Vagon_Cont>();
             Arrival_UZ_Vagon_Pay = new HashSet<Arrival_UZ_Vagon_Pay>();
         }
-
         public long id { get; set; }
 
         public long id_document { get; set; }
@@ -88,6 +87,34 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+
+        public int? id_owner { get; set; }
+
+        public int? id_countrys { get; set; }
+
+        public int? id_genus { get; set; }
+
+        public int? kol_os { get; set; }
+
+        [StringLength(10)]
+        public string usl_tip { get; set; }
+
+        public DateTime? date_rem_uz { get; set; }
+
+        public DateTime? date_rem_vag { get; set; }
+
+        public int? id_type_ownership { get; set; }
+
+        public double? gruzp_uz { get; set; }
+
+        public double? tara_uz { get; set; }
+
+        [StringLength(100)]
+        public string zayava { get; set; }
+
+        public bool? manual { get; set; }
+
+        public int? pay_summa { get; set; }
 
         public virtual Arrival_UZ_Document Arrival_UZ_Document { get; set; }
 
