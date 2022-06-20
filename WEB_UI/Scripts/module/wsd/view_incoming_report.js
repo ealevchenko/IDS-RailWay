@@ -570,10 +570,10 @@
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
             mywindow.document.write(i + 1);
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
             mywindow.document.write(el.num);
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
             mywindow.document.write(OutText(el.arrival_uz_document_nom_main_doc) + (el.arrival_uz_document_nom_doc ? '(' + el.arrival_uz_document_nom_doc + ')' : ''));
             mywindow.document.write('</td>');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
