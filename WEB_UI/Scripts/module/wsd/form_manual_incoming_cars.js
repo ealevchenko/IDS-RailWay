@@ -632,7 +632,7 @@
                 var operation = {
                     id_arrival_sostav: this.id_sostav,
                     check: check,
-                    num_cars: car_out,
+                    num_cars: cars,
                     num_doc: null,
                     as_client: false,
                     user: App.User_Name,
