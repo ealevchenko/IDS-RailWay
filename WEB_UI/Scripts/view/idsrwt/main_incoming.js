@@ -3,6 +3,8 @@
     var App = window.App || {};
     var $ = window.jQuery;
 
+    var format_datetime = "YYYY-MM-DD HH:mm:ss";
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -25,6 +27,8 @@
             'mi_title_report_dg20': 'Накладная предприятия ДГ-20',
             'mi_title_report_way': 'Путевая',
             'mi_operation_mess_print': 'Готовлю документ для печати ...',
+            'mi_title_button_send_db_us_doc': 'БД ЭПД',
+
         },
         'en':  //default language: English
         {
@@ -39,8 +43,14 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang), getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
     App.User_Name = $('input#username').val();
 
+    var interval_min_epd = 180;
+    var duration_min_epd = 0;
+
     var IDS_DIRECTORY = App.ids_directory;
     var ids_dir = new IDS_DIRECTORY();
+
+    var IDS_WSD = App.ids_wsd;
+    var ids_wsd = new IDS_WSD();
     // Модуль инициализаии компонентов формы
     /*    var FC = App.form_control;*/
     var FE = App.form_element;
@@ -63,6 +73,9 @@
     var view_incoming_report = new VICR();
 
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
+
+    var SRV = App.ids_server;
+    var ids_srv = new SRV(); // Создадим класс ids_server
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
@@ -89,6 +102,12 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
+
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(moment().format(format_datetime));
+        }, 1000);
+
 
         if (id_arrival && arrival) {
             start = moment(arrival).set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
@@ -160,7 +179,7 @@
                     {
                         href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.fst(table_incoming_sostav.id_sostav)
                             }
                         }.bind(this)
@@ -168,7 +187,7 @@
                     {
                         href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.fsci(table_incoming_sostav.id_sostav)
                             }
                         }.bind(this)
@@ -176,7 +195,7 @@
                     {
                         href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr');
                             }
                         }.bind(this)
@@ -185,7 +204,7 @@
                     {
                         href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr_gl');
                             }
                         }.bind(this)
@@ -193,7 +212,7 @@
                     {
                         href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr');
                             }
                         }.bind(this)
@@ -201,7 +220,7 @@
                     {
                         href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr_gl');
                             }
                         }.bind(this)
@@ -209,7 +228,7 @@
                     {
                         href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr');
                             }
                         }.bind(this)
@@ -217,7 +236,7 @@
                     {
                         href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr_gl');
                             }
                         }.bind(this)
@@ -225,7 +244,7 @@
                     {
                         href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'gfa');
                             }
                         }.bind(this)
@@ -233,17 +252,19 @@
                     {
                         href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.move_nums(table_incoming_sostav.id_sostav, 'dg20');
                             }
                         }.bind(this)
                     },
-                    { href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function () {
+                    {
+                        href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function () {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'way');
                             }
-                        }.bind(this) },
+                        }.bind(this)
+                    },
                 ],
             });
 
@@ -318,6 +339,38 @@
                 alert: alert,
                 ids_wsd: null,
             });
+
+
+            // Запрос информации от сервера (1 раз в минуту)
+            setInterval(function () {
+                // Запрос клиентов 
+                ids_srv.getCountClient(function (count) {
+                    $('a#client_count').text(count);
+                });
+                // Проверка базы
+                ids_wsd.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+                    var curent = moment();
+                    if (last_date) {
+                        var last_db = moment(last_date);
+                        var duration = moment.duration(curent.diff(last_db))
+                        var duration_min = duration.as('minutes');
+                        table_incoming_sostav.duration_min_epd = duration_min;
+
+                        if (table_incoming_sostav.obj_t_sostav) {
+                            table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                            table_incoming_sostav.obj_t_sostav.button(8).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '-' + duration_min.toFixed(1));
+                            if (duration_min > interval_min_epd) {
+                                table_incoming_sostav.obj_t_sostav.button(8).enable(true);
+                            } else {
+                                table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                            }
+                        }
+                    } else {
+                        table_incoming_sostav.obj_t_sostav.button(7).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '- error!');
+                        table_incoming_sostav.obj_t_sostav.button(7).enable(true);
+                    }
+                });
+            }, 60000);
 
         }.bind(this));
     });

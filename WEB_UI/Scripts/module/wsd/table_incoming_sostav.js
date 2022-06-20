@@ -8,6 +8,11 @@
     var format_date = "YYYY-MM-DD";
     var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
+
+    var email_krr_services = 'KRR.IT.Service@arcelormittal.com';
+    var email_error_epd = 'Sergey.Arhipov@arcelormittal.com';
+    var email_error_mt = 'eduard.levchenko@arcelormittal.com';
+
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
@@ -63,6 +68,7 @@
             'tis_title_button_wagon_accept': 'Принять вагоны',
             'tis_title_button_wagon_view': 'Показать вагоны',
             'tis_title_button_refresh': 'Обновить',
+            'tis_title_button_rerror_db_epd': 'БД-ЭПД',
 
             'tis_mess_init_module': 'Инициализация модуля (table_incoming_sostav) ...',
             'tis_mess_load_sostav': 'Загружаю составы...',
@@ -410,7 +416,13 @@
         {
             button: 'page_length',
             extend: 'pageLength',
-        }
+        },
+        {
+            button: 'error_db_epd',
+            className: 'buttons-error',
+            text: langView('tis_title_button_rerror_db_epd', App.Langs),
+            enabled: true
+        },
     ];
     //-----------------------------------------------------------------------------------------
     // Конструктор
@@ -536,6 +548,12 @@
             }.bind(this)
         });
         buttons.push({ name: 'page_length', action: null });
+        buttons.push({
+            name: 'error_db_epd',
+            action: function (e, dt, node, config) {
+                this.action_error_db_epd();
+            }.bind(this)
+        });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -597,6 +615,8 @@
         this.table_select = false;
         this.table_columns = [];
         this.table_buttons = [];
+
+        this.duration_min_epd = 0;
 
         this.init_type_report();
 
@@ -1020,6 +1040,10 @@
                 cb_refresh(this.sostav);
             }
         }.bind(this));
+    };
+    //
+    table_incoming_sostav.prototype.action_error_db_epd = function () {
+        window.open('mailto:' + email_krr_services + ';' + email_error_epd + '?subject=Не заполняется промежуточная база ЭПД&body=Инцидент направить на группу: KRR-ДАТП - DDICS / Архипов Сергей (Arhipov, Sergey A) (интервал :' + this.duration_min_epd.toFixed(0) + ' минут)', '_self');
     };
     // Загрузить составы прибывающие на станцию 
     //-------------------------------------------------------------------------------------------
