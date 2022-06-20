@@ -1221,6 +1221,29 @@
     //=============================================================================================================
     //                                  РАЗДЕЛ ДОКУМЕНТЫ ЭПД
     //=============================================================================================================
+    // Получить последнюю дату и время записи в промежуточной базе
+    ids_wsd.prototype.getLastDT_UZ_DOC_DB_IDS = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/transfer/epd/db_uz/last_datatime/',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getLastDT_UZ_DOC_DB_IDS", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
     // Получить список документов по номеру накладной
     ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback) {
