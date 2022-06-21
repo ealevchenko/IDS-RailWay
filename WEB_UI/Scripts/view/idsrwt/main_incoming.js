@@ -99,7 +99,36 @@
     // Считаем строку с дополнительными параметрами
     var id_arrival = getUrlVar('id_arrival');
     var arrival = getUrlVar('arrival');
+    // Функция получения информации из сервера
+    var get_server_info = function () {
+        // Запрос клиентов 
+        ids_srv.getCountClient(function (count) {
+            $('a#client_count').text(count);
+        });
+        // Проверка базы
+        ids_wsd.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+            var curent = moment();
+            if (last_date) {
+                var last_db = moment(last_date);
+                var duration = moment.duration(curent.diff(last_db))
+                var duration_min = duration.as('minutes');
+                table_incoming_sostav.duration_min_epd = duration_min;
 
+                if (table_incoming_sostav.obj_t_sostav) {
+                    table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                    table_incoming_sostav.obj_t_sostav.button(8).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '-' + duration_min.toFixed(1));
+                    if (duration_min > interval_min_epd) {
+                        table_incoming_sostav.obj_t_sostav.button(8).enable(true);
+                    } else {
+                        table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                    }
+                }
+            } else {
+                table_incoming_sostav.obj_t_sostav.button(7).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '- error!');
+                table_incoming_sostav.obj_t_sostav.button(7).enable(true);
+            }
+        });
+    }
     // После загрузки документа
     $(document).ready(function ($) {
 
@@ -107,15 +136,12 @@
         setInterval(function () {
             $('label#curent_date').text(moment().format(format_datetime));
         }, 1000);
-
-
         if (id_arrival && arrival) {
             start = moment(arrival).set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
             stop = moment(arrival).set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
 
             id_sostav = Number(id_arrival);
         }
-
         LockScreen(langView('mi_init_main', App.Langs));
         // Загрузим справочники, с признаком обязательно
         load_db(['station'], true, function (result) {
@@ -326,6 +352,7 @@
                 ids_wsd: null,
                 fn_init: function () {
                     // На проверку окончания инициализации
+                    get_server_info();
                     process--;
                     out_init(process);
                 },
@@ -343,33 +370,38 @@
 
             // Запрос информации от сервера (1 раз в минуту)
             setInterval(function () {
-                // Запрос клиентов 
-                ids_srv.getCountClient(function (count) {
-                    $('a#client_count').text(count);
-                });
-                // Проверка базы
-                ids_wsd.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
-                    var curent = moment();
-                    if (last_date) {
-                        var last_db = moment(last_date);
-                        var duration = moment.duration(curent.diff(last_db))
-                        var duration_min = duration.as('minutes');
-                        table_incoming_sostav.duration_min_epd = duration_min;
 
-                        if (table_incoming_sostav.obj_t_sostav) {
-                            table_incoming_sostav.obj_t_sostav.button(8).enable(false);
-                            table_incoming_sostav.obj_t_sostav.button(8).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '-' + duration_min.toFixed(1));
-                            if (duration_min > interval_min_epd) {
-                                table_incoming_sostav.obj_t_sostav.button(8).enable(true);
-                            } else {
-                                table_incoming_sostav.obj_t_sostav.button(8).enable(false);
-                            }
-                        }
-                    } else {
-                        table_incoming_sostav.obj_t_sostav.button(7).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '- error!');
-                        table_incoming_sostav.obj_t_sostav.button(7).enable(true);
-                    }
-                });
+                get_server_info();
+
+
+
+                //// Запрос клиентов 
+                //ids_srv.getCountClient(function (count) {
+                //    $('a#client_count').text(count);
+                //});
+                //// Проверка базы
+                //ids_wsd.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
+                //    var curent = moment();
+                //    if (last_date) {
+                //        var last_db = moment(last_date);
+                //        var duration = moment.duration(curent.diff(last_db))
+                //        var duration_min = duration.as('minutes');
+                //        table_incoming_sostav.duration_min_epd = duration_min;
+
+                //        if (table_incoming_sostav.obj_t_sostav) {
+                //            table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                //            table_incoming_sostav.obj_t_sostav.button(8).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '-' + duration_min.toFixed(1));
+                //            if (duration_min > interval_min_epd) {
+                //                table_incoming_sostav.obj_t_sostav.button(8).enable(true);
+                //            } else {
+                //                table_incoming_sostav.obj_t_sostav.button(8).enable(false);
+                //            }
+                //        }
+                //    } else {
+                //        table_incoming_sostav.obj_t_sostav.button(7).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '- error!');
+                //        table_incoming_sostav.obj_t_sostav.button(7).enable(true);
+                //    }
+                //});
             }, 60000);
 
         }.bind(this));
