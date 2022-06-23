@@ -1733,8 +1733,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         }
         #endregion
 
-
-
         // GET: api/ids/rwt/wsd/view/ways/status/station/id/6
         [Route("view/ways/status/station/id/{id_station:int}")]
         [ResponseType(typeof(view_way_status))]

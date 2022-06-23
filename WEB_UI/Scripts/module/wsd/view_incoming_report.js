@@ -329,7 +329,7 @@
         // Список вагонов есть
         if (list_cars) {
             for (var i = 0; i < list_cars.length; i++) {
-                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang] : '');
+                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? (' ' + list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang]) : '');
                 var id_operator = list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator ? list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator : 0;
                 var operator = list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang];
                 var vesg = list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000) : 0;

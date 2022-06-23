@@ -2162,7 +2162,14 @@
         };
         this.text = function (text) {
             if (text !== undefined) {
+                var disabled = this.$element.prop("disabled");
+                if (disabled) {
+                    this.$element.prop("disabled", false);
+                }
                 this.$element.text(text);
+                if (disabled) {
+                    this.$element.prop("disabled", true);
+                }
             } else {
                 return this.$element.text();
             };

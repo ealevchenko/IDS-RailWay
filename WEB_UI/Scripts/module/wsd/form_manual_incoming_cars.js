@@ -67,9 +67,6 @@
     var FC = App.form_control;
     var wsd = App.ids_wsd;
 
-
-
-
     function form_manual_incoming_cars() {
         this.fc_ui = new FC();
     }

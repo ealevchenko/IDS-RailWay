@@ -871,10 +871,8 @@
                                         this.out_info(langView('tis_mess_ok_operation_delete', App.Langs).format(name_operation));
                                         //LockScreenOff();
                                     }.bind(this));
-
-
                                 } else {
-                                    this.out_error(langView('tis_mess_error_operation_delete', App.Langs) + result);
+                                    this.out_error(langView('tis_mess_error_operation_delete', App.Langs) + result_delete);
                                     LockScreenOff();
                                 }
                             }.bind(this));

@@ -1245,6 +1245,30 @@
         });
     };
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
+    // Получить разпарсеный ЭПД принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getOTPR_UZ_DOC_OUTOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/uz_doc_out/otpr/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOTPR_UZ_DOC_OUTOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
     // Получить список документов по номеру накладной
     ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback) {
         $.ajax({
