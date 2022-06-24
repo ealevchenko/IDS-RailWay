@@ -2166,7 +2166,7 @@
                 if (disabled) {
                     this.$element.prop("disabled", false);
                 }
-                this.$element.text(text);
+                this.$element.val(text === null ? '' : text);
                 if (disabled) {
                     this.$element.prop("disabled", true);
                 }
