@@ -58,7 +58,7 @@
             'ficcd_title_date_adoption_act': 'Ручной ввод (если вагон принимаем по акту)',
 
             'fogcd_label_not_epd': 'Без ЭПД',
-            'fogcd_label_return': 'Вернуть',
+            'fogcd_label_return': 'Возврат',
             'ficcd_label_document_nom_doc': '№ Досылочной накладной:',
             'ficcd_title_document_nom_doc': 'Номер досылочной накладной',
             'ficcd_label_document_nom_main_doc': '№ Основной накладной:',
@@ -6230,42 +6230,6 @@
                 valid = valid & this.form.validation_common.set_object_error(this.elements.input_datetime_date_adoption_act.$element, langView('figcd_mess_valid_not_deff_date_detention', App.Langs).format(this.wagon.arrival_sostav_date_arrival, min_date_adoption_act));
             }
         }
-
-
-
-        //valid = valid & this.form.validation_common.check_control_datetime_input_null(this.elements.input_datetime_date_outgoing_act, langView('ficcd_mess_valid_date_outgoing_act', App.Langs), '', true);
-        //valid = valid & this.form.validation_common.check_control_autocomplete_null(this.elements.autocomplete_reason_discrepancy_uz, langView('ficcd_mess_valid_reason_discrepancy', App.Langs), '', true);
-        //valid = valid & this.form.validation_common.check_control_autocomplete_null(this.elements.autocomplete_reason_discrepancy_amkr, langView('ficcd_mess_valid_reason_discrepancy', App.Langs), '', true);
-        //var date_outgoing_act = this.elements.input_datetime_date_outgoing_act.val();
-        //if (date_outgoing_act) {
-        //    valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_reason_discrepancy_amkr, langView('ficcd_mess_valid_reason_discrepancy', App.Langs), '', langView('ficcd_mess_valid_not_reason_discrepancy', App.Langs), true);
-        //} else {
-        //    if (this.elements.autocomplete_reason_discrepancy_amkr.val() > 0 || this.elements.autocomplete_reason_discrepancy_uz.val() > 0) {
-        //        valid = valid & this.form.validation_common.check_control_datetime_input(this.elements.input_datetime_date_outgoing_act, langView('ficcd_mess_valid_not_date_outgoing_act', App.Langs), '', true);
-        //    }
-        //}
-        //// Проверим отметку вагонником
-        //if (this.wagon && this.wagon.outgoing_car_vagonnik === null) {
-        //    this.form.validation_common.set_object_error(this.elements.textarea_condition_present.$element, langView('ficcd_mess_valid_null_condition_present', App.Langs));
-        //}
-        //// Задержание
-        //if (this.detention_edit && (this.elements.autocomplete_cause_detention.text() !== '' || this.elements.input_datetime_detention_start.val() !== null || this.elements.input_datetime_detention_stop.val() !== null)) {
-        //    valid = valid & this.validation_wagon_detention();
-        //    // Проверка валидация прошла но кнопка не нажата
-        //    if (this.detention_edit && valid) {
-        //        this.form.validation_detention.out_error_message(langView('ficcd_mess_valid_no_save_detention', App.Langs))
-        //        valid = false;
-        //    };
-        //}
-
-        //// Задержания
-        //if (this.current_return_wagons && this.current_return_wagons.date_stop === null) {
-        //    valid = valid & this.validation_wagon_return(true);
-        //}
-
-        //if (this.elements.checkbox_loaded_car.val() === true) {
-        //    valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_loading_devision, langView('ficcd_mess_valid_loading_devision', App.Langs), '', langView('ficcd_mess_valid_not_loading_devision', App.Langs), true);
-        //}
         return valid;
     };
     //-----------------------------------------------------------------------------
