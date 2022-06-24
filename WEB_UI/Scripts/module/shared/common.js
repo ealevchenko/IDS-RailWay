@@ -4664,7 +4664,7 @@
         if (o.text()) {
             var s = o.val();
             var s1 = o.text();
-            if (o.val()) {
+            if (o.val()!==null) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
                 return true;
