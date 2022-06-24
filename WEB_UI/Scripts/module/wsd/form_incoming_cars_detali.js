@@ -1898,11 +1898,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
@@ -1982,11 +1977,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
@@ -2018,11 +2008,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
@@ -2287,11 +2272,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
@@ -2891,11 +2871,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
@@ -2922,11 +2897,6 @@
                         // var code = Number($(e.currentTarget).val());
                     }.bind(this),
                     element_check: function (value) {
-                        //if (value && Number(value) >= 0) {
-                        //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                        //} else {
-                        //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                        //}
                     }.bind(this),
                 },
                 childs: []
