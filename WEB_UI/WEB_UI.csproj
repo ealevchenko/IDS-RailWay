@@ -18,8 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>false</Use64BitIISExpress>
     <IISExpressSSLPort>44326</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -191,6 +190,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IDSMORSResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="App_LocalResources\IDSReportResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IDSReportResource.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_LocalResources\IDSRWTResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -235,6 +239,8 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Areas\IDSMORS\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSMORS\IDSMORSAreaRegistration.cs" />
+    <Compile Include="Areas\IDSReport\Controllers\HomeController.cs" />
+    <Compile Include="Areas\IDSReport\IDSReportAreaRegistration.cs" />
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
@@ -1729,10 +1735,13 @@
     <Content Include="Content\view\admin\_layout.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
+    <Content Include="Content\view\idsreport\home.css" />
     <Content Include="Content\view\idsrwt\incoming1.css" />
     <Content Include="Content\view\idsrwt\outgoing1.css" />
+    <Content Include="Content\view\shared\dashboard.css" />
     <Content Include="Content\view\shared\print_way.css" />
     <Content Include="Content\view\shared\print_gfa.css" />
+    <Content Include="Content\view\shared\_idsreport.css" />
     <Content Include="Images\8m.png" />
     <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Images\idsrwt\wsd\eye-solid.svg" />
@@ -1905,6 +1914,11 @@
     <Content Include="Content\fontawesome-free\webfonts\fa-regular-400.woff2" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.ttf" />
     <Content Include="Content\fontawesome-free\webfonts\fa-solid-900.woff2" />
+    <Content Include="Areas\IDSReport\Views\web.config" />
+    <Content Include="Areas\IDSReport\Views\Home\Index.cshtml" />
+    <Content Include="Areas\IDSReport\Views\Home\Report_SD.cshtml" />
+    <Content Include="Areas\IDSReport\Views\Shared\_IDSReport.cshtml" />
+    <Content Include="Areas\IDSReport\Views\_ViewStart.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2447,6 +2461,7 @@
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
+    <Content Include="Scripts\view\idsreport\main_sd_report.js" />
     <Content Include="Scripts\view\idsrwt\main_incoming.js" />
     <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
     <Content Include="Scripts\view\idsrwt\incoming.js" />
@@ -2492,6 +2507,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Directory\Models\" />
     <Folder Include="Areas\IDSMORS\Models\" />
+    <Folder Include="Areas\IDSReport\Data\" />
     <Folder Include="Areas\IDSRWT\Models\" />
     <Folder Include="Models\" />
   </ItemGroup>
@@ -2555,6 +2571,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IDSMORSResource.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_LocalResources\IDSReportResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IDSReportResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="App_LocalResources\IDSRWTResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

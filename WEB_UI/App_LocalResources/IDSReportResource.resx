@@ -117,82 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="contact_admin_email" xml:space="preserve">
-    <value>Eduard.Levchenko@arcelormittal.com</value>
+  <data name="report_sales_department_description" xml:space="preserve">
+    <value>Аналитическая отчетность департамента по продажам</value>
   </data>
-  <data name="contact_admin_phone" xml:space="preserve">
-    <value>96332</value>
+  <data name="report_sales_department_title" xml:space="preserve">
+    <value>ДпоП</value>
   </data>
-  <data name="contact_admin_title" xml:space="preserve">
-    <value>Техническая поддержка, администрирование сайта : Левченко Эдуард</value>
+  <data name="report_td_description" xml:space="preserve">
+    <value>Аналитическая отчетность транспортного департамента</value>
   </data>
-  <data name="contact_rail_transport_email" xml:space="preserve">
-    <value>Irina.Shuba@arcelormittal.com</value>
+  <data name="report_td_title" xml:space="preserve">
+    <value>ТД</value>
   </data>
-  <data name="contact_rail_transport_phone" xml:space="preserve">
-    <value>91932</value>
-  </data>
-  <data name="contact_rail_transport_title" xml:space="preserve">
-    <value>Техническая поддержка, ВДС «ЖД АМКР»: Шуба Ирина</value>
-  </data>
-  <data name="error_ad_text1" xml:space="preserve">
-    <value>Для учетной  записи:</value>
-  </data>
-  <data name="error_ad_text2" xml:space="preserve">
-    <value>доступ запрещен к ресурсу</value>
-  </data>
-  <data name="error_message" xml:space="preserve">
-    <value>Ошибка! Извините что-то пошло не так.</value>
-  </data>
-  <data name="home_link_contact" xml:space="preserve">
-    <value>Контакты</value>
-  </data>
-  <data name="home_link_document" xml:space="preserve">
-    <value>Инструкции</value>
-  </data>
-  <data name="home_link_home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="home_link_services" xml:space="preserve">
-    <value>Сервисы</value>
-  </data>
-  <data name="home_link_system" xml:space="preserve">
-    <value>Системы</value>
-  </data>
-  <data name="home_menu" xml:space="preserve">
-    <value>Menu</value>
-  </data>
-  <data name="home_title" xml:space="preserve">
-    <value>Информационно диспетчерская система</value>
-  </data>
-  <data name="home_title1" xml:space="preserve">
-    <value>Информационно диспетчерская система</value>
-  </data>
-  <data name="home_title2" xml:space="preserve">
-    <value>Транспортный департамент ArcelorMittal Кривой Рог</value>
-  </data>
-  <data name="lang" xml:space="preserve">
-    <value>ru-RU</value>
-  </data>
-  <data name="link_goto" xml:space="preserve">
-    <value>Перейти</value>
-  </data>
-  <data name="system_idsmors_description" xml:space="preserve">
-    <value>Информационно-диспетчерская система «Управление собственным подвижным составом АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
-  </data>
-  <data name="system_idsmors_title" xml:space="preserve">
-    <value>ИДС "УСПС"</value>
-  </data>
-  <data name="system_rail_transport_description" xml:space="preserve">
-    <value>«Железнодорожный транспорт АМКР» - внутренняя диспетчерская система оперативного управления перевозочным процессом на железнодорожном транспорте  внутри предприятия ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
-  </data>
-  <data name="system_rail_transport_title" xml:space="preserve">
-    <value>ВДС «ЖД АМКР»</value>
-  </data>
-  <data name="system_transport_department_description" xml:space="preserve">
+  <data name="system_idsreport_description" xml:space="preserve">
     <value>Аналитическая отчетность транспортного департамента ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</value>
   </data>
-  <data name="system_transport_department_title" xml:space="preserve">
+  <data name="system_idsreport_title" xml:space="preserve">
     <value>ИДС "ОТЧЕТЫ"</value>
   </data>
 </root>

@@ -1,0 +1,50 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    Layout = "~/Views/Shared/_IDS.cshtml";
+    ViewBag.Title = IDSReportResource.system_idsreport_title;
+}
+
+@section styles {
+    <link rel="stylesheet" type="text/css" href="~/Content/view/idsreport/home.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/view/shared/home-menu.css">
+}
+
+@section scripts {
+    <script>
+        $('header').addClass('img-header-idsmors');
+    </script>
+}
+
+@section Services {
+
+}
+
+@section Document {
+
+}
+
+<h1 id="homeHeading">@IDSReportResource.system_idsreport_title</h1>
+<hr>
+<p>@IDSReportResource.system_idsreport_description</p>
+<div class="content">
+    <ul class="ca-menu">
+        <li>
+            <a href='@Url.Action("Report_TD", "Home", new { area = "IDSReport" })'>
+                <span class="ca-icon">F</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSReportResource.report_td_title</h2>
+                    <h3 class="ca-sub">@IDSReportResource.report_td_description</h3>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href='@Url.Action("Report_SD", "Home", new { area = "IDSReport" })'>
+                <span class="ca-icon">F</span>
+                <div class="ca-content">
+                    <h2 class="ca-main">@IDSReportResource.report_sales_department_title</h2>
+                    <h3 class="ca-sub">@IDSReportResource.report_sales_department_description</h3>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
