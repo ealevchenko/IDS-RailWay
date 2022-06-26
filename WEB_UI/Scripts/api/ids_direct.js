@@ -2561,7 +2561,6 @@
         }
         return null;
     };
-    App.ids_directory = ids_directory;
     //*======= ids_directory.list_payer_sender  (Справочник платильщиков по отправке) ======================================
     //
     ids_directory.prototype.getPayerSender_Of_ID = function (code) {
@@ -2631,6 +2630,7 @@
         return null;
     };
 
+    App.ids_directory = ids_directory;
 
     window.App = App;
 

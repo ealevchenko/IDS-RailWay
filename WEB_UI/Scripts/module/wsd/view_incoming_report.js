@@ -329,11 +329,11 @@
         // Список вагонов есть
         if (list_cars) {
             for (var i = 0; i < list_cars.length; i++) {
-                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang] : '');
+                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? (' ' + list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang]) : '');
                 var id_operator = list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator ? list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator : 0;
                 var operator = list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang];
                 var vesg = list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000) : 0;
-
+                var nom_main_doc = list_cars[i].arrival_uz_document_nom_main_doc !== null && Number(list_cars[i].arrival_uz_document_nom_main_doc) > 0 ? list_cars[i].arrival_uz_document_nom_main_doc : '';
                 doc.write('<tr>');
                 doc.write('<th>' + list_cars[i].arrival_car_position_arrival + '</th>');
                 doc.write('<td>' + list_cars[i]['arrival_uz_document_station_from_name_' + App.Lang] + '</td>');
@@ -343,7 +343,7 @@
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i].arrival_uz_vagon_wagon_adm) + '</td>');
                 doc.write('<td>' + list_cars[i].num + '</td>');
-                doc.write('<td>' + OutText(list_cars[i].arrival_uz_document_nom_main_doc) + (list_cars[i].arrival_uz_document_nom_doc ? '(' + list_cars[i].arrival_uz_document_nom_doc + ')' : '') + '</td>');
+                doc.write('<td>' + nom_main_doc + (list_cars[i].arrival_uz_document_nom_doc ? '(' + list_cars[i].arrival_uz_document_nom_doc + ')' : '') + '</td>');
                 doc.write('<td>' + (list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000).toFixed(2) : '0.00') + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_division_abbr_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_condition_abbr_' + App.Lang]) + '</td>');
@@ -430,6 +430,7 @@
                 for (var ia = 0; ia < acts.length; ia++) {
                     acts_uz += ('id=' + acts[ia].id_document + ' №' + acts[ia].nom_akt + ' от ' + (acts[ia].date_akt ? acts[ia].date_akt.replace(/T/g, ' ') : '') + ' ' + acts[ia].prichina_akt + ' ст.' + acts[ia].stn_name_akt + ';');
                 }
+                var nom_main_doc = cur_el.arrival_uz_document_nom_main_doc !== null && Number(cur_el.arrival_uz_document_nom_main_doc) > 0 ? cur_el.arrival_uz_document_nom_main_doc : '';
                 //--------------------------------------------------------------------
                 mywindow.document.write('<tr>');
                 mywindow.document.write('<th>' + cur_el.arrival_car_position_arrival + '</th>');
@@ -438,7 +439,7 @@
                 mywindow.document.write('<td>' + vesg.toFixed(2) + '</td>');
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_rod_abbr_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + cur_el.num + '</td>');
-                mywindow.document.write('<td>' + OutText(cur_el.arrival_uz_document_nom_main_doc) + (cur_el.arrival_uz_document_nom_doc ? '(' + cur_el.arrival_uz_document_nom_doc + ')' : '') + '</td>');
+                mywindow.document.write('<td>' + nom_main_doc + (cur_el.arrival_uz_document_nom_doc ? '(' + cur_el.arrival_uz_document_nom_doc + ')' : '') + '</td>');
                 mywindow.document.write('<td>' + cur_el['arrival_uz_vagon_cargo_name_' + App.Lang] + certification_data + '</td>');
                 mywindow.document.write('<td>' + cur_el['arrival_uz_document_station_from_name_' + App.Lang] + '</td>');
                 mywindow.document.write('<td>' + cur_el['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] + '</td>');
@@ -566,15 +567,17 @@
         $.each(vagons_page1, function (i, el) {
             var vesg = el.arrival_uz_vagon_vesg ? Number(Number(el.arrival_uz_vagon_vesg) / 1000) : 0;
             var vesg_reweighing = el.arrival_uz_vagon_vesg_reweighing ? Number(Number(el.arrival_uz_vagon_vesg_reweighing) / 1000) : 0;
+            var nom_main_doc = el.arrival_uz_document_nom_main_doc !== null && Number(el.arrival_uz_document_nom_main_doc) > 0 ? el.arrival_uz_document_nom_main_doc : '';
+
             mywindow.document.write('<tr style="height:14.35pt">');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
             mywindow.document.write(i + 1);
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
             mywindow.document.write(el.num);
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
-            mywindow.document.write(OutText(el.arrival_uz_document_nom_main_doc) + (el.arrival_uz_document_nom_doc ? '(' + el.arrival_uz_document_nom_doc + ')' : ''));
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
+            mywindow.document.write(nom_main_doc + (el.arrival_uz_document_nom_doc ? '(' + el.arrival_uz_document_nom_doc + ')' : ''));
             mywindow.document.write('</td>');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
             mywindow.document.write(OutText(el['arrival_uz_vagon_sertification_data_' + App.Lang]));

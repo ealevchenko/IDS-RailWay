@@ -1,4 +1,4 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-Test-Railway]--[KRR-PA-CNT-Railway]
 
 select 
 	out_car.[id] as outgoing_car_id
@@ -722,5 +722,5 @@ select
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
-out_car.id = 511491
+out_car.id = 181861
 order by out_car.position

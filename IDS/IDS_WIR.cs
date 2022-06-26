@@ -794,6 +794,7 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFSAPIncomingSupply ef_sap_is = new EFSAPIncomingSupply(context);
                 ArrivalSostav sostav = ef_arr_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
                 if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправкиия
                 if (sostav.status > 0) return (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
@@ -808,6 +809,13 @@ namespace IDS
                 // Проверки закончены
                 if (list_cars != null && list_cars.Count > 0)
                 {
+                    // Удалим входящие поставки
+                    foreach (ArrivalCars car in list_cars)
+                    {
+
+                        List<SAPIncomingSupply> list_del = ef_sap_is.Context.Where(s => s.id_arrival_car == car.id).ToList();
+                        ef_sap_is.Delete(list_del.Select(s => s.id).ToList());
+                    }
                     ef_arr_car.Delete(list_cars.Select(w => w.id).ToList());
                 }
                 ef_arr_sostav.Delete(sostav.id);
@@ -1871,6 +1879,7 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFArrivalCars ef_arr_car = new EFArrivalCars(context);
                 EFUZ_DOC ef_uz_doc = new EFUZ_DOC(context);
+                EFUZ_DOC_OUT ef_uz_doc_out = new EFUZ_DOC_OUT(context);
                 EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 ArrivalCars car = ef_arr_car.Context.Where(c => c.id == id_arrival_car).FirstOrDefault();
@@ -2081,6 +2090,60 @@ namespace IDS
                                 if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
                                 break;
                             };
+                        case 4:
+                            {
+                                // Основной ручной, а досылка оригинал
+                                main_uz_doc_manual = true;
+                                uz_doc_manual = false;
+                                if (arrival_main_doc == null || String.IsNullOrWhiteSpace(arrival_main_doc.nom_doc)) return (int)errors_base.arrival_cars_num_main_doc;   // По вагону неопределен основной документ
+                                // Проверим наличие физическое наличие документа
+                                epd_main = ef_uz_doc.Context.Where(d => d.num_doc == arrival_main_doc.id_doc).FirstOrDefault();
+                                if (epd_main == null)
+                                {
+                                    // Такого документа не существует
+                                    if (arrival_main_doc.id_doc != null)
+                                    {
+                                        // Документ существует переносим
+                                        UZ_DOC_OUT exist_uz_doc_out = ef_uz_doc_out.Context.Where(d => d.num_doc == arrival_main_doc.id_doc).FirstOrDefault();
+                                        if (exist_uz_doc_out == null) return (int)errors_base.not_uz_doc_out_db; // В базе данных нет записи документа ЭПД по отправке
+                                        epd_main = new EFIDS.Entities.UZ_DOC()
+                                        {
+                                            num_doc = exist_uz_doc_out.num_doc,
+                                            revision = exist_uz_doc_out.revision,
+                                            status = exist_uz_doc_out.status,
+                                            num_uz = exist_uz_doc_out.num_uz,
+                                            code_from = exist_uz_doc_out.code_from,
+                                            code_on = exist_uz_doc_out.code_on,
+                                            dt = exist_uz_doc_out.dt,
+                                            xml_doc = exist_uz_doc_out.xml_doc,
+                                            close = DateTime.Now,
+                                            close_message = "Возврат с УЗ"
+                                        };
+                                    }
+                                    else
+                                    {
+                                        // Документ отсутсвует сосздадим ручной
+                                        string num_doc = "MN:" + arrival_main_doc.nom_doc;
+                                        int i_nom_main_doc = int.Parse(arrival_main_doc.nom_doc);
+                                        epd_main = new EFIDS.Entities.UZ_DOC()
+                                        {
+                                            num_doc = num_doc,
+                                            revision = 0,
+                                            status = 6,
+                                            num_uz = i_nom_main_doc,
+                                            code_from = arrival_main_doc.epd_code_from,
+                                            code_on = arrival_main_doc.epd_code_on,
+                                            dt = DateTime.Now,
+                                            xml_doc = null,
+                                            close = DateTime.Now,
+                                            close_message = "Возврат с УЗ"
+                                        };
+                                    }
+                                    ef_uz_doc.Add(epd_main);
+
+                                }
+                                break;
+                            };
                     };
                 };
                 // Привяжем к ArrivalCars правильную ссылку EFIDS.Entities.UZ_DOC
@@ -2260,7 +2323,7 @@ namespace IDS
                             // Удалим сам документ
                             ef_arr_uz_doc.Delete(arr_uz_doc.id);
                             // Если докуменит был создан в ручную убрать на него сылку, а если нет привязок документ удалить
-                            if (car.UZ_DOC != null && car.UZ_DOC.xml_doc == null)
+                            if (car.UZ_DOC != null && (car.UZ_DOC.xml_doc == null || arr_uz_vag.cargo_returns == true))
                             {
                                 EFIDS.Entities.UZ_DOC epd = ef_uz_doc.Context.Where(d => d.num_uz == car.UZ_DOC.num_uz).FirstOrDefault();
                                 car.UZ_DOC = null;
@@ -2274,6 +2337,11 @@ namespace IDS
                         {
                             arr_uz_doc.Arrival_UZ_Vagon.Remove(arr_uz_vag);
                         }
+                    }
+                    // Если вагон возвратный тогда удалим сылку на документ
+                    if (arr_uz_vag.cargo_returns == true && car.UZ_DOC != null)
+                    {
+                        car.UZ_DOC = null;
                     }
                     // Удалим сам документ на вагон
                     ef_arr_uz_vag.Delete(arr_uz_vag.id);
@@ -2656,6 +2724,7 @@ namespace IDS
                             };
                             ef_arr_car.Add(arr_car);
                             sostav.ArrivalCars.Add(arr_car);
+                            position++;
                         }
                         else
                         {
@@ -2677,13 +2746,14 @@ namespace IDS
                                 arr_car.position = position;
                                 arr_car.note = "Перенесен (ручной режим)";
                                 arr_car.num_doc = sv.new_uz_doc != null ? sv.new_uz_doc.num_doc : arr_car.num_doc;
-                                position++;
+
                             }
                             arr_car.change = DateTime.Now;
                             arr_car.change_user = user;
                             ef_arr_car.Update(arr_car);
+                            position++;
                         }
-                        
+
                     }
                     res_upd = context.SaveChanges();
                 }

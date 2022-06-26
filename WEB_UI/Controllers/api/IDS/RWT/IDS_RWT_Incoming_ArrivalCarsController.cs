@@ -20,6 +20,9 @@ namespace WEB_UI.Controllers.api
         public int? num { get; set; }
         public int? arrival_car_position_arrival { get; set; }
         public long? id_wir { get; set; }
+        // Добавил 21-06-2022
+        public long? arrival_car_id_outgoing_car { get; set; }
+        public long? arrival_car_id_outgoing_uz_vagon { get; set; }
         // Добавил 10-05-2022
         public long? arrival_car_wim_cur_id { get; set; }
         public long? arrival_car_wim_cur_id_wagon_internal_routes { get; set; }

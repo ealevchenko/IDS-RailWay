@@ -32,6 +32,7 @@
     <script src="~/Scripts/module/shared/epd.js"></script>                  <!-- Библиотека методов для работы ЭПД УЗ -->
     <script src="~/Scripts/api/shared.js"></script>                         <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/us_direct.js"></script>
+    <script src="~/Scripts/api/ids_server.js"></script>
     <script src="~/Scripts/api/ids_direct.js"></script>
     <script src="~/Scripts/api/ids_wsd.js"></script>
     <script src="~/Scripts/module/shared/form_detali.js"></script>
@@ -55,6 +56,13 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse text-light" id="nb-incoming">
+        </div>
+        <div>
+            <label class="text-warning">@User.Identity.Name</label><br />
+            <label class="text-warning" id="curent_date"></label>
+        </div>
+        <div class="ml-1">
+            <a href="#" id="client_count" class="badge badge-primary">0</a>
         </div>
     </div>
 </nav>

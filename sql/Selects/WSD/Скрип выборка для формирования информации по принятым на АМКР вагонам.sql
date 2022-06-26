@@ -1,6 +1,6 @@
-use [KRR-PA-Test-Railway]
+use [KRR-PA-CNT-Railway]
 
-declare @id_sostav int = 149632--171467 --171467
+declare @id_sostav int = 171772--171467 --171467
 
 
 	select 
@@ -8,6 +8,9 @@ declare @id_sostav int = 149632--171467 --171467
 		,arr_car.[num]
 		,arr_car.[position_arrival] as arrival_car_position_arrival
 		,wir.id as id_wir
+		-- Добавил 21-06-2022
+		,out_car.id as arrival_car_id_outgoing_car
+		,out_car.id_outgoing_uz_vagon as arrival_car_id_outgoing_uz_vagon
 		-- Добавил 10-05-2022
 		-->================================= ТЕКУЩАЯ ПОЗИЦИЯ ВАГОНА========================
 		,wim_cur.id as arrival_car_wim_cur_id
@@ -314,6 +317,8 @@ declare @id_sostav int = 149632--171467 --171467
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON arr_car.id = wir.[id_arrival_car]
+		--> Последнее отправление
+		Left JOIN [IDS].[OutgoingCars] as out_car ON out_car.id = (SELECT TOP (1) [id_outgoing_car] FROM [IDS].[WagonInternalRoutes] where [num]=arr_car.[num] order by 1 desc)
 		-- Добавил 10-05-2022
 		--> Текущее место нахождения
 		Left JOIN IDS.[WagonInternalMovement] as wim_cur ON wim_cur.id = (SELECT top(1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes] = (SELECT TOP (1) [id]  FROM [IDS].[WagonInternalRoutes] where [num] = arr_car.[num] order by 1 desc) and [close] is null order by 1 desc)

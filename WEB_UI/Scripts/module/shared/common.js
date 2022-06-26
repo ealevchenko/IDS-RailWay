@@ -2162,7 +2162,14 @@
         };
         this.text = function (text) {
             if (text !== undefined) {
-                this.$element.text(text);
+                var disabled = this.$element.prop("disabled");
+                if (disabled) {
+                    this.$element.prop("disabled", false);
+                }
+                this.$element.val(text === null ? '' : text);
+                if (disabled) {
+                    this.$element.prop("disabled", true);
+                }
             } else {
                 return this.$element.text();
             };
@@ -4657,7 +4664,7 @@
         if (o.text()) {
             var s = o.val();
             var s1 = o.text();
-            if (o.val()) {
+            if (o.val()!==null) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
                 return true;

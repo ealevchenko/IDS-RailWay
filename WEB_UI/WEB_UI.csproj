@@ -289,6 +289,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_UZ_DOC_OUTController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingDetentionReturnController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalOperationController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalMovementController.cs" />
@@ -1735,6 +1736,7 @@
     <Content Include="Images\8m.png" />
     <Content Include="Images\directory\line-icon-3_.svg" />
     <Content Include="Images\idsrwt\wsd\eye-solid.svg" />
+    <Content Include="Scripts\api\ids_server.js" />
     <Content Include="Scripts\api\ids_wsd.js" />
     <Content Include="Scripts\api\ids_direct.js" />
     <Content Include="Scripts\api\ids_global.js" />
