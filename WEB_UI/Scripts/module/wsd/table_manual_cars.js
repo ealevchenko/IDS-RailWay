@@ -28,13 +28,8 @@
             'tmc_field_sostav_status': 'Статус состава',
             'tmc_field_car_arrival': 'Вагон принят',
             'tmc_field_wir_status': 'Вагон на АМКР',
-
             'tmc_field_select_num': '№ вагона',
-
-
-
             'tmc_mess_init_module': 'Инициализация модуля(table_manual_cars)...',
-            //'tmc_title_yes': 'Да',
             'tmc_title_all': 'Все',
             'tmc_title_type_update_0': 'Добавить вагон.',
             'tmc_title_type_update_1': 'Только обновить ЭПД.',
@@ -44,15 +39,12 @@
             'tmc_title_type_update_5': 'Запрет! (Состав принят)',
             'tmc_title_type_update_6': 'Запрет! (Вагон на АМКР)',
             'tmc_title_type_update_7': 'Запрет! (Вагон уже находится в составе)',
-
             'tmc_title_ststus_0': 'Не принят',
             'tmc_title_ststus_1': 'В работе',
             'tmc_title_ststus_2': 'Принят',
             'tmc_title_ststus_3': 'Отклонен',
-
             'tmc_title_way': 'Стоит на станции: {0} на пути: {1}',
             'tmc_title_out_way': 'Стоит на перегоне :{0}',
-
             'tmc_title_button_export': 'Экспорт',
             'tmc_title_button_buffer': 'Буфер',
             'tmc_title_button_excel': 'Excel',
@@ -66,7 +58,45 @@
         },
         'en':  //default language: English
         {
-
+            'tmc_field_searsh_num': 'car number',
+            'tmc_field_searsh_position': 'position',
+            'tmc_field_searsh_type_update': 'Status',
+            'tmc_field_new_uz_doc': 'Invoice # (found)',
+            'tmc_field_new_id_doc': 'id doc doc (found)',
+            'tmc_field_arrival_id_doc': 'id doc doc (existing)',
+            'tmc_field_sostav_arrival': 'Composition Arrived',
+            'tmc_field_composition_index': 'Index',
+            'tmc_field_train': 'Train',
+            'tmc_field_sostav_status': 'Squad Status',
+            'tmc_field_car_arrival': 'Car received',
+            'tmc_field_wir_status': 'Wagon on AMKR',
+            'tmc_field_select_num': 'car number',
+            'tmc_mess_init_module': 'Module initialization(table_manual_cars)...',
+            'tmc_title_all': 'All',
+            'tmc_title_type_update_0': 'Add a wagon.',
+            'tmc_title_type_update_1': 'Update EPD only.',
+            'tmc_title_type_update_2': 'Move wagon from incoming train.',
+            'tmc_title_type_update_3': 'Reschedule? (the train is in operation, but the carriage has not been accepted!)',
+            'tmc_title_type_update_4': 'Ban! (The composition in the work of the car is accepted)',
+            'tmc_title_type_update_5': 'Ban! (Composition adopted)',
+            'tmc_title_type_update_6': 'Ban! (Wagon on AMKR)',
+            'tmc_title_type_update_7': 'Ban! (The car is already in the train)',
+            'tmc_title_ststus_0': 'Not Accepted',
+            'tmc_title_ststus_1': 'In Progress',
+            'tmc_title_ststus_2': 'Accepted',
+            'tmc_title_ststus_3': 'Rejected',
+            'tmc_title_way': 'Standing at Station: {0} on Way: {1}',
+            'tmc_title_out_way': 'Standing on track :{0}',
+            'tmc_title_button_export': 'Export',
+            'tmc_title_button_buffer': 'Buffer',
+            'tmc_title_button_excel': 'Excel',
+            'tmc_title_excel_sheet_name': 'Wagons',
+            'tmc_title_button_field': 'Fields',
+            'tmc_title_button_field_select': 'Select',
+            'tmc_title_button_field_view_all': 'Show All',
+            'tmc_title_button_field_clear': 'Reset',
+            'tmc_title_button_select_all': 'Select All',
+            'tmc_title_button_select_none': 'Remove All',
         }
     };
     // Определлим список текста для этого модуля

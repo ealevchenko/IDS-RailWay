@@ -20,9 +20,6 @@
             'vicr_mess_load_sostav': 'Загружаю информацию по составу...',
             'vicr_mess_load_print': 'Формирую документ для печати...',
             'vicr_title_report_nvt': 'Натурная ведомость поезда № {0}',
-            //'vicr_title_report_composition_index': 'Индекс поезда',
-            //'vicr_title_report_composition_arrival': 'Прибытие',
-            //'vicr_title_report_composition_adoption': 'Прием',
             'vicr_title_report_podp_priem': 'Подпись приемосдатчика ______________________',
             'vicr_title_form_nums': 'Укажите вагоны',
             'vicr_title_form_move_nums': 'Выберите вагоны',
@@ -30,7 +27,13 @@
         },
         'en':  //default language: English
         {
-
+            'vicr_mess_init_module': 'Module initialization(view_incoming_report)...',
+            'vicr_mess_load_sostav': 'Loading composition info...',
+            'vicr_mess_load_print': 'Creating a document to print...',
+            'vicr_title_report_nvt': 'Train sheet #{0}',
+            'vicr_title_report_podp_priem': 'Signature of podp_priem ______________________',
+            'vicr_title_form_nums': 'Specify wagons',
+            'vicr_title_form_move_nums': 'Select wagons',
         }
     };
     // Определлим список текста для этого модуля

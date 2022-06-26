@@ -58,7 +58,36 @@
         },
         'en':  //default language: English
         {
+            'fmic_title_edit': 'OK',
+            'fmic_title_cancel': 'Cancel',
+            'fmic_label_check_sys_num': 'Check system numbering',
+            'fmic_label_list_nums': 'Add wagon numbers',
+            'fmic_title_list_nums': 'xxxxxxxxx;xxxxxxxx;',
+            'fmic_label_main_doc': 'Invoice number',
+            'fmic_title_main_doc': 'Invoice #',
 
+            'fmic_field_num': 'Wagon#',
+            'fmic_field_position': 'Position',
+            'fmic_title_search_cars': 'Search and Inspect Cars',
+            'fmic_title_search_main_doc': 'Search for EPD on the server of UZ Client',
+            'fmic_title_form_add': 'Add wagons manually',
+            'fmic_mess_init_module': 'Module initialization(form_manual_incoming_cars)...',
+            'fmic_mess_operation_run': 'Running an operation...',
+            'fmic_mess_operation_run_searsh_epd': 'Running a search for a document in the database (UZ Client)...',
+            'fmic_form_add_cars': 'Add?',
+            'fmic_form_add_cars_message': 'Add {0} cars. part?',
+            'fmic_mess_input_wagon': 'Enter wagon numbers separated by “;”, and click the check button. Attention! The cars will be checked for the system numbering of the entered car number (to disable this mode, uncheck the “Check system numbering”)',
+            'fmic_mess_error_not_cars': 'Enter the number of a car or several cars, number separator is ";"',
+            'fmic_mess_error_not_doc': 'Enter invoice number',
+            'fmic_mess_error_input_num_cars': 'Input error, item number :{0}, wrong number entered :{1}',
+            'fmic_mess_error_input_num_cars1': 'Input error, position number :{0}, number cannot be less than or equal to 0 :{1}',
+            'fmic_mess_error_input_num_cars2': 'Input error, position number :{0}, non-system numbering (checksum error) :{1}',
+            'fmic_mess_error_input_num_cars_duble': 'Input error, entered number :{0} - repeated!',
+            'fmic_mess_error_info': 'Correct the given numbers in the given positions and try again.',
+            'fmic_mess_error_search_cars': 'Error performing the operation "Search for information on cars entered manually, error code: {0}"',
+            'fmic_mess_run_operation_add_wagon': 'Running the operation "ADD WAGONS TO STRUCTURE"',
+            'fmic_mess_run_error_operation_add_wagon': 'Error performing operation "ADD WAGONS TO STRUCTURE", error code :{0}',
+            'fmic_mess_error_searsh_doc': 'Error searching for document in DB:{0}',
         }
     };
     // Определлим список текста для этого модуля

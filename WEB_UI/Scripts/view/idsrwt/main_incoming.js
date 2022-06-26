@@ -10,7 +10,6 @@
     {
         'default':  //default language: ru
         {
-
             'mi_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mi_init_main': 'Инициализация формы прибытие...',
@@ -34,7 +33,21 @@
         {
             'mi_title_label_date': 'LINE-UP PERIOD :',
             'mi_title_label_station': 'DEPARTURE STATION:',
-            'mi_init_main': 'Form initialization arrival...',
+            'mi_init_main': 'Initializing form arrival...',
+            'mi_title_label_dropdown': 'Reporting documentation',
+            'mi_title_report_fst': 'Train sheet',
+            'mi_title_report_fsci': 'Commercial inspection sheet',
+            'mi_title_report_aica_kr': 'Application for the issuance of a commercial act art. KR.',
+            'mi_title_report_aica_kr_gl': 'Application for the issuance of a commercial act art. CR Ch.',
+            'mi_title_report_api_kr': 'Application for participation in the issuance of art. KR.',
+            'mi_title_report_api_kr_gl': 'Application for participation in the issuance of art. CR Ch.',
+            'mi_title_report_apaca_kr': 'Application for participation with accompanying Kom. Act Art. KR.',
+            'mi_title_report_apaca_kr_gl': 'Application for participation with a passing Kom. Act Art. CR Ch.',
+            'mi_title_report_gfa': 'General Form Act',
+            'mi_title_report_dg20': 'Invoice of enterprise DG-20',
+            'mi_title_report_way': 'Travel',
+            'mi_operation_mess_print': 'Preparing a document for printing...',
+            'mi_title_button_send_db_us_doc': 'EPD DB',
         }
     };
 

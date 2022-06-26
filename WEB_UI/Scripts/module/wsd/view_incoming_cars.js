@@ -36,7 +36,23 @@
         },
         'en':  //default language: English
         {
+            'vicc_card_header_detali': 'CONTENT INFO',
+            'vicc_card_header_detali_sostav': 'CONTENT INFO [train no:{0}, train id:{1}, arrival time :{2}, arrived from station :{3}]',
+            'vicc_card_table_cars': 'ACCEPTED CARS',
+            'vicc_card_info_cars': 'Car info',
+            'vicc_card_list_cars': 'Cars',
 
+            'vicc_title_button_search_epd': 'Find wagons by EPD, search document by number',
+            'vicc_title_button_car_manual': 'Add Car Manually',
+            'vicc_title_icon_doc': 'Document Found',
+            'vicc_mess_not_id_sostav': 'Composition not selected, no id defined',
+            'vicc_mess_init_panel': 'Initiating module(view_incoming_cars)...',
+            'vicc_mess_load_sostav': 'Loading info for the selected squad...',
+            'vicc_mess_load_vagon_detali': 'Loading information about a wagon',//
+            'vicc_mess_run_operation_add_car': 'Operation "ADD CARS TO COMPLETE" completed!',//
+
+            'vicc_title_disable_wagon_out_way': 'Wagon is on track: "{0}" start: {1} end: {2}',
+            'vicc_title_disable_wagon_way': 'The wagon is at station: {0}, way {1} start: {2} end: {3}',
         }
     };
     // Определлим список текста для этого модуля
