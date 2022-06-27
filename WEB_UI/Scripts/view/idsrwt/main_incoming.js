@@ -144,7 +144,6 @@
     }
     // После загрузки документа
     $(document).ready(function ($) {
-
         // Обновить
         setInterval(function () {
             $('label#curent_date').text(moment().format(format_datetime));
@@ -380,41 +379,9 @@
                 ids_wsd: null,
             });
 
-
             // Запрос информации от сервера (1 раз в минуту)
             setInterval(function () {
-
                 get_server_info();
-
-
-
-                //// Запрос клиентов 
-                //ids_srv.getCountClient(function (count) {
-                //    $('a#client_count').text(count);
-                //});
-                //// Проверка базы
-                //ids_wsd.getLastDT_UZ_DOC_DB_IDS(function (last_date) {
-                //    var curent = moment();
-                //    if (last_date) {
-                //        var last_db = moment(last_date);
-                //        var duration = moment.duration(curent.diff(last_db))
-                //        var duration_min = duration.as('minutes');
-                //        table_incoming_sostav.duration_min_epd = duration_min;
-
-                //        if (table_incoming_sostav.obj_t_sostav) {
-                //            table_incoming_sostav.obj_t_sostav.button(8).enable(false);
-                //            table_incoming_sostav.obj_t_sostav.button(8).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '-' + duration_min.toFixed(1));
-                //            if (duration_min > interval_min_epd) {
-                //                table_incoming_sostav.obj_t_sostav.button(8).enable(true);
-                //            } else {
-                //                table_incoming_sostav.obj_t_sostav.button(8).enable(false);
-                //            }
-                //        }
-                //    } else {
-                //        table_incoming_sostav.obj_t_sostav.button(7).text(langView('mi_title_button_send_db_us_doc', App.Langs) + '- error!');
-                //        table_incoming_sostav.obj_t_sostav.button(7).enable(true);
-                //    }
-                //});
             }, 60000);
 
         }.bind(this));
