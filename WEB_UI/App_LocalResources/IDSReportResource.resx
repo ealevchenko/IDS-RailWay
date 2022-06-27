@@ -123,6 +123,15 @@
   <data name="report_sales_department_title" xml:space="preserve">
     <value>ДпоП</value>
   </data>
+  <data name="report_sd_group_link_cargo" xml:space="preserve">
+    <value>Грузы АМКР</value>
+  </data>
+  <data name="report_sd_link_border_crossing" xml:space="preserve">
+    <value>Пересечение границы</value>
+  </data>
+  <data name="report_sd_title" xml:space="preserve">
+    <value>Департамент по продажам</value>
+  </data>
   <data name="report_td_description" xml:space="preserve">
     <value>Аналитическая отчетность транспортного департамента</value>
   </data>

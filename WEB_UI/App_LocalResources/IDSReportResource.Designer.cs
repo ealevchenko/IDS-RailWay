@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class IDSReportResource {
@@ -75,6 +75,33 @@ namespace WEB_UI.App_LocalResources {
         public static string report_sales_department_title {
             get {
                 return ResourceManager.GetString("report_sales_department_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Грузы АМКР.
+        /// </summary>
+        public static string report_sd_group_link_cargo {
+            get {
+                return ResourceManager.GetString("report_sd_group_link_cargo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пересечение границы.
+        /// </summary>
+        public static string report_sd_link_border_crossing {
+            get {
+                return ResourceManager.GetString("report_sd_link_border_crossing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Департамент по продажам.
+        /// </summary>
+        public static string report_sd_title {
+            get {
+                return ResourceManager.GetString("report_sd_title", resourceCulture);
             }
         }
         

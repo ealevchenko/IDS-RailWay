@@ -25,21 +25,17 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang), getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
     App.User_Name = $('input#username').val();
 
-    var interval_min_epd = 180;
-    var duration_min_epd = 0;
+    var VSDR = App.view_sd_report;
+    var view_sd_report = new VSDR('#content');
 
-    var IDS_DIRECTORY = App.ids_directory;
-    var ids_dir = new IDS_DIRECTORY();
+    //var IDS_DIRECTORY = App.ids_directory;
+    //var ids_dir = new IDS_DIRECTORY();
 
-    //var IDS_WSD = App.ids_wsd;
-    //var ids_wsd = new IDS_WSD();
+    var IDS_WSD = App.ids_wsd;
+    var ids_wsd = new IDS_WSD();
     // Модуль инициализаии компонентов формы
-    /*    var FC = App.form_control;*/
-    var FE = App.form_element;
-
-    var FIL = App.form_inline;
-    //var fc_ui = new FC();
-    var fe_ui = new FE();
+    //var FE = App.form_element;
+    //var fe_ui = new FE();
     var alert = App.alert_form;
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
@@ -56,11 +52,39 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        LockScreen(langView('mi_init_main', App.Langs));
-        // Загрузим справочники, с признаком обязательно
-        load_db(['station'], true, function (result) {
-            LockScreenOff();
-        }.bind(this));
+        //    LockScreen(langView('mi_init_main', App.Langs));
+        //    // Загрузим справочники, с признаком обязательно
+        //    load_db(['station'], true, function (result) {
+        //        LockScreenOff();
+        //    }.bind(this));
+        var fullHeight = function () {
+
+            $('.js-fullheight').css('height', $(window).height());
+            $(window).resize(function () {
+                $('.js-fullheight').css('height', $(window).height());
+            });
+
+        };
+
+        fullHeight();
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+
+        view_sd_report.init({
+            alert: null,
+            ids_wsd: ids_wsd,
+            id_sidebar: 'list-sidebar',
+            fn_init: function (init) {
+                LockScreenOff();
+            }.bind(this),
+        });
     });
+
+
+
+
 
 })(jQuery); // End of use strict

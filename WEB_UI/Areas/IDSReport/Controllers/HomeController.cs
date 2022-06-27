@@ -21,5 +21,9 @@ namespace WEB_UI.Areas.IDSReport.Controllers
         {
             return View();
         }
+        public ActionResult Report_SD1()
+        {
+            return View();
+        }
     }
 }

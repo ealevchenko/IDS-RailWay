@@ -27,48 +27,6 @@
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "" })'>Номе</a>
-                        </li>
-                        <li class="nav-item">
-                            @*<a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSRWT" })'>ВДС «ЖД АМКР»</a>*@
-                            <div class="dropdown  mr-3">
-                                @*<button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        ВДС «ЖД АМКР»
-                                    </button>*@
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href=#>ВДС «ЖД АМКР»</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href='@Url.Action("Index", "Home", new { area = "IDSRWT" })'>@WEB_UI.App_LocalResources.IDSRWTResource.home_vds_title</a>
-                                    <a class="dropdown-item" href='@Url.Action("Arrival", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.arrival_title</a>
-                                    <a class="dropdown-item" href='@Url.Action("Incoming", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.incoming_title</a>
-                                    <a class="dropdown-item" href='@Url.Action("WSD", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.wsd_title</a>
-                                    <a class="dropdown-item" href='@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.outgoing_title</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            @*<a class="nav-link" href='@Url.Action("Index", "Home", new { Area = "Directory" })' target="_blank">Утилиты</a>*@
-                            <div class="dropdown  mr-3">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href=#>Утилиты</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href='@Url.Action("Index", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.utilite_title</a>
-                                    <a class="dropdown-item" href='@Url.Action("InstructionalLetters", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_letters</a>
-                                    <a class="dropdown-item" href='@Url.Action("SearchWagon", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_searsh_wagon</a>
-                                    <a class="dropdown-item" href='@Url.Action("WagonMarking", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_wagon_marking</a>
-                                    <a class="dropdown-item" href='@Url.Action("PresentWagonMarking", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_present_wagon_marking</a>
-                                    <a class="dropdown-item" href='@Url.Action("ParkState", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_park_state</a>
-                                    <a class="dropdown-item" href='@Url.Action("Cars", "Home", new { Area = "Directory" })' target="_blank">@WEB_UI.App_LocalResources.IDSRWTResource.title_link_wagon_dir</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href='@Url.Action("Index", "Home", new { area = "IDSMORS" })'>ИДС"УСПС"</a>
-                        </li>
-
-                    </ul>
-                </div>
             </div>
         </div>
     </nav>
