@@ -728,11 +728,11 @@
                 break;
             };
             case 'apaca_kr': {
-                this.api('Кривий Ріг');
+                this.apaca('Кривий Ріг');
                 break;
             };
             case 'apaca_kr_gl': {
-                this.api('Кривий Ріг-Головний');
+                this.apaca('Кривий Ріг-Головний');
                 break;
             };
             case 'gfa': {
