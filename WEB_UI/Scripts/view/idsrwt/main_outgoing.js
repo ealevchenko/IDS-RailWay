@@ -3,6 +3,8 @@
     var App = window.App || {};
     var $ = window.jQuery;
 
+    var format_datetime = "YYYY-MM-DD HH:mm:ss";
+
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -64,8 +66,30 @@
     var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
     var id_station = null; // По умолчанию не выбрана
     var list_station = [];
+    var id_sostav = null;   // По умолчанию не выбрана
+
+    // Считаем строку с дополнительными параметрами
+    var id_outgoing = getUrlVar('id');
+    var readiness = getUrlVar('readiness');
+    // Функция получения информации из сервера
+    var get_server_info = function () {
+        // Запрос клиентов 
+        ids_srv.getCountClient(function (count) {
+            $('a#client_count').text(count);
+        });
+    }
     // После загрузки документа
     $(document).ready(function ($) {
+        // Обновить
+        setInterval(function () {
+            $('label#curent_date').text(moment().format(format_datetime));
+        }, 1000);
+        if (id_outgoing && readiness) {
+            start = moment(readiness).set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+            stop = moment(readiness).set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+
+            id_sostav = Number(id_outgoing);
+        };
         LockScreen(langView('mo_init_main', App.Langs));
         // Загрузим справочники, с признаком обязательно
         load_db(['station'], true, function (result) {
@@ -133,7 +157,7 @@
                 if (process === 0) {
                     // Загрузим составы
                     table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-                        this.view(sostav, id_station, null);
+                        this.view(sostav, id_station, id_sostav);
                         LockScreenOff();
                     }.bind(table_outgoing_sostav));
                 }

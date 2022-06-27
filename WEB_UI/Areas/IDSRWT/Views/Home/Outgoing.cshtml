@@ -28,6 +28,7 @@
     <script src="~/Scripts/module/shared/modal_confirm_form.js"></script> <!-- Форма сообщений подтверждения -->
     <script src="~/Scripts/api/shared.js"></script> <!-- Общая библиотека методов API -->
     <script src="~/Scripts/api/us_direct.js"></script>
+    <script src="~/Scripts/api/ids_server.js"></script>
     <script src="~/Scripts/api/ids_direct.js"></script>
     <script src="~/Scripts/api/ids_wsd.js"></script>
     <script src="~/Scripts/module/wsd/table_outgoing_detention_return.js"></script>
@@ -51,6 +52,13 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse text-light" id="nb-outgoing">
+        </div>
+        <div>
+            <label class="text-warning">@User.Identity.Name</label><br />
+            <label class="text-warning" id="curent_date"></label>
+        </div>
+        <div class="ml-1">
+            <a href="#" id="client_count" class="badge badge-primary">0</a>
         </div>
     </div>
 </nav>
