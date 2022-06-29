@@ -1787,7 +1787,6 @@
             },
         });
     };
-
     //=============================================================================================================
     //                                  РАЗДЕЛ ДОКУМЕНТЫ САП
     //=============================================================================================================
@@ -1975,6 +1974,34 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postOperationUpdateSAPIncomingSupply", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ОТЧЕТЫ ДЕПАРТАМЕНТ ПО ПРОДАЖАМ
+    //=============================================================================================================
+    //Добавить поставку
+    ids_wsd.prototype.postReportBorderCrossingOfNums = function (nums, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/report/sd/border_crossing/',
+            type: 'POST',
+            data: JSON.stringify(nums),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReportBorderCrossingOfNums", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

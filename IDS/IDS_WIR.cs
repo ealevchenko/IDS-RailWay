@@ -652,6 +652,23 @@ namespace IDS
         public int type_update { get; set; }
     }
 
+    public class ReportBorderCrossing
+    {
+        public int num { get; set; }
+        public int? status { get; set; }
+        public DateTime? date_departure_amkr { get; set; } // Отправлен
+        public DateTime? cross_time { get; set; }
+        public string border_crossing_stn { get; set; }
+        public string border_crossing_stn_name { get; set; }
+        public string client_kod_on { get; set; }
+        public string client_name_on { get; set; }
+        public int? vesg { get; set; }
+        public int? epd_status { get; set; }
+        public DateTime? epd_date_otpr { get; set; }
+        public DateTime? epd_date_pr { get; set; }
+
+    }
+
     #endregion
 
     public class IDS_WIR : IDS_Base
@@ -7902,97 +7919,115 @@ namespace IDS
             }
         }
 
-        //public List<sostav_send_arrival> GetSostavWagonsOperationOfSendArrival(DateTime start, DateTime stop)
-        //{
-        //    try
-        //    {
-        //        int id = 1;
-        //        List<sostav_send_arrival> list_sostav = new List<sostav_send_arrival>();
-        //        List<wagon_send_arrival> list = GetWagonsOperationOfSendArrival(start, stop);
-        //        if (list != null && list.Count() > 0)
-        //        {
-        //            // Сгруппируем по времени операции
-        //            List<IGrouping<DateTime, wagon_send_arrival>> wagons_date = list.OrderBy(c => c.from_operation_end).ToList()
-        //                            .ToList()
-        //                            .GroupBy(w => w.from_operation_end)
-        //                            .ToList();
-        //            // Пройдемся по индексу поезда
-        //            foreach (IGrouping<DateTime, wagon_send_arrival> gr_outer_way in wagons_date.ToList())
-        //            {
-        //                DateTime operation_start = gr_outer_way.Key;
-        //                // Сгруппируем по перегону
-        //                List<IGrouping<int?, wagon_send_arrival>> wagons_outer = gr_outer_way
-        //                    .ToList()
-        //                    .GroupBy(w => w.id_outer_way)
-        //                    .ToList();
-
-        //                foreach (IGrouping<int?, wagon_send_arrival> wagons_sostav in wagons_outer.ToList())
-        //                {
-        //                    // Получим вагоны состава
-        //                    List<wagon_send_arrival> wagons = wagons_sostav.OrderBy(w => w.wim_position).ToList();
-        //                    // Проверим есть вагоны
-        //                    if (wagons != null && wagons.Count() > 0)
-        //                    {
-        //                        // Вагоны есть, создадим строку состав
-        //                        sostav_send_arrival sostav = new sostav_send_arrival()
-        //                        {
-        //                            id = id,
-        //                            id_operation = wagons[0].id_operation,
-        //                            operation_name_ru = wagons[0].operation_name_ru,
-        //                            operation_name_en = wagons[0].operation_name_en,
-        //                            operation_start = wagons[0].operation_start,
-        //                            operation_end = wagons[0].operation_end,
-        //                            operation_create = wagons.OrderByDescending(w => w.operation_create).FirstOrDefault().operation_create,
-        //                            operation_create_user = wagons[0].operation_create_user,
-        //                            operation_locomotive1 = wagons[0].operation_locomotive1,
-        //                            operation_locomotive2 = wagons[0].operation_locomotive2,
-        //                            from_id_station = wagons[0].from_id_station,
-        //                            from_station_name_ru = wagons[0].from_station_name_ru,
-        //                            from_station_name_en = wagons[0].from_station_name_en,
-        //                            from_station_abbr_ru = wagons[0].from_station_abbr_ru,
-        //                            from_station_abbr_en = wagons[0].from_station_abbr_en,
-        //                            from_id_way = wagons[0].from_id_way,
-        //                            from_id_park = wagons[0].from_id_park,
-        //                            from_way_num_ru = wagons[0].from_way_num_ru,
-        //                            from_way_num_en = wagons[0].from_way_num_en,
-        //                            from_way_name_ru = wagons[0].from_way_name_ru,
-        //                            from_way_name_en = wagons[0].from_way_name_en,
-        //                            from_way_abbr_ru = wagons[0].from_way_abbr_ru,
-        //                            from_way_abbr_en = wagons[0].from_way_abbr_en,
-        //                            id_outer_way = wagons[0].id_outer_way,
-        //                            name_outer_way_ru = wagons[0].name_outer_way_ru,
-        //                            name_outer_way_en = wagons[0].name_outer_way_en,
-        //                            outer_way_close = wagons[0].outer_way_close,
-        //                            outer_way_delete = wagons[0].outer_way_delete,
-        //                            outer_way_note = wagons[0].outer_way_note,
-        //                            id_station_on = wagons[0].id_station_on,
-        //                            on_station_name_ru = wagons[0].on_station_name_ru,
-        //                            on_station_name_en = wagons[0].on_station_name_en,
-        //                            on_station_abbr_ru = wagons[0].on_station_abbr_ru,
-        //                            on_station_abbr_en = wagons[0].on_station_abbr_en,
-        //                            count_wagon_send = wagons.Count(),
-        //                            count_wagon_arrival = wagons.Where(w => w.outer_way_end != null).Count(),
-        //                            wagons = wagons.ToList(),
-        //                        };
-        //                        id++;
-        //                        list_sostav.Add(sostav);
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //        return list_sostav;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("GetSostavWagonsOperationOfSendArrival(start={0}, stop={1})",
-        //            start, stop), servece_owner, eventID);
-        //        return null; // Глобальная ошибка
-        //    }
-        //}
-
         #endregion
+        #region Отчеты "Департамент по продажам"
+        public List<ReportBorderCrossing> GetReportBorderCrossingOfNums(List<int> nums)
+        {
+            try
+            {
+                List<ReportBorderCrossing> list_report = new List<ReportBorderCrossing>();
 
+                EFDbContext context = new EFDbContext();
+                UZ.UZ_Convert convert = new UZ.UZ_Convert();
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+
+                foreach (int num in nums)
+                {
+                    DateTime? date_departure_amkr = null;
+                    int? status = null;
+                    DateTime? cross_time = null;
+                    string border_crossing_stn = null;
+                    string border_crossing_stn_name = null;
+                    string client_kod_on = null;
+                    string client_name_on = null;
+                    int? vesg = null;
+                    DateTime? epd_date_otpr = null;
+                    DateTime? epd_date_pr = null;
+                    int? epd_status = null;
+
+                    OutgoingCars out_car = ef_out_car.Context.Where(c => c.num == num).OrderByDescending(c => c.id).FirstOrDefault();
+                    if (out_car != null)
+                    {
+                        date_departure_amkr = out_car.OutgoingSostav.date_departure_amkr;
+                        status = out_car.OutgoingSostav.status;
+                        UZ_DOC_OUT uz_doc_out = out_car.UZ_DOC_OUT;
+                        if (uz_doc_out != null)
+                        {
+                            epd_status = uz_doc_out.status;
+                            UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
+                            if (otpr != null)
+                            {
+                                epd_date_otpr = otpr.date_otpr;
+                                epd_date_pr = otpr.date_pr;
+                                // Погран переход
+                                if (otpr.route != null && otpr.route.Count() > 0)
+                                {
+                                    ROUTE route = otpr.route[otpr.route.Count() - 1];
+                                    if (route != null && route.joint != null && route.joint.Count() > 0)
+                                    {
+                                        foreach (JOINT jn in route.joint)
+                                        {
+                                            if (jn.admin == 22)
+                                            {
+                                                cross_time = jn.cross_time;
+                                                border_crossing_stn = jn.stn;
+                                                border_crossing_stn_name = jn.stn_name;
+                                            }
+                                        }
+                                    }
+                                }
+                                // Грузополучатель
+                                if (otpr.client != null && otpr.client.Count() > 0)
+                                {
+                                    foreach (CLIENT cl in otpr.client)
+                                    {
+                                        if (cl.type == "2")
+                                        {
+                                            client_kod_on = cl.kod;
+                                            client_name_on = cl.name;
+                                        }
+                                    }
+                                }
+                                // груз
+                                if (otpr.vagon != null && otpr.vagon.Count() > 0)
+                                {
+                                    VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
+                                    if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                                    {
+                                        vesg = vagon.collect_v[0].vesg;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ReportBorderCrossing rbc = new ReportBorderCrossing()
+                    {
+                        num = num,
+                        status = status,
+                        date_departure_amkr = date_departure_amkr,
+                        cross_time = cross_time,
+                        border_crossing_stn = border_crossing_stn,
+                        border_crossing_stn_name = border_crossing_stn_name,
+                        client_kod_on = client_kod_on,
+                        client_name_on = client_name_on,
+                        vesg = vesg,
+                        epd_status = epd_status,
+                        epd_date_otpr = epd_date_otpr,
+                        epd_date_pr = epd_date_pr,
+                };
+                    list_report.Add(rbc);
+                }
+
+                return list_report;
+            }
+
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetReportBorderCrossingOfNums(nums={0})", nums), servece_owner, eventID);
+                return null; // Глобальная ошибка
+            }
+        }
+        #endregion
     }
 }
 
