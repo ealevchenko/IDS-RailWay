@@ -13,6 +13,28 @@ $.Text_Common =
         'mess_operation': 'Выполняю операцию...',
         'mess_update_uz': 'Обновляю данные на УЗ...',
         'mess_checking_data': 'Проверяю данные...',
+
+        'mess_error_not_cars': 'Введите номер вагона или несколько вагонов, разделитель номеров ";"',
+        'mess_error_input_num_cars': 'Ошибка ввода, номер позиции :{0}, введен неправильный номер :{1}',
+        'mess_error_input_num_cars1': 'Ошибка ввода, номер позиции :{0}, номер не может быть меньше или равен 0 :{1}',
+        'mess_error_input_num_cars2': 'Ошибка ввода, номер позиции :{0}, не системная нумерация (ошибка контрольной суммы) :{1}',
+        'mess_error_input_num_cars_duble': 'Ошибка ввода, введеный номер :{0} - повторяется!',
+
+        'epd_status_unknown': 'Статус невідомий',
+        'epd_status_draft': 'Чернетка',
+        'epd_status_sending': 'Документ передається товарному касиру',
+        'epd_status_registered': 'Документ переданий товарному касиру',
+        'epd_status_reclaiming': 'Документ відкликається від товарного касира',
+        'epd_status_accepted': 'Вантаж прийнято до перевезення',
+        'epd_status_delivered': 'Вантаж прибув',
+        'epd_status_recieved': 'Вантаж отримано одержувачем',
+        'epd_status_uncredited': 'Документ розкредитовано товарним касиром',
+        'epd_status_recieved_draft': 'Вантаж отримано одержувачем і редагується',
+        'epd_status_recieved_sending': 'Вантаж отримано одержувачем і переданий товарному касиру',
+        'epd_status_recieved_reclaiming': 'Вантаж отримано одержувачем і відкликається від товарного касира',
+        'epd_status_canceled': 'Документ зіпсований товарним касиром',
+        'epd_status_locked': 'Документ заблокований',
+
     },
     'en':  //default language: English
     {
@@ -24,6 +46,27 @@ $.Text_Common =
         'mess_operation': 'Performing an operation...',
         'mess_update_uz': 'I am updating the data on the UZ ...',
         'mess_checking_data': 'Checking data...',
+
+        'mess_error_not_cars': 'Enter the number of a car or several cars, number separator ";"',
+        'mess_error_input_num_cars': 'Input error, item number :{0}, wrong number entered :{1}',
+        'mess_error_input_num_cars1': 'Input error, position number :{0}, number cannot be less than or equal to 0 :{1}',
+        'mess_error_input_num_cars2': 'Input error, position number :{0}, non-system numbering (checksum error) :{1}',
+        'mess_error_input_num_cars_duble': 'Input error, number entered :{0} - repeated!',
+
+        'epd_status_unknown': 'Unknown status',
+        'epd_status_draft': 'Darling',
+        'epd_status_sending': 'Document is being sent to the commodity cashier',
+        'epd_status_registered': 'Document of transfers to the commodity cashier',
+        'epd_status_reclaiming': 'Document reclaimed by cashier',
+        'epd_status_accepted': 'Vantage accepted before moving',
+        'epd_status_delivered': 'Epd_status_delivered',
+        'epd_status_recieved': 'Vantage received by owner',
+        'epd_status_uncredited': 'Document uncredited by commodity cashier',
+        'epd_status_recieved_draft': 'Vantage received and edited',
+        'epd_status_recieved_sending': 'Vantage received by the receiver and the goods cashier',
+        'epd_status_recieved_reclaiming': 'Vantage received by the owner and reclaimed by the cashier',
+        'epd_status_canceled': 'Document of zіpsovaniya commodity cashier',
+        'epd_status_locked': 'Lock Document',
     }
 
 };
@@ -1187,7 +1230,7 @@ var is_valid_num_wagon = function (num) {
 var is_valid_nums = function (nums, alert, valid_sys_numbering) {
     // Проверим список вагонов
     if (!nums || nums === null) {
-        alert.out_warning_message('Нет списка вагонов');
+        alert.out_warning_message(langView('mess_error_not_cars', App.Langs));
         return null;
     }
     var isNumeric = function (value) {
@@ -1203,11 +1246,11 @@ var is_valid_nums = function (nums, alert, valid_sys_numbering) {
 
     $.each(cars, function (i, el) {
         if (!isNumeric($.trim(el))) {
-            alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' введен неправильный номер :' + el);
+            alert.out_warning_message(langView('mess_error_input_num_cars', App.Langs).format((i + 1), el));
             valid = false;
         } else {
             if (Number($.trim(el)) <= 0) {
-                alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' номер не может быть меньше или равен 0 :' + el);
+                alert.out_warning_message(langView('mess_error_input_num_cars1', App.Langs).format((i + 1), el));
                 valid = false;
             } else {
                 // Разрешена проверка системной нумерации
@@ -1218,7 +1261,7 @@ var is_valid_nums = function (nums, alert, valid_sys_numbering) {
                         car_valid.push(Number($.trim(el)));
                         car_out.push(Number($.trim(el)));
                     } else {
-                        alert.out_warning_message('Ошибка ввода, номер позиции :' + (i + 1) + ' не системная нумерация (ошибка контрольной суммы) :' + el);
+                        alert.out_warning_message(langView('mess_error_input_num_cars2', App.Langs).format((i + 1), el));
                     }
                     valid = valid & num_val;
                 } else {
@@ -1248,7 +1291,7 @@ var is_valid_nums = function (nums, alert, valid_sys_numbering) {
     }
     // Вывод сообщений повторяющихся номеров
     $.each(arr_res, function (i, el) {
-        alert.out_warning_message('Ошибка ввода, введеный номер :' + el + ' повторяется.');
+        alert.out_warning_message(langView('mess_error_input_num_cars_duble', App.Langs).format(el));
         valid = false;
     });
     return valid ? car_out : null;
@@ -1287,6 +1330,26 @@ var outStatusOutgoingSostav = function (i) {
         default: return i;
     }
 };
+
+var get_status_epd = function (status) {
+    switch (status) {
+        case 0: { return langView('epd_status_unknown', App.Langs) }
+        case 1: { return langView('epd_status_draft', App.Langs) }
+        case 2: { return langView('epd_status_sending', App.Langs) }
+        case 3: { return langView('epd_status_registered', App.Langs) }
+        case 4: { return langView('epd_status_reclaiming', App.Langs) }
+        case 5: { return langView('epd_status_accepted', App.Langs) }
+        case 6: { return langView('epd_status_delivered', App.Langs) }
+        case 7: { return langView('epd_status_recieved', App.Langs) }
+        case 8: { return langView('epd_status_uncredited', App.Langs) }
+        case 9: { return langView('epd_status_recieved_draft', App.Langs) }
+        case 10: { return langView('epd_status_recieved_sending', App.Langs) }
+        case 11: { return langView('epd_status_recieved_reclaiming', App.Langs) }
+        case 12: { return langView('epd_status_canceled', App.Langs) }
+        case 13: { return langView('epd_status_locked', App.Langs) }
+        default: { return null; }
+    }
+}
 
 //==============================================================================================
 /* ----------------------------------------------------------
