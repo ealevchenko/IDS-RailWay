@@ -482,6 +482,14 @@ namespace Test.TestModule
             ids.OperationManualSearchArrivalWagon(171648, true, nums, null, false, "test");
 
         }
+
+        public void IDS_WIR_GetReportBorderCrossingOfNums()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            List<int> nums = new List<int>() { 64072010, 67277707, 60807781 };
+            ids.GetReportBorderCrossingOfNums(nums);
+
+        }
         #endregion
 
         #region IDSThread
