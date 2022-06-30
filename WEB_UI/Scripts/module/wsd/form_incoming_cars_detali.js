@@ -6531,7 +6531,7 @@
         // Проверка погран перехода
         valid = valid & this.form.validation_common.check_control_autocomplete_null(this.elements.autocomplete_stn_border_name, langView('ficcd_mess_valid_border_name', App.Langs), '', true);
         var border_name = this.elements.autocomplete_stn_border_name.text();
-        if (border_name !== null && border_name !== '') {
+        if (border_name !== null && border_name !== '' && this.mode_epd !== 0) {
             // Указан погран переход, проверим время
             valid = valid & this.form.validation_common.check_control_datetime_input(this.elements.input_datetime_border_cross_time, langView('ficcd_mess_valid_not_stn_border_cross_time', App.Langs), '', true);
         }
