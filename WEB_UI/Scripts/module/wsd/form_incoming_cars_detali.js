@@ -4597,8 +4597,10 @@
     form_incoming_cars_detali.prototype.update_wagon_of_main_epd = function (callback) {
         // Проверим если есть ссылка на основной документ, тогда ищем его
         if (this.wagon_settings.main_otpr && this.wagon_settings.main_otpr.otprdp && this.wagon_settings.main_otpr.otprdp.nom_osn_doc) {
-            this.wagon_settings.otpr_num = this.wagon_settings.main_otpr_num;                       // переопределяем основной номер как досылочный
+            this.wagon_settings.otpr_num = this.wagon_settings.main_otpr_num;                      // переопределяем основной номер как досылочный
+            this.wagon_settings.otpr_id = this.wagon_settings.main_otpr_id;
             this.wagon_settings.main_otpr_num = this.wagon_settings.main_otpr.otprdp.nom_osn_doc;   // сохраняем основной
+
             // Получим ЭПД по основной накладной № накладной
             var current_mode_epd = this.mode_epd
             var operation = {
