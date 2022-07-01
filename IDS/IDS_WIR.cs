@@ -7920,6 +7920,7 @@ namespace IDS
         }
 
         #endregion
+
         #region Отчеты "Департамент по продажам"
         public List<ReportBorderCrossing> GetReportBorderCrossingOfNums(List<int> nums)
         {

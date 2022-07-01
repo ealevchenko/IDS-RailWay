@@ -375,4 +375,10 @@
   <data name="operators_wagons_title" xml:space="preserve">
     <value>Справочник "Операторы"</value>
   </data>
+  <data name="commercial_condition_description" xml:space="preserve">
+    <value>Разметка коммерческого состояния вагона</value>
+  </data>
+  <data name="commercial_condition_title" xml:space="preserve">
+    <value>Коммерческое состояние</value>
+  </data>
 </root>

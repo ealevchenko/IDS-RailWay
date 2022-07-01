@@ -117,7 +117,12 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-
+        // Коммерческое состояние
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult ComCondition()
+        {
+            return View();
+        }
 
     }
 }

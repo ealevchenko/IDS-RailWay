@@ -88,6 +88,24 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка коммерческого состояния вагона.
+        /// </summary>
+        public static string commercial_condition_description {
+            get {
+                return ResourceManager.GetString("commercial_condition_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Коммерческое состояние.
+        /// </summary>
+        public static string commercial_condition_title {
+            get {
+                return ResourceManager.GetString("commercial_condition_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Справочник &quot;Страны&quot;.
         /// </summary>
         public static string countrys_title {

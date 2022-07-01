@@ -39,7 +39,52 @@
     //                                  РАЗДЕЛ ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ ВАГОНОВ
     //=============================================================================================================
     //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
-
+    // Вернуть строки внутренего перемещения указанного вагона
+    ids_wsd.prototype.getWagonInternalRoutesOfNum= function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wir/wagon/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getWagonInternalRoutesOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Вернуть открытую последнюю строку внутреннего перемещения вагона
+    ids_wsd.prototype.getOpenWagonInternalRoutesOfNum= function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wir/open/wagon/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOpenWagonInternalRoutesOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= WagonInternalOperation (Внутреннее перемещение вагона на АМКР, операции над вагонами) =====================================
     // Вернуть строку операций по id
     ids_wsd.prototype.getWagonInternalOperationOfID = function (id, callback) {

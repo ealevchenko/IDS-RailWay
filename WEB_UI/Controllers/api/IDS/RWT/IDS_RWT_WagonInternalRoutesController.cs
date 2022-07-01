@@ -59,6 +59,32 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Получить последнюю открытую строку внутреннего перемещения
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/wir/open/wagon/num/63462121
+        [Route("open/wagon/num/{num:int}")]
+        [ResponseType(typeof(WagonInternalRoutes))]
+        public IHttpActionResult GetOpenWagonInternalRoutesOfWagonNum(int num)
+        {
+            try
+            {
+                WagonInternalRoutes wir = this.ef_ids
+                    .Context
+                    .Where(s => s.num == num && s.close == null)
+                    .OrderByDescending(w=>w.id)
+                    .ToList()
+                    .Select(c => c.GetWagonInternalRoutes()).FirstOrDefault();
+                return Ok(wir);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/wir/id/78943
         [Route("id/{id:long}")]
         [ResponseType(typeof(WagonInternalRoutes))]

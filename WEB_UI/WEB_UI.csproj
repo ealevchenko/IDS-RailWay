@@ -1735,6 +1735,7 @@
     <Content Include="Content\module\wsd\view_arrival_cars.css" />
     <Content Include="Content\module\wsd\view_send_cars.css" />
     <Content Include="Content\view\admin\_layout.css" />
+    <Content Include="Content\view\directory\commercial_condition.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
     <Content Include="Content\view\idsreport\home.css" />
@@ -1922,6 +1923,7 @@
     <Content Include="Areas\IDSReport\Views\Shared\_IDSReport.cshtml" />
     <Content Include="Areas\IDSReport\Views\_ViewStart.cshtml" />
     <Content Include="Areas\IDSReport\Views\Home\Report_SD.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\ComCondition.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2450,6 +2452,7 @@
     <Content Include="Scripts\view\directory\countrys.js" />
     <Content Include="Scripts\view\directory\main_park.js" />
     <Content Include="Scripts\view\directory\main_operators_wagons.js" />
+    <Content Include="Scripts\view\directory\main_commercial_condition.js" />
     <Content Include="Scripts\view\directory\main_ways.js" />
     <Content Include="Scripts\view\directory\main_search_wagon.js" />
     <Content Include="Scripts\view\directory\shipper.js" />
