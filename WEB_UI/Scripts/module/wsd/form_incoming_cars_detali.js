@@ -4943,7 +4943,8 @@
                             if (nom_main_doc && nom_doc === null) this.elements.button_change_main_doc.show(); else this.elements.button_change_main_doc.hide();
                             this.elements.button_search_doc.hide();
                             if (nom_doc) this.elements.button_change_doc.show(); else this.elements.button_change_doc.hide();
-                            this.elements.input_text_document_nom_main_doc.disable();
+                            //this.elements.input_text_document_nom_main_doc.disable();
+                            this.elements.input_text_document_nom_main_doc.enable();
                             this.elements.input_text_document_nom_doc.disable();
                             this.form.validation_epd.out_warning_message(langView('ficcd_message_mode_2', App.Langs));
                             break;
