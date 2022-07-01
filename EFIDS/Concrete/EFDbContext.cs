@@ -620,6 +620,12 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_Countrys)
                 .HasForeignKey(e => e.id_countrys)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_Countrys>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_Countrys)
+                .HasForeignKey(e => e.id_countrys);
+
             #endregion
 
             #region Directory_DEPO
@@ -705,6 +711,12 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_GenusWagons)
                 .HasForeignKey(e => e.id_genus)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_GenusWagons>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_GenusWagons)
+                .HasForeignKey(e => e.id_genus);
+
             #endregion
 
             #region Directory_HazardClass
@@ -810,6 +822,12 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_OwnersWagons)
                 .HasForeignKey(e => e.id_owner_wagon)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_OwnersWagons>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_OwnersWagons)
+                .HasForeignKey(e => e.id_owner);
+
             #endregion
 
             #region Directory_ParkWays
@@ -952,6 +970,12 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_TypeOwnerShip)
                 .HasForeignKey(e => e.id_type_ownership)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_TypeOwnerShip>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_TypeOwnerShip)
+                .HasForeignKey(e => e.id_type_ownership);
+
             #endregion
 
             #region Directory_TypeWagons

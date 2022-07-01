@@ -1138,7 +1138,11 @@ namespace EFIDS.Helper
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
                 Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(), 
+                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(), 
+                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(), 
+                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(), 
+                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip() 
             };
         }
 
@@ -1208,7 +1212,11 @@ namespace EFIDS.Helper
                     Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                     Directory_Station = v.Directory_Station.GetDirectory_Station(),
                     Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
-                    Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions()
+                    Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(),
+                    Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
+                    Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
+                    Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
+                    Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
                 };
             }
             catch (Exception e)

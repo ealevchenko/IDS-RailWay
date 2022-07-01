@@ -151,5 +151,13 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ArrivalCars> ArrivalCars { get; set; }
+
+        public virtual Directory_Countrys Directory_Countrys { get; set; }
+
+        public virtual Directory_GenusWagons Directory_GenusWagons { get; set; }
+
+        public virtual Directory_OwnersWagons Directory_OwnersWagons { get; set; }
+
+        public virtual Directory_TypeOwnerShip Directory_TypeOwnerShip { get; set; }
     }
 }
