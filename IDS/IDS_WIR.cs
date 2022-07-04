@@ -1884,6 +1884,19 @@ namespace IDS
         }
         #endregion
 
+        /// <summary>
+        /// Принять вагон на АМКР (перенести в левую часть)
+        /// </summary>
+        /// <param name="id_arrival_car"></param>
+        /// <param name="position"></param>
+        /// <param name="date_adoption_act"></param>
+        /// <param name="mode"></param>
+        /// <param name="arrival_main_doc"></param>
+        /// <param name="arrival_doc"></param>
+        /// <param name="arrival_vagon_main_doc"></param>
+        /// <param name="arrival_vagon_doc"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationIncomingWagon(long id_arrival_car, int position, DateTime? date_adoption_act, int? mode, Arrival_Doc arrival_main_doc, Arrival_Doc arrival_doc, Arrival_Doc_Vagon arrival_vagon_main_doc, Arrival_Doc_Vagon arrival_vagon_doc, string user)
         {
             try
@@ -2267,6 +2280,12 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Отменить принятие вагона на АМКР (вернуть из левой в правую часть)
+        /// </summary>
+        /// <param name="id_arrival_car"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationReturnIncomingWagon(long id_arrival_car, string user)
         {
             try
@@ -2395,6 +2414,23 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Принять состав на АМКР (перенести все вагоны состава на станцию АМКР АРМ)
+        /// </summary>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="num_doc"></param>
+        /// <param name="train"></param>
+        /// <param name="composition_index"></param>
+        /// <param name="date_arrival"></param>
+        /// <param name="date_adoption"></param>
+        /// <param name="date_adoption_act"></param>
+        /// <param name="id_station_from"></param>
+        /// <param name="id_station_on"></param>
+        /// <param name="id_way"></param>
+        /// <param name="numeration"></param>
+        /// <param name="count"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationIncomingSostav(long id_arrival_sostav, int num_doc, int train, string composition_index, DateTime date_arrival,
             DateTime date_adoption, DateTime? date_adoption_act, int id_station_from, int id_station_on, int id_way, bool? numeration,
             int count, string user)
@@ -2480,6 +2516,12 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Отменить принять состав на АМКР (Убрать вагоны со станции АМКР - если по ним небыло операций дислокация и.т.д.)
+        /// </summary>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationCancelIncomingSostav(long id_arrival_sostav, string user)
         {
             try
@@ -2687,7 +2729,14 @@ namespace IDS
             }
             return res;
         }
-
+        /// <summary>
+        /// Добавить вагоны введенные вручную
+        /// </summary>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="num_cars"></param>
+        /// <param name="num_doc"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int OperationManualAddArrivalWagon(long id_arrival_sostav, List<int> num_cars, string num_doc, string user)
         {
             try
@@ -8015,7 +8064,7 @@ namespace IDS
                         epd_status = epd_status,
                         epd_date_otpr = epd_date_otpr,
                         epd_date_pr = epd_date_pr,
-                };
+                    };
                     list_report.Add(rbc);
                 }
 
@@ -8027,6 +8076,53 @@ namespace IDS
                 e.ExceptionMethodLog(String.Format("GetReportBorderCrossingOfNums(nums={0})", nums), servece_owner, eventID);
                 return null; // Глобальная ошибка
             }
+        }
+        #endregion
+
+        #region СЕРВИСЫ
+        public int ServiceChangeCommercialCondition(long id_wir, int id_condition_arrival, string note, bool distinguish, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
+                WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id == id_wir).FirstOrDefault();
+                // Получим текущее внутренее перемещение
+                if (wir == null) return (int)errors_base.not_wir_db;        // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                if (wir.close != null) return (int)errors_base.close_wir;   // Внутренее перемещение уже закрыто
+                if (wir.OutgoingCars != null && wir.OutgoingCars.OutgoingSostav != null && wir.OutgoingCars.OutgoingSostav.status > 1) return (int)errors_base.error_status_outgoing_sostav; //Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                // Получим текущую операцию
+                WagonInternalOperation curr_wio = wir.WagonInternalOperation.ToList().OrderByDescending(w => w.id).FirstOrDefault();
+                if (curr_wio == null) return (int)errors_base.not_wio_db; // В базе данных нет записи по WagonInternalOperation (Внутренняя операция по вагону)
+                WagonInternalOperation wio = ef_wio.Context.Where(w => w.id == curr_wio.id).FirstOrDefault();
+                if (wio == null) return (int)errors_base.not_wio_db; // В базе данных нет записи по WagonInternalOperation (Внутренняя операция по вагону)
+                // Выполним операцию
+                wio.id_condition = id_condition_arrival;
+                ef_wio.Update(wio);
+                wir.note = note.Substring(0, note.Length > 250 ? 250 : note.Length).Trim();
+                if (distinguish == true)
+                {
+                    wir.highlight_color = "#ffcbcb";
+                }
+                else
+                {
+                    wir.highlight_color = null;
+                }
+                ef_wir.Update(wir);
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ServiceChangeCommercialCondition(id_wir={0}, id_condition_arrival={1}, note={2}, distinguish={3}, user={4})", id_wir, id_condition_arrival, note, distinguish, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+
         }
         #endregion
     }

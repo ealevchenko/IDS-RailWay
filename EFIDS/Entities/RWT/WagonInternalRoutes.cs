@@ -47,6 +47,9 @@ namespace EFIDS.Entities
 
         public long? parent_id { get; set; }
 
+        [StringLength(10)]
+        public string highlight_color { get; set; }
+
         public virtual ArrivalCars ArrivalCars { get; set; }
 
         public virtual Directory_Wagons Directory_Wagons { get; set; }

@@ -144,6 +144,31 @@
         }
         return null;
     };
+    //АРМ, сервис изменение "Коммерческого состояния" - правим годность и примечание
+    ids_wsd.prototype.postChangeCommercialCondition = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/commercial_condition/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeCommercialCondition", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //================= ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ (Дерево путей) =========================================================
     // АРМ, Получить список вагонов на пути станции
     ids_wsd.prototype.getViewWagonsOfWay = function (id, callback) {

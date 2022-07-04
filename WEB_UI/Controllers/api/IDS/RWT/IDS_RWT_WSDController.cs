@@ -436,6 +436,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string wagon_ban_uz { get; set; }
         public bool? wagon_closed_route { get; set; }
         public string wir_note { get; set; }
+        public string wir_highlight_color { get; set; }
+
     }
 
     public class view_outer_way_wagons
@@ -804,6 +806,18 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     }
 
     #endregion
+
+    #region СЕРВИС Коммерческое состояние
+
+    #endregion
+    public class OperationCommercialCondition
+    {
+        public long id_wir { get; set; }
+        public int id_condition_arrival { get; set; }
+        public string note { get; set; }
+        public bool distinguish { get; set; }
+        public string user { get; set; }
+    }
 
     public class view_arrival_sostav
     {
@@ -1744,6 +1758,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 List<ReportBorderCrossing> result = ids_wir.GetReportBorderCrossingOfNums(nums);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
+        #region СЕРВИС Коммерческое состояние
+        // POST api/ids/rwt/wsd/service/operation/commercial_condition
+        [HttpPost]
+        [Route("service/operation/commercial_condition")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostChangeCommercialCondition([FromBody] OperationCommercialCondition value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.ServiceChangeCommercialCondition(value.id_wir, value.id_condition_arrival, value.note, value.distinguish, value.user);
                 return Ok(result);
             }
             catch (Exception e)
