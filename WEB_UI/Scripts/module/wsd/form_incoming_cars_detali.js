@@ -923,7 +923,9 @@
             this.list_external_station = this.ids_dir.getListExternalStation('code', 'station_name', App.Lang, null);
             this.list_border_checkpoint = this.ids_dir.getListBorderCheckpoint('code', 'station_name', App.Lang, null);
             this.list_shipper = this.ids_dir.getListShipper('code', 'shipper_name', App.Lang, null);
-            this.list_consignee = this.ids_dir.getListConsignee('code', 'name', null);
+            this.list_consignee = this.ids_dir.getListConsignee('code', 'name', function (i) {
+                return i.auxiliary === false;
+            });
             //----------------------------------
             // Создать макет панели
             this.form = new FDL();
