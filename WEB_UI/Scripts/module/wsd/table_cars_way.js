@@ -2548,6 +2548,9 @@
             "createdRow": function (row, data, index) {
                 $(row).attr('id', data.wim_id); // id строки дислокации вагона
                 $(row).attr('data-num', data.num); // data-num номер вагона
+                if (data.wir_highlight_color !== null) {
+                    $(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
+                }
                 // Проверим если по оператору контролировать норму времени, тогда проверить
                 if (data.arrival_idle_time < data.arrival_duration) {
                     // Превышена норма нахождения вагона на АМКР
