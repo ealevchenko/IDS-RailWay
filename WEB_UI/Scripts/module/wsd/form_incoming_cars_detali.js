@@ -6540,26 +6540,26 @@
         }
         // грузополучатели и отправители
         valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_shipper_name, langView('ficcd_mess_valid_shipper_name', App.Langs), '', langView('ficcd_mess_valid_not_shipper_name', App.Langs), true);
-        valid = valid & valid & this.form.validation_common.check_control_select_not_null(this.elements.select_consignee_name, langView('ficcd_mess_valid_not_consignee_name', App.Langs), '', true);
+        valid = valid & this.form.validation_common.check_control_select_not_null(this.elements.select_consignee_name, langView('ficcd_mess_valid_not_consignee_name', App.Langs), '', true);
         // Грузополучатели на АМКР
-        valid = valid & valid & this.form.validation_common.check_control_select_not_null(this.elements.select_station_amkr_name, langView('ficcd_mess_valid_not_station_amkr_name', App.Langs), '', true);
+        valid = valid & this.form.validation_common.check_control_select_not_null(this.elements.select_station_amkr_name, langView('ficcd_mess_valid_not_station_amkr_name', App.Langs), '', true);
         valid = valid & this.form.validation_common.check_control_autocomplete_is_value_null(this.elements.autocomplete_division_name, langView('ficcd_mess_valid_division_name', App.Langs), '', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
         // Проверка вагона
 
         // разметка по прибытию
-        valid = valid & valid & this.form.validation_common.check_control_select_not_null(this.elements.select_condition_arrival, langView('ficcd_mess_valid_not_condition_arrival', App.Langs), '', true);
+        valid = valid & this.form.validation_common.check_control_select_not_null(this.elements.select_condition_arrival, langView('ficcd_mess_valid_not_condition_arrival', App.Langs), '', true);
         // проверка данных с ЭПД
-        valid = valid & valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_gruzp, gruzp_min_value, gruzp_max_value, langView('ficcd_mess_valid_range_gruzp', App.Langs).format(gruzp_min_value, gruzp_max_value), '', true);
-        valid = valid & valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
-        valid = valid & valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
+        valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_gruzp, gruzp_min_value, gruzp_max_value, langView('ficcd_mess_valid_range_gruzp', App.Langs).format(gruzp_min_value, gruzp_max_value), '', true);
+        valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
+        valid = valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
         // Оплата
         if (this.mode_epd !== 7) {
             valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_plat, langView('ficcd_mess_valid_name_plat', App.Langs), '', langView('ficcd_mess_valid_not_name_plat', App.Langs), true);
-            valid = valid & valid & this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
+            valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
         }
         // Грузы
         valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
-        valid = valid & valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_group_cargo, langView('ficcd_mess_valid_not_group_cargo', App.Langs), '', true);
+        valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_group_cargo, langView('ficcd_mess_valid_not_group_cargo', App.Langs), '', true);
         if (this.ids_cargo_etsng && this.ids_cargo_etsng.id_group !== null) {
             var res = list_groups_cargo.indexOf(this.ids_cargo_etsng.id_group);
             var ves = this.elements.input_number_vesg.val();
