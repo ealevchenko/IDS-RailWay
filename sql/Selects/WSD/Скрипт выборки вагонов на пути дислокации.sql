@@ -169,6 +169,7 @@ select wir.id as wir_id
 	,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 	,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
 	,wir.note as wir_note									-- Примечание по ходу движения вагона
+	,wir.highlight_color as wir_highlight_color				-- выделить цветом
 	--into wagons
 FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 	--> Текущее внетренее перемещение
