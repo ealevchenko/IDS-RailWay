@@ -11,7 +11,7 @@
     {
         'default':  //default language: ru
         {
-
+            'title_select': 'Выбирите...',
         },
         'en':  //default language: English
         {
