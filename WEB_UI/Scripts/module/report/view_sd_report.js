@@ -43,6 +43,9 @@
             'vsdr_field_border_crossing_epd_status': 'Статус ЭПД',
             'vsdr_field_border_crossing_epd_date_otpr': 'Отправлен (ЭПД)',
             'vsdr_field_border_crossing_epd_date_pr': 'Прибыл (ЭПД)',
+            'vsdr_field_border_crossing_epd_num_doc': 'Id документа (ЭПД)',
+            'vsdr_field_border_crossing_epd_revision': '№ ревизии (ЭПД)',
+            'vsdr_field_border_crossing_epd_num_uz': '№ накладной (ЭПД)',
 
             'vsdr_mess_error_search_cars': 'При формировании отчета произошла ошибка, код ошибки {0}',
 
@@ -411,6 +414,27 @@
                             },
                             className: 'dt-body-nowrap',
                             title: langView('vsdr_field_border_crossing_epd_date_pr', App.Langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.num_doc;
+                            },
+                            className: 'dt-body-nowrap',
+                            title: langView('vsdr_field_border_crossing_epd_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.revision;
+                            },
+                            className: 'dt-body-nowrap',
+                            title: langView('vsdr_field_border_crossing_epd_revision', App.Langs), width: "50px", orderable: true, searchable: true
+                        },
+                        {
+                            data: function (row, type, val, meta) {
+                                return row.num_uz;
+                            },
+                            className: 'dt-body-nowrap',
+                            title: langView('vsdr_field_border_crossing_epd_num_uz', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                     ],
                     dom: 'Bfrtip',

@@ -663,6 +663,9 @@ namespace IDS
         public string client_kod_on { get; set; }
         public string client_name_on { get; set; }
         public int? vesg { get; set; }
+        public string num_doc { get; set; }
+        public int? revision { get; set; }
+        public int? num_uz { get; set; }
         public int? epd_status { get; set; }
         public DateTime? epd_date_otpr { get; set; }
         public DateTime? epd_date_pr { get; set; }
@@ -7994,6 +7997,10 @@ namespace IDS
                     DateTime? epd_date_otpr = null;
                     DateTime? epd_date_pr = null;
                     int? epd_status = null;
+                    string num_doc = null;
+                    int? revision = null;
+                    int? num_uz = null;
+
 
                     OutgoingCars out_car = ef_out_car.Context.Where(c => c.num == num).OrderByDescending(c => c.id).FirstOrDefault();
                     if (out_car != null)
@@ -8003,6 +8010,9 @@ namespace IDS
                         UZ_DOC_OUT uz_doc_out = out_car.UZ_DOC_OUT;
                         if (uz_doc_out != null)
                         {
+                            num_doc = uz_doc_out.num_doc;
+                            revision = uz_doc_out.revision;
+                            num_uz = uz_doc_out.num_uz;
                             epd_status = uz_doc_out.status;
                             UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
                             if (otpr != null)
@@ -8064,6 +8074,9 @@ namespace IDS
                         epd_status = epd_status,
                         epd_date_otpr = epd_date_otpr,
                         epd_date_pr = epd_date_pr,
+                        num_doc = num_doc,
+                        revision = revision,
+                        num_uz = num_uz,
                     };
                     list_report.Add(rbc);
                 }
