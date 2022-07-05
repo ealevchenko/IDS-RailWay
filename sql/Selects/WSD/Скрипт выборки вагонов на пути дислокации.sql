@@ -1,6 +1,6 @@
-use [KRR-PA-Test-Railway]--[KRR-PA-CNT-Railway]
+use [KRR-PA-CNT-Railway]
 
-declare @id_way int =107--214--112;
+declare @id_way int =214--112;
 
 --select * from [IDS].[get_view_wagons_of_id_way](@id_way)
 
@@ -159,6 +159,7 @@ select wir.id as wir_id
 	,wir.doc_outgoing_car as doc_outgoing_car				-- Наличие документа для сдачи
 	,arr_doc_uz.[nom_doc] as arrival_nom_doc			-- Номер документа(досылки)
 	,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
+	,arr_doc_uz.[klient] as arrival_klient					-- Признак контр-агента
 	,arr_sost.composition_index as arrival_composition_index
 	,arr_sost.date_adoption as arrival_date_adoption		-- дата приема
 	,out_car.[id_outgoing_return_start] as outgoing_id_return

@@ -16,6 +16,7 @@
             'vrrc_title_outer_car': 'Внешние стороние вагоны',
             'vrrc_title_amkr_outer_cars': 'Внешние вагоны АМКР',
             'vrrc_title_amkr_cars': 'Внутризаводские вагоны',
+            'vrrc_title_arrival_klient': 'Контрагены',
             'vrrc_title_handed_cars': 'Сданные вагоны на УЗ',
             'vrrc_title_amkr_cisterns': 'Цистерны арендованные',
             'vrrc_title_select_day': 'Сверх суток:',
@@ -26,7 +27,7 @@
             'vrrc_title_cargo_group_arrival': 'Группа по ПРИБ:',
             'vrrc_title_certification_data': 'Сертификационные данные:',
             'vrrc_title_departure_station': 'Станция отправления:',
-            'vrrc_title_division': 'Грузополучатель:',
+            'vrrc_title_division': 'Цех получатель:',
             'vrrc_title_station_contiguity': 'Внешнее прибытие:',
             'vrrc_title_condition_arrival': 'Разметка по прибытию:',
             'vrrc_title_condition_mr': 'Вагоны МР:',
@@ -69,6 +70,7 @@
             'vrrc_title_outer_car': 'Outer side carriages',
             'vrrc_title_amkr_outer_cars': 'AMKR external cars',
             'vrrc_title_amkr_cars': 'Internal carriages',
+            'vrrc_title_arrival_client': 'Contractors',
             'vrrc_title_handed_cars': 'Handed cars at UZ',
             'vrrc_title_amkr_cisterns': 'Tanks rented',
             'vrrc_title_select_day': 'Over day:',
@@ -79,7 +81,7 @@
             'vrrc_title_cargo_group_arrival': 'Arrival group:',
             'vrrc_title_certification_data': 'Certification data:',
             'vrrc_title_departure_station': 'Departure station:',
-            'vrrc_title_division': 'Consignee:',
+            'vrrc_title_division': 'Destination Destination:',
             'vrrc_title_station_contiguity': 'External arrival:',
             'vrrc_title_condition_arrival': 'Layout on arrival:',
             'vrrc_title_condition_mr': 'Cars MR:',
@@ -190,6 +192,9 @@
         this.wagons = [];               // Список вагонов на АМКР (рабочий после load)
         this.list_operators = [];       // Список операторов
         this.list_limiting = [];       // Список ограничений
+        this.list_amkr = [];
+        this.list_amkr_vz = [];
+        this.list_cisterns = [];
         //this.wagons_where = [];        // Список вагонов на АМКР (рабочий для отображения после выборки where)
 
         // Выборка
@@ -197,6 +202,7 @@
             outer_car: true,                //Внешние стороние вагоны
             amkr_outer_cars: true,          //Внешние вагоны АМКР
             amkr_cars: true,                //Внутри-заводские вагоны
+            client: true,                   //Контрагены
             handed_cars: true,             //Сданные вагоны
             amkr_cisterns: true,           //Цистерны АМКР
             select_day: 0,                  //Сверх суток
@@ -236,6 +242,12 @@
         // Загрузим справочные данные, определим поля формы правки
         this.load_db(['operators_wagons_group'], false, function (result) {
             // Подгрузили списки
+            //this.list_operators_wagons_group = this.ids_dir.list_operators_wagons_group;
+            this.list_amkr = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'amkr'});
+            this.list_amkr_vz = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'amkr_vz' });
+            this.list_cisterns = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'cisterns' });
+
+
             //--------------------ФОРМА  ---------------------------
             // Создадим форму выбора отчета (this.$setup_select)
             var form_select = new this.fc_ui.el_form(null, 'text-left');
@@ -254,9 +266,10 @@
             var sw_outer_cars = new this.fc_ui.el_switch('outer_cars', langView('vrrc_title_outer_car', App.Langs));
             var sw_amkr_outer_cars = new this.fc_ui.el_switch('amkr_outer_cars', langView('vrrc_title_amkr_outer_cars', App.Langs));
             var sw_amkr_cars = new this.fc_ui.el_switch('amkr_cars', langView('vrrc_title_amkr_cars', App.Langs));
+            var sw_klient = new this.fc_ui.el_switch('client', langView('vrrc_title_arrival_klient', App.Langs));
             var sw_handed_cars = new this.fc_ui.el_switch('handed_cars', langView('vrrc_title_handed_cars', App.Langs));
             var sw_amkr_cisterns = new this.fc_ui.el_switch('amkr_cisterns', langView('vrrc_title_amkr_cisterns', App.Langs));
-            div_fg_cars.$div.append(sw_outer_cars.$switch).append(sw_amkr_outer_cars.$switch).append(sw_amkr_cars.$switch).append(sw_handed_cars.$switch).append(sw_amkr_cisterns.$switch);
+            div_fg_cars.$div.append(sw_outer_cars.$switch).append(sw_amkr_outer_cars.$switch).append(sw_amkr_cars.$switch).append(sw_klient.$switch).append(sw_handed_cars.$switch).append(sw_amkr_cisterns.$switch);
             // Добавим top свыше дней
             var div_fr_day_top = new this.fc_ui.el_div_form_row();
             var col_day = new this.fc_ui.el_col('md', 12, 'mb-1');
@@ -418,6 +431,7 @@
             this.el_sw_outer_cars = sw_outer_cars.$input;
             this.el_sw_amkr_outer_cars = sw_amkr_outer_cars.$input;
             this.el_sw_amkr_cars = sw_amkr_cars.$input;
+            this.el_sw_klient = sw_klient.$input;
             this.el_handed_cars = sw_handed_cars.$input;
             this.el_amkr_cisterns = sw_amkr_cisterns.$input;
             // day
@@ -625,6 +639,13 @@
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
                 this.where_option.amkr_cars = checked;
+                this.update_where(); // Обновим выборку
+            }.bind(this));
+            // Контрагены
+            this.el_sw_klient.on('change', function (event) {
+                event.preventDefault();
+                var checked = $(event.currentTarget).prop('checked');
+                this.where_option.client = checked;
                 this.update_where(); // Обновим выборку
             }.bind(this));
             // Вагоны сданные
@@ -921,6 +942,7 @@
             this.el_sw_outer_cars.prop('checked', this.where_option.outer_car);
             this.el_sw_amkr_outer_cars.prop('checked', this.where_option.amkr_outer_cars);
             this.el_sw_amkr_cars.prop('checked', this.where_option.amkr_cars);
+            this.el_sw_klient.prop('checked', this.where_option.client);
             this.el_handed_cars.prop('checked', this.where_option.handed_cars);
             this.el_amkr_cisterns.prop('checked', this.where_option.amkr_cisterns);
             //----------------------------------
@@ -1084,15 +1106,22 @@
     };
     // Пренадлежит внешним вагонам
     view_report_remainder_cars.prototype.is_outer_cars = function (i) {
-        return Boolean(i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188);
+        var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator });
+        var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator });
+        return !Boolean(amkr || amkr_vz);
+        //return Boolean(i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188);
     };
     // Пренадлежит внешним вагонам АМКР
     view_report_remainder_cars.prototype.is_amkr_outer_cars = function (i) {
-        return Boolean(i.id_operator === 14 || i.id_operator === 16);
+        //return Boolean(i.id_operator === 14 || i.id_operator === 16);
+        var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator })
+        return Boolean(amkr);
     };
     // Пренадлежит вагонам АМКР ВЗ
     view_report_remainder_cars.prototype.is_amkr_cars = function (i) {
-        return Boolean(i.id_operator === 188);
+        //return Boolean(i.id_operator === 188);
+        var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator })
+        return Boolean(amkr_vz);
     };
     // Пренадлежит сданным вагонам
     view_report_remainder_cars.prototype.is_handed_cars = function (i) {
@@ -1100,35 +1129,53 @@
     };
     // Пренадлежит цестернам
     view_report_remainder_cars.prototype.is_amkr_cisterns = function (i) {
-        return Boolean((i.id_operator === 28
-            || i.id_operator === 23
-            || i.id_operator === 2
-            || i.id_operator === 41
-            || i.id_operator === 125
-            || i.id_operator === 193
-            || i.id_operator === 192
-            || i.id_operator === 31
-            || i.id_operator === 29
-            || i.id_operator === 32
-            || i.id_operator === 27
-            || i.id_operator === 1201)
-            && i.wagon_rod === 70);
+        //return Boolean((i.id_operator === 28
+        //    || i.id_operator === 23
+        //    || i.id_operator === 2
+        //    || i.id_operator === 41
+        //    || i.id_operator === 125
+        //    || i.id_operator === 193
+        //    || i.id_operator === 192
+        //    || i.id_operator === 31
+        //    || i.id_operator === 29
+        //    || i.id_operator === 32
+        //    || i.id_operator === 27
+        //    || i.id_operator === 1201)
+        //    && i.wagon_rod === 70);
+        var cisterns = this.list_cisterns.find(function (o) { return o.id_operator === i.id_operator })
+        return Boolean(cisterns && i.wagon_rod === 70);
     };
+    // Пренадлежит контр-агенту
+    view_report_remainder_cars.prototype.is_client = function (i) {
+        return i.arrival_klient === true;
+    };
+
     // Уточняющий запрос сданные вагоны и цистерны
     view_report_remainder_cars.prototype.is_clarify_where = function (is_result, where_option, i) {
         if (is_result === null) { is_result = true; }
         // Отобразить все 
-        if (where_option.handed_cars === false && where_option.amkr_cisterns === false) {
-            return is_result & !(this.is_handed_cars(i) || this.is_amkr_cisterns(i));
+        if (where_option.handed_cars === false && where_option.amkr_cisterns === false && where_option.client === false) {
+            return is_result & !(this.is_handed_cars(i) || this.is_amkr_cisterns(i) || this.is_client(i));
         } else {
-            if (where_option.handed_cars === true && where_option.amkr_cisterns === true) {
+            if (where_option.handed_cars === true && where_option.amkr_cisterns === true && where_option.client === true ) {
                 return is_result;
             } else {
+                var result = is_result;
                 if (where_option.handed_cars === false) {
-                    return is_result & !this.is_handed_cars(i);
-                } else {
-                    return is_result & !this.is_amkr_cisterns(i);
+                    result = result & !this.is_handed_cars(i);
                 }
+                if (where_option.amkr_cisterns === false) {
+                    result = result & !this.is_amkr_cisterns(i);
+                }
+                if (where_option.client === false) {
+                    result = result & !this.is_client(i);
+                }
+                return result;
+                //if (where_option.handed_cars === false) {
+                //    return is_result & !this.is_handed_cars(i);
+                //} else {
+                //    return is_result & !this.is_amkr_cisterns(i);
+                //}
             }
 
         }
@@ -1136,17 +1183,34 @@
     // Выполнить запрос сданные вагоны и\или цистерны
     view_report_remainder_cars.prototype.is_not_clarify_where = function (where_option, i) {
         // Отобразить все 
-        if (where_option.handed_cars === false && where_option.amkr_cisterns === false) {
+        if (where_option.handed_cars === false && where_option.amkr_cisterns === false && where_option.client === false) {
             return false;
         } else {
-            if (where_option.handed_cars === true && where_option.amkr_cisterns === true) {
-                return (this.is_handed_cars(i) || this.is_amkr_cisterns(i));
+            if (where_option.handed_cars === true && where_option.amkr_cisterns === true && where_option.client === true) {
+                return (this.is_handed_cars(i) || this.is_amkr_cisterns(i) || this.is_client(i));
             } else {
+                var result = true;
                 if (where_option.handed_cars === false) {
-                    return this.is_amkr_cisterns(i) && !this.is_handed_cars(i);
+                    result = result & !this.is_handed_cars(i);
                 } else {
-                    return this.is_handed_cars(i) && !this.is_amkr_cisterns(i);
+                    result = result & this.is_handed_cars(i);
                 }
+                if (where_option.amkr_cisterns === false) {
+                    result = result & !this.is_amkr_cisterns(i);
+                } else {
+                    result = result & this.is_amkr_cisterns(i);
+                }
+                if (where_option.client === false) {
+                    result = result & !this.is_client(i);
+                } else {
+                    result = result & this.is_client(i);
+                }
+                return result;
+                //if (where_option.handed_cars === false) {
+                //    return this.is_amkr_cisterns(i) && !this.is_handed_cars(i);
+                //} else {
+                //    return this.is_handed_cars(i) && !this.is_amkr_cisterns(i);
+                //}
             }
         }
     };
@@ -1157,11 +1221,11 @@
         // Запустим выборку отдельным процессом
         setTimeout(function () {
             // Отключен весь выбор
-            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false && where_option.handed_cars === false && where_option.amkr_cisterns === false) {
+            if (where_option.outer_car === false && where_option.amkr_outer_cars === false && where_option.amkr_cars === false && where_option.client === false && where_option.handed_cars === false && where_option.amkr_cisterns === false) {
                 wagons = [];
             } else {
                 // Включен весь выбор
-                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true && where_option.handed_cars === true && where_option.amkr_cisterns === true) {
+                if (where_option.outer_car === true && where_option.amkr_outer_cars === true && where_option.amkr_cars === true && where_option.client === true && where_option.handed_cars === true && where_option.amkr_cisterns === true) {
                     wagons = this.wagons;
                 } else {
                     // Делаем выбор

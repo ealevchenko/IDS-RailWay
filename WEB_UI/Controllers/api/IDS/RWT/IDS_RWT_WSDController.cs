@@ -426,6 +426,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? doc_outgoing_car { get; set; }
         public int? arrival_nom_doc { get; set; }
         public int? arrival_nom_main_doc { get; set; }
+        public bool? arrival_klient { get; set; }
         public string arrival_composition_index { get; set; }
         public DateTime? arrival_date_adoption { get; set; }
         public int? outgoing_id_return { get; set; }
