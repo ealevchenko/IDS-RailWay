@@ -1,0 +1,58 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = IDSReportResource.system_idsreport_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+    <link href="~/Content/module/report/view_td_report.css" rel="stylesheet">
+    <link href="~/Content/view/idsreport/main_td_report.css" rel="stylesheet">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+    <script src="~/Scripts/view/shared/common.js"></script>                 <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/api/shared.js"></script>
+    <script src="~/Scripts/api/ids_direct.js"></script>
+    <script src="~/Scripts/api/ids_wsd.js"></script>
+    <script src="~/Scripts/module/report/view_td_report.js"></script>
+    <script src="~/Scripts/view/idsreport/main_td_report.js"></script>
+}
+<div id="report">
+
+</div>
+
+<!--<div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+        <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                <i class="fa-solid fa-bars"></i>
+                <span class="sr-only">Toggle Menu</span>
+            </button>
+        </div>
+        <div class="p-4">
+            <h1><a href='@Url.Action("Index", "Home", new { Area = "IDSReport" })' class="logo">@IDSReportResource.system_idsreport_title<span><i class="fa-solid fa-sack-dollar mr-1"></i>@IDSReportResource.report_td_title</span></a></h1>-->
+            @*<h3 class="h6 mb-3">@IDSReportResource.report_sd_group_link_cargo</h3>*@
+            <!--<ul class="list-unstyled components mb-5 text-left" id="list-sidebar">-->
+                @*<li class="active">
+                        <a href="#"><i class="fa-solid fa-magnifying-glass-arrow-right mr-1" style="color:#44bef1"></i>@IDSReportResource.report_sd_link_border_crossing</a>
+                    </li>
+                    <li>
+                            <a href="#"><span class="fa fa-user mr-3"></span> About</a>
+                  </li>*@
+            <!--</ul>
+            <div class="footer">
+                <p>
+
+                </p>
+            </div>
+        </div>
+    </nav>
+    <div id="content" class="p-4 p-md-5 pt-5 pt-1">
+
+    </div>
+</div>-->

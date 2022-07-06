@@ -1704,6 +1704,7 @@
     <Content Include="Content\module\directory\table_dir_operators_wagons.css" />
     <Content Include="Content\module\directory\table_dir_park_station.css" />
     <Content Include="Content\module\directory\table_dir_park_ways.css" />
+    <Content Include="Content\module\report\view_td_report.css" />
     <Content Include="Content\module\report\view_sd_report.css" />
     <Content Include="Content\module\shared\form_detali.css" />
     <Content Include="Content\module\shared\modal_edit_form.css" />
@@ -1739,6 +1740,7 @@
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
     <Content Include="Content\view\idsreport\home.css" />
+    <Content Include="Content\view\idsreport\main_td_report .css" />
     <Content Include="Content\view\idsreport\main_sd_report.css" />
     <Content Include="Content\view\idsrwt\incoming1.css" />
     <Content Include="Content\view\idsrwt\outgoing1.css" />
@@ -1804,6 +1806,7 @@
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
+    <Content Include="Scripts\module\report\view_td_report.js" />
     <Content Include="Scripts\module\report\view_sd_report.js" />
     <Content Include="Scripts\module\shared\epd.js" />
     <Content Include="Scripts\module\shared\form_detali.js" />
@@ -1925,6 +1928,7 @@
     <Content Include="Areas\IDSReport\Views\_ViewStart.cshtml" />
     <Content Include="Areas\IDSReport\Views\Home\Report_SD.cshtml" />
     <Content Include="Areas\Directory\Views\Home\ComCondition.cshtml" />
+    <Content Include="Areas\IDSReport\Views\Home\Report_TD.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2468,6 +2472,7 @@
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
+    <Content Include="Scripts\view\idsreport\main_td_report.js" />
     <Content Include="Scripts\view\idsreport\main_sd_report.js" />
     <Content Include="Scripts\view\idsrwt\main_incoming.js" />
     <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
