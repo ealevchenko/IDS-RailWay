@@ -104,8 +104,8 @@
                 var clients = main_otpr.client;
                 clients.forEach(function (el, i, arr) {
                     if (Number(el.type) === 1) {
-                        epd.client.kod_from = el.kod;//1;
-                        epd.client.name_from = el.name; //"Тестовый грузоотправитель";
+                        epd.client.kod_from = el.kod !== null ? el.kod : el.carrier_kod;//1;
+                        epd.client.name_from = el.name !== null ? el.name : el.carrier_name; //"Тестовый грузоотправитель";
                     };
                     if (Number(el.type) === 2) {
                         epd.client.kod_on = el.kod;
