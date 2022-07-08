@@ -307,8 +307,6 @@
                 return null;
 
             }
-
-
         };
         this.destroy = function () {
             this.$element.data('dateRangePicker').destroy();
@@ -894,6 +892,22 @@
         this.$select = select.$select;
         this.$element = div.$div.append($label).append(this.$select);
     };
+
+    form_control.prototype.el_form_inline_input = function (id, prefix, title) {
+        var FC = App.form_control;
+        var fc = new FC();
+
+        var div = new fc.el_div_form_group();
+        var $label = $('<label></label>', {
+            'class': 'col-form-label' + (prefix ? '-' + prefix + ' ' : ' ') + 'mr-2',
+            'for': id,
+            'text': title
+        });
+        //
+        var input = new fc.el_input1(prefix, id, true);
+        this.$input = input.$input;
+        this.$element = div.$div.append($label).append(this.$input);
+    };
     //---------------------------------------------------------------------------------
     // Элемент <form class="">
     form_control.prototype.el_form = function (id, cl_form, valid_html5) {
@@ -1198,7 +1212,9 @@
     //================================================================================
     // Конструктор формы с элементами по вертикали
     function form_inline() {
-        this.fc = new form_control();
+        //this.fc = new form_control();
+        this.fe = new form_element();
+
     }
     // Инициализация формы
     form_inline.prototype.init = function (options) {
@@ -1208,32 +1224,149 @@
             id: '',
             cl_form: '',
         }, options);
-        var form = new this.fc.el_form_inline(this.settings.id, this.settings.cl_form);
+        var form = new this.fe.form_inline({
+            class: this.settings.cl_form,
+            id: this.settings.id,
+            novalidate: null,
+        });
         this.$form = form.$form;
         this.el_destroy = []; // Элементы которые нужно удалить
         // создадим поля
         $.each(this.settings.fields, function (i, el) {
             if (el.type === 'interval_date') {
-                var element = new this.fc.el_form_inline_interval_date(el.id, el.prefix, el.title);
+                //var element = new this.fc.el_form_inline_interval_date(el.id, el.prefix, el.title);
+                //if (element && element.$element && element.$element.length > 0) {
+                //    this.$form.append(element.$element);
+                //    el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
+                //    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
+                //}
+                var element = new this.fe.bs_interval_datetime({
+                    id: null,
+                    form_group_size: null,
+                    form_group_col: null,
+                    form_group_class: null,
+                    label: el.title,
+                    label_class: 'col-form-label' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_size: null,
+                    input_class: 'form-control' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_title: null,
+                    input_placeholder: null,
+                    input_required: null,
+                    input_min: null,
+                    input_max: null,
+                    input_step: null,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_obj_form: null,
+                    element_time: true,
+                    element_start: el.start,
+                    element_stop: el.stop,
+                    element_default: el.start,
+                    element_fn_close: el.select,
+                });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
-                    el['element'] = new this.fc.init_datetime_range(element.$span, el.start, el.stop, el.select);
+                    el['element'] = element.$element;
+                    this.el_destroy.push(element.$element_start); // Этот элемент нужно удалить из HTML формы
+                    this.el_destroy.push(element.$element_stop); // Этот элемент нужно удалить из HTML формы
+                }
+            };
+            if (el.type === 'date') {
+                //var element = new this.fc.el_form_inline_input(el.id, el.prefix, el.title);
+                //if (element && element.$element && element.$element.length > 0) {
+                //    this.$form.append(element.$element);
+                //    el['element'] = new this.fc.init_datetime_input(element.$input, el.start, el.select, el.time);
+                //    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
+                //}
+                var element = new this.fe.bs_input_datetime({
+                    id: null,
+                    form_group_size: null,
+                    form_group_col: null,
+                    form_group_class: null,
+                    label: el.title,
+                    label_class: 'col-form-label' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_size: null,
+                    input_class: 'form-control' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_title: null,
+                    input_placeholder: null,
+                    input_required: null,
+                    input_min: null,
+                    input_max: null,
+                    input_step: null,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_obj_form: null,
+                    element_time: el.time,
+                    element_default: el.start,
+                    element_fn_close: el.select,
+                });
+                if (element && element.$element && element.$element.length > 0) {
+                    this.$form.append(element.$element);
+                    el['element'] = element.$element;
                     this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
                 }
             };
             if (el.type === 'select') {
-                var element = new this.fc.el_form_inline_select(el.id, el.prefix, el.title);
+                //var element = new this.fc.el_form_inline_select(el.id, el.prefix, el.title);
+                //if (element && element.$element && element.$element.length > 0) {
+                //    this.$form.append(element.$element);
+                //    el['element'] = new this.fc.init_select(element.$select, el.list, -1, null, el.select);
+                //}
+                var element = new this.fe.bs_select({
+                    id: el.id,
+                    form_group_size: null,
+                    form_group_col: null,
+                    form_group_class: null,
+                    label: el.title,
+                    label_class: 'col-form-label' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_size: null,
+                    input_class: 'form-control' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_title: null,
+                    input_placeholder: null,
+                    input_multiple: null,
+                    input_required: null,
+                    input_readonly: null,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_data: el.list,
+                    element_default: 1,
+                    element_change: el.select,
+                    element_check: null,
+                });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
-                    el['element'] = new this.fc.init_select(element.$select, el.list, -1, null, el.select);
+                    el['element'] = element.$element;
                 }
             };
             if (el.type === 'button') {
                 //var element = function (prefix, cl_bt, id, title, icon)
-                var element = new this.fc.el_button(el.prefix, 'btn-primary ml-2', el.id, el.title, el.icon);
+                //var element = new this.fc.el_button(el.prefix, 'btn-primary ml-2', el.id, el.title, el.icon);
+                //if (element && element.$button && element.$button.length > 0) {
+                //    this.$form.append(element.$button);
+                //    el['element'] = new this.fc.init_button(element.$button, el.select);
+                //}
+                var element = new this.fe.bs_button({
+                    color: 'primary',
+                    size: el.prefix,
+                    class: 'ml-2',
+                    id: el.id,
+                    label: el.title,
+                    title: null,
+                    icon_left: el.icon,
+                    icon_right: null,
+                    click: el.select,
+                });
                 if (element && element.$button && element.$button.length > 0) {
                     this.$form.append(element.$button);
-                    el['element'] = new this.fc.init_button(element.$button, el.select);
+                    el['element'] = element.$button;
                 }
             };
         }.bind(this));
@@ -2380,6 +2513,125 @@
         this.init();
 
     };
+    // Инициализация поля дата и время "INPUT"
+    form_element.prototype.init_datetime_range = function (element, element_start, element_stop, options) {
+        this.settings = $.extend({
+            start: null,
+            stop: null,
+            fn_close: null,
+            time: true,
+        }, options);
+        this.$element = element;
+        this.$element_start = element_start;
+        this.$element_stop = element_stop;
+        this.init = function () {
+            this.update(this.settings.start, this.settings.stop);
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                this.set(value);
+            } else {
+                return this.get();
+            };
+        };
+        this.update = function (start, stop) {
+            this.$element = element.dateRangePicker(
+                {
+                    language: App.Lang,
+                    format: App.Lang === 'ru' ? 'DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '') : 'DD\MM\YYYY' + (this.settings.time ? ' HH:mm' : ''),
+                    separator: '-',
+                    autoClose: false,
+                    //singleDate: true,
+                    //singleMonth: true,
+                    //showShortcuts: false,
+                    time: {
+                        enabled: this.settings.time
+                    },
+                    setValue: function (s, s1, s2) {
+                        this.$element_start.val(s1);
+                        this.$element_stop.val(s2);
+                    }.bind(this)
+                }).
+                bind('datepicker-change', function (evt, obj) {
+                    /*                    this.select_date = obj.date1;*/
+                    this.start_date = obj.date1;
+                    this.stop_date = obj.date2;
+
+                }.bind(this)).bind('datepicker-closed', function () {
+                    // Преобразовать формат
+                    if (typeof this.settings.fn_close === 'function') {
+                        this.settings.fn_close(this.get());
+                    }
+                }.bind(this));
+            this.set(start, stop);
+        };
+        this.set = function (start, stop) {
+            var disabled = this.$element.prop("disabled");
+            if (disabled) {
+                this.$element.prop("disabled", false);
+            }
+            if (start !== null && stop !== null) {
+                this.$element.data('dateRangePicker').setDateRange(moment(start).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment(stop).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
+            } else {
+                // Установить текущую дату и время
+                this.$element.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
+                this.$element.data('dateRangePicker').clear();
+            }
+            if (disabled) {
+                this.$element.prop("disabled", true);
+            }
+            //if (datetime !== null) {
+            //    //var ms = moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : ''));
+            //    this.$element.data('dateRangePicker').setDateRange(moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment(datetime).format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
+            //} else {
+            //    // Установить текущую дату и время
+            //    this.$element.data('dateRangePicker').setDateRange(moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), moment().format('DD.MM.YYYY' + (this.settings.time ? ' HH:mm' : '')), true);
+            //    this.$element.data('dateRangePicker').clear();
+            //}
+        };
+        this.get = function () {
+            var start = this.$element_start.val();
+            var stop = this.$element_stop.val();
+            var dt_start = start !== null && start !== "" ? moment(start, 'DD.MM.YYYY hh:mm') : null;
+            if (dt_start === null || !dt_start.isValid()) this.$element_start.val('');
+            var dt_stop = stop !== null && stop !== "" ? moment(stop, 'DD.MM.YYYY hh:mm') : null;
+            if (dt_stop === null || !dt_stop.isValid()) this.$element_stop.val('');
+            if (dt_start !== null && dt_stop !== null && dt_start.isValid() && dt_stop.isValid()) {
+                this.set(dt_start._d, dt_stop._d);
+                //return { start: (start !== null && start !== "" ? moment.utc(start, 'DD.MM.YYYY hh:mm').toISOString() : null), stop: (stop !== null && stop !== "" ? .utc(stop, 'DD.MM.YYYY hh:mm').toISOString() : null) }
+                //return { start: dt_start.format('YYYY-MM-DDTHH:mm:ss.SSS'), stop: dt_stop.format('YYYY-MM-DDTHH:mm:ss.SSS') };
+                return { start: moment.utc(dt_start, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss'), stop: moment.utc(dt_stop, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss') };
+            } else {
+                // Оштбка формата
+                return null;
+
+            }
+            //var datetime = this.$element.val();
+            //if (datetime !== null && datetime !== "") {
+            //    return moment.utc(datetime, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss');
+            //} else {
+            //    return null;
+            //}
+        };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$element.prop("disabled", false);
+        };
+        this.disable = function (clear) {
+            if (clear) this.set(null);
+            this.$element.prop("disabled", true);
+        };
+        this.destroy = function () {
+            this.$element.data('dateRangePicker').destroy();
+        };
+        this.init();
+
+    };
     // Инициализация поля дата "TEXTAREA"
     form_element.prototype.init_textarea = function (element, options) {
         this.settings = $.extend({
@@ -2536,6 +2788,24 @@
             novalidate: null,
         }, options);
         this.$form = $('<form></form>');
+        if (!this.$form || this.$form.length === 0) {
+            throw new Error('Не удалось создать элемент <form></form>');
+        } else {
+            add_class(this.$form, this.settings.class);
+            add_id(this.$form, this.settings.id);
+            add_tag(this.$alink, 'novalidate', this.settings.novalidate);
+        }
+    };
+    // Элемент <form class="form-inline"></form>
+    form_element.prototype.form_inline = function (options) {
+        this.settings = $.extend({
+            class: null,
+            id: null,
+            novalidate: null,
+        }, options);
+        this.$form = $('<form></form>', {
+            class: 'form-inline',
+        });
         if (!this.$form || this.$form.length === 0) {
             throw new Error('Не удалось создать элемент <form></form>');
         } else {
@@ -3400,14 +3670,24 @@
         if (this.settings.input_group) {
             add_class(this.$element, 'form-group');
         }
-        var cl = 'col';
-        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
-            cl += '-' + this.settings.form_group_size;
+        if ((this.settings.form_group_size && this.settings.form_group_size !== '') || (this.settings.form_group_col && this.settings.form_group_col !== '')) {
+            var cl = 'col';
+            if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+                cl += '-' + this.settings.form_group_size;
+            }
+            if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+                cl += '-' + this.settings.form_group_col;
+            }
+            add_class(this.$element, cl);
         }
-        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
-            cl += '-' + this.settings.form_group_col;
-        }
-        add_class(this.$element, cl);
+        //var cl = 'col';
+        //if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+        //    cl += '-' + this.settings.form_group_size;
+        //}
+        //if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+        //    cl += '-' + this.settings.form_group_col;
+        //}
+        //add_class(this.$element, cl);
         add_class(this.$element, this.settings.form_group_class);
         // Подпись
         var label = new this.fe.label({
@@ -3460,6 +3740,131 @@
             this.$element.append(ig.$div);
         } else {
             this.$element.append(input.$input);
+            this.$element.append(ifb.$div);
+        }
+    };
+    //
+    form_element.prototype.bs_interval_datetime = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            input_size: null,
+            input_class: null,
+            input_title: null,
+            input_placeholder: null,
+            input_required: null,
+            input_min: null,
+            input_max: null,
+            input_step: null,
+            input_group: false,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: null,
+            input_group_append_class: null,
+            input_group_obj_form: null,
+            element_time: null,
+            element_start: null,
+            element_stop: null,
+            element_fn_close: null,
+
+        }, options);
+        //
+        this.fe = new form_element();
+        //this.fc = new form_control();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        if ((this.settings.form_group_size && this.settings.form_group_size !== '') || (this.settings.form_group_col && this.settings.form_group_col !== '')) {
+            var cl = 'col';
+            if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+                cl += '-' + this.settings.form_group_size;
+            }
+            if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+                cl += '-' + this.settings.form_group_col;
+            }
+            add_class(this.$element, cl);
+        }
+        add_class(this.$element, this.settings.form_group_class);
+        // Подпись
+        var label = new this.fe.label({
+            class: this.settings.label_class,
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        this.$element.append(label.$label);
+        var $span = $('<span></span>', {
+            'class': 'mr-2',
+            'id': this.settings.id
+        });
+        // Input
+        var input_start = new this.fe.input({
+            id: this.settings.id + '-start',
+            type: 'datetime',
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.input_placeholder,
+            required: this.settings.input_required,
+            maxlength: this.settings.input_maxlength,
+            pattern: this.settings.input_pattern,
+            min: this.settings.input_min,
+            max: this.settings.input_max,
+            step: this.settings.input_step,
+        });
+        var input_stop = new this.fe.input({
+            id: this.settings.id + '-stop',
+            type: 'datetime',
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.input_placeholder,
+            required: this.settings.input_required,
+            maxlength: this.settings.input_maxlength,
+            pattern: this.settings.input_pattern,
+            min: this.settings.input_min,
+            max: this.settings.input_max,
+            step: this.settings.input_step,
+        });
+        add_class(input_start.$input, this.settings.input_class);
+        add_class(input_stop.$input, this.settings.input_class);
+
+        $span.append(input_start.$input).append(input_stop.$input);
+
+        this.$element_start = input_start.$input;
+        this.$element_stop = input_stop.$input;
+        this.element = new this.fe.init_datetime_range($span, input_start.$input, input_stop.$input, { start: this.settings.element_start, stop: this.settings.element_stop, fn_close: this.settings.element_fn_close, time: this.settings.element_time });
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+
+        if (this.settings.input_group) {
+            var ig = new this.fe.bs_input_group();
+            if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
+                var input_group_prepend = new this.fe.bs_input_group_prepend({
+                    class: this.settings.input_group_prepend_class,
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_prepend.$div);
+            };
+            //
+            ig.$div.append($span);
+            if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
+                var input_group_append = new this.fe.bs_input_group_append({
+                    class: this.settings.input_group_append_class,
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_append.$div);
+            };
+            ig.$div.append(ifb.$div);
+            this.$element.append(ig.$div);
+        } else {
+            this.$element.append($span);
             this.$element.append(ifb.$div);
         }
     };
@@ -3798,14 +4203,16 @@
         if (this.settings.input_group) {
             add_class(this.$element, 'form-group');
         }
-        var cl = 'col';
-        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
-            cl += '-' + this.settings.form_group_size;
+        if ((this.settings.form_group_size && this.settings.form_group_size !== '') || (this.settings.form_group_col && this.settings.form_group_col !== '')) {
+            var cl = 'col';
+            if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+                cl += '-' + this.settings.form_group_size;
+            }
+            if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+                cl += '-' + this.settings.form_group_col;
+            }
+            add_class(this.$element, cl);
         }
-        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
-            cl += '-' + this.settings.form_group_col;
-        }
-        add_class(this.$element, cl);
         add_class(this.$element, this.settings.form_group_class);
         // Подпись
         var label = new this.fe.label({
@@ -4664,7 +5071,7 @@
         if (o.text()) {
             var s = o.val();
             var s1 = o.text();
-            if (o.val()!==null) {
+            if (o.val() !== null) {
                 this.set_control_ok(o.$element, mes_ok);
                 if (out_message) this.out_info_message(mes_ok);
                 return true;

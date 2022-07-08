@@ -17,74 +17,79 @@
     {
         'default':  //default language: ru
         {
-            'vsdr_mess_init_module': 'Инициализация модуля(view_td_report)...',
-            'vsdr_link_title_home1': 'ИДС "ОТЧЕТЫ"',
-            'vsdr_link_title_home2': 'Транспортный департамент',
+            'vtdr_mess_init_module': 'Инициализация модуля(view_td_report)...',
+            'vtdr_link_title_home1': 'ИДС "ОТЧЕТЫ"',
+            'vtdr_link_title_home2': 'Транспортный департамент',
 
-            'vsdr_link_title_report_1_1': 'Статистика',
+            'vtdr_link_title_report_1_1': 'Статистика',
 
-            'vsdr_link_report_1': 'Погран-переход',
-            'vsdr_title_report_1': 'Движение грузов отгруженных АМКР для внешних потребителей продукции (Европа)',
-            'vsdr_title_search_cars': 'Найти вагоны',
-            'vsdr_label_list_nums': 'Добавьте номера вагонов (разделитель “;”) по которым необходимо провести поиск:',
-            'vsdr_title_list_nums': 'Добавте номера вагонов',
-            'vsdr_placeholder_list_nums': '00000001;00000002;00000003',
-            'vsdr_mess_operation_run': 'Выполняю операцию...',
-            'vsdr_title_all': 'Все',
-            'vsdr_title_button_export': 'Экспорт',
-            'vsdr_title_button_buffer': 'Буфер',
-            'vsdr_title_button_excel': 'Excel',
-            'vsdr_title_excel_sheet_name': 'Погран переходы',
+            'vtdr_title_type_select': 'Выборка за:',
+            'vtdr_title_label_interval_date': ' период:',
+            'vtdr_title_label_date': ' с даты:',
+            'vtdr_title_button': ' Применить',
 
-            'vsdr_field_border_crossing_num': '№ вагона',
-            'vsdr_field_border_crossing_status': 'Статус вагона',
-            'vsdr_field_border_crossing_date_departure_amkr': 'Вагон отправлен',
-            'vsdr_field_border_crossing_border_crossing_stn': 'Код погр.-перехода',
-            'vsdr_field_border_crossing_border_crossing_stn_name': 'Погран-переход',
-            'vsdr_field_border_crossing_cross_time': 'Дата и время перехода',
-            'vsdr_field_border_crossing_client_kod_on': 'Код грузополучателя',
-            'vsdr_field_border_crossing_client_name_on': 'Грузополучатель',
-            'vsdr_field_border_crossing_vesg': 'Вес груза',
-            'vsdr_field_border_crossing_epd_status': 'Статус ЭПД',
-            'vsdr_field_border_crossing_epd_date_otpr': 'Отправлен (ЭПД)',
-            'vsdr_field_border_crossing_epd_date_pr': 'Прибыл (ЭПД)',
-            'vsdr_field_border_crossing_epd_num_doc': 'Id документа (ЭПД)',
-            'vsdr_field_border_crossing_epd_revision': '№ ревизии (ЭПД)',
-            'vsdr_field_border_crossing_epd_num_uz': '№ накладной (ЭПД)',
+            'vtdr_link_report_1': 'Погран-переход',
+            'vtdr_title_report_1': 'Движение грузов отгруженных АМКР для внешних потребителей продукции (Европа)',
+            'vtdr_title_search_cars': 'Найти вагоны',
+            'vtdr_label_list_nums': 'Добавьте номера вагонов (разделитель “;”) по которым необходимо провести поиск:',
+            'vtdr_title_list_nums': 'Добавте номера вагонов',
+            'vtdr_placeholder_list_nums': '00000001;00000002;00000003',
+            'vtdr_mess_operation_run': 'Выполняю операцию...',
+            'vtdr_title_all': 'Все',
+            'vtdr_title_button_export': 'Экспорт',
+            'vtdr_title_button_buffer': 'Буфер',
+            'vtdr_title_button_excel': 'Excel',
+            'vtdr_title_excel_sheet_name': 'Погран переходы',
 
-            'vsdr_mess_error_search_cars': 'При формировании отчета произошла ошибка, код ошибки {0}',
+            'vtdr_field_border_crossing_num': '№ вагона',
+            'vtdr_field_border_crossing_status': 'Статус вагона',
+            'vtdr_field_border_crossing_date_departure_amkr': 'Вагон отправлен',
+            'vtdr_field_border_crossing_border_crossing_stn': 'Код погр.-перехода',
+            'vtdr_field_border_crossing_border_crossing_stn_name': 'Погран-переход',
+            'vtdr_field_border_crossing_cross_time': 'Дата и время перехода',
+            'vtdr_field_border_crossing_client_kod_on': 'Код грузополучателя',
+            'vtdr_field_border_crossing_client_name_on': 'Грузополучатель',
+            'vtdr_field_border_crossing_vesg': 'Вес груза',
+            'vtdr_field_border_crossing_epd_status': 'Статус ЭПД',
+            'vtdr_field_border_crossing_epd_date_otpr': 'Отправлен (ЭПД)',
+            'vtdr_field_border_crossing_epd_date_pr': 'Прибыл (ЭПД)',
+            'vtdr_field_border_crossing_epd_num_doc': 'Id документа (ЭПД)',
+            'vtdr_field_border_crossing_epd_revision': '№ ревизии (ЭПД)',
+            'vtdr_field_border_crossing_epd_num_uz': '№ накладной (ЭПД)',
+
+            'vtdr_mess_error_search_cars': 'При формировании отчета произошла ошибка, код ошибки {0}',
 
         },
         'en':  //default language: English
         {
-            'vsdr_mess_init_module': 'Module initialization(view_td_report)...',
-            'vsdr_link_report_1': 'Border crossing',
-            'vsdr_title_report_1': 'Movement of goods shipped by AMKR for external consumers of products (Europe)',
-            'vsdr_title_search_cars': 'Find Cars',
-            'vsdr_label_list_nums': 'Add wagon numbers (separator “;”) for which you want to search:',
-            'vsdr_title_list_nums': 'Add wagon numbers',
-            'vsdr_placeholder_list_nums': '00000001;00000002;00000003',
-            'vsdr_mess_operation_run': 'Performing an operation...',
-            'vsdr_title_all': 'All',
-            'vsdr_title_button_export': 'Export',
-            'vsdr_title_button_buffer': 'Buffer',
-            'vsdr_title_button_excel': 'Excel',
-            'vsdr_title_excel_sheet_name': 'Border Transitions',
+            'vtdr_mess_init_module': 'Module initialization(view_td_report)...',
+            'vtdr_link_report_1': 'Border crossing',
+            'vtdr_title_report_1': 'Movement of goods shipped by AMKR for external consumers of products (Europe)',
+            'vtdr_title_search_cars': 'Find Cars',
+            'vtdr_label_list_nums': 'Add wagon numbers (separator “;”) for which you want to search:',
+            'vtdr_title_list_nums': 'Add wagon numbers',
+            'vtdr_placeholder_list_nums': '00000001;00000002;00000003',
+            'vtdr_mess_operation_run': 'Performing an operation...',
+            'vtdr_title_all': 'All',
+            'vtdr_title_button_export': 'Export',
+            'vtdr_title_button_buffer': 'Buffer',
+            'vtdr_title_button_excel': 'Excel',
+            'vtdr_title_excel_sheet_name': 'Border Transitions',
 
-            'vsdr_field_border_crossing_num': 'car number',
-            'vsdr_field_border_crossing_status': 'Status of the wagon',
-            'vsdr_field_border_crossing_date_departure_amkr': 'Wagon sent',
-            'vsdr_field_border_crossing_border_crossing_stn': 'Boundary crossing code',
-            'vsdr_field_border_crossing_border_crossing_stn_name': 'Border Crossing',
-            'vsdr_field_border_crossing_cross_time': 'Date and time of crossing',
-            'vsdr_field_border_crossing_client_kod_on': 'Consignee Code',
-            'vsdr_field_border_crossing_client_name_on': 'Consignee',
-            'vsdr_field_border_crossing_vesg': 'Weight',
-            'vsdr_field_border_crossing_epd_status': 'EPD status',
-            'vsdr_field_border_crossing_epd_date_otpr': 'Sent (EPD)',
-            'vsdr_field_border_crossing_epd_date_pr': 'Arrived (EPD)',
+            'vtdr_field_border_crossing_num': 'car number',
+            'vtdr_field_border_crossing_status': 'Status of the wagon',
+            'vtdr_field_border_crossing_date_departure_amkr': 'Wagon sent',
+            'vtdr_field_border_crossing_border_crossing_stn': 'Boundary crossing code',
+            'vtdr_field_border_crossing_border_crossing_stn_name': 'Border Crossing',
+            'vtdr_field_border_crossing_cross_time': 'Date and time of crossing',
+            'vtdr_field_border_crossing_client_kod_on': 'Consignee Code',
+            'vtdr_field_border_crossing_client_name_on': 'Consignee',
+            'vtdr_field_border_crossing_vesg': 'Weight',
+            'vtdr_field_border_crossing_epd_status': 'EPD status',
+            'vtdr_field_border_crossing_epd_date_otpr': 'Sent (EPD)',
+            'vtdr_field_border_crossing_epd_date_pr': 'Arrived (EPD)',
 
-            'vsdr_mess_error_search_cars': 'An error occurred while generating the report, error code {0}',
+            'vtdr_mess_error_search_cars': 'An error occurred while generating the report, error code {0}',
 
         }
     };
@@ -94,6 +99,8 @@
     var FE = App.form_element;
     var alert = App.alert_form;
     var wsd = App.ids_wsd;
+
+    var FIL = App.form_inline;
 
     //-----------------------------------------------------------------------------------------
     // Конструктор
@@ -112,7 +119,7 @@
     // Инициализация
     view_td_report.prototype.init = function (options) {
         this.result_init = true;
-        LockScreen(langView('vsdr_mess_init_module', App.Langs));
+        LockScreen(langView('vtdr_mess_init_module', App.Langs));
         // теперь выполним инициализацию
         // Определим основные свойства
         this.settings = $.extend({
@@ -124,10 +131,15 @@
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.elements = {}; // Все элементы формы
 
+        // Диапазон времени
+        this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+
+
         // Сылки на отчеты
         this.report_links = [
             {
-                text: langView('vsdr_link_title_report_1_1', App.Langs),
+                text: langView('vtdr_link_title_report_1_1', App.Langs),
                 icon: 'fa-solid fa-chart-column mr-1',
                 click: function () {
                     this.view_report_1_1();
@@ -173,7 +185,7 @@
             id: null,
             class: 'logo',
             href: '/IDSReport/Home',
-            text: langView('vsdr_link_title_home1', App.Langs) + '<span><i class="fa-solid fa-train-subway mr-1"></i>' + langView('vsdr_link_title_home2', App.Langs) + '</span>',
+            text: langView('vtdr_link_title_home1', App.Langs) + '<span><i class="fa-solid fa-train-subway mr-1"></i>' + langView('vtdr_link_title_home2', App.Langs) + '</span>',
             target: null,
             title: null,
         });
@@ -240,6 +252,89 @@
         }
         //----------------------------------
     };
+    //----------------------------------------------------------
+    // Отчеты 1
+    view_td_report.prototype.view_report_1_1 = function () {
+        $('#sidebar').toggleClass('active');
+        this.$title_report.text(langView('vtdr_title_report_1', App.Langs));
+        this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        // Создадим форму выбора для отчета
+        this.form_panel = new FIL();
+        var fl_interval_date = {
+            type: 'interval_date',
+            id: 'interval_date',
+            prefix: 'sm',
+            title: langView('vtdr_title_label_interval_date', App.Langs),
+            start: this.start,
+            stop: this.stop,
+            select: function (interval) {
+                //if (interval && interval.start && interval.stop) {
+                //    table_incoming_sostav.load_outgoing_sostav(moment(interval.start)._d, moment(interval.stop)._d, function (sostav) {
+                //        this.view(sostav, id_station, null);
+                //        LockScreenOff();
+                //    }.bind(table_incoming_sostav));
+                //}
+            }.bind(this),
+        };
+        var fl_select_date = {
+            type: 'date',
+            id: 'select_date',
+            prefix: 'sm',
+            title: langView('vtdr_title_label_date', App.Langs),
+            start: this.start,
+            time: false,
+            select: function (interval) {
+                //if (interval && interval.start && interval.stop) {
+                //    table_incoming_sostav.load_outgoing_sostav(moment(interval.start)._d, moment(interval.stop)._d, function (sostav) {
+                //        this.view(sostav, id_station, null);
+                //        LockScreenOff();
+                //    }.bind(table_incoming_sostav));
+                //}
+            }.bind(this),
+        };
+        var fl_type_select = {
+            type: 'select',
+            id: 'type_select',
+            prefix: 'sm',
+            title: langView('vtdr_title_type_select', App.Langs),
+            list: [{ value: 1, text: 'ЖД сутки' }, { value: 2, text: 'Календарные сутки' }, { value: 3, text: 'От начала месяца' }, { value: 4, text: 'Произвольный выбор' }],
+            select: function (event, ui) {
+                event.preventDefault();
+                //// Обработать выбор
+                //var id = Number($(e.currentTarget).val());
+                //id_station = id > 0 ? id : null;
+                //this.update(function (sostav) {
+                //    this.view(sostav, id_station, this.id_sostav);
+                //    LockScreenOff();
+                //}.bind(this));
+            }.bind(view_td_report),
+        };
+        var fl_button = {
+            type: 'button',
+            id: 'button',
+            prefix: 'sm',
+            title: langView('vtdr_title_button', App.Langs),
+            icon: 'fas fa-retweet',
+            select: function (e, ui) {
+                event.preventDefault();
+/*                this.update();*/
+            }.bind(this),
+        };
+        var fields = [];
+        fields.push(fl_type_select);
+        fields.push(fl_select_date);
+        fields.push(fl_interval_date);
+        fields.push(fl_button);
+        // Инициализация формы
+        this.form_panel.init({
+            fields: fields,
+            cl_form: 'd-flex w-100'
+        });
+        // Отображение формы выбора 
+        this.$main_report.append(this.form_panel.$form);
+    };
+
     //
     view_td_report.prototype.load_sostav = function (id_sostav, callback) {
         //this.id_sostav = id_sostav;
@@ -261,11 +356,15 @@
         //        callback(null);
         //    }
         //}
-    }
+    };
+
+
+
+
     // Открыть отчет
     view_td_report.prototype.view_report_border_crossing = function () {
         $('#sidebar').toggleClass('active');
-        this.$title_report.text(langView('vsdr_title_report_1', App.Langs))
+        this.$title_report.text(langView('vtdr_title_report_1', App.Langs));
         // Очистим старую форму
         this.$main_report.empty();
         this.elements = {}; // Все элементы формы
@@ -299,7 +398,7 @@
                 class: null,
                 id: 'search_car',
                 label: null,
-                title: langView('vsdr_title_search_cars', App.Langs),
+                title: langView('vtdr_title_search_cars', App.Langs),
                 icon_left: null,
                 icon_right: 'fas fa-search',
                 click: function (event) {
@@ -316,14 +415,14 @@
                 form_group_size: 'xl',
                 form_group_col: 12,
                 form_group_class: 'text-left',
-                label: langView('vsdr_label_list_nums', App.Langs),
+                label: langView('vtdr_label_list_nums', App.Langs),
                 label_class: 'mb-1',
                 textarea_size: null,
                 textarea_rows: 5,
                 textarea_class: 'inp-manual',
-                textarea_title: langView('vsdr_title_list_nums', App.Langs),
+                textarea_title: langView('vtdr_title_list_nums', App.Langs),
                 textarea_maxlength: null,
-                textarea_placeholder: langView('vsdr_placeholder_list_nums', App.Langs),
+                textarea_placeholder: langView('vtdr_placeholder_list_nums', App.Langs),
                 textarea_required: null,
                 textarea_readonly: false,
                 input_group: true,
@@ -389,7 +488,7 @@
                 //this.$div_out.addClass(this.settings.div_class).append(this.this.$table);
                 // Инициализируем таблицу
                 this.obj_t_report = this.$table.DataTable({
-                    "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('vsdr_title_all', App.Langs)]],
+                    "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('vtdr_title_all', App.Langs)]],
                     "pageLength": -1,
                     "deferRender": true,
                     "paging": true,
@@ -416,105 +515,105 @@
                                 return row.num;
                             },
                             className: 'dt-body-center',
-                            title: langView('vsdr_field_border_crossing_num', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_num', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.status !== null ? outStatusOutgoingSostav(row.status) : '';
                             },
                             className: 'dt-body-left',
-                            title: langView('vsdr_field_border_crossing_status', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_status', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.date_departure_amkr ? moment(row.date_departure_amkr).format(format_datetime) : null;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_date_departure_amkr', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_date_departure_amkr', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.border_crossing_stn;
                             },
                             className: 'dt-body-center',
-                            title: langView('vsdr_field_border_crossing_border_crossing_stn', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_border_crossing_stn', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.border_crossing_stn_name;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_border_crossing_stn_name', App.Langs), width: "100px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_border_crossing_stn_name', App.Langs), width: "100px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.cross_time ? moment(row.cross_time).format(format_datetime) : null;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_cross_time', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_cross_time', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.client_kod_on;
                             },
                             className: 'dt-body-center',
-                            title: langView('vsdr_field_border_crossing_client_kod_on', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_client_kod_on', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.client_name_on;
                             },
                             className: 'dt-body-left shorten mw-300',
-                            title: langView('vsdr_field_border_crossing_client_name_on', App.Langs), width: "300px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_client_name_on', App.Langs), width: "300px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.vesg !== null ? Number(Number(row.vesg) / 1000).toFixed(3) : '';
                             },
                             className: 'dt-body-right',
-                            title: langView('vsdr_field_border_crossing_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_vesg', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.epd_status !== null ? get_status_epd(row.epd_status) : '';
                             },
                             className: 'dt-body-left',
-                            title: langView('vsdr_field_border_crossing_epd_status', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_status', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.epd_date_otpr ? moment(row.epd_date_otpr).format(format_datetime) : null;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_epd_date_otpr', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_date_otpr', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.epd_date_pr ? moment(row.epd_date_pr).format(format_datetime) : null;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_epd_date_pr', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_date_pr', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.num_doc;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_epd_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.revision;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_epd_revision', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_revision', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                         {
                             data: function (row, type, val, meta) {
                                 return row.num_uz;
                             },
                             className: 'dt-body-nowrap',
-                            title: langView('vsdr_field_border_crossing_epd_num_uz', App.Langs), width: "50px", orderable: true, searchable: true
+                            title: langView('vtdr_field_border_crossing_epd_num_uz', App.Langs), width: "50px", orderable: true, searchable: true
                         },
                     ],
                     dom: 'Bfrtip',
@@ -522,16 +621,16 @@
                     buttons: [
                         {
                             extend: 'collection',
-                            text: langView('vsdr_title_button_export', App.Langs),
+                            text: langView('vtdr_title_button_export', App.Langs),
                             buttons: [
                                 {
-                                    text: langView('vsdr_title_button_buffer', App.Langs),
+                                    text: langView('vtdr_title_button_buffer', App.Langs),
                                     extend: 'copyHtml5',
                                 },
                                 {
-                                    text: langView('vsdr_title_button_excel', App.Langs),
+                                    text: langView('vtdr_title_button_excel', App.Langs),
                                     extend: 'excelHtml5',
-                                    sheetName: langView('vsdr_title_excel_sheet_name', App.Langs),
+                                    sheetName: langView('vtdr_title_excel_sheet_name', App.Langs),
                                     messageTop: function () {
                                         return '';
                                     }
@@ -548,7 +647,7 @@
 
             }.bind(this),
         });
-    }
+    };
     // Выполнить поиск
     view_td_report.prototype.action_search_border_crossing = function () {
         this.out_clear();
@@ -556,7 +655,7 @@
         var list_cars = this.elements.textarea_list_nums.val();
         var nums = is_valid_nums(list_cars, this.alert, true);
         if (nums) {
-            LockScreen(langView('vsdr_mess_operation_run', App.Langs));
+            LockScreen(langView('vtdr_mess_operation_run', App.Langs));
             this.ids_wsd.postReportBorderCrossingOfNums(nums, function (result) {
                 if (result !== null) {
                     if (this.obj_t_report) {
@@ -565,7 +664,7 @@
                         this.obj_t_report.draw();
                     }
                 } else {
-                    this.mf_edit.out_warning(langView('vsdr_mess_error_search_cars', App.Langs).format(result.result));
+                    this.mf_edit.out_warning(langView('vtdr_mess_error_search_cars', App.Langs).format(result.result));
                 }
                 this.elements.button_search_car.prop("disabled", false); // сделаем активной
                 LockScreenOff();
@@ -573,31 +672,31 @@
         } else {
             this.elements.button_search_car.prop("disabled", false); // сделаем активной
         };
-    }
+    };
     //
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()
         }
-    }
+    };
     // Показать ошибки
     view_td_report.prototype.out_error = function (message) {
         if (this.settings.alert) {
             this.settings.alert.out_error_message(message)
         }
-    }
+    };
     // Показать предупреждения
     view_td_report.prototype.out_warning = function (message) {
         if (this.settings.alert) {
             this.settings.alert.out_warning_message(message)
         }
-    }
+    };
     // Показать сообщения о выполнении действий
     view_td_report.prototype.out_info = function (message) {
         if (this.settings.alert) {
             this.settings.alert.out_info_message(message)
         }
-    }
+    };
     //------------------------------------------------------------------
     // Очистить объект
     view_td_report.prototype.destroy = function () {
@@ -610,7 +709,7 @@
             this.obj_t_report.destroy(true);
             this.obj_t_report = null;
         }
-    }
+    };
 
     App.view_td_report = view_td_report;
 
