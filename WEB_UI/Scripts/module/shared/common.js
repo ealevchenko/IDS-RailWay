@@ -1241,7 +1241,7 @@
                 //    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
                 //}
                 var element = new this.fe.bs_interval_datetime({
-                    id: null,
+                    id: el.id,
                     form_group_size: null,
                     form_group_col: null,
                     form_group_class: null,
@@ -1268,9 +1268,10 @@
                 });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
-                    el['element'] = element.$element;
-                    this.el_destroy.push(element.$element_start); // Этот элемент нужно удалить из HTML формы
-                    this.el_destroy.push(element.$element_stop); // Этот элемент нужно удалить из HTML формы
+                    el['element'] = element.element;
+                    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
+                    //this.el_destroy.push(element.$element_start); // Этот элемент нужно удалить из HTML формы
+                    //this.el_destroy.push(element.$element_stop); // Этот элемент нужно удалить из HTML формы
                 }
             };
             if (el.type === 'date') {
@@ -1281,7 +1282,7 @@
                 //    this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
                 //}
                 var element = new this.fe.bs_input_datetime({
-                    id: null,
+                    id: el.id,
                     form_group_size: null,
                     form_group_col: null,
                     form_group_class: null,
@@ -1306,7 +1307,7 @@
                 });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
-                    el['element'] = element.$element;
+                    el['element'] = element.element;
                     this.el_destroy.push(el['element']); // Этот элемент нужно удалить из HTML формы
                 }
             };
@@ -1337,13 +1338,13 @@
                     input_group_append_objs: null,
                     input_group_obj_form: null,
                     element_data: el.list,
-                    element_default: 1,
+                    element_default: el.default,
                     element_change: el.select,
                     element_check: null,
                 });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
-                    el['element'] = element.$element;
+                    el['element'] = element.element;
                 }
             };
             if (el.type === 'button') {
@@ -1366,7 +1367,7 @@
                 });
                 if (element && element.$button && element.$button.length > 0) {
                     this.$form.append(element.$button);
-                    el['element'] = element.$button;
+                    el['element'] = element.element;
                 }
             };
         }.bind(this));
@@ -1383,6 +1384,30 @@
             }
         }.bind(this));
         return result;
+    };
+    // Установит значение компонента
+    form_inline.prototype.set = function (id, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                switch (field.type) {
+                    case 'interval_date': {
+                        field.element.set(value.start, value.stop)
+                        break;
+                    };
+                    case 'date': {
+                        field.element.set(value)
+                        break;
+                    };
+                    case 'select': {
+                        field.element.val(value)
+                        break;
+                    };
+                }
+            }
+        }
     };
     // Удаление формы
     form_inline.prototype.destroy = function () {
@@ -2600,7 +2625,7 @@
                 this.set(dt_start._d, dt_stop._d);
                 //return { start: (start !== null && start !== "" ? moment.utc(start, 'DD.MM.YYYY hh:mm').toISOString() : null), stop: (stop !== null && stop !== "" ? .utc(stop, 'DD.MM.YYYY hh:mm').toISOString() : null) }
                 //return { start: dt_start.format('YYYY-MM-DDTHH:mm:ss.SSS'), stop: dt_stop.format('YYYY-MM-DDTHH:mm:ss.SSS') };
-                return { start: moment.utc(dt_start, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss'), stop: moment.utc(dt_stop, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss') };
+                return { start: moment(dt_start, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss'), stop: moment(dt_stop, 'DD.MM.YYYY' + (this.settings.time ? ' hh:mm' : '')).format('YYYY-MM-DDTHH:mm:ss') };
             } else {
                 // Оштбка формата
                 return null;

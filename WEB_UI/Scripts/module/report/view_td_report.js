@@ -22,6 +22,14 @@
             'vtdr_link_title_home2': 'Транспортный департамент',
 
             'vtdr_link_title_report_1_1': 'Статистика',
+            'vtdr_title_report_1_1': 'Статистика {0}',
+            'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
+            'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
+            'vtdr_title_report_type_3': '«За месяц» c:{0} по {1}',
+            'vtdr_title_report_type_4': '«За период» c:{0} по {1}',
+
+            'vtdr_card_header_report_1_1_arr': 'ПРИБЫТИЕ',
+            'vtdr_card_header_report_1_1_out': 'СДАЧА',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_label_interval_date': ' период:',
@@ -29,7 +37,7 @@
             'vtdr_title_button': ' Применить',
 
             'vtdr_link_report_1': 'Погран-переход',
-            'vtdr_title_report_1': 'Движение грузов отгруженных АМКР для внешних потребителей продукции (Европа)',
+            'vtdr_title_report_1': 'Статистика',
             'vtdr_title_search_cars': 'Найти вагоны',
             'vtdr_label_list_nums': 'Добавьте номера вагонов (разделитель “;”) по которым необходимо провести поиск:',
             'vtdr_title_list_nums': 'Добавте номера вагонов',
@@ -131,18 +139,18 @@
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.elements = {}; // Все элементы формы
 
+        this.report = null;     // Номер выбранного отчета
+        this.type = 1;          // Тип диапазона времени отчета
         // Диапазон времени
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
-
-
         // Сылки на отчеты
         this.report_links = [
             {
                 text: langView('vtdr_link_title_report_1_1', App.Langs),
                 icon: 'fa-solid fa-chart-column mr-1',
                 click: function () {
-                    this.view_report_1_1();
+                    this.init_report_1_1();
                 }.bind(this),
             }
         ];
@@ -252,11 +260,10 @@
         }
         //----------------------------------
     };
-    //----------------------------------------------------------
-    // Отчеты 1
-    view_td_report.prototype.view_report_1_1 = function () {
-        $('#sidebar').toggleClass('active');
-        this.$title_report.text(langView('vtdr_title_report_1', App.Langs));
+    //----------------------------------------------------------------------
+    // ФОРМА ВЫБОРА ВРЕМЕНИ ОТЧЕТА
+    // Настройка выбора диапазона отчета
+    view_td_report.prototype.init_select_report = function () {
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
         // Создадим форму выбора для отчета
@@ -269,12 +276,7 @@
             start: this.start,
             stop: this.stop,
             select: function (interval) {
-                //if (interval && interval.start && interval.stop) {
-                //    table_incoming_sostav.load_outgoing_sostav(moment(interval.start)._d, moment(interval.stop)._d, function (sostav) {
-                //        this.view(sostav, id_station, null);
-                //        LockScreenOff();
-                //    }.bind(table_incoming_sostav));
-                //}
+                this.set_data_report(null, interval);
             }.bind(this),
         };
         var fl_select_date = {
@@ -284,13 +286,8 @@
             title: langView('vtdr_title_label_date', App.Langs),
             start: this.start,
             time: false,
-            select: function (interval) {
-                //if (interval && interval.start && interval.stop) {
-                //    table_incoming_sostav.load_outgoing_sostav(moment(interval.start)._d, moment(interval.stop)._d, function (sostav) {
-                //        this.view(sostav, id_station, null);
-                //        LockScreenOff();
-                //    }.bind(table_incoming_sostav));
-                //}
+            select: function (date) {
+                this.set_data_report(date, null);
             }.bind(this),
         };
         var fl_type_select = {
@@ -299,16 +296,13 @@
             prefix: 'sm',
             title: langView('vtdr_title_type_select', App.Langs),
             list: [{ value: 1, text: 'ЖД сутки' }, { value: 2, text: 'Календарные сутки' }, { value: 3, text: 'От начала месяца' }, { value: 4, text: 'Произвольный выбор' }],
+            default: this.type,
             select: function (event, ui) {
                 event.preventDefault();
-                //// Обработать выбор
-                //var id = Number($(e.currentTarget).val());
-                //id_station = id > 0 ? id : null;
-                //this.update(function (sostav) {
-                //    this.view(sostav, id_station, this.id_sostav);
-                //    LockScreenOff();
-                //}.bind(this));
-            }.bind(view_td_report),
+                // Обработать выбор
+                var id = Number($(event.currentTarget).val());
+                this.select_report(id);
+            }.bind(this),
         };
         var fl_button = {
             type: 'button',
@@ -318,7 +312,7 @@
             icon: 'fas fa-retweet',
             select: function (e, ui) {
                 event.preventDefault();
-/*                this.update();*/
+                this.view_report();
             }.bind(this),
         };
         var fields = [];
@@ -329,38 +323,137 @@
         // Инициализация формы
         this.form_panel.init({
             fields: fields,
-            cl_form: 'd-flex w-100'
+            cl_form: 'd-flex w-100 mb-2'
         });
         // Отображение формы выбора 
         this.$main_report.append(this.form_panel.$form);
+        this.div_interval_date = $('span#interval_date').closest("div").prev().closest("div");
+        this.div_select_date = $('input#select_date').closest("div").prev().closest("div");
+        this.div_select_date.hide();
+        this.div_interval_date.hide();
+        this.select_report(1);
     };
-
-    //
-    view_td_report.prototype.load_sostav = function (id_sostav, callback) {
-        //this.id_sostav = id_sostav;
-        //if (this.id_sostav) {
-        //    LockScreen(langView('vicr_mess_load_sostav', App.Langs));
-        //    this.ids_wsd.getViewIncomingCarsOfIDSostav(this.id_sostav, function (wagons) {
-        //        this.wagons = wagons;
-        //        // Получим информацию по составу
-        //        this.get_sostav(wagons);
-        //        LockScreenOff();
-        //        if (typeof callback === 'function') {
-        //            callback(this.wagons);
-        //        }
-        //    }.bind(this));
-        //} else {
-        //    this.wagons = null;
-        //    this.sostav = {};
-        //    if (typeof callback === 'function') {
-        //        callback(null);
-        //    }
-        //}
+    // Выбор типа отчета
+    view_td_report.prototype.select_report = function (type) {
+        this.type = type;
+        this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        if (type === 4) {
+            this.div_select_date.hide();
+            this.div_interval_date.show();
+            this.set_data_report(null);
+            this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
+            this.set_data_report(null, { start: this.start, stop: this.stop });
+        } else {
+            if (type > 0) {
+                this.div_select_date.show();
+                this.div_interval_date.hide();
+                this.form_panel.set('select_date', moment());
+                this.set_data_report(moment(), null);
+            } else {
+                this.div_select_date.hide();
+                this.div_interval_date.hide();
+                this.set_data_report(null, null);
+            }
+        }
     };
+    // Получить дату отчета
+    view_td_report.prototype.set_data_report = function (date, interval) {
+        var message_report = '';
+        switch (this.type) {
+            case 1: {
+                if (date) {
+                    this.start = moment(date).subtract(1, 'd').set({ 'hour': 20, 'minute': 1, 'second': 0 })._d;
+                    this.stop = moment(date).set({ 'hour': 20, 'minute': 0, 'second': 0 })._d;
+                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
+            case 2: {
+                // календарные сутки
+                if (date) {
+                    this.start = moment(date).set({ 'hour': 0, 'minute': 1, 'second': 0 })._d;
+                    this.stop = moment(date).set({ 'hour': 23, 'minute': 59, 'second': 0 })._d;
+                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
+            case 3: {
+                // календарные сутки
+                if (date) {
+                    this.start = moment(date).set({ 'date': 1, 'hour': 0, 'minute': 1, 'second': 0 })._d;
+                    this.stop = moment(date)._d;
+                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
+            case 4: {
+                if (interval && interval.start && interval.stop) {
+                    this.start = moment(interval.start)._d;
+                    this.stop = moment(interval.stop)._d;
+                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
+        }
+        this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(message_report));
+    };
+    // Показать отчет
+    view_td_report.prototype.view_report = function () {
+        switch (this.report) {
+            case 1: {
+                this.view_report_1_1(this.start, this.stop);
+                break;
+            }
+        }
+    };
+    //----------------------------------------------------------
+    // Отчеты
+    // Инициализировать отчет "Статистика"
+    view_td_report.prototype.init_report_1_1 = function () {
+        this.report = 1;
+        $('#sidebar').toggleClass('active');
+        this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(''));
+        this.init_select_report();
+        //this.$main_report.empty();
+        //------
+        var div_row1 = new this.fe_ui.bs_row();
+        var div_row2 = new this.fe_ui.bs_row();
+        var div_col1 = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 6,
+        });
+        var div_col2 = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 6,
+        });
 
+        var card_arr = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_report_1_1_arr', App.Langs),
+        });
 
+        var card_out = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_report_1_1_out', App.Langs),
+        });
 
+        div_row1.$row.append(div_col1.$col.append(card_arr.$card)).append(div_col2.$col.append(card_out.$card));
+        this.$main_report.append(div_row1.$row).append(div_row2.$row)
 
+    };
+    // Показать отчет  "Статистика"
+    view_td_report.prototype.view_report_1_1 = function () {
+        
+    };
     // Открыть отчет
     view_td_report.prototype.view_report_border_crossing = function () {
         $('#sidebar').toggleClass('active');
