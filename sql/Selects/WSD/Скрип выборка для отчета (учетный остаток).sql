@@ -156,9 +156,14 @@ Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [
 Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
 --> Отправка состава
 Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
+--> Прием вагона
+Left JOIN [IDS].[ArrivalCars] as arr_car ON wir.id_arrival_car = arr_car.id
+Left JOIN [IDS].[Arrival_UZ_Vagon] as uz_doc_vag ON arr_car.id_arrival_uz_vagon = uz_doc_vag.id
+Left JOIN [IDS].[Arrival_UZ_Document] as uz_doc ON uz_doc_vag.id_document = uz_doc.id
 where 
 -- Исключим КИРОВА
 wim.id_station <> 10
+and uz_doc.klient <> 1
 and wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 -- Вагоны на станциях и перегонах
 AND (wim.way_end IS NULL OR (wim.outer_way_start is not NULL and wim.outer_way_end is null))
