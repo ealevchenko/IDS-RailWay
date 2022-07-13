@@ -1,3 +1,4 @@
+use [KRR-PA-CNT-Railway]
 declare @start datetime = Convert(datetime, '2022-07-01 00:00:00', 120)
 declare @stop datetime = Convert(datetime, '2022-07-11 23:59:59', 120)
 
@@ -23,5 +24,6 @@ SELECT arr_sost.[id]
       ,arr_sost.[change_user]
 	  ,count_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null)
 	  ,count_account_balance = ([IDS].[get_count_account_balance_of_arrival_sostav](arr_sost.id))
+	  --into view_arrival_sostav
   FROM  [IDS].[ArrivalSostav] as arr_sost
   where arr_sost.[date_adoption]>= @start and arr_sost.[date_adoption]<=@stop
