@@ -89,6 +89,34 @@ namespace WEB_UI.Controllers.api
         public int? count_arrival { get; set; }
         public int? count_not_arrival { get; set; }
     }
+    /// <summary>
+    /// Класс описания данных информация по принятым составам (Отчет ТД - Статистика)
+    /// </summary>
+    public class ViewReportAdoptionSostav
+    {
+        public long id { get; set; }
+        public long? id_arrived { get; set; }
+        public long? id_sostav { get; set; }
+        public int train { get; set; }
+        public string composition_index { get; set; }
+        public DateTime date_arrival { get; set; }
+        public DateTime? date_adoption { get; set; }
+        public DateTime? date_adoption_act { get; set; }
+        public int? id_station_from { get; set; }
+        public int? id_station_on { get; set; }
+        public int? id_way { get; set; }
+        public bool? numeration { get; set; }
+        public int? num_doc { get; set; }
+        public int? count { get; set; }
+        public int status { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public int? count_wagon { get; set; }
+        public int? count_account_balance { get; set; }
+    }
 
     [RoutePrefix("api/ids/rwt/arrival_sostav")]
     public class IDS_RWT_Incoming_ArrivalSostavController : ApiController
@@ -256,6 +284,30 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Получить информацию по принятым составам (Отчет ТД - Статистика)
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/arrival_sostav/report/adoption_sostav/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
+        [Route("report/adoption_sostav/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewReportAdoptionSostav))]
+        public IHttpActionResult GetReportAdoptionSostavOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_adoption_sostav_of_period](@start,@stop)";
+                List<ViewReportAdoptionSostav> sostav = this.ef_ids.Database.SqlQuery<ViewReportAdoptionSostav>(sql, d_start, d_stop).ToList();
+                return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // POST api/ids/rwt/arrival_sostav/
         [HttpPost]
         [Route("")]

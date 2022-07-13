@@ -503,7 +503,6 @@
             },
         });
     };
-
     //=============================================================================================================
     //                                  РАЗДЕЛ ПРИЕМ СОСТАВОВ НА АМКР
     //=============================================================================================================
@@ -2078,7 +2077,32 @@
             },
         });
     };
-
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ОТЧЕТЫ ТД
+    //=============================================================================================================
+    //Получить принятые составы за период
+    ids_wsd.prototype.getReportAdoptionSostavOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_sostav/report/adoption_sostav/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportAdoptionSostavOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 
