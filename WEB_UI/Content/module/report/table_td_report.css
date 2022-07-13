@@ -1,0 +1,62 @@
+﻿body {
+}
+
+/*Уменьшить размер таблицы*/
+.table-report-operation {
+    font-size: 0.8rem;
+}
+
+table.dataTable tbody td.mw-50 {
+    max-width: 50px;
+}
+
+table.dataTable tbody td.mw-100 {
+    max-width: 100px;
+}
+
+table.dataTable tbody td.mw-150 {
+    max-width: 150px;
+}
+
+table.dataTable tbody td.mw-200 {
+    max-width: 200px;
+}
+
+table.dataTable tbody td.mw-250 {
+    max-width: 250px;
+}
+
+table.dataTable tbody td.mw-300 {
+    max-width: 300px;
+}
+
+table.dataTable tbody td.shorten {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/*время создания операции привышено*/
+/*table.dataTable.display tbody tr td.error {
+    color: red;
+}*/
+/*Превышена норма нахождения вагона на АМКР*/
+/*table.dataTable.display tbody tr td.idle-time-error {
+    color: red;
+}
+
+table.dataTable.display tbody tr td a.idle-time-error {
+    color: red;
+}*/
+
+/*IE сука не поддерживает*/
+/*:root {
+    --idle-station-bg-color: #faf0f0;
+    --idle-station-bg-color-select: #ffebeb;
+    --idle-station-bg-color-head: #ffebeb;
+}*/
+
+/*Отобразить типы полей*/
+/*Зафиксированные поля - не просвечиваемые*/
+table.dataTable.display thead tr th.fixed-column {
+    background-color: #ffffff;
+}

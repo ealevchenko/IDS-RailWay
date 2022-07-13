@@ -1709,6 +1709,7 @@
     <Content Include="Content\module\shared\form_detali.css" />
     <Content Include="Content\module\shared\modal_edit_form.css" />
     <Content Include="Content\module\directory\table_dir_way.css" />
+    <Content Include="Content\module\report\table_td_report.css" />
     <Content Include="Content\module\table_tree_way.css" />
     <Content Include="Content\module\wsd\view_incoming_report.css" />
     <Content Include="Content\module\wsd\form_hd_outgoing_sostav.css" />
@@ -1806,6 +1807,7 @@
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
+    <Content Include="Scripts\module\report\table_td_report.js" />
     <Content Include="Scripts\module\report\view_td_report.js" />
     <Content Include="Scripts\module\report\view_sd_report.js" />
     <Content Include="Scripts\module\shared\epd.js" />
