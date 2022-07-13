@@ -30,6 +30,8 @@
 
             'vtdr_card_header_report_1_1_arr': 'ПРИБЫТИЕ',
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
+            'vtdr_load_adoption_sostav': 'Выполняю операцию выборка принятых составов ...',
+
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_label_interval_date': ' период:',
@@ -109,6 +111,7 @@
     var wsd = App.ids_wsd;
 
     var FIL = App.form_inline;
+    var TTDR = App.table_td_report;
 
     //-----------------------------------------------------------------------------------------
     // Конструктор
@@ -144,6 +147,12 @@
         // Диапазон времени
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        //
+        this.adoption_sostav = [];
+        this.vs_adoption_sostav = [];
+        this.nb_adoption_sostav = [];
+        this.pr_adoption_sostav = [];
+        this.kr_adoption_sostav = [];
         // Сылки на отчеты
         this.report_links = [
             {
@@ -436,6 +445,12 @@
             class_body: 'text-center',
             title_header: langView('vtdr_card_header_report_1_1_arr', App.Langs),
         });
+        // Добавим таблицы отображения
+        card_arr.$body
+            .append($('<div id="adoption-sostav-all"></div>'))
+            .append($('<div id="adoption-sostav-kr"></div>'))
+            .append($('<div id="adoption-sostav-detali"></div>'));
+
 
         var card_out = new this.fe_ui.bs_card({
             id: null,
@@ -449,11 +464,80 @@
         div_row1.$row.append(div_col1.$col.append(card_arr.$card)).append(div_col2.$col.append(card_out.$card));
         this.$main_report.append(div_row1.$row).append(div_row2.$row)
 
+        // Запускаем 3 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                // Загрузим составы
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');             // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_adop_sostav_all.init({
+            alert: null,
+            detali_wagons: false,
+            type_report: 'adoption_sostav',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
     };
     // Показать отчет  "Статистика"
-    view_td_report.prototype.view_report_1_1 = function () {
-        
+    view_td_report.prototype.view_report_1_1 = function (start, stop) {
+        //getReportAdoptionSostavOfPeriod
+        langView('vtdr_load_adoption_sostav', App.Langs);
+        this.ids_wsd.getReportAdoptionSostavOfPeriod(start, stop, function (result_sostav) {
+            this.adoption_sostav = result_sostav;
+            var adoption_sostav = [];
+            var adoption_sostav_kr = [];
+
+            this.vs_adoption_sostav = result_sostav.filter(function (i) {
+                return i.id_station_on === 6 || i.id_station_on === 7 || i.id_station_on === 8;
+            });
+            this.nb_adoption_sostav = result_sostav.filter(function (i) {
+                return i.id_station_on === 19;
+            });
+            this.pr_adoption_sostav = result_sostav.filter(function (i) {
+                return i.id_station_on === 27;
+            });
+            this.kr_adoption_sostav = result_sostav.filter(function (i) {
+                return i.id_station_on === 10;
+            });
+
+            adoption_sostav.push(this.get_adoption_sostav('Восточная', this.vs_adoption_sostav));
+            adoption_sostav.push(this.get_adoption_sostav('Промышленная', this.pr_adoption_sostav));
+            adoption_sostav.push(this.get_adoption_sostav('Новобункерная', this.nb_adoption_sostav));
+
+            adoption_sostav_kr.push(this.get_adoption_sostav('Кирова', this.kr_adoption_sostav));
+
+            this.table_adop_sostav_all.view(adoption_sostav);
+
+        }.bind(this));
     };
+    // Получим строку для отчета
+    view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav) {
+        if (list_sostav === null) return null;
+        var count_wagon = 0;
+        var count_account_balance = 0;
+        $.each(list_sostav, function (i, s) {
+            count_wagon += s.count_wagon;
+            count_account_balance += s.count_account_balance;
+        });
+        return { station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
+    };
+
+
+
     // Открыть отчет
     view_td_report.prototype.view_report_border_crossing = function () {
         $('#sidebar').toggleClass('active');
