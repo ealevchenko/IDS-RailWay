@@ -22,6 +22,10 @@
             'ttdr_field_adoption_count_wagon': 'Всего вагонов',
             'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
 
+            'ttdr_field_adoption_sostav_detali_num_doc': '№ ведомости',
+            'ttdr_field_adoption_sostav_detali_date_adoption': 'Дата приема',
+            'ttdr_field_adoption_sostav_detali_count_wagon': 'кол-во',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_view_report': 'Отображаю данные ...',
 
@@ -83,6 +87,49 @@
             },
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_adoption_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        // Поля принятые составы детально adoption_sostav_detali
+        {
+            field: 'adoption_sostav_detali_details_control',
+            className: 'details-control adoption-sostav-detali',
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "20px",
+            searchable: false
+        },
+        {
+            field: 'adoption_sostav_detali_button_view',
+            targets: 0,
+            data: null,
+            defaultContent: '<button class="btn"><i class="far fa-eye"></i></button>',
+            orderable: false,
+            className: 'dt-body-center',
+            width: "20px"
+        },
+        {
+            field: 'adoption_sostav_detali_num_doc',
+            data: function (row, type, val, meta) {
+                return row.num_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_sostav_detali_num_doc', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'adoption_sostav_detali_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.date_adoption ? moment(row.date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_adoption_sostav_detali_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_sostav_detali_count_wagon',
+            data: function (row, type, val, meta) {
+                return row.count_wagon;
+            },
+            className: 'dt-body-center sum_count_wagon',
+            title: langView('ttdr_field_adoption_sostav_detali_count_wagon', App.Langs), width: "50px", orderable: false, searchable: false
         },
     ];
     // Перечень кнопок
@@ -171,6 +218,16 @@
         collums.push({ field: 'adoption_sostav_count_account_balance', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // 
+    table_td_report.prototype.init_columns_adoption_sostav_detali = function () {
+        var collums = [];
+        collums.push({ field: 'adoption_sostav_detali_details_control', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_button_view', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_num_doc', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_date_adoption', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_count_wagon', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -191,7 +248,21 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+/*        buttons.push({ name: 'page_length', action: null });*/
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_adoption_sostav_detali = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+/*        buttons.push({ name: 'page_length', action: null });*/
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -206,6 +277,16 @@
                 this.table_select = true;
                 this.table_columns = this.init_columns_adoption_sostav();
                 this.table_buttons = this.init_button_adoption_sostav();
+                break;
+            };
+            case 'adoption_sostav_detali': {
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.table_columns = this.init_columns_adoption_sostav_detali();
+                this.table_buttons = this.init_button_adoption_sostav_detali();
                 break;
             };
             // Таблица составы по умолчанию (если не выставят тип отчета)
@@ -234,6 +315,7 @@
             link_num: false,
             ids_wsd: null,
             fn_init: null,
+            fn_select_rows: null,
             fn_action_view_wagons: null,
         }, options);
         //
@@ -248,7 +330,8 @@
         this.table_buttons = [];
 
         this.init_type_report();
-
+        this.data = [];
+        this.selected_rows = null;
         //----------------------------------
         // Создать макет таблицы
         var table_report = new this.fe_ui.table({
@@ -256,7 +339,12 @@
             class: 'display compact cell-border row-border hover',
             title: null,
         });
-        this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td></td><td></td></tr></tfoot>'));
+        if (this.settings.type_report === 'adoption_sostav') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'adoption_sostav_detali') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report-operation').append(this.$table_report);
         // Инициализируем таблицу
@@ -285,12 +373,16 @@
             language: language_table(App.Langs),
             jQueryUI: false,
             "createdRow": function (row, data, index) {
-                //$(row).attr('id', data.id); // id строки 
-                //switch (data.status) {
-                //    case 1: $(row).addClass('yellow'); break;
-                //    case 2: $(row).addClass('green'); break;
-                //    case 3: $(row).addClass('red'); break;
-                //}
+                switch (this.settings.type_report) {
+                    case 'adoption_sostav': {
+                        if (data.type === 0) {
+
+                        } else {
+                            $(row).addClass('yellow');
+                        }
+                        break;
+                    };
+                };
             }.bind(this),
             "footerCallback": function (row, data, start, end, display) {
                 //var api = this.api();
@@ -322,15 +414,27 @@
             stateSave: true,
             buttons: this.table_buttons,
         });
-
-
-
         // Обработка события выбора
         switch (this.settings.type_report) {
             case 'adoption_sostav': {
                 this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
-                    //this.select_rows(); // определим строку
-                    //this.enable_button();
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'adoption_sostav_detali': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
                 }.bind(this));
                 break;
             };
@@ -346,7 +450,7 @@
     table_td_report.prototype.select_rows = function () {
         var index = this.obj_t_report.rows({ selected: true });
         var rows = this.obj_t_report.rows(index && index.length > 0 ? index[0] : null).data().toArray();
-        this.select_rows_sostav = rows;
+        this.selected_rows = rows;
         this.id_sostav = this.select_rows_sostav && this.select_rows_sostav.length > 0 ? this.select_rows_sostav[0].id : null;
     };
     // Отображение кнопки добавить
@@ -377,36 +481,59 @@
     };
     // Показать данные
     table_td_report.prototype.view = function (data) {
+        this.data = data;
         this.out_clear();
         LockScreen(langView('ttdr_mess_view_report', App.Langs));
         this.obj_t_report.clear();
         this.obj_t_report.rows.add(data);
         this.obj_t_report.draw();
-        this.view_footer();
+        this.view_footer(data);
         this.select_rows();
         this.enable_button();
         LockScreenOff();
     };
     //
-    table_td_report.prototype.view_footer = function () {
+    table_td_report.prototype.view_footer = function (data) {
         switch (this.settings.type_report) {
             case 'adoption_sostav': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_count_wagon_all = 0;
+                    var sum_count_account_balance = 0;
+                    var sum_count_account_balance_all = 0;
+                    $.each(data, function (i, el) {
+                        if (el.type === 0) {
+                            sum_count_wagon += el.count_wagon;
+                            sum_count_account_balance += el.count_account_balance;
+                        }
+                        sum_count_wagon_all += el.count_wagon;
+                        sum_count_account_balance_all += el.count_account_balance;
+
+                    });
+                }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
-                    var sum = this
-                        .data()
-                        .reduce(function (a, b) {
-                            return a + b;
-                        });
-                    $(this.footer()).html(sum);
+                    $(this.footer()).html(sum_count_wagon_all + '(' + sum_count_wagon + ')');
                 });
                 this.obj_t_report.columns('.sum_count_account_balance').every(function () {
-                    var sum = this
-                        .data()
-                        .reduce(function (a, b) {
-                            return a + b;
-                        });
-                    $(this.footer()).html(sum);
+                    $(this.footer()).html(sum_count_account_balance_all + '(' + sum_count_account_balance + ')');
                 });
+                break;
+            };
+            case 'adoption_sostav_detali': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_count_account_balance += el.count_account_balance;
+                    });
+                }
+                this.obj_t_report.columns('.sum_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                //this.obj_t_report.columns('.sum_count_account_balance').every(function () {
+                //    $(this.footer()).html(sum_count_account_balance);
+                //});
                 break;
             };
         };

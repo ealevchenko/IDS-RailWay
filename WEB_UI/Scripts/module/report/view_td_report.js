@@ -448,10 +448,8 @@
         // Добавим таблицы отображения
         card_arr.$body
             .append($('<div id="adoption-sostav-all"></div>'))
-            .append($('<div id="adoption-sostav-kr"></div>'))
             .append($('<div id="adoption-sostav-detali"></div>'));
-
-
+        //
         var card_out = new this.fe_ui.bs_card({
             id: null,
             class_card: 'border-secondary mb-1',
@@ -465,7 +463,7 @@
         this.$main_report.append(div_row1.$row).append(div_row2.$row)
 
         // Запускаем 3 процесса инициализации (паралельно)
-        var process = 1;
+        var process = 2;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -473,7 +471,7 @@
                 LockScreenOff();
             }
         }.bind(this);
-
+        //
         this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');             // Создадим экземпляр
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_adop_sostav_all.init({
@@ -490,7 +488,33 @@
             fn_action_view_detali: function (rows) {
 
             },
+            fn_select_rows: function (rows) {
+                if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                } else {
+                    this.table_adop_sostav_detali.view([]);
+                }
+            }.bind(this),
         });
+
+        this.table_adop_sostav_detali = new TTDR('div#adoption-sostav-detali');             // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_adop_sostav_detali.init({
+            alert: null,
+            detali_wagons: false,
+            type_report: 'adoption_sostav_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+
     };
     // Показать отчет  "Статистика"
     view_td_report.prototype.view_report_1_1 = function (start, stop) {
@@ -499,7 +523,6 @@
         this.ids_wsd.getReportAdoptionSostavOfPeriod(start, stop, function (result_sostav) {
             this.adoption_sostav = result_sostav;
             var adoption_sostav = [];
-            var adoption_sostav_kr = [];
 
             this.vs_adoption_sostav = result_sostav.filter(function (i) {
                 return i.id_station_on === 6 || i.id_station_on === 7 || i.id_station_on === 8;
@@ -514,18 +537,17 @@
                 return i.id_station_on === 10;
             });
 
-            adoption_sostav.push(this.get_adoption_sostav('Восточная', this.vs_adoption_sostav));
-            adoption_sostav.push(this.get_adoption_sostav('Промышленная', this.pr_adoption_sostav));
-            adoption_sostav.push(this.get_adoption_sostav('Новобункерная', this.nb_adoption_sostav));
-
-            adoption_sostav_kr.push(this.get_adoption_sostav('Кирова', this.kr_adoption_sostav));
+            adoption_sostav.push(this.get_adoption_sostav('Восточная', this.vs_adoption_sostav, 0));
+            adoption_sostav.push(this.get_adoption_sostav('Промышленная', this.pr_adoption_sostav, 0));
+            adoption_sostav.push(this.get_adoption_sostav('Новобункерная', this.nb_adoption_sostav, 0));
+            adoption_sostav.push(this.get_adoption_sostav('Кирова', this.kr_adoption_sostav, 1));
 
             this.table_adop_sostav_all.view(adoption_sostav);
 
         }.bind(this));
     };
     // Получим строку для отчета
-    view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav) {
+    view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav, type) {
         if (list_sostav === null) return null;
         var count_wagon = 0;
         var count_account_balance = 0;
@@ -533,11 +555,8 @@
             count_wagon += s.count_wagon;
             count_account_balance += s.count_account_balance;
         });
-        return { station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
+        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
     };
-
-
-
     // Открыть отчет
     view_td_report.prototype.view_report_border_crossing = function () {
         $('#sidebar').toggleClass('active');
@@ -821,7 +840,6 @@
                         }
                     ],
                 });
-
             }.bind(this),
         });
     };

@@ -60,3 +60,63 @@ table.dataTable.display tbody tr td a.idle-time-error {
 table.dataTable.display thead tr th.fixed-column {
     background-color: #ffffff;
 }
+
+/*Состав сдан*/
+table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {
+    background-color: #cdffcd;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.green > .sorting_1 {
+    background-color: #a6ffa6;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.green > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.green > .sorting_1 {
+    background-color: #a6ffa6;
+}
+/*Состав сдают*/
+table.dataTable tbody tr:not(.selected).yellow.odd, table.dataTable tbody tr:not(.selected).yellow.even {
+    background-color: #fef9e0;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.yellow > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.yellow > .sorting_1 {
+    background-color: #fdf2ba;
+}
+/*Состав отмена сдачи*/
+table.dataTable tbody tr:not(.selected).red.odd, table.dataTable tbody tr:not(.selected).red.even {
+    background-color: #ffebeb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.red > .sorting_1 {
+    background-color: #ffc4c4;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.red > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.red > .sorting_1 {
+    background-color: #ffc4c4;
+}
+/*Состав отправили*/
+table.dataTable tbody tr:not(.selected).blue.odd, table.dataTable tbody tr:not(.selected).blue.even {
+    background-color: #dfe9fb;
+}
+
+table.dataTable.display tbody tr:not(.selected).odd.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.blue > .sorting_1 {
+    background-color: #cdddf9;
+}
+
+table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.blue > .sorting_1 {
+    background-color: #cdddf9;
+}
+
+td.details-control {
+    background: url('/../Content/DataTables/media/images/details_open.png') no-repeat center center;
+    width: 20px; 
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url('/../Content/DataTables/media/images/details_close.png') no-repeat center center;
+    width: 20px;
+}
