@@ -476,7 +476,7 @@
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_adop_sostav_all.init({
             alert: null,
-            detali_wagons: false,
+            detali_table: false,
             type_report: 'adoption_sostav',     //
             link_num: false,
             ids_wsd: null,
@@ -501,7 +501,7 @@
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_adop_sostav_detali.init({
             alert: null,
-            detali_wagons: false,
+            detali_table: true,
             type_report: 'adoption_sostav_detali',     //
             link_num: false,
             ids_wsd: null,
