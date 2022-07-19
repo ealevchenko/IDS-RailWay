@@ -1163,7 +1163,7 @@
     view_epd.prototype.load_epd_conts = function (otpr, num, cb_load) {
         if (otpr !== null) {
             LockScreen(langView('vepd_mess_load_epd_conts', App.Langs));
-            this.conts = this.epd_uz.get_vagon_cont_epd(this.otpr, num);
+            this.conts = this.epd_uz.get_vagon_cont_epd(otpr, num);
             if (!this.conts) this.conts = [];
             LockScreenOff();
             if (typeof cb_load === 'function') {

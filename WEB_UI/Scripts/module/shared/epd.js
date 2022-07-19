@@ -156,7 +156,7 @@
             }
             // Раздел CONT
             epd.main_doc_conts = this.get_doc_conts(main_otpr, num); // Получим список контейнеров
-            if (epd.cont && epd.cont.nom_vag) {
+            if (epd.cont && epd.cont.length >0 &&  epd.cont[0].nom_vag) {
                 // Указаны контейнеры, уточним груз
                 epd.cargo = this.get_epd_cargo_cont(epd.cont);
             };
@@ -303,8 +303,8 @@
             if (conts) {
                 for (var i = 0; i < conts.length; i++) {
                     var cont = conts[i];
-                    var collect = cont.collect_k && cont.collect_k.length > 0 ? cont.collect_k[0] : null
-                    var zpu = cont.zpu_k && cont.zpu_k.length > 0 ? cont.zpu_k[0] : null
+                    var collect = cont.collect_k ? cont.collect_k : null;
+                    var zpu = cont.zpu_k && cont.zpu_k.length > 0 ? cont.zpu_k[0] : null;
                     var pay = cont.pay_k && cont.pay_k.length > 0 ? cont.zpu_k : [];
                     var pays = [];
                     for (var p = 0; p < pay.length; p++) {
@@ -398,6 +398,7 @@
     };
     // Показать груз и группу ет снг контейнеров вагона
     epd.prototype.get_epd_cargo_cont = function (conts) {
+        var cargo = {};
         if (conts && conts.length > 0) {
             // ! берем груз первого контейнера
             cargo.kod_etsng = conts[0].collect_k.kod_etsng ? Number(conts[0].collect_k.kod_etsng) : null;
@@ -405,24 +406,25 @@
             cargo.kod_gng = conts[0].collect_k.kod_gng ? Number(conts[0].collect_k.kod_gng) : null;
             cargo.name_gng = conts[0].collect_k.name_gng;
             // Уточним количество пас. мест был определен в разделе Vagon
-            if (cargo.kol_pac === null || cargo.kol_pac === 0) {
+            if (!cargo.kol_pac || cargo.kol_pac === 0) {
                 cargo.kol_pac = 0;
                 for (var i = 0; i < conts.length; i++) {
                     cargo.kol_pac += conts[i].collect_k.kol_pac ? Number(conts[i].collect_k.kol_pac) : 0;
                 }
             }
             // Уточним вес груза был определен в разделе Vagon
-            if (cargo.vesg === null || cargo.vesg === 0) {
+            if (!cargo.vesg || cargo.vesg === 0) {
                 cargo.vesg = 0;
                 for (var i = 0; i < conts.length; i++) {
                     cargo.vesg += conts[i].collect_k.vesg ? Number(conts[i].collect_k.vesg) : 0;
                 }
             };
             // Уточним класс опасности был определен в разделе Vagon
-            cargo.danger = cargo.danger ? conts[0].collect_k.danger : cargo.danger; // класс опасности
-            cargo.danger_kod = cargo.danger_kod ? conts[0].collect_k.danger_kod : cargo.danger_kod; // код опасности
-            cargo.pac = cargo.pac ? conts[0].collect_k.pac : cargo.pac; // Код роду упаковки
+            cargo.danger = !cargo.danger ? conts[0].collect_k.danger : cargo.danger; // класс опасности
+            cargo.danger_kod = !cargo.danger_kod ? conts[0].collect_k.danger_kod : cargo.danger_kod; // код опасности
+            cargo.pac = !cargo.pac ? conts[0].collect_k.pac : cargo.pac; // Код роду упаковки
         }
+        return cargo;
     };
 
     App.epd = epd;
