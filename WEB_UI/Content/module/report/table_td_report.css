@@ -2,9 +2,14 @@
 }
 
 /*Уменьшить размер таблицы*/
-.table-report-operation {
+.table-report {
     font-size: 0.8rem;
 }
+
+.table-report-detali {
+    font-size: 0.7rem;
+}
+
 
 table.dataTable tbody td.mw-50 {
     max-width: 50px;
@@ -112,7 +117,7 @@ table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.da
 
 td.details-control {
     background: url('/../Content/DataTables/media/images/details_open.png') no-repeat center center;
-    width: 20px; 
+    width: 20px;
     cursor: pointer;
 }
 
@@ -125,9 +130,17 @@ tr.shown td.details-control {
     border-left: 6px solid #8ae;
     border-top: 1px solid #8ae;
     padding: 10px;
-    font-size: 14px;
+    /*font-size: 14px;*/
     line-height: 1.4;
     background-color: #eee;
     border-radius: 4px;
     text-align: left;
+}
+
+th.details-control, td.details-control {
+    width: 20px !important;
+}
+
+th.button-control, td.button-control {
+    width: 20px !important;
 }

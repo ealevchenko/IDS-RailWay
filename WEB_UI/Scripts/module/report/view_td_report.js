@@ -369,6 +369,7 @@
     // Получить дату отчета
     view_td_report.prototype.set_data_report = function (date, interval) {
         var message_report = '';
+        this.clear_report_1_1();
         switch (this.type) {
             case 1: {
                 if (date) {
@@ -383,7 +384,7 @@
                 if (date) {
                     this.start = moment(date).set({ 'hour': 0, 'minute': 1, 'second': 0 })._d;
                     this.stop = moment(date).set({ 'hour': 23, 'minute': 59, 'second': 0 })._d;
-                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                    message_report = langView('vtdr_title_report_type_2', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
                 }
                 break;
             };
@@ -392,7 +393,7 @@
                 if (date) {
                     this.start = moment(date).set({ 'date': 1, 'hour': 0, 'minute': 1, 'second': 0 })._d;
                     this.stop = moment(date)._d;
-                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                    message_report = langView('vtdr_title_report_type_3', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
                 }
                 break;
             };
@@ -400,7 +401,7 @@
                 if (interval && interval.start && interval.stop) {
                     this.start = moment(interval.start)._d;
                     this.stop = moment(interval.stop)._d;
-                    message_report = langView('vtdr_title_report_type_1', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                    message_report = langView('vtdr_title_report_type_4', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
                 }
                 break;
             };
@@ -445,6 +446,50 @@
             class_body: 'text-center',
             title_header: langView('vtdr_card_header_report_1_1_arr', App.Langs),
         });
+        //<ul class="nav nav-tabs card-header-tabs">
+        //    <li class="nav-item">
+        //        <a class="nav-link active" href="#">Active</a>
+        //    </li>
+        //    <li class="nav-item">
+        //        <a class="nav-link" href="#">Link</a>
+        //    </li>
+        //    <li class="nav-item">
+        //        <a class="nav-link disabled">Disabled</a>
+        //    </li>
+        //</ul>
+        //var $ul = $('<ul class="nav nav-tabs card-header-tabs"><li class="nav-item"><a class="nav-link active" href="#">Active</a></li><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>');
+        var $ul_card_arr = $('<ul class="nav nav-tabs card-header-tabs"></ul>');
+        var $li_card_arr_1 = $('<li class="nav-item"></li>');
+        var $li_card_arr_2 = $('<li class="nav-item"></li>');
+        var a_link_card_arr_1 = new this.fe_ui.a({
+            id: null,
+            class: 'nav-link active',
+            href: '#',
+            text: 'Отчет',
+            target: null,
+            title: null,
+        });
+        a_link_card_arr_1.$alink.attr("data-toggle", "tab-card-arr");
+        a_link_card_arr_1.$alink.on("click", function (event) {
+            event.preventDefault();
+            /*            this.view_report();*/
+        }.bind(this));
+        var a_link_card_arr_2 = new this.fe_ui.a({
+            id: null,
+            class: 'nav-link',
+            href: '#',
+            text: 'Поиск',
+            target: null,
+            title: null,
+        });
+        a_link_card_arr_2.$alink.attr("data-toggle", "tab-card-arr");
+        a_link_card_arr_2.$alink.on("click", function (event) {
+            event.preventDefault();
+            /*            this.view_report();*/
+        }.bind(this))
+        //
+        $ul_card_arr.append($li_card_arr_1.append(a_link_card_arr_1.$alink)).append($li_card_arr_2.append(a_link_card_arr_2.$alink))
+        card_arr.$header.append($ul_card_arr);
         // Добавим таблицы отображения
         card_arr.$body
             .append($('<div id="adoption-sostav-all"></div>'))
@@ -467,7 +512,11 @@
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
-                // Загрузим составы
+                // 
+                $('a[data-toggle="tab-card-arr"]').on('shown.bs.tab', function (event) {
+                    event.target // newly activated tab
+                    event.relatedTarget // previous active tab
+                });
                 LockScreenOff();
             }
         }.bind(this);
@@ -514,12 +563,10 @@
 
             },
         });
-
     };
     // Показать отчет  "Статистика"
     view_td_report.prototype.view_report_1_1 = function (start, stop) {
-        //getReportAdoptionSostavOfPeriod
-        langView('vtdr_load_adoption_sostav', App.Langs);
+        LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
         this.ids_wsd.getReportAdoptionSostavOfPeriod(start, stop, function (result_sostav) {
             this.adoption_sostav = result_sostav;
             var adoption_sostav = [];
@@ -557,318 +604,13 @@
         });
         return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
     };
-    // Открыть отчет
-    view_td_report.prototype.view_report_border_crossing = function () {
-        $('#sidebar').toggleClass('active');
-        this.$title_report.text(langView('vtdr_title_report_1', App.Langs));
-        // Очистим старую форму
-        this.$main_report.empty();
-        this.elements = {}; // Все элементы формы
-        if (this.form) {
-            this.form.destroy();
-            this.form = null;
-        }
-        // Очистить таблицы
-        if (this.obj_t_report) {
-            this.obj_t_report.destroy(true);
-            this.obj_t_report = null;
-        }
-        // Создадим форму поиска вагонов через погран переход
-        var FDL = App.form_dialog;
-        this.form = new FDL();
-        // Создать макет панели
-        var objs = [];
-        // Форма детально
-        var row_input = {
-            obj: 'bs_row',
-            options: {
-                class: null,
-            },
-            childs: []
-        };
-        var bt_search_car = {
-            obj: 'bs_button',
-            options: {
-                color: 'warning',
-                size: 'sm',
-                class: null,
-                id: 'search_car',
-                label: null,
-                title: langView('vtdr_title_search_cars', App.Langs),
-                icon_left: null,
-                icon_right: 'fas fa-search',
-                click: function (event) {
-                    event.preventDefault();
-                    this.action_search_border_crossing();
-                }.bind(this),
-            }
-        };
-        var form_textarea_list_nums = {
-            obj: 'bs_textarea',
-            options: {
-                id: 'list_nums',
-                validation_group: 'common',
-                form_group_size: 'xl',
-                form_group_col: 12,
-                form_group_class: 'text-left',
-                label: langView('vtdr_label_list_nums', App.Langs),
-                label_class: 'mb-1',
-                textarea_size: null,
-                textarea_rows: 5,
-                textarea_class: 'inp-manual',
-                textarea_title: langView('vtdr_title_list_nums', App.Langs),
-                textarea_maxlength: null,
-                textarea_placeholder: langView('vtdr_placeholder_list_nums', App.Langs),
-                textarea_required: null,
-                textarea_readonly: false,
-                input_group: true,
-                input_group_prepend_class: null,
-                input_group_prepend_objs: [],
-                input_group_append_class: null,
-                input_group_append_objs: [bt_search_car],
-            },
-            childs: []
-        };
-        var row_input1 = {
-            obj: 'bs_row',
-            options: {
-                class: null,
-            },
-            childs: []
-        };
-        var form_div_result = {
-            obj: 'div',
-            options: {
-                id: 'result-report',
-                class: 'col-md-12 table-report-operation',
-            },
-            childs: []
-        };
-        //
-        row_input.childs.push(form_textarea_list_nums);
-        row_input1.childs.push(form_div_result);
-        objs.push(row_input);
-        objs.push(row_input1);
-        // Инициализируем форму
-        this.form.init({
-            alert: this.alert,
-            objs: objs,
-            mb: 2,
-            id: null,
-            cl_form: null,
-            validation: true,
-            fn_validation: function (result) {
-                // Валидация успешна
-                if (result && result.valid) {
-
-                }
-            }.bind(this),
-            fn_html_init: function () {
-                // HTML документы созданы
-
-            }.bind(this),
-            fn_init: function (init) {
-                // Инициализация формы закончена
-                // создадим элементы и привяжем их к сылке this.elements (получить данные к элементам можно будет через эту переменую)
-                this.form.create_element(this.elements, true);
-                // отобразим форму
-                this.$main_report.append(this.form.$form);
-                // Создадим и добавим макет таблицы
-                var table = new this.fe_ui.table({
-                    id: 'table-report-sd',
-                    class: 'display compact cell-border row-border hover',
-                    title: null,
-                });
-                this.$table = table.$table;
-                $('div#result-report').append(this.$table);
-                //this.$div_out.addClass(this.settings.div_class).append(this.this.$table);
-                // Инициализируем таблицу
-                this.obj_t_report = this.$table.DataTable({
-                    "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('vtdr_title_all', App.Langs)]],
-                    "pageLength": -1,
-                    "deferRender": true,
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "keys": true,
-                    select: false,
-                    "autoWidth": false,
-                    //"filter": true,
-                    //"scrollY": "600px",
-                    sScrollX: "100%",
-                    scrollX: true,
-                    //"responsive": true,
-                    //"bAutoWidth": false,
-                    language: language_table(App.Langs),
-                    jQueryUI: false,
-                    "createdRow": function (row, data, index) {
-
-                    }.bind(this),
-                    columns: [
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.num;
-                            },
-                            className: 'dt-body-center',
-                            title: langView('vtdr_field_border_crossing_num', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.status !== null ? outStatusOutgoingSostav(row.status) : '';
-                            },
-                            className: 'dt-body-left',
-                            title: langView('vtdr_field_border_crossing_status', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.date_departure_amkr ? moment(row.date_departure_amkr).format(format_datetime) : null;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_date_departure_amkr', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.border_crossing_stn;
-                            },
-                            className: 'dt-body-center',
-                            title: langView('vtdr_field_border_crossing_border_crossing_stn', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.border_crossing_stn_name;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_border_crossing_stn_name', App.Langs), width: "100px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.cross_time ? moment(row.cross_time).format(format_datetime) : null;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_cross_time', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.client_kod_on;
-                            },
-                            className: 'dt-body-center',
-                            title: langView('vtdr_field_border_crossing_client_kod_on', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.client_name_on;
-                            },
-                            className: 'dt-body-left shorten mw-300',
-                            title: langView('vtdr_field_border_crossing_client_name_on', App.Langs), width: "300px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.vesg !== null ? Number(Number(row.vesg) / 1000).toFixed(3) : '';
-                            },
-                            className: 'dt-body-right',
-                            title: langView('vtdr_field_border_crossing_vesg', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.epd_status !== null ? get_status_epd(row.epd_status) : '';
-                            },
-                            className: 'dt-body-left',
-                            title: langView('vtdr_field_border_crossing_epd_status', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.epd_date_otpr ? moment(row.epd_date_otpr).format(format_datetime) : null;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_epd_date_otpr', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.epd_date_pr ? moment(row.epd_date_pr).format(format_datetime) : null;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_epd_date_pr', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.num_doc;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_epd_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.revision;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_epd_revision', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                        {
-                            data: function (row, type, val, meta) {
-                                return row.num_uz;
-                            },
-                            className: 'dt-body-nowrap',
-                            title: langView('vtdr_field_border_crossing_epd_num_uz', App.Langs), width: "50px", orderable: true, searchable: true
-                        },
-                    ],
-                    dom: 'Bfrtip',
-                    stateSave: false,
-                    buttons: [
-                        {
-                            extend: 'collection',
-                            text: langView('vtdr_title_button_export', App.Langs),
-                            buttons: [
-                                {
-                                    text: langView('vtdr_title_button_buffer', App.Langs),
-                                    extend: 'copyHtml5',
-                                },
-                                {
-                                    text: langView('vtdr_title_button_excel', App.Langs),
-                                    extend: 'excelHtml5',
-                                    sheetName: langView('vtdr_title_excel_sheet_name', App.Langs),
-                                    messageTop: function () {
-                                        return '';
-                                    }
-                                },
-                            ],
-                            autoClose: true
-                        },
-                        {
-                            button: 'page_length',
-                            extend: 'pageLength',
-                        }
-                    ],
-                });
-            }.bind(this),
-        });
+    // 
+    view_td_report.prototype.clear_report_1_1 = function () {
+        if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
+        if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
     };
-    // Выполнить поиск
-    view_td_report.prototype.action_search_border_crossing = function () {
-        this.out_clear();
-        this.elements.button_search_car.prop("disabled", true); // сделаем не активной
-        var list_cars = this.elements.textarea_list_nums.val();
-        var nums = is_valid_nums(list_cars, this.alert, true);
-        if (nums) {
-            LockScreen(langView('vtdr_mess_operation_run', App.Langs));
-            this.ids_wsd.postReportBorderCrossingOfNums(nums, function (result) {
-                if (result !== null) {
-                    if (this.obj_t_report) {
-                        this.obj_t_report.clear();
-                        this.obj_t_report.rows.add(result);
-                        this.obj_t_report.draw();
-                    }
-                } else {
-                    this.mf_edit.out_warning(langView('vtdr_mess_error_search_cars', App.Langs).format(result.result));
-                }
-                this.elements.button_search_car.prop("disabled", false); // сделаем активной
-                LockScreenOff();
-            }.bind(this));
-        } else {
-            this.elements.button_search_car.prop("disabled", false); // сделаем активной
-        };
-    };
-    //
+
+    //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()
@@ -895,14 +637,14 @@
     //------------------------------------------------------------------
     // Очистить объект
     view_td_report.prototype.destroy = function () {
-        if (this.form) {
-            this.form.destroy();
-            this.form = null;
+        if (this.table_adop_sostav_all) {
+            this.table_adop_sostav_all.destroy();
+            this.table_adop_sostav_all = null;
         }
         // Очистить таблицы
-        if (this.obj_t_report) {
-            this.obj_t_report.destroy(true);
-            this.obj_t_report = null;
+        if (this.table_adop_sostav_detali) {
+            this.table_adop_sostav_detali.destroy();
+            this.table_adop_sostav_detali = null;
         }
     };
 
