@@ -421,6 +421,7 @@
     // Отчеты
     // Инициализировать отчет "Статистика"
     view_td_report.prototype.init_report_1_1 = function () {
+        this.$main_report.empty();
         this.report = 1;
         $('#sidebar').toggleClass('active');
         this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(''));
@@ -458,42 +459,56 @@
         //    </li>
         //</ul>
         //var $ul = $('<ul class="nav nav-tabs card-header-tabs"><li class="nav-item"><a class="nav-link active" href="#">Active</a></li><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>');
-        var $ul_card_arr = $('<ul class="nav nav-tabs card-header-tabs"></ul>');
-        var $li_card_arr_1 = $('<li class="nav-item"></li>');
-        var $li_card_arr_2 = $('<li class="nav-item"></li>');
+        var $ul_card_arr = $('<ul class="nav nav-tabs card-header-tabs" id="tab-arr" role="tablist"></ul>');
+        var $li_card_arr_1 = $('<li class="nav-item" role="presentation"></li>');
+        var $li_card_arr_2 = $('<li class="nav-item" role="presentation"></li>');
         var a_link_card_arr_1 = new this.fe_ui.a({
-            id: null,
+            id: 'arr-report-tab',
             class: 'nav-link active',
             href: '#',
             text: 'Отчет',
             target: null,
             title: null,
         });
-        a_link_card_arr_1.$alink.attr("data-toggle", "tab-card-arr");
+        a_link_card_arr_1.$alink.attr("data-toggle", "tab");
+        a_link_card_arr_1.$alink.attr("data-target", "#arr-report");
+        a_link_card_arr_1.$alink.attr("type", "button");
+        a_link_card_arr_1.$alink.attr("role", "tab");
+        a_link_card_arr_1.$alink.attr("aria-controls", "arr-report");
+        a_link_card_arr_1.$alink.attr("aria-selected", "true");
         a_link_card_arr_1.$alink.on("click", function (event) {
             event.preventDefault();
-            /*            this.view_report();*/
+            //this.view_report();
         }.bind(this));
         var a_link_card_arr_2 = new this.fe_ui.a({
-            id: null,
+            id: 'arr-searsh-tab',
             class: 'nav-link',
             href: '#',
             text: 'Поиск',
             target: null,
             title: null,
         });
-        a_link_card_arr_2.$alink.attr("data-toggle", "tab-card-arr");
+        a_link_card_arr_2.$alink.attr("data-toggle", "tab");
+        a_link_card_arr_2.$alink.attr("data-target", "#arr-searsh");
+        a_link_card_arr_2.$alink.attr("type", "button");
+        a_link_card_arr_2.$alink.attr("role", "tab");
+        a_link_card_arr_2.$alink.attr("aria-controls", "arr-searsh");
+        a_link_card_arr_2.$alink.attr("aria-selected", "false");
         a_link_card_arr_2.$alink.on("click", function (event) {
             event.preventDefault();
-            /*            this.view_report();*/
-        }.bind(this))
+            //this.view_report();
+        }.bind(this));
         //
         $ul_card_arr.append($li_card_arr_1.append(a_link_card_arr_1.$alink)).append($li_card_arr_2.append(a_link_card_arr_2.$alink))
         card_arr.$header.append($ul_card_arr);
+        // Добавим <!-- Tab panes -->
+        var $tab_content_arr = $('<div class="tab-content"></div>');
+        var $tab_panel_arr_report = $('<div class="tab-pane active" id="arr-report" role="tabpanel" aria-labelledby="arr-report-tab"></div>');
+        $tab_panel_arr_report.append($('<div id="adoption-sostav-all"></div>')).append($('<div id="adoption-sostav-detali"></div>'));
+        var $tab_panel_arr_searsh = $('<div class="tab-pane" id="arr-searsh" role="tabpanel" aria-labelledby="arr-searsh-tab"></div>');
+        $tab_content_arr.append($tab_panel_arr_report).append($tab_panel_arr_searsh);
         // Добавим таблицы отображения
-        card_arr.$body
-            .append($('<div id="adoption-sostav-all"></div>'))
-            .append($('<div id="adoption-sostav-detali"></div>'));
+        card_arr.$body.append($tab_content_arr);
         //
         var card_out = new this.fe_ui.bs_card({
             id: null,
@@ -513,10 +528,21 @@
         var out_init = function (process) {
             if (process === 0) {
                 // 
-                $('a[data-toggle="tab-card-arr"]').on('shown.bs.tab', function (event) {
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    switch (event.target.id) {
+                        case 'arr-report-tab': {
+                            this.form_panel.$form.addClass('d-flex').show();
+                            break;
+                        };
+                        case 'arr-searsh-tab': {
+                            this.form_panel.$form.removeClass('d-flex').hide();
+                            break;
+                        };
+                    };
+
                     event.target // newly activated tab
                     event.relatedTarget // previous active tab
-                });
+                }.bind(this));
                 LockScreenOff();
             }
         }.bind(this);
