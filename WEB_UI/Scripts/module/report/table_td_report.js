@@ -25,6 +25,7 @@
             'ttdr_field_adoption_sostav_detali_num_doc': '№ ведомости',
             'ttdr_field_adoption_sostav_detali_date_adoption': 'Дата приема',
             'ttdr_field_adoption_sostav_detali_count_wagon': 'кол-во',
+            'ttdr_field_adoption_sostav_detali_count_account_balance': 'Уч. ваг.',
 
             //'ttdr_field_sostav_naturka_position_arrival': '№',
             //'ttdr_field_sostav_naturka_station_from_name': 'Станция отправления',
@@ -50,11 +51,11 @@
             'ttdr_field_sostav_naturka_uz_vagon_owner_wagon': 'Собственник',
             'ttdr_field_sostav_naturka_uz_vagon_owner_wagon_abbr': 'Собственник',
             'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_id_operator': 'id Опер. по отправке',
-            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operators': 'Оператор по отправке',
-            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operator_abbr': 'Оператор по отправке',
-            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_start': 'Опер. по отпр. нач. аренды',
-            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_end': 'Опер. по отпр. кон. аренды',
-            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. по отпр. платный',
+            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operators': 'Оператор по АМКР',
+            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operator_abbr': 'Оператор по АМКР',
+            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_start': 'Опер. по АМКР. нач. аренды',
+            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_end': 'Опер. по АМКР. кон. аренды',
+            'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. по АМКР. платный',
             'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран. по отправке',
             'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. по отправке',
             'ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. по отправке',
@@ -196,6 +197,14 @@
             },
             className: 'dt-body-center sum_count_wagon',
             title: langView('ttdr_field_adoption_sostav_detali_count_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'adoption_sostav_detali_count_account_balance',
+            data: function (row, type, val, meta) {
+                return row.count_account_balance;
+            },
+            className: 'dt-body-center sum_count_account_balance',
+            title: langView('ttdr_field_adoption_sostav_detali_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
         },
         // 
         //{
@@ -781,6 +790,7 @@
         collums.push({ field: 'adoption_sostav_detali_num_doc', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_date_adoption', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_wagon', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_count_account_balance', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей sostav_naturka
@@ -1020,7 +1030,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_sostav_detali') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
@@ -1221,9 +1231,9 @@
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                //this.obj_t_report.columns('.sum_count_account_balance').every(function () {
-                //    $(this.footer()).html(sum_count_account_balance);
-                //});
+                this.obj_t_report.columns('.sum_count_account_balance').every(function () {
+                    $(this.footer()).html(sum_count_account_balance);
+                });
                 break;
             };
         };

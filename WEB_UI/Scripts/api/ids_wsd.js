@@ -2103,6 +2103,29 @@
             },
         });
     };
+    //Получить принятые составы 
+    ids_wsd.prototype.getReportAdoptionSostavOfDocs = function (docs, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_sostav/report/adoption_sostav/docs/' + docs,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportAdoptionSostavOfDocs", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

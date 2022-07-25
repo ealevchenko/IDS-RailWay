@@ -44,7 +44,7 @@
             'vtdr_label_list_nums': 'Добавьте номера вагонов (разделитель “;”) по которым необходимо провести поиск:',
             'vtdr_title_list_nums': 'Добавте номера вагонов',
             'vtdr_placeholder_list_nums': '00000001;00000002;00000003',
-            'vtdr_mess_operation_run': 'Выполняю операцию...',
+
             'vtdr_title_all': 'Все',
             'vtdr_title_button_export': 'Экспорт',
             'vtdr_title_button_buffer': 'Буфер',
@@ -67,8 +67,10 @@
             'vtdr_field_border_crossing_epd_revision': '№ ревизии (ЭПД)',
             'vtdr_field_border_crossing_epd_num_uz': '№ накладной (ЭПД)',
 
-            'vtdr_mess_error_search_cars': 'При формировании отчета произошла ошибка, код ошибки {0}',
+            'vtdr_mess_operation_run': 'Выполняю операцию поиска принятых составов ...',
 
+            'vtdr_mess_error_search_cars': 'При формировании отчета произошла ошибка, код ошибки {0}',
+            'vtdr_mess_error_search_docs': 'При формировании отчета произошла ошибка, код ошибки {0}',
         },
         'en':  //default language: English
         {
@@ -447,68 +449,101 @@
             class_body: 'text-center',
             title_header: langView('vtdr_card_header_report_1_1_arr', App.Langs),
         });
-        //<ul class="nav nav-tabs card-header-tabs">
-        //    <li class="nav-item">
-        //        <a class="nav-link active" href="#">Active</a>
-        //    </li>
-        //    <li class="nav-item">
-        //        <a class="nav-link" href="#">Link</a>
-        //    </li>
-        //    <li class="nav-item">
-        //        <a class="nav-link disabled">Disabled</a>
-        //    </li>
-        //</ul>
-        //var $ul = $('<ul class="nav nav-tabs card-header-tabs"><li class="nav-item"><a class="nav-link active" href="#">Active</a></li><li class="nav-item"><a class="nav-link" href="#">Link</a></li></ul>');
-        var $ul_card_arr = $('<ul class="nav nav-tabs card-header-tabs" id="tab-arr" role="tablist"></ul>');
-        var $li_card_arr_1 = $('<li class="nav-item" role="presentation"></li>');
-        var $li_card_arr_2 = $('<li class="nav-item" role="presentation"></li>');
-        var a_link_card_arr_1 = new this.fe_ui.a({
-            id: 'arr-report-tab',
-            class: 'nav-link active',
-            href: '#',
-            text: 'Отчет',
-            target: null,
-            title: null,
+        var nav_tabs = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-arr',
+            class_nav: null,
+            id_content: 'tab-arr-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'arr-report',
+                    aria_controls: 'arr-report-tab',
+                    label: 'Отчет',
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'arr-searsh',
+                    aria_controls: 'arr-searsh-tab',
+                    label: 'Поиск',
+                    disable: false,
+                    click: null,
+                },
+            ],
         });
-        a_link_card_arr_1.$alink.attr("data-toggle", "tab");
-        a_link_card_arr_1.$alink.attr("data-target", "#arr-report");
-        a_link_card_arr_1.$alink.attr("type", "button");
-        a_link_card_arr_1.$alink.attr("role", "tab");
-        a_link_card_arr_1.$alink.attr("aria-controls", "arr-report");
-        a_link_card_arr_1.$alink.attr("aria-selected", "true");
-        a_link_card_arr_1.$alink.on("click", function (event) {
-            event.preventDefault();
-            //this.view_report();
-        }.bind(this));
-        var a_link_card_arr_2 = new this.fe_ui.a({
-            id: 'arr-searsh-tab',
-            class: 'nav-link',
-            href: '#',
-            text: 'Поиск',
-            target: null,
-            title: null,
+
+        var $arr_report = nav_tabs.$content.find('div#arr-report-tab');
+        $arr_report.append($('<div id="adoption-sostav-all"></div>')).append($('<div id="adoption-sostav-detali"></div>'));
+
+        var $arr_searsh = nav_tabs.$content.find('div#arr-searsh-tab');
+        //----------------------------------
+        // Создать макет панели для поиска
+        var row1 = new this.fe_ui.bs_row({
+            class: null,
+            id: null,
         });
-        a_link_card_arr_2.$alink.attr("data-toggle", "tab");
-        a_link_card_arr_2.$alink.attr("data-target", "#arr-searsh");
-        a_link_card_arr_2.$alink.attr("type", "button");
-        a_link_card_arr_2.$alink.attr("role", "tab");
-        a_link_card_arr_2.$alink.attr("aria-controls", "arr-searsh");
-        a_link_card_arr_2.$alink.attr("aria-selected", "false");
-        a_link_card_arr_2.$alink.on("click", function (event) {
-            event.preventDefault();
-            //this.view_report();
-        }.bind(this));
+        var button = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: null,
+            id: 'search_car',
+            label: null,
+            title: '',
+            icon_left: null,
+            icon_right: 'fas fa-search',
+            click: function (event) {
+                event.preventDefault();
+                this.action_search_adoption_docs();
+            }.bind(this),
+        });
+        var textarea = new this.fe_ui.bs_textarea({
+            id: 'list_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: '№№ Ведомостей',
+            label_class: 'mb-1',
+            textarea_size: null,
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: '№№ Ведомостей',
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxx;xxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+            input_group: true,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: [],
+            input_group_append_class: null,
+            input_group_append_objs: [],
+            input_group_obj_form: null,
+        });
+        var iga = textarea.$element.find('div.input-group-append');
+        iga.append(button.$button);
+        row1.$row.append(textarea.$element);
+        var row2 = new this.fe_ui.bs_row({
+            class: null,
+            id: null,
+        });
+        var col2 = new this.fe_ui.bs_col({
+            id: null,
+            size: 'xl',
+            col: 12,
+            class: null,
+        });
+        var div_table_searsh_docs = new this.fe_ui.div({
+            class: null,
+            id: 'adoption-searsh-docs',
+        });
+        this.$bt_search_car = button.$button;
+        this.element_textarea_docs = textarea.element;
         //
-        $ul_card_arr.append($li_card_arr_1.append(a_link_card_arr_1.$alink)).append($li_card_arr_2.append(a_link_card_arr_2.$alink))
-        card_arr.$header.append($ul_card_arr);
-        // Добавим <!-- Tab panes -->
-        var $tab_content_arr = $('<div class="tab-content"></div>');
-        var $tab_panel_arr_report = $('<div class="tab-pane active" id="arr-report" role="tabpanel" aria-labelledby="arr-report-tab"></div>');
-        $tab_panel_arr_report.append($('<div id="adoption-sostav-all"></div>')).append($('<div id="adoption-sostav-detali"></div>'));
-        var $tab_panel_arr_searsh = $('<div class="tab-pane" id="arr-searsh" role="tabpanel" aria-labelledby="arr-searsh-tab"></div>');
-        $tab_content_arr.append($tab_panel_arr_report).append($tab_panel_arr_searsh);
-        // Добавим таблицы отображения
-        card_arr.$body.append($tab_content_arr);
+        $arr_searsh.append(row1.$row).append(row2.$row.append(col2.$col.append(div_table_searsh_docs.$div)));
+
+
+        card_arr.$header.append(nav_tabs.$ul);
+        card_arr.$body.append(nav_tabs.$content);
         //
         var card_out = new this.fe_ui.bs_card({
             id: null,
@@ -523,31 +558,31 @@
         this.$main_report.append(div_row1.$row).append(div_row2.$row)
 
         // Запускаем 3 процесса инициализации (паралельно)
-        var process = 2;
+        var process = 3;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
                 // 
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                     switch (event.target.id) {
-                        case 'arr-report-tab': {
+                        case 'arr-report': {
                             this.form_panel.$form.addClass('d-flex').show();
                             break;
                         };
-                        case 'arr-searsh-tab': {
+                        case 'arr-searsh': {
                             this.form_panel.$form.removeClass('d-flex').hide();
                             break;
                         };
                     };
-
-                    event.target // newly activated tab
-                    event.relatedTarget // previous active tab
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    //event.target // newly activated tab
+                    //event.relatedTarget // previous active tab
                 }.bind(this));
                 LockScreenOff();
             }
         }.bind(this);
         //
-        this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');             // Создадим экземпляр
+        this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');               // Создадим экземпляр
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_adop_sostav_all.init({
             alert: null,
@@ -572,7 +607,7 @@
             }.bind(this),
         });
 
-        this.table_adop_sostav_detali = new TTDR('div#adoption-sostav-detali');             // Создадим экземпляр
+        this.table_adop_sostav_detali = new TTDR('div#adoption-sostav-detali');         // Создадим экземпляр
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_adop_sostav_detali.init({
             alert: null,
@@ -588,6 +623,31 @@
             fn_action_view_detali: function (rows) {
 
             },
+        });
+
+        this.table_adop_searsh_docs = new TTDR('div#adoption-searsh-docs');              // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_adop_searsh_docs.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_sostav_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+            fn_select_rows: function (rows) {
+                //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                //} else {
+                //    this.table_adop_sostav_detali.view([]);
+                //}
+            }.bind(this),
         });
     };
     // Показать отчет  "Статистика"
@@ -635,6 +695,27 @@
         if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
         if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
     };
+    // Поиск по номеру документа
+    view_td_report.prototype.action_search_adoption_docs = function () {
+        this.out_clear();
+        this.$bt_search_car.prop("disabled", true); // сделаем не активной
+        var list_docs = this.element_textarea_docs.val();
+        var nums = is_valid_docs(list_docs, this.alert);
+        if (nums) {
+            LockScreen(langView('vtdr_mess_operation_run', App.Langs));
+            this.ids_wsd.getReportAdoptionSostavOfDocs(nums, function (result) {
+                if (result !== null) {
+                    this.table_adop_searsh_docs.view(result);
+                } else {
+                    this.mf_edit.out_warning(langView('vtdr_mess_error_search_docs', App.Langs).format(result.result));
+                }
+                this.$bt_search_car.prop("disabled", false); // сделаем активной
+                LockScreenOff();
+            }.bind(this));
+        } else {
+            this.$bt_search_car.prop("disabled", false); // сделаем активной
+        };
+    }
 
     //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {

@@ -3391,6 +3391,79 @@
             }.bind(this));
         }
     };
+    //<ul class="nav nav-tabs" id="myTab" role="tablist">
+    //  <li class="nav-item">
+    //    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+    //  </li>
+    //  <li class="nav-item">
+    //    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+    //  </li>
+    //  <li class="nav-item">
+    //    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+    //  </li>
+    //</ul>
+    //<div class="tab-content" id="myTabContent">
+    //  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+    //  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+    //  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+    //</div>
+    form_element.prototype.bs_nav_tabs = function (options) {
+        this.settings = $.extend({
+            id_nav: 'myTab',
+            class_nav: null,
+            id_content: 'myTabContent',
+            class_content: null,
+            list_link: null,
+        }, options);
+        this.fe = new form_element();
+        // UL
+        this.$ul = $('<ul class="nav nav-tabs"></ul>');
+        add_id(this.$ul, this.settings.id_nav);
+        add_class(this.$ul, this.settings.class_nav);
+        add_tag(this.$ul, 'role', 'tablist');
+        // div
+        var div_content = new this.fe.div({ class: 'tab-content', id: this.settings.id_content });
+        this.$content = div_content.$div;
+        add_class(this.$content, this.settings.class_content);
+
+        if (this.settings.list_link && this.settings.list_link.length > 0) {
+            $.each(this.settings.list_link, function (i, el) {
+                var $li = $('<li class="nav-item"></li>');
+                //<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                var a_link = new this.fe.a({
+                    id: el.id,
+                    class: 'nav-link',
+                    href: '#' + el.aria_controls,
+                    text: el.label,
+                    target: null,
+                    title: null,
+                });
+
+                add_tag(a_link.$alink, 'data-toggle', 'tab');
+                add_tag(a_link.$alink, 'role', 'tab');
+                add_tag(a_link.$alink, 'aria-controls', el.aria_controls);
+                add_class(a_link.$alink, el.disable ? 'disabled' : '');
+                if (typeof el.click === 'function') {
+                    a_link.$alink.on("click", el.click);
+                }
+
+                //<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                var div_tab = new this.fe.div({ class: 'tab-pane fade', id: el.aria_controls });
+                add_tag(div_tab.$div, 'role', 'tabpanel');
+                add_tag(div_tab.$div, 'aria-labelledby', el.id);
+                if (i === 0) {
+                    add_class(a_link.$alink, 'active');
+                    add_class(div_tab.$div, 'show active');
+                    add_tag(a_link.$alink, 'aria-selected', 'true');
+                } else {
+                    add_tag(a_link.$alink, 'aria-selected', 'false');
+                }
+                this.$ul.append($li.append(a_link.$alink));
+                this.$content.append(div_tab.$div);
+            }.bind(this));
+        }
+    };
+
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {
         this.settings = $.extend({

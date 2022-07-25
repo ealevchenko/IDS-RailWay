@@ -308,6 +308,29 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        /// <summary>
+        /// Получить информацию по принятым составам  (Отчет ТД - Статистика)
+        /// </summary>
+        /// <param name="docs"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/arrival_sostav/report/adoption_sostav/docs/
+        [Route("report/adoption_sostav/docs/{docs}")]
+        [ResponseType(typeof(ViewReportAdoptionSostav))]
+        public IHttpActionResult GetReportAdoptionSostavOfDocs(String docs)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_adoption_sostav_of_docs]() where num_doc IN(" + docs + ")";
+                List<ViewReportAdoptionSostav> sostav = this.ef_ids.Database.SqlQuery<ViewReportAdoptionSostav>(sql).ToList();
+                return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // POST api/ids/rwt/arrival_sostav/
         [HttpPost]
         [Route("")]

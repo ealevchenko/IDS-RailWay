@@ -20,6 +20,12 @@ $.Text_Common =
         'mess_error_input_num_cars2': 'Ошибка ввода, номер позиции :{0}, не системная нумерация (ошибка контрольной суммы) :{1}',
         'mess_error_input_num_cars_duble': 'Ошибка ввода, введеный номер :{0} - повторяется!',
 
+        'mess_error_not_docs': 'Введите номер документа или несколько документов, разделитель номеров ";"',
+        'mess_error_input_num_docs': 'Ошибка ввода, номер позиции :{0}, введен неправильный номер :{1}',
+        'mess_error_input_num_docs1': 'Ошибка ввода, номер позиции :{0}, номер не может быть меньше или равен 0 :{1}',
+        'mess_error_input_num_docs_duble': 'Ошибка ввода, введеный номер :{0} - повторяется!',
+
+
         'epd_status_unknown': 'Статус невідомий',
         'epd_status_draft': 'Чернетка',
         'epd_status_sending': 'Документ передається товарному касиру',
@@ -1296,7 +1302,62 @@ var is_valid_nums = function (nums, alert, valid_sys_numbering) {
     });
     return valid ? car_out : null;
 }
+// Проверка списка документов
+var is_valid_docs = function (nums, alert, valid_sys_numbering) {
+    // Проверим список вагонов
+    if (!nums || nums === null) {
+        alert.out_warning_message(langView('mess_error_not_docs', App.Langs));
+        return null;
+    }
+    var isNumeric = function (value) {
+        return /^\d+$/.test(value);
+    };
+    // Провкерка на правильный ввод номеров
+    var valid = true;
+    var car_valid = [];
+    var car_out = [];
+    var cars = nums.split(';');
 
+    $.each(cars, function (i, el) {
+        if (!isNumeric($.trim(el))) {
+            alert.out_warning_message(langView('mess_error_input_num_docs', App.Langs).format((i + 1), el));
+            valid = false;
+        } else {
+            if (Number($.trim(el)) <= 0) {
+                alert.out_warning_message(langView('mess_error_input_num_docs1', App.Langs).format((i + 1), el));
+                valid = false;
+            } else {
+                // Разрешена проверка системной нумерации
+                // добавим в список
+                car_valid.push(Number($.trim(el)));
+                car_out.push(Number($.trim(el)));
+            }
+        }
+    });
+    // Провкерка на повторяющиеся номера
+    arr_res = [];
+    car_valid.sort();
+    for (var i = 1; i < car_valid.length; i++) {
+        if (car_valid[i] === car_valid[i - 1]) {
+            var is_unique = true;
+            for (var k = 0; k < arr_res.length; k++) {
+                if (arr_res[k] === car_valid[i]) {
+                    is_unique = false;
+                    break;
+                }
+            }
+            if (is_unique) {
+                arr_res.push(car_valid[i]);
+            }
+        }
+    }
+    // Вывод сообщений повторяющихся номеров
+    $.each(arr_res, function (i, el) {
+        alert.out_warning_message(langView('mess_error_input_num_docs_duble', App.Langs).format(el));
+        valid = false;
+    });
+    return valid ? car_out : null;
+}
 // Вернуть режим
 var outOperation = function (i) {
     if (i === null) return null;
