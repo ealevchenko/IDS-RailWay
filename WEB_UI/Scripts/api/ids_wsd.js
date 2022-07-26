@@ -2126,6 +2126,30 @@
             },
         });
     };
+    //Получить сданные-отправленые составы за период
+    ids_wsd.prototype.getReportOutgoingSostavOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_sostav/report/outgoing_sostav/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportOutgoingSostavOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     App.ids_wsd = ids_wsd;
 

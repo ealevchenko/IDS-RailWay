@@ -22,10 +22,19 @@
             'ttdr_field_adoption_count_wagon': 'Всего вагонов',
             'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
 
+            'ttdr_field_outgoing_sostav_station': 'ПРИБЫТИЕ',
+            'ttdr_field_outgoing_sostav_wagon': 'Всего вагонов',
+            'ttdr_field_outgoing_sostav_account_balance': 'Учетные вагоны',
+
             'ttdr_field_adoption_sostav_detali_num_doc': '№ ведомости',
             'ttdr_field_adoption_sostav_detali_date_adoption': 'Дата приема',
             'ttdr_field_adoption_sostav_detali_count_wagon': 'кол-во',
             'ttdr_field_adoption_sostav_detali_count_account_balance': 'Уч. ваг.',
+
+            'ttdr_field_outgoing_sostav_detali_num_doc': '№ ведомости',
+            'ttdr_field_outgoing_sostav_detali_date_outgoing': 'Дата сдача',
+            'ttdr_field_outgoing_sostav_detali_count_wagon': 'кол-во',
+            'ttdr_field_outgoing_sostav_detali_count_account_balance': 'Уч. ваг.',
 
             //'ttdr_field_sostav_naturka_position_arrival': '№',
             //'ttdr_field_sostav_naturka_station_from_name': 'Станция отправления',
@@ -155,6 +164,31 @@
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_adoption_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
         },
+        // Поля составы сданные
+        {
+            field: 'outgoing_sostav_station',
+            data: function (row, type, val, meta) {
+                return row.station;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_sostav_station', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_sostav_count_wagon',
+            data: function (row, type, val, meta) {
+                return row.count_wagon;
+            },
+            className: 'dt-body-center sum_count_wagon',
+            title: langView('ttdr_field_outgoing_sostav_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_sostav_count_account_balance',
+            data: function (row, type, val, meta) {
+                return row.count_account_balance;
+            },
+            className: 'dt-body-center sum_count_account_balance',
+            title: langView('ttdr_field_outgoing_sostav_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
+        },
         // Поля принятые составы детально adoption_sostav_detali
         {
             field: 'adoption_sostav_detali_details_control',
@@ -206,24 +240,58 @@
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_adoption_sostav_detali_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
         },
-        // 
-        //{
-        //    field: 'sostav_naturka_position_arrival',
-        //    data: function (row, type, val, meta) {
-        //        return row.arrival_car_position_arrival;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_sostav_naturka_position_arrival', App.Langs), width: "50px", orderable: false, searchable: false
-        //},
-        //{
-        //    field: 'sostav_naturka_station_from_name',
-        //    data: function (row, type, val, meta) {
-        //        return row['arrival_uz_document_station_from_name_' + App.Lang];
-        //    },
-        //    className: 'dt-body-nowrap shorten mw-100',
-        //    title: langView('ttdr_field_sostav_naturka_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
-        //},
-
+        // Поля принятые составы детально outgoing_sostav_detali
+        {
+            field: 'outgoing_sostav_detali_details_control',
+            className: 'details-control outgoing-sostav-detali',
+            orderable: false,
+            data: null,
+            defaultContent: '',
+            width: "20px",
+            searchable: false
+        },
+        {
+            field: 'outgoing_sostav_detali_button_view',
+            targets: 0,
+            data: null,
+            defaultContent: '<button class="btn outgoing-button"><i class="far fa-eye"></i></button>',
+            orderable: false,
+            className: 'dt-body-center button-control',
+            width: "20px"
+        },
+        {
+            field: 'outgoing_sostav_detali_num_doc',
+            data: function (row, type, val, meta) {
+                return row.num_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_sostav_detali_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_sostav_detali_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.date_outgoing ? moment(row.date_outgoing).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_sostav_detali_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_sostav_detali_count_wagon',
+            data: function (row, type, val, meta) {
+                return row.count_wagon;
+            },
+            className: 'dt-body-center sum_count_wagon',
+            title: langView('ttdr_field_outgoing_sostav_detali_count_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_sostav_detali_count_account_balance',
+            data: function (row, type, val, meta) {
+                return row.count_account_balance;
+            },
+            className: 'dt-body-center sum_count_account_balance',
+            title: langView('ttdr_field_outgoing_sostav_detali_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        // Натурка прибытие
         {
             field: 'sostav_naturka_id',
             data: function (row, type, val, meta) {
@@ -782,6 +850,14 @@
         collums.push({ field: 'adoption_sostav_count_account_balance', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей outgoing_sostav
+    table_td_report.prototype.init_columns_outgoing_sostav = function () {
+        var collums = [];
+        collums.push({ field: 'outgoing_sostav_station', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_count_wagon', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_count_account_balance', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     // 
     table_td_report.prototype.init_columns_adoption_sostav_detali = function () {
         var collums = [];
@@ -791,6 +867,17 @@
         collums.push({ field: 'adoption_sostav_detali_date_adoption', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_wagon', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_account_balance', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // 
+    table_td_report.prototype.init_columns_outgoing_sostav_detali = function () {
+        var collums = [];
+        if (this.settings.detali_table) collums.push({ field: 'outgoing_sostav_detali_details_control', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_detali_button_view', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_detali_num_doc', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_detali_date_outgoing', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_detali_count_wagon', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_detali_count_account_balance', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей sostav_naturka
@@ -886,7 +973,35 @@
         return init_buttons(buttons, list_buttons);
     };
     //
+    table_td_report.prototype.init_button_outgoing_sostav = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        /*        buttons.push({ name: 'page_length', action: null });*/
+        return init_buttons(buttons, list_buttons);
+    };
+    //
     table_td_report.prototype.init_button_adoption_sostav_detali = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_outgoing_sostav_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -934,6 +1049,23 @@
                 this.table_buttons = this.init_button_adoption_sostav();
                 break;
             };
+            case 'outgoing_sostav': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.table_columns = this.init_columns_outgoing_sostav();
+                this.table_buttons = this.init_button_outgoing_sostav();
+                break;
+            };
             case 'adoption_sostav_detali': {
                 this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
                 this.pageLength = 10;
@@ -949,6 +1081,23 @@
                 this.table_select = false;
                 this.table_columns = this.init_columns_adoption_sostav_detali();
                 this.table_buttons = this.init_button_adoption_sostav_detali();
+                break;
+            };
+            case 'outgoing_sostav_detali': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [2, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.table_columns = this.init_columns_outgoing_sostav_detali();
+                this.table_buttons = this.init_button_outgoing_sostav_detali();
                 break;
             };
             case 'sostav_naturka': {
@@ -1029,7 +1178,13 @@
         if (this.settings.type_report === 'adoption_sostav') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
+        if (this.settings.type_report === 'outgoing_sostav') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
         if (this.settings.type_report === 'adoption_sostav_detali') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_sostav_detali') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
@@ -1069,32 +1224,17 @@
                         }
                         break;
                     };
+                    case 'outgoing_sostav': {
+                        if (data.type === 0) {
+
+                        } else {
+                            $(row).addClass('yellow');
+                        }
+                        break;
+                    };
                 };
             }.bind(this),
             "footerCallback": function (row, data, start, end, display) {
-                //var api = this.api();
-                //// Remove the formatting to get integer data for summation
-                ////view_footer(api);
-                //var intVal = function (i) {
-                //    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
-                //};
-                //// Total over all pages
-                //var total = api
-                //    .column(1)
-                //    .data()
-                //    .reduce(function (a, b) {
-                //        return intVal(a) + intVal(b);
-                //    }, 0);
-
-                //// Total over this page
-                //var pageTotal = api
-                //    .column(1, { page: 'current' })
-                //    .data()
-                //    .reduce(function (a, b) {
-                //        return intVal(a) + intVal(b);
-                //    }, 0);
-                //// Update footer
-                //$(api.column(1).footer()).html(total);
             },
             columns: this.table_columns,
             dom: 'Bfrtip',
@@ -1114,7 +1254,42 @@
                 }.bind(this));
                 break;
             };
+            case 'outgoing_sostav': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
             case 'adoption_sostav_detali': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                // Настроим ссылку на прибытие
+                this.$table_report.find('tbody').on('tbody click', 'button.arrival-button', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var data = this.obj_t_report.row($(e.currentTarget).parents('tr')).data();
+                    if (data) {
+                        var date = moment(data.date_arrival)
+                        date = date.format('YYYY-MM-DD[T]HH:mm:ss');
+                        window.open(url_incoming + '?id_arrival=' + data.id + '&arrival=' + date, '', '');
+                    }
+
+                }.bind(this));
+                if (this.settings.detali_table) this.init_detali();
+                break;
+            };
+            case 'outgoing_sostav_detali': {
                 this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
                     this.select_rows(); // определим строку
                     this.enable_button();
@@ -1190,7 +1365,7 @@
         this.view_footer(data);
         this.select_rows();
         this.enable_button();
-        LockScreenOff();
+        //LockScreenOff();
     };
     //
     table_td_report.prototype.view_footer = function (data) {

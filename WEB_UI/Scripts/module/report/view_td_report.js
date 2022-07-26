@@ -155,6 +155,11 @@
         this.nb_adoption_sostav = [];
         this.pr_adoption_sostav = [];
         this.kr_adoption_sostav = [];
+        this.outgoing_sostav = [];
+        this.vs_outgoing_sostav = [];
+        this.nb_outgoing_sostav = [];
+        this.pr_outgoing_sostav = [];
+        this.kr_outgoing_sostav = [];
         // Сылки на отчеты
         this.report_links = [
             {
@@ -165,10 +170,11 @@
                 }.bind(this),
             }
         ];
+        // Очистим экран
         this.$panel.empty();
+        // Построим основной экран
         //<div class="wrapper d-flex align-items-stretch">
         this.$panel.addClass('wrapper d-flex align-items-stretch');
-
         var nav$ = $('<nav id="sidebar"></nav>');
         //<div class="custom-menu">
         var div_cm = new this.fe_ui.div({
@@ -248,9 +254,9 @@
         var div_title = new this.fe_ui.div({
             class: 'd-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom',
         });
-        this.$title_report = $('<h1 class="h2"></h1>');
-        this.$main_report = $('<div></div>');
-        var $alert = $('<div class="alert" role="alert">');
+        this.$title_report = $('<h1 class="h2"></h1>');             // Подпись отчета
+        this.$main_report = $('<div></div>');                       // Основное окно отчета
+        var $alert = $('<div class="alert" role="alert">');         // вывод ошибки
         this.alert = new alert($alert);
         if (this.settings.alert === null) this.settings.alert = this.alert;
         div_content.$div.append(div_title.$div.append(this.$title_report)).append($alert).append(this.$main_report);
@@ -423,12 +429,12 @@
     // Отчеты
     // Инициализировать отчет "Статистика"
     view_td_report.prototype.init_report_1_1 = function () {
+        // очистим основное окно отчета
         this.$main_report.empty();
-        this.report = 1;
-        $('#sidebar').toggleClass('active');
-        this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(''));
-        this.init_select_report();
-        //this.$main_report.empty();
+        this.report = 1; // номер отчета
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
         //------
         var div_row1 = new this.fe_ui.bs_row();
         var div_row2 = new this.fe_ui.bs_row();
@@ -440,7 +446,7 @@
             size: 'xl',
             col: 6,
         });
-
+        //--- Окно прибытие --------------------------------
         var card_arr = new this.fe_ui.bs_card({
             id: null,
             class_card: 'border-secondary mb-1',
@@ -448,8 +454,8 @@
             class_header: 'text-center',
             class_body: 'text-center',
             title_header: langView('vtdr_card_header_report_1_1_arr', App.Langs),
-        });
-        var nav_tabs = new this.fe_ui.bs_nav_tabs({
+        });             // Карточка прибытия
+        var nav_tabs_arr = new this.fe_ui.bs_nav_tabs({
             id_nav: 'tab-arr',
             class_nav: null,
             id_content: 'tab-arr-conntent',
@@ -470,19 +476,18 @@
                     click: null,
                 },
             ],
-        });
-
-        var $arr_report = nav_tabs.$content.find('div#arr-report-tab');
-        $arr_report.append($('<div id="adoption-sostav-all"></div>')).append($('<div id="adoption-sostav-detali"></div>'));
-
-        var $arr_searsh = nav_tabs.$content.find('div#arr-searsh-tab');
-        //----------------------------------
+        });     // Переключатели панелей карточки
+        //---- Панель "Отчет"
+        var $arr_report = nav_tabs_arr.$content.find('div#arr-report-tab'); // Панель отчета
+        $arr_report.append($('<div id="adoption-sostav-all"></div>')).append($('<div id="adoption-sostav-detali"></div>')); // Добавим div для таблиц
+        //---- Панель "Поиск по ..."
+        var $arr_searsh = nav_tabs_arr.$content.find('div#arr-searsh-tab'); // Панель поиска
         // Создать макет панели для поиска
-        var row1 = new this.fe_ui.bs_row({
+        var row1_arr = new this.fe_ui.bs_row({
             class: null,
             id: null,
         });
-        var button = new this.fe_ui.bs_button({
+        var button_arr = new this.fe_ui.bs_button({
             color: 'warning',
             size: 'sm',
             class: null,
@@ -496,7 +501,7 @@
                 this.action_search_adoption_docs();
             }.bind(this),
         });
-        var textarea = new this.fe_ui.bs_textarea({
+        var textarea_arr = new this.fe_ui.bs_textarea({
             id: 'list_docs',
             form_group_size: 'xl',
             form_group_col: 12,
@@ -519,32 +524,30 @@
             input_group_append_objs: [],
             input_group_obj_form: null,
         });
-        var iga = textarea.$element.find('div.input-group-append');
-        iga.append(button.$button);
-        row1.$row.append(textarea.$element);
-        var row2 = new this.fe_ui.bs_row({
+        var iga_arr = textarea_arr.$element.find('div.input-group-append');
+        iga_arr.append(button_arr.$button);
+        row1_arr.$row.append(textarea_arr.$element);
+        var row2_arr = new this.fe_ui.bs_row({
             class: null,
             id: null,
         });
-        var col2 = new this.fe_ui.bs_col({
+        var col2_arr = new this.fe_ui.bs_col({
             id: null,
             size: 'xl',
             col: 12,
             class: null,
         });
-        var div_table_searsh_docs = new this.fe_ui.div({
+        var div_table_searsh_docs_arr = new this.fe_ui.div({
             class: null,
             id: 'adoption-searsh-docs',
         });
-        this.$bt_search_car = button.$button;
-        this.element_textarea_docs = textarea.element;
-        //
-        $arr_searsh.append(row1.$row).append(row2.$row.append(col2.$col.append(div_table_searsh_docs.$div)));
-
-
-        card_arr.$header.append(nav_tabs.$ul);
-        card_arr.$body.append(nav_tabs.$content);
-        //
+        this.$bt_search_car_arr = button_arr.$button;
+        this.element_textarea_docs_arr = textarea_arr.element;
+        $arr_searsh.append(row1_arr.$row).append(row2_arr.$row.append(col2_arr.$col.append(div_table_searsh_docs_arr.$div)));
+        // Добавим панель в карточку
+        card_arr.$header.append(nav_tabs_arr.$ul);
+        card_arr.$body.append(nav_tabs_arr.$content);
+        //--- Окно Отправка --------------------------------
         var card_out = new this.fe_ui.bs_card({
             id: null,
             class_card: 'border-secondary mb-1',
@@ -553,12 +556,105 @@
             class_body: 'text-center',
             title_header: langView('vtdr_card_header_report_1_1_out', App.Langs),
         });
+        var nav_tabs_out = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-out',
+            class_nav: null,
+            id_content: 'tab-out-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'out-report',
+                    aria_controls: 'out-report-tab',
+                    label: 'Отчет',
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'out-searsh',
+                    aria_controls: 'out-searsh-tab',
+                    label: 'Поиск',
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });     // Переключатели панелей карточки
+        //---- Панель "Отчет"
+        var $out_report = nav_tabs_out.$content.find('div#out-report-tab'); // Панель отчета
+        $out_report.append($('<div id="outgoing-sostav-all"></div>')).append($('<div id="outgoing-sostav-detali"></div>')); // Добавим div для таблиц
+        //---- Панель "Поиск по ..."
+        var $out_searsh = nav_tabs_out.$content.find('div#out-searsh-tab'); // Панель поиска
+        // Создать макет панели для поиска
+        var row1_out = new this.fe_ui.bs_row({
+            class: null,
+            id: null,
+        });
+        var button_out = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: null,
+            id: 'search_car',
+            label: null,
+            title: '',
+            icon_left: null,
+            icon_right: 'fas fa-search',
+            click: function (event) {
+                event.preventDefault();
+                //this.action_search_outgoing_docs();
+            }.bind(this),
+        });
+        var textarea_out = new this.fe_ui.bs_textarea({
+            id: 'list_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: '№№ Ведомостей',
+            label_class: 'mb-1',
+            textarea_size: null,
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: '№№ Ведомостей',
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxx;xxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+            input_group: true,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: [],
+            input_group_append_class: null,
+            input_group_append_objs: [],
+            input_group_obj_form: null,
+        });
+        var iga_out = textarea_out.$element.find('div.input-group-append');
+        iga_out.append(button_out.$button);
+        row1_out.$row.append(textarea_out.$element);
+        var row2_out = new this.fe_ui.bs_row({
+            class: null,
+            id: null,
+        });
+        var col2_out = new this.fe_ui.bs_col({
+            id: null,
+            size: 'xl',
+            col: 12,
+            class: null,
+        });
+        var div_table_searsh_docs_out = new this.fe_ui.div({
+            class: null,
+            id: 'outgoing-searsh-docs',
+        });
+        this.$bt_search_car_out = button_out.$button;
+        this.element_textarea_docs_out = textarea_out.element;
+        $out_searsh.append(row1_out.$row).append(row2_out.$row.append(col2_out.$col.append(div_table_searsh_docs_out.$div)));
+        // Добавим панель в карточку
+        card_out.$header.append(nav_tabs_out.$ul);
+        card_out.$body.append(nav_tabs_out.$content);
 
+        // Добавим форму отчета на основное окно
         div_row1.$row.append(div_col1.$col.append(card_arr.$card)).append(div_col2.$col.append(card_out.$card));
         this.$main_report.append(div_row1.$row).append(div_row2.$row)
 
-        // Запускаем 3 процесса инициализации (паралельно)
-        var process = 3;
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process = 6;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -570,6 +666,14 @@
                             break;
                         };
                         case 'arr-searsh': {
+                            this.form_panel.$form.removeClass('d-flex').hide();
+                            break;
+                        };
+                        case 'out-report': {
+                            this.form_panel.$form.addClass('d-flex').show();
+                            break;
+                        };
+                        case 'out-searsh': {
                             this.form_panel.$form.removeClass('d-flex').hide();
                             break;
                         };
@@ -600,9 +704,11 @@
             },
             fn_select_rows: function (rows) {
                 if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
-                    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                    this.table_adop_sostav_detali.view(rows[0].adoption_sostav);
+                    LockScreenOff();
                 } else {
                     this.table_adop_sostav_detali.view([]);
+                    LockScreenOff();
                 }
             }.bind(this),
         });
@@ -649,10 +755,90 @@
                 //}
             }.bind(this),
         });
+        //
+        this.table_outg_sostav_all = new TTDR('div#outgoing-sostav-all');               // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_outg_sostav_all.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_sostav',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+            fn_select_rows: function (rows) {
+                if (rows && rows.length > 0 && rows[0].outgoing_sostav && rows[0].outgoing_sostav.length > 0) {
+                    this.table_outg_sostav_detali.view(rows[0].outgoing_sostav);
+                    LockScreenOff();
+                } else {
+                    this.table_outg_sostav_detali.view([]);
+                    LockScreenOff();
+                }
+            }.bind(this),
+        });
+
+        this.table_outg_sostav_detali = new TTDR('div#outgoing-sostav-detali');         // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_outg_sostav_detali.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'outgoing_sostav_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+
+        this.table_outg_searsh_docs = new TTDR('div#outgoing-searsh-docs');              // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_outg_searsh_docs.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_sostav_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+            fn_select_rows: function (rows) {
+                //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                //} else {
+                //    this.table_adop_sostav_detali.view([]);
+                //}
+            }.bind(this),
+        });
     };
     // Показать отчет  "Статистика"
     view_td_report.prototype.view_report_1_1 = function (start, stop) {
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process_load = 2;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                LockScreenOff();
+            }
+        }.bind(this);
+
         LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
+        // Прибытие
         this.ids_wsd.getReportAdoptionSostavOfPeriod(start, stop, function (result_sostav) {
             this.adoption_sostav = result_sostav;
             var adoption_sostav = [];
@@ -676,8 +862,39 @@
             adoption_sostav.push(this.get_adoption_sostav('Кирова', this.kr_adoption_sostav, 1));
 
             this.table_adop_sostav_all.view(adoption_sostav);
+            process_load--;
+            out_load(process_load);
 
         }.bind(this));
+        // Отправка
+        this.ids_wsd.getReportOutgoingSostavOfPeriod(start, stop, function (result_sostav) {
+            this.outgoing_sostav = result_sostav;
+            var outgoing_sostav = [];
+
+            this.vs_outgoing_sostav = result_sostav.filter(function (i) {
+                return i.id_station_from === 6 || i.id_station_from === 7 || i.id_station_from === 8;
+            });
+            this.nb_outgoing_sostav = result_sostav.filter(function (i) {
+                return i.id_station_from === 19;
+            });
+            this.pr_outgoing_sostav = result_sostav.filter(function (i) {
+                return i.id_station_from === 27;
+            });
+            this.kr_outgoing_sostav = result_sostav.filter(function (i) {
+                return i.id_station_from === 10;
+            });
+
+            outgoing_sostav.push(this.get_outgoing_sostav('Восточная', this.vs_outgoing_sostav, 0));
+            outgoing_sostav.push(this.get_outgoing_sostav('Промышленная', this.pr_outgoing_sostav, 0));
+            outgoing_sostav.push(this.get_outgoing_sostav('Новобункерная', this.nb_outgoing_sostav, 0));
+            outgoing_sostav.push(this.get_outgoing_sostav('Кирова', this.kr_outgoing_sostav, 1));
+
+            this.table_outg_sostav_all.view(outgoing_sostav);
+            process_load--;
+            out_load(process_load);
+
+        }.bind(this));
+
     };
     // Получим строку для отчета
     view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav, type) {
@@ -690,30 +907,43 @@
         });
         return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
     };
+    // Получим строку для отчета отправка
+    view_td_report.prototype.get_outgoing_sostav = function (station_name, list_sostav, type) {
+        if (list_sostav === null) return null;
+        var count_wagon = 0;
+        var count_account_balance = 0;
+        $.each(list_sostav, function (i, s) {
+            count_wagon += s.count_wagon;
+            count_account_balance += s.count_account_balance;
+        });
+        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, outgoing_sostav: list_sostav }
+    };
     // 
     view_td_report.prototype.clear_report_1_1 = function () {
         if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
         if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
+        LockScreenOff();
     };
     // Поиск по номеру документа
     view_td_report.prototype.action_search_adoption_docs = function () {
         this.out_clear();
-        this.$bt_search_car.prop("disabled", true); // сделаем не активной
-        var list_docs = this.element_textarea_docs.val();
+        this.$bt_search_car_arr.prop("disabled", true); // сделаем не активной
+        var list_docs = this.element_textarea_docs_arr.val();
         var nums = is_valid_docs(list_docs, this.alert);
         if (nums) {
             LockScreen(langView('vtdr_mess_operation_run', App.Langs));
             this.ids_wsd.getReportAdoptionSostavOfDocs(nums, function (result) {
                 if (result !== null) {
                     this.table_adop_searsh_docs.view(result);
+                    LockScreenOff();
                 } else {
                     this.mf_edit.out_warning(langView('vtdr_mess_error_search_docs', App.Langs).format(result.result));
                 }
-                this.$bt_search_car.prop("disabled", false); // сделаем активной
+                this.$bt_search_car_arr.prop("disabled", false); // сделаем активной
                 LockScreenOff();
             }.bind(this));
         } else {
-            this.$bt_search_car.prop("disabled", false); // сделаем активной
+            this.$bt_search_car_arr.prop("disabled", false); // сделаем активной
         };
     }
 

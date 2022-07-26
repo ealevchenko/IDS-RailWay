@@ -56,6 +56,39 @@ namespace WEB_UI.Controllers.api
         public int? count_vagonnik { get; set; }
     }
 
+    /// <summary>
+    /// Класс описания данных информация по принятым составам (Отчет ТД - Статистика)
+    /// </summary>
+    public class ViewReportOutgoingSostav
+    {
+        public long id { get; set; }
+        public int num_doc { get; set; }
+        public int id_station_from { get; set; }
+        public int id_way_from { get; set; }
+        public int? id_station_on { get; set; }
+        public DateTime date_readiness_amkr { get; set; }
+        public DateTime? date_end_inspection_acceptance_delivery { get; set; }
+        public DateTime? date_end_inspection_loader { get; set; }
+        public DateTime? date_end_inspection_vagonnik { get; set; }
+        public DateTime? date_show_wagons { get; set; }
+        public DateTime? date_readiness_uz { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public DateTime? date_departure_amkr { get; set; }
+        public string composition_index { get; set; }
+        public int status { get; set; }
+        public string note { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public bool? route_sign { get; set; }
+        public string vagonnik_user { get; set; }
+        public int? count_wagon { get; set; }
+        public int? count_account_balance { get; set; }
+    }
+
+
     [RoutePrefix("api/ids/rwt/outgoing_sostav")]
     public class IDS_RWT_OutgoingSostavController : ApiController
     {
@@ -201,6 +234,31 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Получить информацию по отправленым(сданным на УЗ) составам (Отчет ТД - Статистика)
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/outgoing_sostav/report/outgoing_sostav/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
+        [Route("report/outgoing_sostav/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewReportOutgoingSostav))]
+        public IHttpActionResult GetReportOutgoingSostavOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_outgoing_sostav_of_period](@start,@stop)";
+                List<ViewReportOutgoingSostav> sostav = this.ef_ids.Database.SqlQuery<ViewReportOutgoingSostav>(sql, d_start, d_stop).ToList();
+                return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/outgoing_sostav/view/sostav/status/2
         /// <summary>
         /// Выбрать составы сданные на уз
@@ -222,7 +280,6 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
 
         // POST api/ids/rwt/outgoing_sostav/
         [HttpPost]

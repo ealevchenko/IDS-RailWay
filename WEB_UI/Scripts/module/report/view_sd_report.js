@@ -119,7 +119,7 @@
 
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         this.elements = {}; // Все элементы формы
-
+        // Очистим
         this.$panel.empty();
 
         var div = new this.fe_ui.div({
@@ -131,7 +131,7 @@
         this.alert = new alert($alert);
         if (this.settings.alert === null) this.settings.alert = this.alert;
         this.$panel.append(div.$div.append(this.$title_report)).append($alert).append(this.$main_report);
-        // Настроим ссылку
+        // Настроим ссылку на отчет
         if (this.settings.id_sidebar) {
             var $ul_list_sidebar = $('#' + this.settings.id_sidebar);
             $ul_list_sidebar.empty();
@@ -153,35 +153,12 @@
             $li1.append(a_link1.$alink);
             $ul_list_sidebar.append($li1);
         }
-
         //----------------------------------
         if (typeof this.settings.fn_init === 'function') {
             this.settings.fn_init(this.result_init);
         }
         //----------------------------------
     };
-    //
-    view_sd_report.prototype.load_sostav = function (id_sostav, callback) {
-        //this.id_sostav = id_sostav;
-        //if (this.id_sostav) {
-        //    LockScreen(langView('vicr_mess_load_sostav', App.Langs));
-        //    this.ids_wsd.getViewIncomingCarsOfIDSostav(this.id_sostav, function (wagons) {
-        //        this.wagons = wagons;
-        //        // Получим информацию по составу
-        //        this.get_sostav(wagons);
-        //        LockScreenOff();
-        //        if (typeof callback === 'function') {
-        //            callback(this.wagons);
-        //        }
-        //    }.bind(this));
-        //} else {
-        //    this.wagons = null;
-        //    this.sostav = {};
-        //    if (typeof callback === 'function') {
-        //        callback(null);
-        //    }
-        //}
-    }
     // Открыть отчет
     view_sd_report.prototype.view_report_border_crossing = function () {
         $('#sidebar').toggleClass('active');
