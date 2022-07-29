@@ -1,58 +1,44 @@
-use [KRR-PA-CNT-Railway]
-declare @start datetime = Convert(datetime, '2022-07-28 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-07-29 23:59:59', 120)
+USE [KRR-PA-CNT-Railway]
+GO
 
---SELECT arr_sost.[id]
---      ,arr_sost.[id_arrived]
---      ,arr_sost.[id_sostav]
---      ,arr_sost.[train]
---      ,arr_sost.[composition_index]
---      ,arr_sost.[date_arrival]
---      ,arr_sost.[date_adoption]
---      ,arr_sost.[date_adoption_act]
---      ,arr_sost.[id_station_from]
---      ,arr_sost.[id_station_on]
---      ,arr_sost.[id_way]
---      ,arr_sost.[numeration]
---      ,arr_sost.[num_doc]
---      ,arr_sost.[count]
---      ,arr_sost.[status]
---      ,arr_sost.[note]
---      ,arr_sost.[create]
---      ,arr_sost.[create_user]
---      ,arr_sost.[change]
---      ,arr_sost.[change_user]
---	  ,count_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null)
---	  ,count_account_balance = ([IDS].[get_count_account_balance_of_arrival_sostav](arr_sost.id))
---	  --into view_arrival_sostav
---  FROM  [IDS].[ArrivalSostav] as arr_sost
---  where arr_sost.[date_adoption]>= @start and arr_sost.[date_adoption]<=@stop
+/****** Object:  UserDefinedFunction [IDS].[get_view_adoption_sostav_of_period]    Script Date: 29.07.2022 10:16:47 ******/
+SET ANSI_NULLS ON
+GO
 
-  --SELECT arr_sost.[id]
-  --    ,arr_sost.[id_arrived]
-  --    ,arr_sost.[id_sostav]
-  --    ,arr_sost.[train]
-  --    ,arr_sost.[composition_index]
-  --    ,arr_sost.[date_arrival]
-  --    ,arr_sost.[date_adoption]
-  --    ,arr_sost.[date_adoption_act]
-  --    ,arr_sost.[id_station_from]
-  --    ,arr_sost.[id_station_on]
-  --    ,arr_sost.[id_way]
-  --    ,arr_sost.[numeration]
-  --    ,arr_sost.[num_doc]
-  --    ,arr_sost.[count]
-  --    ,arr_sost.[status]
-  --    ,arr_sost.[note]
-  --    ,arr_sost.[create]
-  --    ,arr_sost.[create_user]
-  --    ,arr_sost.[change]
-  --    ,arr_sost.[change_user]
-	 -- ,count_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null)
-	 -- ,count_account_balance = ([IDS].[get_count_account_balance_of_arrival_sostav](arr_sost.id))
-  --FROM  [IDS].[ArrivalSostav] as arr_sost
-  --where arr_sost.[num_doc] is not null and arr_sost.[num_doc] > 0; 
+SET QUOTED_IDENTIFIER ON
+GO
 
+
+CREATE FUNCTION [IDS].[get_view_adoption_wagon_not_operation_of_period]
+ (
+   @start datetime, 
+   @stop datetime
+ )
+	RETURNS 
+	@wagons TABLE(
+		[id_sostav] [bigint] NOT NULL,
+		[sostav_date_adoption] [datetime] NULL,
+		[sostav_num_doc] [int] NULL,
+		[id_car] [bigint] NULL,
+		[num] [int] NULL,
+		[id_cargo] [int] NULL,
+		[cargo_name_ru] [nvarchar](50) NULL,
+		[cargo_name_en] [nvarchar](50) NULL,
+		[nom_doc] [int] NULL,
+		[nom_main_doc] [int] NULL,
+		[code_stn_from] [int] NULL,
+		[station_from_name_ru] [nvarchar](50) NULL,
+		[station_from_name_en] [nvarchar](50) NULL,
+		[id_division_on_amkr] [int] NULL,
+		[division_code] [nvarchar](5) NULL,
+		[name_division_ru] [nvarchar](250) NULL,
+		[name_division_en] [nvarchar](250) NULL,
+		[division_abbr_ru] [nvarchar](50) NULL,
+		[division_abbr_en] [nvarchar](50) NULL
+	)
+	AS
+	BEGIN
+	insert @wagons
   SELECT 
 		arr_sost.[id] as id_sostav
 		,arr_sost.[date_adoption] as sostav_date_adoption
@@ -73,7 +59,6 @@ declare @stop datetime = Convert(datetime, '2022-07-29 23:59:59', 120)
 		,arr_dir_divis_amkr.[name_division_en] as name_division_en				-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_divis_amkr.[division_abbr_ru] as division_abbr_ru				-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_divis_amkr.[division_abbr_en] as division_abbr_en				-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
-  --into adoption_wagon_not_operation
   FROM  [IDS].[ArrivalSostav] as arr_sost
 	Left JOIN IDS.[ArrivalCars] as arr_car ON arr_sost.id = arr_car.id_arrival
 	Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and rent_end is null order by [id] desc)
@@ -86,3 +71,13 @@ declare @stop datetime = Convert(datetime, '2022-07-29 23:59:59', 120)
 	--> Справочник Подразделений АМКР (по отправке)
 	Left JOIN [IDS].[Directory_Divisions] as arr_dir_divis_amkr ON uz_doc_vag.[id_division_on_amkr] = arr_dir_divis_amkr.id
   where arr_car.arrival is not null and arr_sost.[date_adoption]>= @start and arr_sost.[date_adoption]<=@stop and (dir_rent.id_operator is null OR dir_rent.id_operator =0)
+  RETURN
+ END
+ 
+
+
+
+
+GO
+
+

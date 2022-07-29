@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @id_sostav int = 171772--171467 --171467
+declare @id_sostav int = 181948--171467 --171467
 
 
 	select 
@@ -342,7 +342,7 @@ declare @id_sostav int = 171772--171467 --171467
 		--Left JOIN IDS.Directory_Wagons as dir_wagon ON arr_car.num = dir_wagon.num
 		--> Справочник аренд
 		--Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and rent_end is null order by [id] desc)	
-		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and [rent_start]<=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and [rent_start]<=arr_sost.[date_adoption])) order by [rent_start] desc)	
+		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_adoption])) order by [rent_start] desc)	
 		----> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
 		----> Справочник Ограничение погрузки по прибытию
