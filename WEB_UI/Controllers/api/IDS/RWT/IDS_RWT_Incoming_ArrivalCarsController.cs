@@ -277,6 +277,29 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_note { get; set; }
     }
 
+    public class ViewReportAdoptionWagonNotOperation 
+    {
+        public long id_sostav { get; set; }
+        public DateTime? sostav_date_adoption { get; set; }
+        public int? sostav_num_doc { get; set; }
+        public long? id_car { get; set; }
+        public int? num { get; set; }
+        public int? id_cargo { get; set; }
+        public string cargo_name_ru { get; set; }
+        public string cargo_name_en { get; set; }
+        public int? nom_doc { get; set; }
+        public int? nom_main_doc { get; set; }
+        public int? code_stn_from { get; set; }
+        public string station_from_name_ru { get; set; }
+        public string station_from_name_en { get; set; }
+        public int? id_division_on_amkr { get; set; }
+        public string division_code { get; set; }
+        public string name_division_ru { get; set; }
+        public string name_division_en { get; set; }
+        public string division_abbr_ru { get; set; }
+        public string division_abbr_en { get; set; }
+    }
+
     [RoutePrefix("api/ids/rwt/arrival_cars")]
     public class IDS_RWT_Incoming_ArrivalCarsController : ApiController
     {
@@ -437,6 +460,25 @@ namespace WEB_UI.Controllers.api
                     }
                 }
                 return Ok(list_result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/arrival_cars/report/adoption_wagon/not_operator/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
+        [Route("report/adoption_wagon/not_operator/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewReportAdoptionWagonNotOperation))]
+        public IHttpActionResult GetReportAdoptionWagonNotOperationOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_adoption_wagon_not_operation_of_period](@start,@stop)";
+                List<ViewReportAdoptionWagonNotOperation> sostav = this.ef_ids.Database.SqlQuery<ViewReportAdoptionWagonNotOperation>(sql, d_start, d_stop).ToList();
+                return Ok(sostav);
             }
             catch (Exception e)
             {

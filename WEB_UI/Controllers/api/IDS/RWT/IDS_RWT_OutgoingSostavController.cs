@@ -259,6 +259,28 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Получить информацию по принятым составам  (Отчет ТД - Статистика)
+        /// </summary>
+        /// <param name="docs"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/outgoing_sostav/report/outgoing_sostav/docs/
+        [Route("report/outgoing_sostav/docs/{docs}")]
+        [ResponseType(typeof(ViewReportOutgoingSostav))]
+        public IHttpActionResult GetReportOutgoingSostavOfDocs(String docs)
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_view_outgoing_sostav_of_docs]() where num_doc IN(" + docs + ")";
+                List<ViewReportOutgoingSostav> sostav = this.ef_ids.Database.SqlQuery<ViewReportOutgoingSostav>(sql).ToList();
+                return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/outgoing_sostav/view/sostav/status/2
         /// <summary>
         /// Выбрать составы сданные на уз

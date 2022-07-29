@@ -30,6 +30,7 @@
 
             'vtdr_card_header_report_1_1_arr': 'ПРИБЫТИЕ',
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
+            'vtdr_card_header_report_1_1_not_oper': 'ВАГОНЫ БЕЗ ОПЕРАТОРОВ',
             'vtdr_load_adoption_sostav': 'Выполняю операцию выборка принятых составов ...',
 
 
@@ -446,6 +447,10 @@
             size: 'xl',
             col: 6,
         });
+        var div_col3 = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
         //--- Окно прибытие --------------------------------
         var card_arr = new this.fe_ui.bs_card({
             id: null,
@@ -599,7 +604,7 @@
             icon_right: 'fas fa-search',
             click: function (event) {
                 event.preventDefault();
-                //this.action_search_outgoing_docs();
+                this.action_search_outgoing_docs();
             }.bind(this),
         });
         var textarea_out = new this.fe_ui.bs_textarea({
@@ -648,13 +653,22 @@
         // Добавим панель в карточку
         card_out.$header.append(nav_tabs_out.$ul);
         card_out.$body.append(nav_tabs_out.$content);
-
+        //----- Карточка вагоны без оператора
+        var card_wag_not_oper = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1 mt-1',
+            header: true,
+            class_header: 'text-center',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_report_1_1_not_oper', App.Langs),
+        });
+        card_wag_not_oper.$body.append($('<div id="adoption-wagon-not-operation"></div>'));
         // Добавим форму отчета на основное окно
         div_row1.$row.append(div_col1.$col.append(card_arr.$card)).append(div_col2.$col.append(card_out.$card));
-        this.$main_report.append(div_row1.$row).append(div_row2.$row)
+        this.$main_report.append(div_row1.$row).append(div_row2.$row.append(div_col3.$col.append(card_wag_not_oper.$card)));
 
         // Запускаем 6 процесса инициализации (паралельно)
-        var process = 6;
+        var process = 7;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -806,7 +820,7 @@
         this.table_outg_searsh_docs.init({
             alert: null,
             detali_table: true,
-            type_report: 'adoption_sostav_detali',     //
+            type_report: 'outgoing_sostav_detali',     //
             link_num: false,
             ids_wsd: null,
             fn_init: function () {
@@ -825,11 +839,37 @@
                 //}
             }.bind(this),
         });
+
+        this.table_adop_wagon_not_operation = new TTDR('div#adoption-wagon-not-operation');              // Создадим экземпляр
+        // Инициализация модуля "Таблица вагонов без оператора"
+        this.table_adop_wagon_not_operation.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_wagon_not_operation',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+            fn_select_rows: function (rows) {
+                //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                //} else {
+                //    this.table_adop_sostav_detali.view([]);
+                //}
+            }.bind(this),
+        });
+
     };
     // Показать отчет  "Статистика"
     view_td_report.prototype.view_report_1_1 = function (start, stop) {
         // Запускаем 6 процесса инициализации (паралельно)
-        var process_load = 2;
+        var process_load = 3;
         // Выход из загрузки
         var out_load = function (process_load) {
             if (process_load === 0) {
@@ -894,18 +934,28 @@
             out_load(process_load);
 
         }.bind(this));
+        // пустые операторы
+        this.ids_wsd.getReportAdoptionWagonNotOperationOfPeriod(start, stop, function (result_wagons) {
+            this.wagons_not_operation = result_wagons;
 
+            //this.table_outg_sostav_all.view(outgoing_sostav);
+            process_load--;
+            out_load(process_load);
+
+        }.bind(this));
     };
     // Получим строку для отчета
     view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav, type) {
         if (list_sostav === null) return null;
         var count_wagon = 0;
         var count_account_balance = 0;
+        var count_not_operator = 0;
         $.each(list_sostav, function (i, s) {
             count_wagon += s.count_wagon;
             count_account_balance += s.count_account_balance;
+            count_not_operator += s.count_not_operator;
         });
-        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, adoption_sostav: list_sostav }
+        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, count_not_operator: count_not_operator, adoption_sostav: list_sostav }
     };
     // Получим строку для отчета отправка
     view_td_report.prototype.get_outgoing_sostav = function (station_name, list_sostav, type) {
@@ -922,6 +972,9 @@
     view_td_report.prototype.clear_report_1_1 = function () {
         if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
         if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
+        if (this.table_outg_sostav_all) this.table_outg_sostav_all.view([]);
+        if (this.table_outg_sostav_detali) this.table_outg_sostav_detali.view([]);
+        if (this.table_adop_wagon_not_operation) this.table_adop_wagon_not_operation.view([]);
         LockScreenOff();
     };
     // Поиск по номеру документа
@@ -946,7 +999,28 @@
             this.$bt_search_car_arr.prop("disabled", false); // сделаем активной
         };
     }
-
+    // Поиск по номеру документа
+    view_td_report.prototype.action_search_outgoing_docs = function () {
+        this.out_clear();
+        this.$bt_search_car_out.prop("disabled", true); // сделаем не активной
+        var list_docs = this.element_textarea_docs_out.val();
+        var nums = is_valid_docs(list_docs, this.alert);
+        if (nums) {
+            LockScreen(langView('vtdr_mess_operation_run', App.Langs));
+            this.ids_wsd.getReportOutgoingSostavOfDocs(nums, function (result) {
+                if (result !== null) {
+                    this.table_outg_searsh_docs.view(result);
+                    LockScreenOff();
+                } else {
+                    this.mf_edit.out_warning(langView('vtdr_mess_error_search_docs', App.Langs).format(result.result));
+                }
+                this.$bt_search_car_out.prop("disabled", false); // сделаем активной
+                LockScreenOff();
+            }.bind(this));
+        } else {
+            this.$bt_search_car_out.prop("disabled", false); // сделаем активной
+        };
+    }
     //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {

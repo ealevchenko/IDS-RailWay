@@ -21,6 +21,7 @@
             'ttdr_field_adoption_sostav_station': 'ПРИБЫТИЕ',
             'ttdr_field_adoption_count_wagon': 'Всего вагонов',
             'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
+            'ttdr_field_adoption_count_not_operator': 'Без оператора',
 
             'ttdr_field_outgoing_sostav_station': 'ПРИБЫТИЕ',
             'ttdr_field_outgoing_sostav_wagon': 'Всего вагонов',
@@ -30,6 +31,7 @@
             'ttdr_field_adoption_sostav_detali_date_adoption': 'Дата приема',
             'ttdr_field_adoption_sostav_detali_count_wagon': 'кол-во',
             'ttdr_field_adoption_sostav_detali_count_account_balance': 'Уч. ваг.',
+            'ttdr_field_adoption_sostav_detali_count_not_operator': 'Без опер.',
 
             'ttdr_field_outgoing_sostav_detali_num_doc': '№ ведомости',
             'ttdr_field_outgoing_sostav_detali_date_outgoing': 'Дата сдача',
@@ -41,7 +43,7 @@
 
             'ttdr_field_sostav_naturka_id': 'id вагона',
             'ttdr_field_sostav_naturka_position_arrival': '№ поз.',
-            'ticc_field_num': '№ вагона',
+            'ttdr_field_num': '№ вагона',
             'ttdr_field_sostav_naturka_uz_document_nom_doc': '№ дос. накл.',
             'ttdr_field_sostav_naturka_uz_document_nom_main_doc': '№ осн. накл.',
             'ttdr_field_sostav_naturka_uz_vagon_wagon_adm': 'Код Адм.',
@@ -95,6 +97,43 @@
             'ttdr_field_sostav_naturka_uz_vagon_division_abbr': 'Цех получатель',
             'ttdr_field_sostav_naturka_uz_vagon_commercial_condition': 'Ком состояние',
             'ttdr_field_sostav_naturka_uz_vagon_sertification_data': 'Серт. данные',
+
+            'ttdr_field_sostav_outgoing_naturka_outgoing_car_position_outgoing': '№ поз.',
+            'ttdr_field_sostav_outgoing_naturka_num': '№ вагона',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_document_nom_doc': '№ накл.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name': 'Груз',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name': 'Груз',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name': 'Станция назначения',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_name': 'Адм.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr': 'Адм.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod': 'Код Род.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_name': 'Род.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr': 'Род.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_code': 'Шифр Цех',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_name_division': 'Цех погр.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr': 'Цех погр.',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon': 'Собственник',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr': 'Собственник',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator': 'id Опер. по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators': 'Оператор по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr': 'Оператор по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start': 'Опер. по отпр. нач. аренды',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end': 'Опер. по отпр. кон. аренды',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid': 'Опер. по отпр. платный',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg': 'Вес, тн',
+
+            'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
+            'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
+            'ttdr_field_adoption_wagon_not_operation_date_adoption': 'Дата приема',
+            'ttdr_field_adoption_wagon_not_operation_cargo_name': 'Груз ПРИБ.',
+            'ttdr_field_adoption_wagon_not_operation_nom_main_doc': 'Осн. накл.',
+            'ttdr_field_adoption_wagon_not_operation_nom_doc': 'Доп. накл.',
+            'ttdr_field_adoption_wagon_not_operation_station_from_name': 'Станция отправления',
+            'ttdr_field_adoption_wagon_not_operation_division_abbr': 'Цех-получатель',
 
 
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
@@ -163,6 +202,14 @@
             },
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_adoption_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'adoption_sostav_count_not_operator',
+            data: function (row, type, val, meta) {
+                return row.count_not_operator;
+            },
+            className: 'dt-body-center sum_count_not_operator',
+            title: langView('ttdr_field_adoption_count_not_operator', App.Langs), width: "50px", orderable: false, searchable: false
         },
         // Поля составы сданные
         {
@@ -240,6 +287,14 @@
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_adoption_sostav_detali_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
         },
+        {
+            field: 'adoption_sostav_detali_count_not_operator',
+            data: function (row, type, val, meta) {
+                return row.count_not_operator;
+            },
+            className: 'dt-body-center sum_count_not_operator',
+            title: langView('ttdr_field_adoption_sostav_detali_count_not_operator', App.Langs), width: "50px", orderable: false, searchable: false
+        },
         // Поля принятые составы детально outgoing_sostav_detali
         {
             field: 'outgoing_sostav_detali_details_control',
@@ -314,7 +369,7 @@
                 return row.num;
             },
             className: 'dt-body-center',
-            title: langView('ticc_field_num', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_num', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Документы накладных УЗ
         {
@@ -507,7 +562,7 @@
         {
             field: 'sostav_naturka_arrival_uz_vagon_arrival_wagons_rent_operator_paid',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_arrival_wagons_rent_operator_paid ? langView('ticc_title_yes', App.Langs) : '';
+                return row.arrival_uz_vagon_arrival_wagons_rent_operator_paid ? langView('ttdr_title_yes', App.Langs) : '';
             },
             className: 'dt-body-centr',
             title: langView('ttdr_field_sostav_naturka_uz_vagon_arrival_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
@@ -760,9 +815,306 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_sostav_naturka_uz_vagon_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
         },
-
-
-
+        // Натурка отправка
+        {
+            field: 'sostav_outgoing_naturka_num',
+            data: function (row, type, val, meta) {
+                return row.num;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_car_position_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing_car_position_outgoing;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_car_position_outgoing', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_document_nom_doc',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_document_nom_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_cargo_group_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_to_station_uz_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция назначения основное поле по документу САП если пусто тогда по ручному вводу
+        {
+            field: 'sostav_outgoing_naturka_outgoing_to_station_uz_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_document_station_to_name_' + App.Lang] !== null && row['outgoing_uz_document_station_to_name_' + App.Lang] !== '' ? row['outgoing_uz_document_station_to_name_' + App.Lang] : row.outgoing_uz_vagon_to_station_uz_name;
+                //return row.sap_outgoing_supply_destination_station_name !== null && row.sap_outgoing_supply_destination_station_name !== '' ? row.sap_outgoing_supply_destination_station_name : row.outgoing_uz_vagon_to_station_uz_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Администрация по отправке
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_wagon_adm;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_adm_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_adm_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //Род по отправке
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_rod;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_rod_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_rod_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Цех отправитель
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_code',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_division_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_name_division',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_name_division_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_name_division', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_division_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Собственник
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_owner_wagon_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_owner_wagon_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // ОПЕРАТОР ПО ОТПРАВКЕ [IDS].[Directory_OperatorsWagons]
+        // Оператор
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_outgoing_wagons_rent_id_operator;
+            },
+            className: 'dt-body-center operator',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_outgoing_wagons_rent_start ? moment(row.outgoing_uz_vagon_outgoing_wagons_rent_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_outgoing_wagons_rent_end ? moment(row.outgoing_uz_vagon_outgoing_wagons_rent_end).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_outgoing_wagons_rent_operator_paid ? langView('togc_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-centr',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // field: 'operator_color'
+        //Ограничение
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_outgoing_wagons_rent_limiting_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_vesg',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_vesg ? Number(Number(row.outgoing_uz_vagon_vesg) / 1000).toFixed(3) : null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Вагоны без оператора
+        {
+            field: 'adoption_wagon_not_operation_position',
+            data: function (row, type, val, meta) {
+                return meta.row++;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_wagon_not_operation_position', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_num',
+            data: function (row, type, val, meta) {
+                return row.num;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_wagon_not_operation_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.sostav_date_adoption ? moment(row.sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_adoption_wagon_not_operation_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_adoption_wagon_not_operation_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_nom_main_doc',
+            data: function (row, type, val, meta) {
+                return row.nom_main_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_wagon_not_operation_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_nom_doc',
+            data: function (row, type, val, meta) {
+                return row.nom_main_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_wagon_not_operation_nom_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_station_from_name',
+            data: function (row, type, val, meta) {
+                return row['station_from_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_adoption_wagon_not_operation_station_from_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_wagon_not_operation_division_abbr',
+            data: function (row, type, val, meta) {
+                return row['division_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_adoption_wagon_not_operation_division_abbr', App.Langs), width: "150px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -848,6 +1200,7 @@
         collums.push({ field: 'adoption_sostav_station', title: null, class: null });
         collums.push({ field: 'adoption_sostav_count_wagon', title: null, class: null });
         collums.push({ field: 'adoption_sostav_count_account_balance', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_count_not_operator', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей outgoing_sostav
@@ -867,6 +1220,7 @@
         collums.push({ field: 'adoption_sostav_detali_date_adoption', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_wagon', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_account_balance', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_count_not_operator', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // 
@@ -881,7 +1235,7 @@
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей sostav_naturka
-    table_td_report.prototype.init_columns_sostav_naturka = function () {
+    table_td_report.prototype.init_columns_sostav_arrival_naturka = function () {
         var collums = [];
         collums.push({ field: 'sostav_naturka_arrival_car_position_arrival', title: null, class: null });
         collums.push({ field: 'sostav_naturka_num', title: null, class: null });
@@ -949,6 +1303,53 @@
         //collums.push({ field: 'adoption_sostav_count_account_balance', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей sostav_naturka
+    table_td_report.prototype.init_columns_sostav_outgoing_naturka = function () {
+        var collums = [];
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_car_position_outgoing', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_num', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_document_nom_doc', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_vesg', title: null, class: null });
+
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_name', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_name', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_code', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_name_division', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', title: null, class: null });
+        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей adoption_wagon_not_operation
+    table_td_report.prototype.init_columns_adoption_wagon_not_operation = function () {
+        var collums = [];
+        collums.push({ field: 'adoption_wagon_not_operation_position', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_num', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_date_adoption', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_cargo_name', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_nom_doc', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_station_from_name', title: null, class: null });
+        collums.push({ field: 'adoption_wagon_not_operation_division_abbr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -1014,8 +1415,8 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация кнопок sostav_naturka
-    table_td_report.prototype.init_button_sostav_naturka = function () {
+    // инициализация кнопок sostav_arrival_naturka
+    table_td_report.prototype.init_button_sostav_arrival_naturka = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -1026,6 +1427,34 @@
             }.bind(this)
         });
         buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // инициализация кнопок sostav_outgoing_naturka
+    table_td_report.prototype.init_button_sostav_outgoing_naturka = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // инициализация кнопок adoption_wagon_not_operation
+    table_td_report.prototype.init_button_adoption_wagon_not_operation = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        /*        buttons.push({ name: 'page_length', action: null });*/
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -1100,7 +1529,7 @@
                 this.table_buttons = this.init_button_outgoing_sostav_detali();
                 break;
             };
-            case 'sostav_naturka': {
+            case 'sostav_arrival_naturka': {
                 this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
                 this.pageLength = 20;
                 this.deferRender = true;
@@ -1113,8 +1542,42 @@
                 this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
-                this.table_columns = this.init_columns_sostav_naturka();
-                this.table_buttons = this.init_button_sostav_naturka();
+                this.table_columns = this.init_columns_sostav_arrival_naturka();
+                this.table_buttons = this.init_button_sostav_arrival_naturka();
+                break;
+            };
+            case 'sostav_outgoing_naturka': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 20;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.table_columns = this.init_columns_sostav_outgoing_naturka();
+                this.table_buttons = this.init_button_sostav_outgoing_naturka();
+                break;
+            };
+            case 'adoption_wagon_not_operation': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.table_columns = this.init_columns_adoption_wagon_not_operation();
+                this.table_buttons = this.init_button_adoption_wagon_not_operation();
                 break;
             };
             // Таблица составы по умолчанию (если не выставят тип отчета)
@@ -1176,13 +1639,13 @@
             title: null,
         });
         if (this.settings.type_report === 'adoption_sostav') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_sostav') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_sostav_detali') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_sostav_detali') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
@@ -1286,7 +1749,7 @@
                     }
 
                 }.bind(this));
-                if (this.settings.detali_table) this.init_detali();
+                if (this.settings.detali_table) this.init_arrival_detali();
                 break;
             };
             case 'outgoing_sostav_detali': {
@@ -1299,18 +1762,17 @@
                     }
                 }.bind(this));
                 // Настроим ссылку на прибытие
-                this.$table_report.find('tbody').on('tbody click', 'button.arrival-button', function (e) {
+                this.$table_report.find('tbody').on('tbody click', 'button.outgoing-button', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     var data = this.obj_t_report.row($(e.currentTarget).parents('tr')).data();
                     if (data) {
-                        var date = moment(data.date_arrival)
+                        var date = moment(data.date_readiness_amkr)
                         date = date.format('YYYY-MM-DD[T]HH:mm:ss');
-                        window.open(url_incoming + '?id_arrival=' + data.id + '&arrival=' + date, '', '');
+                        window.open(url_incoming + '?id=' + data.id_outgoing + '&readiness=' + date, '', '');
                     }
-
                 }.bind(this));
-                if (this.settings.detali_table) this.init_detali();
+                if (this.settings.detali_table) this.init_outgoing_detali();
                 break;
             };
         };
@@ -1376,6 +1838,36 @@
                     var sum_count_wagon_all = 0;
                     var sum_count_account_balance = 0;
                     var sum_count_account_balance_all = 0;
+                    var sum_count_not_operator = 0;
+                    var sum_count_not_operator_all = 0;
+                    $.each(data, function (i, el) {
+                        if (el.type === 0) {
+                            sum_count_wagon += el.count_wagon;
+                            sum_count_account_balance += el.count_account_balance;
+                            sum_count_not_operator += el.count_not_operator;
+                        }
+                        sum_count_wagon_all += el.count_wagon;
+                        sum_count_account_balance_all += el.count_account_balance;
+                        sum_count_not_operator_all += el.count_not_operator;
+                    });
+                }
+                this.obj_t_report.columns('.sum_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon_all + '(' + sum_count_wagon + ')');
+                });
+                this.obj_t_report.columns('.sum_count_account_balance').every(function () {
+                    $(this.footer()).html(sum_count_account_balance_all + '(' + sum_count_account_balance + ')');
+                });
+                this.obj_t_report.columns('.sum_count_not_operator').every(function () {
+                    $(this.footer()).html(sum_count_not_operator_all + '(' + sum_count_not_operator + ')');
+                });
+                break;
+            };
+            case 'outgoing_sostav': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_count_wagon_all = 0;
+                    var sum_count_account_balance = 0;
+                    var sum_count_account_balance_all = 0;
                     $.each(data, function (i, el) {
                         if (el.type === 0) {
                             sum_count_wagon += el.count_wagon;
@@ -1398,6 +1890,28 @@
                 if (data) {
                     var sum_count_wagon = 0;
                     var sum_count_account_balance = 0;
+                    var sum_count_not_operator = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_count_account_balance += el.count_account_balance;
+                        sum_count_not_operator += el.count_not_operator;
+                    });
+                }
+                this.obj_t_report.columns('.sum_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.sum_count_account_balance').every(function () {
+                    $(this.footer()).html(sum_count_account_balance);
+                });
+                this.obj_t_report.columns('.sum_count_not_operator').every(function () {
+                    $(this.footer()).html(sum_count_not_operator);
+                });
+                break;
+            };
+            case 'outgoing_sostav_detali': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
                         sum_count_account_balance += el.count_account_balance;
@@ -1414,7 +1928,7 @@
         };
     };
     // Инициализация таблицы детально
-    table_td_report.prototype.init_detali = function () {
+    table_td_report.prototype.init_arrival_detali = function () {
         var base = this;
         this.$table_report.find('tbody')
             .on('click', 'td.adoption-sostav-detali', function (e) {
@@ -1426,6 +1940,7 @@
                     // This row is already open - close it
                     row.child.hide();
                     tr.removeClass('shown');
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                 }
                 else {
                     var data = row.data();
@@ -1436,14 +1951,46 @@
                     tr.addClass('shown');
                     setTimeout(function () {
                         //var ff = base.$table_report.find(sl)
-                        base.view_detali(data);
+                        base.view_arrival_detali(data);
+                        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     }, 100);
 
                 }
             }.bind(this));
     };
     //
-    table_td_report.prototype.view_detali = function (data) {
+    table_td_report.prototype.init_outgoing_detali = function () {
+        var base = this;
+        this.$table_report.find('tbody')
+            .on('click', 'td.outgoing-sostav-detali', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var tr = $(e.currentTarget).closest('tr');
+                var row = base.obj_t_report.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                }
+                else {
+                    var data = row.data();
+                    var sl = this.selector + '-detali-' + data.id;
+                    row.child('<div class="detali-operation table-report-detali" id="' + sl + '">' +
+                        '</div>').show();
+                    // Инициализируем
+                    tr.addClass('shown');
+                    setTimeout(function () {
+                        //var ff = base.$table_report.find(sl)
+                        base.view_outgoing_detali(data);
+                        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    }, 100);
+
+                }
+            }.bind(this));
+    };
+    //
+    table_td_report.prototype.view_arrival_detali = function (data) {
         var TTDR = App.table_td_report;
         var sl = 'div#' + this.selector + '-detali-' + data.id;
         //if (!this.tables_detali[data.id]) {
@@ -1452,11 +1999,41 @@
         this.tables_detali[data.id].init({
             alert: null,
             detali_table: false,
-            type_report: 'sostav_naturka',     //
+            type_report: 'sostav_arrival_naturka',     //
             link_num: false,
             ids_wsd: null,
             fn_init: function (init) {
                 this.load_incoming_cars_of_id_sostav(data.id, function (wagons) {
+                    this.tables_detali[data.id].view(wagons);
+                }.bind(this));
+            }.bind(this),
+            fn_action_view_detali: function (rows) {
+
+            },
+            fn_select_rows: function (rows) {
+                //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+                //} else {
+                //    this.table_adop_sostav_detali.view([]);
+                //}
+            }.bind(this),
+        });
+    };
+    //
+    table_td_report.prototype.view_outgoing_detali = function (data) {
+        var TTDR = App.table_td_report;
+        var sl = 'div#' + this.selector + '-detali-' + data.id;
+        //if (!this.tables_detali[data.id]) {
+        this.tables_detali[data.id] = new TTDR(sl); // Создадим экземпляр таблицы
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.tables_detali[data.id].init({
+            alert: null,
+            detali_table: false,
+            type_report: 'sostav_outgoing_naturka',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function (init) {
+                this.load_outgoing_cars_of_id_sostav(data.id, function (wagons) {
                     this.tables_detali[data.id].view(wagons);
                 }.bind(this));
             }.bind(this),
@@ -1495,16 +2072,46 @@
         }
 
     };
+    //
+    table_td_report.prototype.load_outgoing_cars_of_id_sostav = function (id_sostav, cb_load) {
+        if (id_sostav !== null) {
+            LockScreen(langView('ttdr_mess_load_sostav', App.Langs));
+            this.ids_wsd.getViewOutgoingCarsOfIDSostav(id_sostav, function (wagons) {
+                this.id_sostav = id_sostav;
+                this.wagons = this.filter_wagons(wagons);
+                LockScreenOff();
+                if (typeof cb_load === 'function') {
+                    cb_load(this.wagons);
+                }
+                LockScreenOff();
+            }.bind(this));
+        } else {
+            this.wagons = [];
+            this.id_sostav = null;
+            if (typeof cb_load === 'function') {
+                cb_load(this.wagons);
+            }
+        }
+
+    };
     // Отфильтровать вагоны
     table_td_report.prototype.filter_wagons = function (wagons) {
-        if (this.settings.type_report === 'sostav_naturka') {
+        if (this.settings.type_report === 'sostav_arrival_naturka') {
             // Сохраним отфильтрованый выбор(вагоны которые приняли)
             return wagons
                 .filter(function (i) { return i.arrival_car_position_arrival !== null })
                 .sort(function (a, b) { return a.arrival_car_position_arrival - b.arrival_car_position_arrival });
         } else {
             return wagons;
-        }
+        };
+        if (this.settings.type_report === 'sostav_outgoing_naturka') {
+            // Сохраним отфильтрованый выбор(вагоны которые приняли)
+            return wagons
+                .filter(function (i) { return i.outgoing_car_position_outgoing !== null })
+                .sort(function (a, b) { return a.outgoing_car_position_outgoing - b.outgoing_car_position_outgoing });
+        } else {
+            return wagons;
+        };
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения

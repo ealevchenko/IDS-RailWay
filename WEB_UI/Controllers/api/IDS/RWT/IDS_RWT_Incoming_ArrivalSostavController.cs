@@ -116,6 +116,7 @@ namespace WEB_UI.Controllers.api
         public string change_user { get; set; }
         public int? count_wagon { get; set; }
         public int? count_account_balance { get; set; }
+        public int? count_not_operator { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/arrival_sostav")]

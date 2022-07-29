@@ -2149,7 +2149,52 @@
             },
         });
     };
-
+    //Получить принятые составы 
+    ids_wsd.prototype.getReportOutgoingSostavOfDocs = function (docs, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_sostav/report/outgoing_sostav/docs/' + docs,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportOutgoingSostavOfDocs", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить принятые вагоны без операторов за период
+    ids_wsd.prototype.getReportAdoptionWagonNotOperationOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_cars/report/adoption_wagon/not_operator/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportAdoptionWagonNotOperationOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 
