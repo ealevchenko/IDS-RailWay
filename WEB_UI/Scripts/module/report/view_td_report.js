@@ -937,8 +937,7 @@
         // пустые операторы
         this.ids_wsd.getReportAdoptionWagonNotOperationOfPeriod(start, stop, function (result_wagons) {
             this.wagons_not_operation = result_wagons;
-
-            //this.table_outg_sostav_all.view(outgoing_sostav);
+            this.table_adop_wagon_not_operation.view(this.wagons_not_operation);
             process_load--;
             out_load(process_load);
 

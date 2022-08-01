@@ -116,13 +116,13 @@ table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.da
 }
 
 td.details-control {
-    background: url('/../Content/DataTables/media/images/details_open.png') no-repeat center center;
+    background: url('/../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
     cursor: pointer;
 }
 
 tr.shown td.details-control {
-    background: url('/../Content/DataTables/media/images/details_close.png') no-repeat center center;
+    background: url('/../../Content/DataTables/media/images/details_close.png') no-repeat center center;
     width: 20px;
 }
 

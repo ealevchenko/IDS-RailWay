@@ -1054,7 +1054,7 @@
         {
             field: 'adoption_wagon_not_operation_position',
             data: function (row, type, val, meta) {
-                return meta.row++;
+                return ++meta.row;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_adoption_wagon_not_operation_position', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1769,7 +1769,7 @@
                     if (data) {
                         var date = moment(data.date_readiness_amkr)
                         date = date.format('YYYY-MM-DD[T]HH:mm:ss');
-                        window.open(url_incoming + '?id=' + data.id_outgoing + '&readiness=' + date, '', '');
+                        window.open(url_outgoing + '?id=' + data.id + '&readiness=' + date, '', '');
                     }
                 }.bind(this));
                 if (this.settings.detali_table) this.init_outgoing_detali();
@@ -2096,22 +2096,21 @@
     };
     // Отфильтровать вагоны
     table_td_report.prototype.filter_wagons = function (wagons) {
-        if (this.settings.type_report === 'sostav_arrival_naturka') {
-            // Сохраним отфильтрованый выбор(вагоны которые приняли)
-            return wagons
-                .filter(function (i) { return i.arrival_car_position_arrival !== null })
-                .sort(function (a, b) { return a.arrival_car_position_arrival - b.arrival_car_position_arrival });
-        } else {
-            return wagons;
-        };
-        if (this.settings.type_report === 'sostav_outgoing_naturka') {
-            // Сохраним отфильтрованый выбор(вагоны которые приняли)
-            return wagons
-                .filter(function (i) { return i.outgoing_car_position_outgoing !== null })
-                .sort(function (a, b) { return a.outgoing_car_position_outgoing - b.outgoing_car_position_outgoing });
-        } else {
-            return wagons;
-        };
+        switch (this.settings.type_report) {
+            case 'adoption_sostav_detali': {
+                return wagons
+                    .filter(function (i) { return i.arrival_car_position_arrival !== null })
+                    .sort(function (a, b) { return a.arrival_car_position_arrival - b.arrival_car_position_arrival });
+            };
+            case 'outgoing_sostav_detali': {
+                return wagons
+                    .filter(function (i) { return i.outgoing_car_position_outgoing !== null })
+                    .sort(function (a, b) { return a.outgoing_car_position_outgoing - b.outgoing_car_position_outgoing });
+            };
+            default: {
+                return wagons;
+            }
+        }
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
