@@ -22,7 +22,12 @@
             'vtdr_link_title_home2': 'Транспортный департамент',
 
             'vtdr_link_title_report_1_1': 'Статистика',
+            'vtdr_link_title_report_2_1': 'Отчет по прибытию (общий)',
+
+
             'vtdr_title_report_1_1': 'Статистика {0}',
+            'vtdr_title_report_2_1': 'Отчет по прибытию (общий) {0}',
+
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
             'vtdr_title_report_type_3': '«За месяц» c:{0} по {1}',
@@ -32,6 +37,9 @@
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
             'vtdr_card_header_report_1_1_not_oper': 'ВАГОНЫ БЕЗ ОПЕРАТОРОВ',
             'vtdr_load_adoption_sostav': 'Выполняю операцию выборка принятых составов ...',
+
+            'vtdr_card_header_report_2_1_group': 'Общая информация',
+            'vtdr_card_header_report_2_1_detali': 'Детально информация',
 
 
             'vtdr_title_type_select': 'Выборка за:',
@@ -169,7 +177,14 @@
                 click: function () {
                     this.init_report_1_1();
                 }.bind(this),
-            }
+            },
+            {
+                text: langView('vtdr_link_title_report_2_1', App.Langs),
+                icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
+                click: function () {
+                    this.init_report_2_1();
+                }.bind(this),
+            },
         ];
         // Очистим экран
         this.$panel.empty();
@@ -378,7 +393,10 @@
     // Получить дату отчета
     view_td_report.prototype.set_data_report = function (date, interval) {
         var message_report = '';
-        this.clear_report_1_1();
+        switch (this.report) {
+            case 1: this.clear_report_1_1(); break;
+            case 2: this.clear_report_2_1(); break;
+        }
         switch (this.type) {
             case 1: {
                 if (date) {
@@ -415,7 +433,11 @@
                 break;
             };
         }
-        this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(message_report));
+        switch (this.report) {
+            case 1: this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(message_report)); break;
+            case 2: this.$title_report.text(langView('vtdr_title_report_2_1', App.Langs).format(message_report)); break;
+        }
+
     };
     // Показать отчет
     view_td_report.prototype.view_report = function () {
@@ -967,7 +989,7 @@
         });
         return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, outgoing_sostav: list_sostav }
     };
-    // 
+    // Очистить таблицы
     view_td_report.prototype.clear_report_1_1 = function () {
         if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
         if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
@@ -1020,6 +1042,225 @@
             this.$bt_search_car_out.prop("disabled", false); // сделаем активной
         };
     }
+    //----------------------------------------------------------
+    // Инициализировать отчет "Отчет по прибытию (общий)"
+    view_td_report.prototype.init_report_2_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 2; // номер отчета
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_2_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        //------
+        var fieldset_setup = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$setup_select = fieldset_setup.$fieldset;
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+
+        var row_common = new this.fe_ui.bs_row();
+        var col_setup = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 2,
+        });
+        col_setup.$col.append(this.$setup_select);
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 10,
+        });
+        col_view.$col.append(this.$table_view);
+        //
+        var div_row1 = new this.fe_ui.bs_row();
+        var div_row2 = new this.fe_ui.bs_row();
+        this.$table_view.append(div_row1.$row.append($('<div id="report-group"></div>'))).append(div_row2.$row.append($('<div id="report-detali"></div>')))
+        //
+        row_common.$row.append(col_setup.$col).append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+
+
+        //this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');               // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_adop_sostav_all.init({
+        //    alert: null,
+        //    detali_table: false,
+        //    type_report: 'adoption_sostav',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //    fn_select_rows: function (rows) {
+        //        if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+        //            this.table_adop_sostav_detali.view(rows[0].adoption_sostav);
+        //            LockScreenOff();
+        //        } else {
+        //            this.table_adop_sostav_detali.view([]);
+        //            LockScreenOff();
+        //        }
+        //    }.bind(this),
+        //});
+
+        //this.table_adop_sostav_detali = new TTDR('div#adoption-sostav-detali');         // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_adop_sostav_detali.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'adoption_sostav_detali',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //});
+
+        //this.table_adop_searsh_docs = new TTDR('div#adoption-searsh-docs');              // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_adop_searsh_docs.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'adoption_sostav_detali',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //    fn_select_rows: function (rows) {
+        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+        //        //} else {
+        //        //    this.table_adop_sostav_detali.view([]);
+        //        //}
+        //    }.bind(this),
+        //});
+        ////
+        //this.table_outg_sostav_all = new TTDR('div#outgoing-sostav-all');               // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_outg_sostav_all.init({
+        //    alert: null,
+        //    detali_table: false,
+        //    type_report: 'outgoing_sostav',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //    fn_select_rows: function (rows) {
+        //        if (rows && rows.length > 0 && rows[0].outgoing_sostav && rows[0].outgoing_sostav.length > 0) {
+        //            this.table_outg_sostav_detali.view(rows[0].outgoing_sostav);
+        //            LockScreenOff();
+        //        } else {
+        //            this.table_outg_sostav_detali.view([]);
+        //            LockScreenOff();
+        //        }
+        //    }.bind(this),
+        //});
+
+        //this.table_outg_sostav_detali = new TTDR('div#outgoing-sostav-detali');         // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_outg_sostav_detali.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'outgoing_sostav_detali',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //});
+
+        //this.table_outg_searsh_docs = new TTDR('div#outgoing-searsh-docs');              // Создадим экземпляр
+        //// Инициализация модуля "Таблица прибывающих составов"
+        //this.table_outg_searsh_docs.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'outgoing_sostav_detali',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //    fn_select_rows: function (rows) {
+        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+        //        //} else {
+        //        //    this.table_adop_sostav_detali.view([]);
+        //        //}
+        //    }.bind(this),
+        //});
+
+        //this.table_adop_wagon_not_operation = new TTDR('div#adoption-wagon-not-operation');              // Создадим экземпляр
+        //// Инициализация модуля "Таблица вагонов без оператора"
+        //this.table_adop_wagon_not_operation.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'adoption_wagon_not_operation',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //    fn_select_rows: function (rows) {
+        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
+        //        //} else {
+        //        //    this.table_adop_sostav_detali.view([]);
+        //        //}
+        //    }.bind(this),
+        //});
+
+    };
+
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_2_1 = function () {
+        //if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
+        //if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
+        //if (this.table_outg_sostav_all) this.table_outg_sostav_all.view([]);
+        //if (this.table_outg_sostav_detali) this.table_outg_sostav_detali.view([]);
+        //if (this.table_adop_wagon_not_operation) this.table_adop_wagon_not_operation.view([]);
+        LockScreenOff();
+    };
     //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {

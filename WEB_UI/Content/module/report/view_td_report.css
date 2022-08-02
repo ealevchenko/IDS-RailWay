@@ -302,12 +302,12 @@ textarea {
     resize: vertical;
 }
 
-fieldset {
+/*fieldset {
     min-width: 0;
     padding: 0;
     margin: 0;
     border: 0;
-}
+}*/
 
 legend {
     display: block;
@@ -11724,4 +11724,10 @@ table.dataTable tbody td.shorten {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+fieldset {
+    border: 2px solid threedface;
+    padding: 10px;
+    border-radius: 3px;
 }
