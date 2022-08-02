@@ -55,6 +55,7 @@
             'togc_title_button_field_clear': 'Сбросить',
             'togc_title_button_hand_over_sostav': 'Сдать состав',
             'togc_title_button_dislocation_over_sostav': 'Перем. состав',
+            'togc_title_button_update_doc_uz': 'Обн.ЭПД',
             'togc_mess_init_module': 'Инициализация модуля (table_outgoing_cars)...',
             'togc_mess_load_sostav': 'Загружаю вагоны...',
             'togc_mess_update_sostav': 'Обновляю вагоны...',
@@ -63,12 +64,15 @@
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
+            'togc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «отправлен»!',
             'togc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
             'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
             'togc_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", статус выполнения не определён!',
             'togc_mess_ok_operation_outgoing_dislocation': 'Операция "Сменить дислокацию предъявленного состава" - выполнена',
             'togc_mess_error_operation_outgoing_dislocation': 'Ошибка выполнения операции "Сменить дислокацию предъявленного состава"',
+            'togc_mess_error_update_epd': 'Ошибка выполнения операции "Обновить ЭПД по отправленному составу", код ошибки :{0}',
+            'togc_mess_ok_update_epd': 'Операция "Обновить ЭПД по отправленному составу" - выполнена, обновленно :{0} вагонов.',
         },
         'en':  //default language: English
         {
@@ -110,6 +114,7 @@
             'togc_title_button_field_clear': 'Reset',
             'togc_title_button_hand_over_sostav': 'Hand Over Composition',
             'togc_title_button_dislocation_over_sostav': 'Wagon Disloc.',
+            'togc_title_button_update_doc_uz': 'Upd.ESD',
             'togc_mess_init_module': 'Initiating module...',
             'togc_mess_load_sostav': 'Loading wagons...',
             'togc_mess_update_sostav': 'Updating wagons...',
@@ -118,11 +123,13 @@
             'togc_mess_warning_id_sostav_null': 'Operation invalid no composition selected!',
             'togc_mess_warning_sostav_status_4': 'Operation invalid composition rejected!',
             'togc_mess_warning_sostav_status_5': 'Operation is invalid, composition does not have status "in progress" or "submitted"!',
+            'togc_mess_warning_sostav_status_6': 'Operation is invalid, the composition does not have status "sent"!',
             'togc_mess_error_sostav_null': 'Composition by id:{0} not found!',
             'togc_mess_ok_operation_return_present': 'Operation "Present composition to OC" - completed',
             'togc_mess_update_operation_return_present': 'Information about the operation "Present Composition at OZ" - updated',
             'togc_mess_error_operation_return_present': 'Error executing the operation "Present composition to OC", execution status is undefined!',
-
+            'togc_mess_error_update_epd': 'Error performing operation "Update EPD by sent train", error code :{0}',
+            'togc_mess_ok_update_epd': 'Operation "Update EPD by sent train" - completed, updated :{0} cars',
         }
     };
     // Определлим список текста для этого модуля
@@ -437,6 +444,11 @@
             enabled: true
         },
         {
+            button: 'update_doc_uz',
+            text: langView('togc_title_button_update_doc_uz', App.Langs),
+            enabled: true
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -512,12 +524,12 @@
                 this.action_hand_dislocation_sostav_sostav(); // выполнить операцию
             }.bind(this)
         });
-        //buttons.push({
-        //    name: 'return_sostav_uz',
-        //    action: function (e, dt, node, config) {
-        //        this.action_return_sostav_uz(); // выполнить операцию
-        //    }.bind(this)
-        //});
+        buttons.push({
+            name: 'update_doc_uz',
+            action: function (e, dt, node, config) {
+                this.update_doc_uz(); // выполнить операцию
+            }.bind(this)
+        });
         //buttons.push({
         //    name: 'view_wagons',
         //    action: function (e, dt, node, config) {
@@ -932,6 +944,50 @@
             LockScreenOff();
         }
 
+    };
+    //
+    table_outgoing_cars.prototype.update_doc_uz = function () {
+        this.out_clear();
+        LockScreen(langView('togc_mess_run_operation', App.Langs));
+        if (this.id_sostav !== null) {
+            this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
+                if (sostav) {
+                    if (sostav.status === 3) {
+                        // Подготовим операцию обновления документов ЭПД
+                        var operation_update_epd = {
+                            id_outgoing_sostav: this.id_sostav,
+                            user: App.User_Name,
+                        };
+                        // Обновим документы ЭПД
+                        this.ids_wsd.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
+                            if (result_update_epd !== null && result_update_epd.result >= 0) {
+                                this.update(function(wagons) {
+                                    this.view(wagons, this.id_station, this.id_sostav);
+                                    this.out_info(langView('togc_mess_ok_update_epd', App.Langs).format(result_update_epd.listResult.length))
+                                    LockScreenOff();
+                                }.bind(this));
+                            } else {
+                                // Ошибка, выполнения операции
+                                this.out_error(langView('togc_mess_error_update_epd', App.Langs).format(result_update_epd !== null ? result_update_epd.error : null));
+                                LockScreenOff();
+                            }
+                        }.bind(this));
+                    } else {
+                        // Ошибка, состав откланен 
+                        this.out_warning(langView('togc_mess_warning_sostav_status_6', App.Langs).format(this.id_sostav));
+                        LockScreenOff();
+                    };
+                } else {
+                    // Ошибка, состав не найден 
+                    this.out_warning(langView('togc_mess_error_sostav_null', App.Langs).format(this.id_sostav));
+                    LockScreenOff();
+                };
+            }.bind(this));
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('togc_mess_warning_id_sostav_null', App.Langs));
+            LockScreenOff();
+        }
     };
     // Загрузить составы прибывающие на станцию 
     //-------------------------------------------------------------------------------------------
