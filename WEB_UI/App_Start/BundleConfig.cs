@@ -33,12 +33,16 @@ namespace WEB_UI
                        "~/Scripts/umd/popper.js",
                         "~/Scripts/bootstrap.js",
                         "~/Scripts/respond.js",
-                        "~/Scripts/bootstrap-input-spinner.js"
+                        "~/Scripts/bootstrap-input-spinner.js",
+                        "~/Scripts/bootstrap-select.js",
+                        "~/Scripts/bootstrap-multiselect.js"
                        ));
 
             bundles.Add(new StyleBundle("~/bootstrap/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/bootstrap-select.min.css"));
+                      "~/Content/bootstrap-select.min.css",
+                      "~/Content/bootstrap-multiselect.min.css"
+                      ));
 
             // Календарь -------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/DateTime").Include(
@@ -102,13 +106,13 @@ namespace WEB_UI
             bundles.Add(new StyleBundle("~/DataTables/css").Include(
                 // ------- СТИЛЬ DATATABLES
                 "~/Content/DataTables/media/css/jquery.dataTables.min.css",
-                //, "~/Content/DataTables/media/css/dataTables.jqueryui.min.css",
+                 //, "~/Content/DataTables/media/css/dataTables.jqueryui.min.css",
                  //"~/Content/DataTables/media/css/dataTables.bootstrap4.min.css",
-                // ------- СТИЛЬ КНОПОК
+                 // ------- СТИЛЬ КНОПОК
                  "~/Content/DataTables/extensions/Buttons/css/buttons.dataTables.min.css",
-                //, "~/Content/DataTables/extensions/Buttons/css/buttons.jqueryui.min.css",
-                //"~/Content/DataTables/extensions/Buttons/css/buttons.bootstrap4.min.css",
-                // ------- СТИЛЬ ВЫБОРА
+                 //, "~/Content/DataTables/extensions/Buttons/css/buttons.jqueryui.min.css",
+                 //"~/Content/DataTables/extensions/Buttons/css/buttons.bootstrap4.min.css",
+                 // ------- СТИЛЬ ВЫБОРА
                  "~/Content/DataTables/extensions/Select/css/select.dataTables.min.css",
                  //, "~/Content/DataTables/extensions/Select/css/select.jqueryui.min.css",
                  //"~/Content/DataTables/extensions/Select/css/select.bootstrap4.min.css"
@@ -124,7 +128,7 @@ namespace WEB_UI
             // Moment ---------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/Moment").Include(
                 "~/Scripts/moment.min.js"//,
-                //"~/Scripts/moment-timezone.min.js"
+                                         //"~/Scripts/moment-timezone.min.js"
                 ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
