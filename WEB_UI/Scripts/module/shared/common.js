@@ -2368,6 +2368,114 @@
         };
         this.init();
     };
+    //
+    form_element.prototype.init_select_multiple = function (element, options) {
+        //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
+        this.$element = element;
+        var $default_option = $('<option></option>', {
+            'value': '-1',
+            'text': langView('title_select', App.Langs),
+        });
+        this.settings = $.extend({
+            data: [],
+            default_value: null,
+            fn_change: null,
+            check: null,
+        }, options);
+        this.init = function () {
+            this.$el = element;
+            this.$element = this.$el.multiselect({
+                buttonTextAlignment: 'left',
+                enableFiltering: true,
+                includeSelectAllOption: true,
+                nonSelectedText: 'Выберите...',
+                selectAllText: ' Выбрать все',
+                onChange: function (event) {
+                    if (typeof this.settings.fn_change) {
+                        this.settings.fn_change(event);
+                    }
+                    if (typeof this.settings.check === 'function') {
+                        this.settings.check(element.val());
+                    };
+                }.bind(this),
+            });
+            this.update(this.settings.data, this.settings.default_value);
+        };
+        this.val = function (value) {
+            if (value !== undefined) {
+                //var disabled = this.$element.prop("disabled");
+                //if (disabled) {
+                //    this.$element.prop("disabled", false);
+                //}
+                this.$el.multiselect('select', value);
+                //this.$element.val(value);
+                //if (disabled) {
+                //    this.$element.prop("disabled", true);
+                //}
+            } else {
+                var res = this.$el.multiselect('select');
+                return res;
+            };
+        };
+        this.getNumber = function () {
+            return this.$element.val() === null ? null : Number(this.$element.val());
+        };
+        this.getNumberNull = function () {
+            return this.$element.val() === null || Number(this.$element.val()) === -1 ? null : Number(this.$element.val());
+        };
+        this.text = function (text) {
+            if (text !== undefined) {
+                var disabled = this.$element.prop("disabled");
+                if (disabled) {
+                    this.$element.prop("disabled", false);
+                }
+                this.$element.val(text === null ? '' : text);
+                if (disabled) {
+                    this.$element.prop("disabled", true);
+                }
+            } else {
+                return this.$element.text();
+            };
+        };
+        this.update = function (data, default_value) {
+            this.$element.empty();
+            //element.append($default_option);
+            ////if (default_value === -1) {
+            ////    element.append($default_option);
+            ////}
+            if (data) {
+                $.each(data, function (i, el) {
+                    // Преобразовать формат
+                    if (el) {
+                        var $option = $('<option></option>', {
+                            'value': el.value,
+                            'text': el.text,
+                            'disabled': el.disabled,
+                        });
+                        this.$element.append($option);
+                    }
+                }.bind(this));
+            };
+            this.$element.val(default_value);
+            this.$el.multiselect('rebuild');
+        };
+        this.show = function () {
+            this.$element.show();
+        };
+        this.hide = function () {
+            this.$element.hide();
+        };
+        this.enable = function () {
+            this.$el.multiselect('enable');
+        };
+        this.disable = function (clear) {
+            this.$el.multiselect('disable');
+        };
+        this.destroy = function () {
+            this.$el.multiselect('destroy');
+        };
+        this.init();
+    };
     // Инициализация текстового поля "INPUT"
     form_element.prototype.init_input = function (element, options) {
         this.settings = $.extend({
@@ -2987,7 +3095,7 @@
             this.$textarea.prop('readonly', this.settings.readonly);
         }
     };
-    // Элемент <select type=".." class=".." id="num_car" title=".." name="..".></select>
+    // Элемент <select class=".." id="num_car" title=".." name="..".></select>
     form_element.prototype.select = function (options) {
         this.settings = $.extend({
             id: null,
@@ -2999,9 +3107,7 @@
             multiple: null,
             readonly: false,
         }, options);
-        this.$select = $('<select></select>', {
-            'type': this.settings.type
-        });
+        this.$select = $('<select></select>');
         if (!this.$select || this.$select.length === 0) {
             throw new Error('Не удалось создать элемент <select></select>');
         } else {
@@ -3011,11 +3117,46 @@
             add_tag(this.$select, 'title', this.settings.title);
             add_tag(this.$select, 'placeholder', this.settings.placeholder);
             add_tag(this.$select, 'required', this.settings.required);
-            add_tag(this.$select, 'size', this.settings.size);
-            add_tag(this.$select, 'multiple', this.settings.size);
+            /*            add_tag(this.$select, 'size', this.settings.size);*/
+            if (this.settings.size !== null || this.settings.size !== '') {
+                add_class(this.$select, 'form-control-' + this.settings.size);
+            }
+            if (this.settings.multiple) {
+                add_tag(this.$select, 'multiple', 'multiple');
+            }
+            //add_tag(this.$select, 'multiple', this.settings.multiple);
             this.$select.prop('readonly', this.settings.readonly);
         }
     };
+    //// Элемент <select id="..." multiple="multiple"></select>
+    //form_element.prototype.select_multiple = function (options) {
+    //    this.settings = $.extend({
+    //        id: null,
+    //        class: null,
+    //        title: null,
+    //        placeholder: null,
+    //        required: null,
+    //        size: null,
+    //        multiple: null,
+    //        readonly: false,
+    //    }, options);
+    //    this.$select = $('<select></select>');
+    //    if (!this.$select || this.$select.length === 0) {
+    //        throw new Error('Не удалось создать элемент <select></select>');
+    //    } else {
+    //        add_class(this.$select, this.settings.class);
+    //        add_id(this.$select, this.settings.id);
+    //        add_tag(this.$select, 'name', this.settings.id);
+    //        add_tag(this.$select, 'title', this.settings.title);
+    //        add_tag(this.$select, 'placeholder', this.settings.placeholder);
+    //        add_tag(this.$select, 'required', this.settings.required);
+    //        if (this.settings.size !== null || this.settings.size !== '') {
+    //            add_class(this.$select, 'form-control-' + this.settings.size);
+    //        }
+    //        add_tag(this.$select, 'multiple', 'multiple');
+    //        this.$select.prop('readonly', this.settings.readonly);
+    //    }
+    //};
     // Элемент <table class=".." id=".." title=".." name="..".></table>
     form_element.prototype.table = function (options) {
         this.settings = $.extend({
@@ -4294,7 +4435,6 @@
         }, options);
         //
         this.fe = new form_element();
-        //this.fc = new form_control();
 
         var div = new this.fe.div();
         this.$element = div.$div;
@@ -4323,7 +4463,7 @@
         // SELECT
         var select = new this.fe.select({
             id: this.settings.id,
-            type: 'text',
+            //type: 'text',
             class: 'form-control',
             title: this.settings.input_title,
             placeholder: this.settings.input_placeholder,
@@ -4368,6 +4508,110 @@
             this.$element.append(select.$select);
             this.$element.append(ifb.$div);
         }
+    };
+    //
+    form_element.prototype.bs_select_multiple = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            input_size: null,
+            input_class: null,
+            input_title: null,
+            input_placeholder: null,
+            input_multiple: true,
+            input_required: null,
+            input_readonly: null,
+            input_group: false,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: null,
+            input_group_append_class: null,
+            input_group_append_objs: null,
+            input_group_obj_form: null,
+            element_data: [],
+            element_default: null,
+            element_change: null,
+            element_check: null,
+        }, options);
+        //
+        this.fe = new form_element();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        if ((this.settings.form_group_size && this.settings.form_group_size !== '') || (this.settings.form_group_col && this.settings.form_group_col !== '')) {
+            var cl = 'col';
+            if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+                cl += '-' + this.settings.form_group_size;
+            }
+            if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+                cl += '-' + this.settings.form_group_col;
+            }
+            add_class(this.$element, cl);
+        }
+        add_class(this.$element, this.settings.form_group_class);
+        // Подпись
+        var label = new this.fe.label({
+            class: this.settings.label_class,
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        this.$element.append(label.$label);
+        // SELECT
+        var select = new this.fe.select({
+            id: this.settings.id,
+            class: 'form-control',
+            title: this.settings.input_title,
+            placeholder: this.settings.input_placeholder,
+            size: this.settings.input_size,
+            multiple: this.settings.input_multiple,
+            required: this.settings.input_required,
+            readonly: this.settings.input_readonly,
+        });
+        add_class(select.$select, this.settings.input_class);
+        this.$select = select.$select;
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+        //
+        if (this.settings.input_group) {
+            var ig = new this.fe.bs_input_group();
+            if (this.settings.input_group_prepend_objs && this.settings.input_group_prepend_objs !== null) {
+                var input_group_prepend = new this.fe.bs_input_group_prepend({
+                    class: this.settings.input_group_prepend_class,
+                    objs: this.settings.input_group_prepend_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_prepend.$div);
+            };
+            //
+            ig.$div.append(select.$select);
+            if (this.settings.input_group_append_objs && this.settings.input_group_append_objs !== null) {
+                var input_group_append = new this.fe.bs_input_group_append({
+                    class: this.settings.input_group_append_class,
+                    objs: this.settings.input_group_append_objs,
+                    obj_form: this.settings.input_group_obj_form
+                });
+                ig.$div.append(input_group_append.$div);
+            };
+            ig.$div.append(ifb.$div);
+            this.$element.append(ig.$div);
+        } else {
+            this.$element.append(select.$select);
+            this.$element.append(ifb.$div);
+        }
+        //
+        this.element = new this.fe.init_select_multiple(this.$select, {
+            data: this.settings.element_data,
+            default_value: this.settings.element_default,
+            fn_change: this.settings.element_change,
+            check: this.settings.element_check
+        });
     };
     //----------------------------------------------------------------------------
     // Автоматически формируем документы на форме
@@ -4560,6 +4804,23 @@
                 if (obj.obj === 'bs_select') {
                     obj.options.input_group_obj_form = obj_form;
                     var input = new this.bs_select(obj.options);
+                    if (input && input.element) {
+                        obj_form.views.push({
+                            name: obj.options.id,
+                            validation_group: obj.options.validation_group,
+                            type: 'select',
+                            element: input.element,
+                            $element: input.element.$element,
+                            destroy: true
+                        });
+                    } else {
+                        throw new Error('Не удалось создать элемент ' + obj.obj);
+                    }
+                    add_element(input.$element, content, obj);
+                };
+                if (obj.obj === 'bs_select_multiple') {
+                    obj.options.input_group_obj_form = obj_form;
+                    var input = new this.bs_select_multiple(obj.options);
                     if (input && input.element) {
                         obj_form.views.push({
                             name: obj.options.id,

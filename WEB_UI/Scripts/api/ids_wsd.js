@@ -672,6 +672,30 @@
             },
         });
     };
+    // Получить все вагоны принятые за период (View)
+    ids_wsd.prototype.getViewIncomingCarsOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_cars/view/car/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewIncomingCarsOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     // Операция принять вагон (перенести в левую часть)
     ids_wsd.prototype.postOperationIncomingWagon = function (operation, callback) {
         $.ajax({

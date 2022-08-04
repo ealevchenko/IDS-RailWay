@@ -1,9 +1,8 @@
-﻿!
- * Bootstrap v4.3.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 The Bootstrap Authors
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- 
+﻿! * Bootstrap v4.3.1 (https://getbootstrap.com/)
+* Copyright 2011-2019 The Bootstrap Authors
+* Copyright 2011-2019 Twitter, Inc.
+* Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+
 :root {
     --blue: #007bff;
     --indigo: #6610f2;
@@ -2292,6 +2291,14 @@ select.form-control:focus::-ms-value {
     border-radius: 0.2rem;
 }
 
+.multiselect-selected-text {
+    font-size: 0.875rem;
+}
+
+.multiselect-option {
+    font-size: 0.875rem;
+}
+
 .form-control-lg {
     height: calc(1.5em + 1rem + 2px);
     padding: 0.5rem 1rem;
@@ -2300,9 +2307,9 @@ select.form-control:focus::-ms-value {
     border-radius: 0.3rem;
 }
 
-select.form-control[size], select.form-control[multiple] {
+/*select.form-control[size], select.form-control[multiple] {
     height: auto;
-}
+}*/
 
 textarea.form-control {
     height: auto;

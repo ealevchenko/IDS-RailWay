@@ -40,6 +40,17 @@
 
             'vtdr_card_header_report_2_1_group': 'Общая информация',
             'vtdr_card_header_report_2_1_detali': 'Детально информация',
+            'vtdr_load_adoption_cars': 'Выполняю операцию выборка принятых вагонов ...',
+
+            'vtdr_label_button_setup_select': 'ВЫБРАТЬ',
+            'vtdr_label_wagon_nums': '№№ ваг.',
+            'vtdr_title_wagon_nums': 'Введите номера вагонов',
+            'vtdr_label_main_epd_docs': '№№ Основного ЭПД.',
+            'vtdr_title_main_epd_docs': 'Введите номера основных ЭПД',
+            'vtdr_label_epd_docs': '№№ Досылочного ЭПД.',
+            'vtdr_title_epd_docs': 'Введите номера досылочных ЭПД',
+            'vtdr_label_operation_amkr': 'Оператор АМКР',
+            'vtdr_title_operation_amkr': 'Оператор АМКР',
 
 
             'vtdr_title_type_select': 'Выборка за:',
@@ -119,6 +130,7 @@
 
     var FE = App.form_element;
     var alert = App.alert_form;
+    var directory = App.ids_directory;
     var wsd = App.ids_wsd;
 
     var FIL = App.form_inline;
@@ -137,6 +149,17 @@
         this.selector = this.$panel.attr('id');
         this.fe_ui = new FE();
     }
+
+    // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
+    view_td_report.prototype.load_db = function (list, update, callback) {
+        if (list) {
+            this.ids_dir.load(list, false, update, function (result) {
+                if (typeof callback === 'function') {
+                    callback(result);
+                }
+            });
+        };
+    };
     //==========================================================================================
     // Инициализация
     view_td_report.prototype.init = function (options) {
@@ -147,10 +170,13 @@
         this.settings = $.extend({
             alert: null,
             ids_wsd: null,
+            ids_dir: null,
             fn_init: null,
         }, options);
 
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
+        this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new directory();
+
         this.elements = {}; // Все элементы формы
 
         this.report = null;     // Номер выбранного отчета
@@ -169,6 +195,9 @@
         this.nb_outgoing_sostav = [];
         this.pr_outgoing_sostav = [];
         this.kr_outgoing_sostav = [];
+
+        this.wagons_not_operation = [];
+        this.wagons_adoption = [];
         // Сылки на отчеты
         this.report_links = [
             {
@@ -444,6 +473,10 @@
         switch (this.report) {
             case 1: {
                 this.view_report_1_1(this.start, this.stop);
+                break;
+            }
+            case 2: {
+                this.view_report_2_1(this.start, this.stop);
                 break;
             }
         }
@@ -1050,7 +1083,13 @@
         this.report = 2; // номер отчета
         $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_2_1', App.Langs).format(''));   // выведем название отчета
-        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        this.init_select_report();                                                     // Инициализация формы выбора периода отчетов
+        //$('#example-getting-started').multiselect();
+        // Загрузим справочные данные, определим поля формы правки
+        //this.load_db(['operators_wagons'], false, function (result) {
+
+        //    this.list_operators_wagons = this.ids_dir.getListOperatorsWagons('id', 'abbr', App.Lang);
+
         //------
         var fieldset_setup = new this.fe_ui.fieldset({
             class: 'border-primary',
@@ -1080,176 +1119,176 @@
         var div_row1 = new this.fe_ui.bs_row();
         var div_row2 = new this.fe_ui.bs_row();
         this.$table_view.append(div_row1.$row.append($('<div id="report-group"></div>'))).append(div_row2.$row.append($('<div id="report-detali"></div>')))
+
+        //this.select_operation_amkr = select_operation_amkr.$select;
+
+
         //
         row_common.$row.append(col_setup.$col).append(col_view.$col)
         this.$main_report.append(row_common.$row);
 
+        // Формируем форму выбора
+        var form_setup_select = new this.fe_ui.form({
+            class: null,
+            id: null,
+            novalidate: null
+        });
+        this.$form_setup_select = form_setup_select.$form;
+        //-кнопка
+        var row_setup_bt = new this.fe_ui.bs_row();
+        var col_setup_bt = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        var bt_setup_select = new this.fe_ui.bs_button({
+            color: 'primary',
+            size: 'sm',
+            class: null,
+            id: null,
+            label: langView('vtdr_label_button_setup_select', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                //this.action_search_adoption_docs();
+            }.bind(this),
+        });
+        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_select.$button));
+        // вагоны
+        var row_setup_1 = new this.fe_ui.bs_row();
+        var ta_wagon_nums = new this.fe_ui.bs_textarea({
+            id: 'wagon_nums',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_wagon_nums', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_wagon_nums', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_1.$row.append(ta_wagon_nums.$element);
+        // основн документы
+        var row_setup_2 = new this.fe_ui.bs_row();
+        var ta_main_epd_docs = new this.fe_ui.bs_textarea({
+            id: 'main_epd_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_main_epd_docs', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_main_epd_docs', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_2.$row.append(ta_main_epd_docs.$element);
+        // досылочные документы
+        var row_setup_3 = new this.fe_ui.bs_row();
+        var ta_epd_docs = new this.fe_ui.bs_textarea({
+            id: 'epd_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_epd_docs', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_epd_docs', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_3.$row.append(ta_epd_docs.$element);
+        // досылочные документы
+        var row_setup_4 = new this.fe_ui.bs_row();
+        var select_operation_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'operation_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_operation_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_operation_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+                //if (value && Number(value) >= 0) {
+                //    this.elements.input_number_consignee_code.val(value);
+                //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
+                //} else {
+                //    this.elements.input_number_consignee_code.val("");
+                //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
+                //}
+            }.bind(this),
+        });
+        row_setup_4.$row.append(select_operation_amkr.$element);
 
-        //this.table_adop_sostav_all = new TTDR('div#adoption-sostav-all');               // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_adop_sostav_all.init({
-        //    alert: null,
-        //    detali_table: false,
-        //    type_report: 'adoption_sostav',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        this.select_operation_amkr = select_operation_amkr.element;
 
-        //    },
-        //    fn_select_rows: function (rows) {
-        //        if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
-        //            this.table_adop_sostav_detali.view(rows[0].adoption_sostav);
-        //            LockScreenOff();
-        //        } else {
-        //            this.table_adop_sostav_detali.view([]);
-        //            LockScreenOff();
-        //        }
-        //    }.bind(this),
-        //});
 
-        //this.table_adop_sostav_detali = new TTDR('div#adoption-sostav-detali');         // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_adop_sostav_detali.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'adoption_sostav_detali',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        this.$form_setup_select.append(row_setup_bt.$row).append(row_setup_1.$row).append(row_setup_2.$row).append(row_setup_3.$row).append(row_setup_4.$row);
+        this.$setup_select.append(this.$form_setup_select);
 
-        //    },
-        //});
+        //this.select_operation_amkr.multiselect();
 
-        //this.table_adop_searsh_docs = new TTDR('div#adoption-searsh-docs');              // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_adop_searsh_docs.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'adoption_sostav_detali',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        //var amkr = $('#operation_amkr');
 
-        //    },
-        //    fn_select_rows: function (rows) {
-        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
-        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
-        //        //} else {
-        //        //    this.table_adop_sostav_detali.view([]);
-        //        //}
-        //    }.bind(this),
-        //});
-        ////
-        //this.table_outg_sostav_all = new TTDR('div#outgoing-sostav-all');               // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_outg_sostav_all.init({
-        //    alert: null,
-        //    detali_table: false,
-        //    type_report: 'outgoing_sostav',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        //amkr.multiselect();
 
-        //    },
-        //    fn_select_rows: function (rows) {
-        //        if (rows && rows.length > 0 && rows[0].outgoing_sostav && rows[0].outgoing_sostav.length > 0) {
-        //            this.table_outg_sostav_detali.view(rows[0].outgoing_sostav);
-        //            LockScreenOff();
-        //        } else {
-        //            this.table_outg_sostav_detali.view([]);
-        //            LockScreenOff();
-        //        }
-        //    }.bind(this),
-        //});
+        /*}.bind(this));*/
+    };
+    // Показать отчет  "Отчет по прибытию (общий)"
+    view_td_report.prototype.view_report_2_1 = function (start, stop) {
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                LockScreenOff();
+            }
+        }.bind(this);
+        LockScreen(langView('vtdr_load_adoption_cars', App.Langs));
+        // пустые операторы
+        this.ids_wsd.getViewIncomingCarsOfPeriod(start, stop, function (result_wagons) {
+            this.wagons_adoption = result_wagons;
+            this.list_operators_wagons = [];
+            $.each(this.wagons_adoption, function (key, value) {
+                var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+                if (!ow) {
+                    this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                }
+            }.bind(this));
 
-        //this.table_outg_sostav_detali = new TTDR('div#outgoing-sostav-detali');         // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_outg_sostav_detali.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'outgoing_sostav_detali',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+            this.select_operation_amkr.update(this.list_operators_wagons, -1);
+            process_load--;
+            out_load(process_load);
 
-        //    },
-        //});
-
-        //this.table_outg_searsh_docs = new TTDR('div#outgoing-searsh-docs');              // Создадим экземпляр
-        //// Инициализация модуля "Таблица прибывающих составов"
-        //this.table_outg_searsh_docs.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'outgoing_sostav_detali',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
-
-        //    },
-        //    fn_select_rows: function (rows) {
-        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
-        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
-        //        //} else {
-        //        //    this.table_adop_sostav_detali.view([]);
-        //        //}
-        //    }.bind(this),
-        //});
-
-        //this.table_adop_wagon_not_operation = new TTDR('div#adoption-wagon-not-operation');              // Создадим экземпляр
-        //// Инициализация модуля "Таблица вагонов без оператора"
-        //this.table_adop_wagon_not_operation.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'adoption_wagon_not_operation',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
-
-        //    },
-        //    fn_select_rows: function (rows) {
-        //        //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
-        //        //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav)
-        //        //} else {
-        //        //    this.table_adop_sostav_detali.view([]);
-        //        //}
-        //    }.bind(this),
-        //});
-
+        }.bind(this));
     };
 
     // Очистить таблицы

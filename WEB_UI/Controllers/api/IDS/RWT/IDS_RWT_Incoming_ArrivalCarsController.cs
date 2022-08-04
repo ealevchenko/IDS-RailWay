@@ -414,6 +414,30 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        /// <summary>
+        /// Получить полную информацию по вагону принятого состава, через id-вагона
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/arrival_cars/view/car/start/2020-03-12T00:00:00/stop/2020-03-20T23:59:59
+        [Route("view/car/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewIncomingCars))]
+        public IHttpActionResult GetViewIncomingCarsOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)";
+                List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/arrival_cars/num/63303077
         [Route("num/{num:int}")]
         [ResponseType(typeof(ArrivalCars))]
