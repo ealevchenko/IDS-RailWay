@@ -237,7 +237,7 @@ namespace Test
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationManualSearchIncomingWagon();          // Тест поиска вагонов введенных в ручную
 
-            tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
+            //tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
 
             #endregion
 
@@ -281,14 +281,16 @@ namespace Test
             //tuz.UZ_SMS_GetOutgoingDocumentOfDB_NumShipper(); //Получить ЭПД из промежуточной базы на вагон который отправили
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
+
+            //tuz.UZ_SMS_GetDocument_of_id_doc();
             #endregion
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
-            //tids.IDS_WIR_Update_EPD();          // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
-            //tids.IDS_WIR_IncomingWagon();          // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
+            //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
+            //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
             #endregion
 
             Console.WriteLine("Press any key to exit...");

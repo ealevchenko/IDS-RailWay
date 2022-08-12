@@ -12,6 +12,7 @@ using System.Configuration;
 using TMSoft.Gohub.Client;
 using EFUZ.Concrete;
 using EFUZ.Entities;
+using System.IO;
 
 namespace UZ
 {
@@ -273,6 +274,29 @@ namespace UZ
             {
                 e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_NumWagon(WagonNumber={0})", WagonNumber), servece_owner, eventID);
                 return null;
+            }
+        }
+
+        public void GetUZ_Document_Of_doc_id(string documentId)
+        {
+            try
+            {
+
+                if (this.connection == null)
+                {
+                    Connection();
+                }
+                if (this.connection != null)
+                {
+                    byte[] doc = connection.QueryDocumentPrintableForm(documentId);
+                    File.WriteAllBytes(@"d:\" + documentId + ".pdf", doc);
+                }
+                return;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetUZ_Document_Of_doc_id(WagonNumber={0})", documentId), servece_owner, eventID);
+                return;
             }
         }
 
