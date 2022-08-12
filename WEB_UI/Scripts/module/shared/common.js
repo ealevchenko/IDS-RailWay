@@ -2413,7 +2413,8 @@
                 //    this.$element.prop("disabled", true);
                 //}
             } else {
-                var res = this.$el.multiselect('select');
+                //var res = this.$el.multiselect('select');
+                var res = this.$el.val();
                 return res;
             };
         };
@@ -2540,7 +2541,8 @@
                 this.$element.prop('checked', Boolean(value));
                 //this.$element.change();
             } else {
-                return this.$element.prop('checked');
+                var res = this.$element.prop('checked');
+                return res;
             };
         };
         this.update = function (default_value) {
@@ -3604,7 +3606,6 @@
             }.bind(this));
         }
     };
-
     // Элемент <button>...</button>
     form_element.prototype.bs_button = function (options) {
         this.settings = $.extend({
@@ -4612,6 +4613,74 @@
             fn_change: this.settings.element_change,
             check: this.settings.element_check
         });
+    };
+    //
+    form_element.prototype.bs_switch = function (options) {
+        this.settings = $.extend({
+            id: null,
+            form_group_size: null,
+            form_group_col: null,
+            form_group_class: null,
+            label: null,
+            label_class: null,
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: null,
+        }, options);
+        //
+        this.fe = new form_element();
+        //this.fc = new form_control();
+
+        var div = new this.fe.div();
+        this.$element = div.$div;
+        if (this.settings.input_group) {
+            add_class(this.$element, 'form-group');
+        }
+        var cl = 'col';
+        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+            cl += '-' + this.settings.form_group_size;
+        }
+        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+            cl += '-' + this.settings.form_group_col;
+        }
+        add_class(this.$element, cl);
+        add_class(this.$element, this.settings.form_group_class);
+        //
+        var custom_switch= new this.fe.div({
+            class: 'custom-control custom-switch',
+        });
+        // Input
+        var input = new this.fe.input({
+            id: this.settings.id,
+            type: 'checkbox',
+            class: 'custom-control-input',
+            title: this.settings.checkbox_title,
+            placeholder: null,
+            required: this.settings.checkbox_required,
+            //readonly: this.settings.checkbox_readonly,
+        });
+        add_class(input.$input, this.settings.checkbox_class);
+        //
+        this.element = new this.fe.init_checkbox(input.$input, { default_value: this.settings.element_default, fn_change: this.settings.element_change });
+        if (this.settings.checkbox_readonly) {
+            this.element.disable();
+        }
+        // Подпись
+        var label = new this.fe.label({
+            class: 'custom-control-label',
+            id: null,
+            for: this.settings.id,
+            label: this.settings.label
+        });
+        add_class(label.$label, this.settings.label_class);
+        //
+        var ifb = new this.fe.bs_invalid_feedback();
+
+        custom_switch.$div.append(input.$input).append(label.$label).append(ifb.$div);
+        this.$element.append(custom_switch.$div);
     };
     //----------------------------------------------------------------------------
     // Автоматически формируем документы на форме

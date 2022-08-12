@@ -42,16 +42,50 @@
             'vtdr_card_header_report_2_1_detali': 'Детально информация',
             'vtdr_load_adoption_cars': 'Выполняю операцию выборка принятых вагонов ...',
 
+            'vtdr_label_button_setup_clear': 'СБРОСИТЬ',
             'vtdr_label_button_setup_select': 'ВЫБРАТЬ',
-            'vtdr_label_wagon_nums': '№№ ваг.',
-            'vtdr_title_wagon_nums': 'Введите номера вагонов',
-            'vtdr_label_main_epd_docs': '№№ Основного ЭПД.',
-            'vtdr_title_main_epd_docs': 'Введите номера основных ЭПД',
-            'vtdr_label_epd_docs': '№№ Досылочного ЭПД.',
-            'vtdr_title_epd_docs': 'Введите номера досылочных ЭПД',
-            'vtdr_label_operation_amkr': 'Оператор АМКР',
-            'vtdr_title_operation_amkr': 'Оператор АМКР',
+            'vtdr_label_laden': 'Только с грузом',
+            'vtdr_label_accounting': 'Учетные вагоны',
+            'vtdr_label_client': 'Клиентура',
+            'vtdr_label_not_client': 'Без учета клиентуры',
+            'vtdr_label_paid': 'Платные',
 
+            'vtdr_label_wagon_nums': '№№ ваг:',
+            'vtdr_title_wagon_nums': 'Введите номера вагонов',
+            'vtdr_label_main_epd_docs': '№№ Основного ЭПД:',
+            'vtdr_title_main_epd_docs': 'Введите номера основных ЭПД',
+            'vtdr_label_epd_docs': '№№ Досылочного ЭПД:',
+            'vtdr_title_epd_docs': 'Введите номера досылочных ЭПД',
+            'vtdr_label_operation_amkr': 'Оператор АМКР:',
+            'vtdr_title_operation_amkr': 'Оператор АМКР',
+            'vtdr_label_limiting': 'Огр. ПОГР:',
+            'vtdr_title_limiting': 'Огр. ПОГР',
+            'vtdr_label_owners': 'Собственник:',
+            'vtdr_title_owners': 'Собственник',
+            'vtdr_label_station_from': 'Станция отправления:',
+            'vtdr_title_station_from': 'Станция отправления',
+            'vtdr_label_cargo': 'Груз ПРИБ:',
+            'vtdr_title_cargo': 'Груз ПРИБ',
+            'vtdr_label_certification_data': 'Сертификатные данные:',
+            'vtdr_title_certification_data': 'Сертификатные данные',
+            'vtdr_label_cargo_sap': 'Код груза ПРИБ SAP:',
+            'vtdr_title_cargo_sap': 'Код груза ПРИБ SAP',
+            'vtdr_label_group_arrival': 'Группа ПРИБ:',
+            'vtdr_title_group_arrival': 'Группа ПРИБ',
+            'vtdr_label_consignee': 'Грузополучатель:',
+            'vtdr_title_consignee': 'Грузополучатель',
+            'vtdr_label_division': 'Цех-получатель:',
+            'vtdr_title_division': 'Цех-получатель',
+            'vtdr_label_genus': 'Род вагона:',
+            'vtdr_title_genus': 'Род вагона',
+            'vtdr_label_condition': 'Разметка по прибытию:',
+            'vtdr_title_condition': 'Разметка по прибытию',
+            'vtdr_label_payer_name': 'Плательщик ПРИБ:',
+            'vtdr_title_payer_name': 'Плательщик ПРИБ',
+            'vtdr_label_payer_code': 'Код плат. ПРИБ:',
+            'vtdr_title_payer_code': 'Код плат. ПРИБ',
+            'vtdr_label_station_amkr': 'Станция примыкания:',
+            'vtdr_title_station_amkr': 'Станция примыкания',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_label_interval_date': ' период:',
@@ -1118,11 +1152,11 @@
         //
         var div_row1 = new this.fe_ui.bs_row();
         var div_row2 = new this.fe_ui.bs_row();
-        this.$table_view.append(div_row1.$row.append($('<div id="report-group"></div>'))).append(div_row2.$row.append($('<div id="report-detali"></div>')))
-
-        //this.select_operation_amkr = select_operation_amkr.$select;
-
-
+        this.$div_group_sostav = $('<div></div>', {
+            id: 'group-sostav',
+            class: 'col-xl-12'
+        });
+        this.$table_view.append(div_row1.$row.append(this.$div_group_sostav)).append(div_row2.$row.append($('<div id="report-detali"></div>')))
         //
         row_common.$row.append(col_setup.$col).append(col_view.$col)
         this.$main_report.append(row_common.$row);
@@ -1140,6 +1174,20 @@
             size: 'xl',
             col: 12,
         });
+        var bt_setup_clear = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: langView('vtdr_label_button_setup_clear', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                //this.action_search_adoption_docs();
+            }.bind(this),
+        });
         var bt_setup_select = new this.fe_ui.bs_button({
             color: 'primary',
             size: 'sm',
@@ -1151,10 +1199,171 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                //this.action_search_adoption_docs();
+                this.action_select_report_2_1();
             }.bind(this),
         });
-        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_select.$button));
+        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
+        //-кнопка
+        //var row_setup_bt1 = new this.fe_ui.bs_row();
+        //var col_setup_bt1 = new this.fe_ui.bs_col({
+        //    size: 'xl',
+        //    col: 12,
+        //});
+        //var bt_setup_clear1 = new this.fe_ui.bs_button({
+        //    color: 'warning',
+        //    size: 'sm',
+        //    class: 'mr-1',
+        //    id: null,
+        //    label: langView('vtdr_label_button_setup_clear', App.Langs),
+        //    title: null,
+        //    icon_left: null,
+        //    icon_right: null,
+        //    click: function (event) {
+        //        event.preventDefault();
+        //        //this.action_search_adoption_docs();
+        //    }.bind(this),
+        //});
+        //var bt_setup_select1 = new this.fe_ui.bs_button({
+        //    color: 'primary',
+        //    size: 'sm',
+        //    class: null,
+        //    id: null,
+        //    label: langView('vtdr_label_button_setup_select', App.Langs),
+        //    title: null,
+        //    icon_left: null,
+        //    icon_right: null,
+        //    click: function (event) {
+        //        event.preventDefault();
+        //        //this.action_search_adoption_docs();
+        //    }.bind(this),
+        //});
+        //row_setup_bt1.$row.append(col_setup_bt1.$col.append(bt_setup_clear1.$button).append(bt_setup_select1.$button));
+
+        // Только с грузом
+        var row_setup_sw1 = new this.fe_ui.bs_row();
+        var sw_laden = new this.fe_ui.bs_switch({
+            id: 'laden',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_laden', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw1.$row.append(sw_laden.$element);
+        this.switch_laden = sw_laden.element;
+        // Только с грузом
+        var row_setup_sw2 = new this.fe_ui.bs_row();
+        var sw_accounting = new this.fe_ui.bs_switch({
+            id: 'accounting',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_accounting', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw2.$row.append(sw_accounting.$element);
+        this.switch_accounting = sw_accounting.element;
+        // Клиентура 
+        var row_setup_sw3 = new this.fe_ui.bs_row();
+        var sw_client = new this.fe_ui.bs_switch({
+            id: 'client',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_client', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw3.$row.append(sw_client.$element);
+        this.switch_client = sw_client.element;
+        // Без учета клиентуры
+        var row_setup_sw4 = new this.fe_ui.bs_row();
+        var sw_not_client = new this.fe_ui.bs_switch({
+            id: 'not_client',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_not_client', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw4.$row.append(sw_not_client.$element);
+        this.switch_not_client = sw_not_client.element;
+        // Платные
+        var row_setup_sw5 = new this.fe_ui.bs_row();
+        var sw_paid = new this.fe_ui.bs_switch({
+            id: 'paid',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_paid', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw5.$row.append(sw_paid.$element);
+        this.switch_paid = sw_paid.element;
         // вагоны
         var row_setup_1 = new this.fe_ui.bs_row();
         var ta_wagon_nums = new this.fe_ui.bs_textarea({
@@ -1175,6 +1384,7 @@
             textarea_readonly: false,
         });
         row_setup_1.$row.append(ta_wagon_nums.$element);
+        this.textarea_wagon_nums = ta_wagon_nums.element;
         // основн документы
         var row_setup_2 = new this.fe_ui.bs_row();
         var ta_main_epd_docs = new this.fe_ui.bs_textarea({
@@ -1195,6 +1405,7 @@
             textarea_readonly: false,
         });
         row_setup_2.$row.append(ta_main_epd_docs.$element);
+        this.textarea_main_epd_docs = ta_main_epd_docs.element;
         // досылочные документы
         var row_setup_3 = new this.fe_ui.bs_row();
         var ta_epd_docs = new this.fe_ui.bs_textarea({
@@ -1215,13 +1426,14 @@
             textarea_readonly: false,
         });
         row_setup_3.$row.append(ta_epd_docs.$element);
-        // досылочные документы
+        this.textarea_epd_docs = ta_epd_docs.element;
+        // Операторы АМКР
         var row_setup_4 = new this.fe_ui.bs_row();
         var select_operation_amkr = new this.fe_ui.bs_select_multiple({
             id: 'operation_amkr',
             form_group_size: 'xl',
             form_group_col: 12,
-            form_group_class: 'text-left',
+            form_group_class: 'text-left mb-0',
             label: langView('vtdr_label_operation_amkr', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
@@ -1247,19 +1459,415 @@
             }.bind(this),
         });
         row_setup_4.$row.append(select_operation_amkr.$element);
-
         this.select_operation_amkr = select_operation_amkr.element;
+        // ограничение погрузки
+        var row_setup_5 = new this.fe_ui.bs_row();
+        var select_limiting = new this.fe_ui.bs_select_multiple({
+            id: 'limiting',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_limiting', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_limiting', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_5.$row.append(select_limiting.$element);
+        this.select_limiting = select_limiting.element;
+        // Собственник
+        var row_setup_6 = new this.fe_ui.bs_row();
+        var select_owners = new this.fe_ui.bs_select_multiple({
+            id: 'owners',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_owners', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_owners', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
-        this.$form_setup_select.append(row_setup_bt.$row).append(row_setup_1.$row).append(row_setup_2.$row).append(row_setup_3.$row).append(row_setup_4.$row);
+            }.bind(this),
+        });
+        row_setup_6.$row.append(select_owners.$element);
+        this.select_owners = select_owners.element;
+        // Станция отправления
+        var row_setup_7 = new this.fe_ui.bs_row();
+        var select_station_from = new this.fe_ui.bs_select_multiple({
+            id: 'station_from',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_station_from', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_station_from', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_7.$row.append(select_station_from.$element);
+        this.select_station_from = select_station_from.element;
+        // Груз
+        var row_setup_8 = new this.fe_ui.bs_row();
+        var select_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_8.$row.append(select_cargo.$element);
+        this.select_cargo = select_cargo.element;
+        // Сертификатные данные
+        var row_setup_9 = new this.fe_ui.bs_row();
+        var select_certification_data = new this.fe_ui.bs_select_multiple({
+            id: 'certification_data',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_certification_data', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_certification_data', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_9.$row.append(select_certification_data.$element);
+        this.select_certification_data = select_certification_data.element;
+        // Код груза ПРИБ SAP
+        var row_setup_10 = new this.fe_ui.bs_row();
+        var select_cargo_sap = new this.fe_ui.bs_select_multiple({
+            id: 'cargo_sap',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_cargo_sap', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_cargo_sap', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_10.$row.append(select_cargo_sap.$element);
+        this.select_cargo_sap = select_cargo_sap.element;
+        // Группа ПРИБ
+        var row_setup_11 = new this.fe_ui.bs_row();
+        var select_group_arrival = new this.fe_ui.bs_select_multiple({
+            id: 'group_arrival',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_group_arrival', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_group_arrival', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_11.$row.append(select_group_arrival.$element);
+        this.select_group_arrival = select_group_arrival.element;
+        // Грузополучатель
+        var row_setup_12 = new this.fe_ui.bs_row();
+        var select_consignee = new this.fe_ui.bs_select_multiple({
+            id: 'consignee',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_consignee', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_consignee', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_12.$row.append(select_consignee.$element);
+        this.select_consignee = select_consignee.element;
+        // Цех-получатель
+        var row_setup_13 = new this.fe_ui.bs_row();
+        var select_division = new this.fe_ui.bs_select_multiple({
+            id: 'division',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_division', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_division', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_13.$row.append(select_division.$element);
+        this.select_division = select_division.element;
+        // Цех-получатель
+        var row_setup_14 = new this.fe_ui.bs_row();
+        var select_genus = new this.fe_ui.bs_select_multiple({
+            id: 'genus',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_genus', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_genus', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_14.$row.append(select_genus.$element);
+        this.select_genus = select_genus.element;
+        // Разметка по прибытию
+        var row_setup_15 = new this.fe_ui.bs_row();
+        var select_condition = new this.fe_ui.bs_select_multiple({
+            id: 'condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_15.$row.append(select_condition.$element);
+        this.select_condition = select_condition.element;
+        // Плательщик ПРИБ
+        var row_setup_16 = new this.fe_ui.bs_row();
+        var select_payer_name = new this.fe_ui.bs_select_multiple({
+            id: 'payer_name',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_payer_name', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_payer_name', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_16.$row.append(select_payer_name.$element);
+        this.select_payer_name = select_payer_name.element;
+        // Код плат. ПРИБ
+        var row_setup_17 = new this.fe_ui.bs_row();
+        var select_payer_code = new this.fe_ui.bs_select_multiple({
+            id: 'payer_code',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_payer_code', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_payer_code', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_17.$row.append(select_payer_code.$element);
+        this.select_payer_code = select_payer_code.element;
+        // Станция примыкания
+        var row_setup_18 = new this.fe_ui.bs_row();
+        var select_station_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'station_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_station_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_station_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_18.$row.append(select_station_amkr.$element);
+        this.select_station_amkr = select_station_amkr.element;
+
+        this.$form_setup_select
+            .append(row_setup_bt.$row)
+            .append(row_setup_sw1.$row)
+            .append(row_setup_sw2.$row)
+            .append(row_setup_sw3.$row)
+            .append(row_setup_sw4.$row)
+            .append(row_setup_sw5.$row)
+
+            //.append(row_setup_bt1.$row)
+            .append(row_setup_1.$row)
+            .append(row_setup_2.$row)
+            .append(row_setup_3.$row)
+            .append(row_setup_4.$row)
+            .append(row_setup_5.$row)
+            .append(row_setup_6.$row)
+            .append(row_setup_7.$row)
+            .append(row_setup_8.$row)
+            .append(row_setup_9.$row)
+            .append(row_setup_10.$row)
+            .append(row_setup_11.$row)
+            .append(row_setup_12.$row)
+            .append(row_setup_13.$row)
+            .append(row_setup_14.$row)
+            .append(row_setup_15.$row)
+            .append(row_setup_16.$row)
+            .append(row_setup_17.$row)
+            .append(row_setup_18.$row)
+            ;
         this.$setup_select.append(this.$form_setup_select);
-
-        //this.select_operation_amkr.multiselect();
-
-        //var amkr = $('#operation_amkr');
-
-        //amkr.multiselect();
-
         /*}.bind(this));*/
     };
     // Показать отчет  "Отчет по прибытию (общий)"
@@ -1274,23 +1882,376 @@
         }.bind(this);
         LockScreen(langView('vtdr_load_adoption_cars', App.Langs));
         // пустые операторы
-        this.ids_wsd.getViewIncomingCarsOfPeriod(start, stop, function (result_wagons) {
+        var where = {
+            start: start,
+            stop: stop,
+            laden: false,
+            accounting: false,
+            client: false,
+            not_client: false,
+            paid: false,
+            nums: null,
+            nom_main_docs: null,
+            nom_docs: null,
+            id_operator: null,
+            id_limiting: null,
+            id_owner: null,
+            code_stn_from: null,
+            id_cargo: null,
+            id_certification_data: null,
+            supply_cargo_code: null,
+            id_group_cargo: null,
+            code_consignee: null,
+            id_division: null,
+            id_genus: null,
+            id_condition: null,
+            code_payer_arrival: null,
+            code_payer_arrival_name: null,
+            id_station_on: null,
+        };
+        // Загрузим данные
+        this.load_select_report_2_1(where, function () {
+            process_load--;
+            out_load(process_load);
+        }.bind(this))
+    };
+    // Загрузить данные
+    view_td_report.prototype.load_select_report_2_1 = function (where, callback) {
+        if (!where) {
+            var where = {
+                start: this.start,
+                stop: this.stop,
+                laden: this.switch_laden.val(),
+                accounting: this.switch_accounting.val(),
+                client: this.switch_client.val(),
+                not_client: this.switch_not_client.val(),
+                paid: this.switch_paid.val(),
+                nums: get_input_string_value(this.textarea_wagon_nums),
+                nom_main_docs: get_input_string_value(this.textarea_main_epd_docs),
+                nom_docs: get_input_string_value(this.textarea_epd_docs),
+                id_operator: this.select_operation_amkr.val(),
+                id_limiting: this.select_limiting.val(),
+                id_owner: this.select_owners.val(),
+                code_stn_from: this.select_station_from.val(),
+                id_cargo: this.select_cargo.val(),
+                id_certification_data: this.select_certification_data.val(),
+                supply_cargo_code: this.select_cargo_sap.val(),
+                id_group_cargo: this.select_group_arrival.val(),
+                code_consignee: this.select_consignee.val(),
+                id_division: this.select_division.val(),
+                id_genus: this.select_genus.val(),
+                id_condition: this.select_condition.val(),
+                code_payer_arrival: this.select_payer_name.val(),
+                code_payer_arrival_name: this.select_payer_code.val(),
+                id_station_on: this.select_station_amkr.val(),
+            };
+        };
+        this.ids_wsd.postReportAdoptionWagonOfWhere(where, function (result_wagons) {
             this.wagons_adoption = result_wagons;
             this.list_operators_wagons = [];
+            this.list_limiting = [];
+            this.list_owners = [];
+            this.list_station_from = [];
+            this.list_cargo = [];
+            this.list_certification_data = [];
+            this.list_cargo_sap = [];
+            this.list_group_arrival = [];
+            this.list_consignee = [];
+            this.list_division = [];
+            this.list_genus = [];
+            this.list_condition = [];
+            this.list_payer_name = [];
+            this.list_payer_code = [];
+            this.list_station_amkr = [];
+            this.list_group_sostav = [];
+
+            // выборка для списков отчета
             $.each(this.wagons_adoption, function (key, value) {
+                //
+                var group_sostav = this.list_group_sostav.find(function (o) { return o.id === value.arrival_sostav_id }.bind(this));
+                if (!group_sostav) {
+                    var sostav = this.wagons_adoption.filter(function (i) { return i.arrival_sostav_id === value.arrival_sostav_id }.bind(this));
+                    var sostav_cargo = [];
+                    $.each(sostav, function (i, el) {
+                        var cargo = sostav_cargo.find(function (o) { return o.id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this))
+                        var sum_vesg = 0;
+                        var sum_vesg_reweighing = 0;
+                        if (!cargo) {
+                            sum_vesg = 0;
+                            sum_vesg_reweighing = 0;
+                            var cargo_list = sostav.filter(function (i) { return i.arrival_uz_vagon_id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this));
+                            // Проссумируем 
+                            $.each(cargo_list, function (i1, el1) {
+                                sum_vesg += el1.arrival_uz_vagon_vesg ? el1.arrival_uz_vagon_vesg : 0;
+                                sum_vesg_reweighing = + el1.arrival_uz_vagon_vesg_reweighing ? el1.arrival_uz_vagon_vesg_reweighing : 0;
+                            }.bind(this));
+                            sostav_cargo.push({ id_cargo: el.arrival_uz_vagon_id_cargo, cargo_name: el['arrival_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg, sum_vesg_reweighing: sum_vesg_reweighing });
+                        };
+                    }.bind(this));
+                    this.list_group_sostav.push({ id: value.arrival_sostav_id, date_adoption: value.arrival_sostav_date_adoption, const_wagon: sostav.length, count_account_balance_wagon: 0, cargo_group: sostav_cargo });
+
+                }
+                // выборка для списков отчета
                 var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
                 if (!ow) {
                     this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
                 }
+                var lm = this.list_limiting.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
+                if (!lm) {
+                    this.list_limiting.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_limiting, text: value['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang] });
+                }
+                var own = this.list_owners.find(function (o) { return o.value === value.arrival_uz_vagon_id_owner }.bind(this));
+                if (!own) {
+                    this.list_owners.push({ value: value.arrival_uz_vagon_id_owner, text: value['arrival_uz_vagon_owner_wagon_abbr_' + App.Lang] });
+                }
+                var stfr = this.list_station_from.find(function (o) { return o.value === value.arrival_uz_document_code_stn_from }.bind(this));
+                if (!stfr) {
+                    this.list_station_from.push({ value: value.arrival_uz_document_code_stn_from, text: value['arrival_uz_document_station_from_name_' + App.Lang] });
+                }
+                var crg = this.list_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_cargo }.bind(this));
+                if (!crg) {
+                    this.list_cargo.push({ value: value.arrival_uz_vagon_id_cargo, text: value['arrival_uz_vagon_cargo_name_' + App.Lang] });
+                }
+                var srtdt = this.list_certification_data.find(function (o) { return o.value === value.arrival_uz_vagon_id_certification_data }.bind(this));
+                if (!srtdt) {
+                    this.list_certification_data.push({ value: value.arrival_uz_vagon_id_certification_data, text: value['arrival_uz_vagon_sertification_data_' + App.Lang] });
+                }
+                var crgsap = this.list_cargo_sap.find(function (o) { return o.value === value.sap_incoming_supply_cargo_code }.bind(this));
+                if (!crgsap) {
+                    this.list_cargo_sap.push({ value: value.sap_incoming_supply_cargo_code, text: value.sap_incoming_supply_cargo_code });
+                }
+                var grpcrg = this.list_group_arrival.find(function (o) { return o.value === value.arrival_uz_vagon_id_group }.bind(this));
+                if (!grpcrg) {
+                    this.list_group_arrival.push({ value: value.arrival_uz_vagon_id_group, text: value['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
+                }
+                var cnsg = this.list_consignee.find(function (o) { return o.value === value.arrival_uz_document_code_consignee }.bind(this));
+                if (!cnsg) {
+                    this.list_consignee.push({ value: value.arrival_uz_document_code_consignee, text: value.arrival_uz_document_name_consignee });
+                }
+                var dvsn = this.list_division.find(function (o) { return o.value === value.arrival_uz_vagon_id_division_on_amkr }.bind(this));
+                if (!dvsn) {
+                    this.list_division.push({ value: value.arrival_uz_vagon_id_division_on_amkr, text: value['arrival_uz_vagon_division_abbr_' + App.Lang] });
+                }
+                var genus = this.list_genus.find(function (o) { return o.value === value.arrival_uz_vagon_id_genus }.bind(this));
+                if (!genus) {
+                    this.list_genus.push({ value: value.arrival_uz_vagon_id_genus, text: value['arrival_uz_vagon_rod_abbr_' + App.Lang] });
+                }
+                var condition = this.list_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
+                if (!condition) {
+                    this.list_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
+                }
+                var payer_name = this.list_payer_name.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
+                if (!payer_name) {
+                    this.list_payer_name.push({ value: value.arrival_uz_document_code_payer_arrival, text: value['arrival_uz_document_payer_arrival_name_' + App.Lang] });
+                }
+                var payer_code = this.list_payer_code.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
+                if (!payer_code) {
+                    this.list_payer_code.push({ value: value.arrival_uz_document_code_payer_arrival, text: value.arrival_uz_document_code_payer_arrival });
+                }
+                var station_amkr = this.list_station_amkr.find(function (o) { return o.value === value.arrival_sostav_id_station_on }.bind(this));
+                if (!station_amkr) {
+                    this.list_station_amkr.push({ value: value.arrival_sostav_id_station_on, text: value['arrival_sostav_station_on_abbr_' + App.Lang] });
+                }
+
             }.bind(this));
 
-            this.select_operation_amkr.update(this.list_operators_wagons, -1);
-            process_load--;
-            out_load(process_load);
+            this.view_table_group_sostav(this.list_group_sostav);
+
+            // обновление списков отчета
+            if (!where.id_operator) {
+                this.select_operation_amkr.update(this.list_operators_wagons, -1);
+            }
+            if (!where.id_limiting) {
+                this.select_limiting.update(this.list_limiting, -1);
+            }
+            if (!where.id_owner) {
+                this.select_owners.update(this.list_owners, -1);
+            }
+            if (!where.code_stn_from) {
+                this.select_station_from.update(this.list_station_from, -1);
+            }
+            if (!where.id_cargo) {
+                this.select_cargo.update(this.list_cargo, -1);
+            }
+            if (!where.id_certification_data) {
+                this.select_certification_data.update(this.list_certification_data, -1);
+            }
+            if (!where.supply_cargo_code) {
+                this.select_cargo_sap.update(this.list_cargo_sap, -1);
+            }
+            if (!where.id_group_cargo) {
+                this.select_group_arrival.update(this.list_group_arrival, -1);
+            }
+            if (!where.code_consignee) {
+                this.select_consignee.update(this.list_consignee, -1);
+            }
+            if (!where.id_division) {
+                this.select_division.update(this.list_division, -1);
+            }
+            if (!where.id_genus) {
+                this.select_genus.update(this.list_genus, -1);
+            }
+            if (!where.id_condition) {
+                this.select_condition.update(this.list_condition, -1);
+            }
+            if (!where.code_payer_arrival) {
+                this.select_payer_name.update(this.list_payer_name, -1);
+            }
+            if (!where.code_payer_arrival_name) {
+                this.select_payer_code.update(this.list_payer_code, -1);
+            }
+            if (!where.id_station_on) {
+                this.select_station_amkr.update(this.list_station_amkr, -1);
+            }
+
+            if (typeof callback === 'function') {
+                callback();
+            }
 
         }.bind(this));
     };
+    // Действие кнопки обновим
+    view_td_report.prototype.action_select_report_2_1 = function () {
+        LockScreen(langView('vtdr_load_adoption_cars', App.Langs));
+        this.load_select_report_2_1(null, function () {
+            LockScreenOff();
+        }.bind(this))
+    };
+    // Действие кнопки обновим
+    view_td_report.prototype.view_table_group_sostav = function (list_group_sostav) {
+        this.$div_group_sostav.empty();
+        var table_group_sostav = new this.fe_ui.table({
+            id: 'table-group-sostav',
+            class: 'table table-hover display compact cell-border row-border hover',
+            title: null,
+        });
+        this.table_group_sostav = table_group_sostav.$table;
+        var $thead = $('<thead></thead>');
+        var $tr_h = $('<tr></tr>');
+        var $th1 = $('<th>Дата приема</th>');
+        var $th2 = $('<th>Общее кол.</th>');
+        var $th3 = $('<th>Кол. уч. ваг.</th>');
+        var $th4 = $('<th>Род груза</th>');
+        var $th5 = $('<th>Вес по ЭПД, нт.</th>');
+        var $th6 = $('<th>Вес по перевеске, нт.</th>');
+        var $th7 = $('<th>Разница, нт.</th>');
+        $thead.append($tr_h.append($th1).append($th2).append($th3).append($th4).append($th5).append($th6).append($th7));
+        var $tbody = $('<tbody></tbody>');
+        this.table_group_sostav.append($thead)
 
+
+
+        if (list_group_sostav && list_group_sostav.length > 0) {
+            $.each(list_group_sostav, function (i, el) {
+                var $tr_d = $('<tr></tr>', {
+                    id: el.id
+                });
+                $.each(el.cargo_group, function (i1, el1) {
+                    if (i1 === 0) {
+                        var $tr_d = $('<tr></tr>', {
+                            id: el.id
+                        });
+                        var $td_date_adoption = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            text: el.date_adoption ? moment(el.date_adoption).format(format_datetime) : ''
+                        });
+                        var $td_const_wagon = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            text: el.const_wagon
+                        });
+                        var $td_count_account_balance_wagon = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            text: el.count_account_balance_wagon
+                        });
+                        var $td_cargo = $('<td></td>', {
+                            text: el1.count + '-' + el1.cargo_name
+                        });
+                        var $td_sum_vesg = $('<td></td>', {
+                            text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
+                        });
+                        var $td_sum_vesg_reweighing = $('<td></td>', {
+                            text: el1.sum_vesg_reweighing ? Number(el1.sum_vesg_reweighing / 1000).toFixed(3) : 0.000
+                        });
+                        var $td_def_vesg = $('<td></td>', {
+                            text: 0.000
+                        });
+                        $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
+                        $tbody.append($tr_d);
+                    } else {
+                        var $tr_d = $('<tr></tr>');
+                        var $td_date_adoption = $('<td></td>', {
+                            style: 'display: none;'
+                        });
+                        var $td_const_wagon = $('<td></td>', {
+                            style: 'display: none;'
+                        });
+                        var $td_count_account_balance_wagon = $('<td></td>', {
+                            style: 'display: none;'
+                        });
+                        var $td_cargo = $('<td></td>', {
+                            text: el1.count + '-' + el1.cargo_name
+                        });
+                        var $td_sum_vesg = $('<td></td>', {
+                            text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
+                        });
+                        var $td_sum_vesg_reweighing = $('<td></td>', {
+                            text: el1.sum_vesg_reweighing ? Number(el1.sum_vesg_reweighing / 1000).toFixed(3) : 0.000
+                        });
+                        var $td_def_vesg = $('<td></td>', {
+                            text: 0.000
+                        });
+                        $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
+                        $tbody.append($tr_d);
+                    }
+                }.bind(this));
+            }.bind(this));
+        }
+        this.table_group_sostav.append($tbody);
+
+        this.$div_group_sostav.append(this.table_group_sostav);
+        this.table_group_sostav.DataTable({
+            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'All']],
+            "pageLength": 10,
+            "deferRender": false,
+            "paging": true,
+            "searching": false,
+            "ordering": false,
+            "info": true,
+            select: false,
+            "autoWidth": false,
+            //"filter": true,
+            //"scrollY": "600px",
+            //sScrollX: "100%",
+            scrollX: true,
+            //"responsive": true,
+            //"bAutoWidth": false,
+            language: language_table(App.Langs),
+            jQueryUI: false,
+            dom: 'Bfrtip',
+            stateSave: false,
+        });
+        //$('#table-group-sostav').DataTable({
+        //    "lengthMenu": null,
+        //    "pageLength": null,
+        //    "deferRender": false,
+        //    "paging": false,
+        //    "searching": false,
+        //    "ordering": false,
+        //    "info": false,
+        //    select: false,
+        //    "autoWidth": false,
+        //    //"filter": true,
+        //    //"scrollY": "600px",
+        //    //sScrollX: "100%",
+        //    scrollX: true,
+        //    //"responsive": true,
+        //    //"bAutoWidth": false,
+        //    language: language_table(App.Langs),
+        //    jQueryUI: false,
+        //    dom: 'Bfrtip',
+        //    stateSave: false,
+        //});
+    };
     // Очистить таблицы
     view_td_report.prototype.clear_report_2_1 = function () {
         //if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
@@ -1300,6 +2261,8 @@
         //if (this.table_adop_wagon_not_operation) this.table_adop_wagon_not_operation.view([]);
         LockScreenOff();
     };
+
+
     //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {

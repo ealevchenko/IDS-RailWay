@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
+using System.Data;
 
 namespace WEB_UI.Controllers.api
 {
@@ -277,7 +278,7 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_note { get; set; }
     }
 
-    public class ViewReportAdoptionWagonNotOperation 
+    public class ViewReportAdoptionWagonNotOperation
     {
         public long id_sostav { get; set; }
         public DateTime? sostav_date_adoption { get; set; }
@@ -298,6 +299,37 @@ namespace WEB_UI.Controllers.api
         public string name_division_en { get; set; }
         public string division_abbr_ru { get; set; }
         public string division_abbr_en { get; set; }
+    }
+    /// <summary>
+    /// Класс набора данных для выбора вагонов по прибытию
+    /// </summary>
+    public class ViewIncomingCarsWhere
+    {
+        public DateTime start { get; set; }
+        public DateTime stop { get; set; }
+        public bool laden { get; set; }
+        public bool accounting { get; set; }
+        public bool client { get; set; }
+        public bool not_client { get; set; }
+        public bool paid { get; set; }
+        public int[] nums { get; set; }
+        public int[] nom_main_docs { get; set; }
+        public int[] nom_docs { get; set; }
+        public int[] id_operator { get; set; }
+        public int[] id_limiting { get; set; }
+        public int[] id_owner { get; set; }
+        public int[] code_stn_from { get; set; }
+        public int[] id_cargo { get; set; }
+        public int[] id_certification_data { get; set; }
+        public int[] supply_cargo_code { get; set; }
+        public int[] id_group_cargo { get; set; }
+        public int[] code_consignee { get; set; }
+        public int[] id_division { get; set; }
+        public int[] id_genus { get; set; }
+        public int[] id_condition { get; set; }
+        public int[] code_payer_arrival { get; set; }
+        public int[] code_payer_arrival_name { get; set; }
+        public int[] id_station_on { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/arrival_cars")]
@@ -430,6 +462,62 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 string sql = "select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)";
                 List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        public object get_string_of_int(int[] vals) {
+            if (vals != null && vals.Count() > 0) {
+                return (object)String.Join(",", vals);
+            }
+            return (object)DBNull.Value;
+        }
+
+        /// <summary>
+        /// Выборка принятых вагонов по условию
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST: api/ids/rwt/arrival_cars/view/car/where/
+        [HttpPost]
+        [Route("view/car/where/")]
+        [ResponseType(typeof(ViewIncomingCars))]
+        public IHttpActionResult GetViewIncomingCarsOfWhere([FromBody] ViewIncomingCarsWhere value)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", value.start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", value.stop);
+                System.Data.SqlClient.SqlParameter p_laden = new System.Data.SqlClient.SqlParameter("@laden", value.laden);
+                System.Data.SqlClient.SqlParameter p_accounting = new System.Data.SqlClient.SqlParameter("@accounting", value.accounting);
+                System.Data.SqlClient.SqlParameter p_client = new System.Data.SqlClient.SqlParameter("@client", value.client);
+                System.Data.SqlClient.SqlParameter p_not_client = new System.Data.SqlClient.SqlParameter("@not_client", value.not_client);
+                System.Data.SqlClient.SqlParameter p_paid = new System.Data.SqlClient.SqlParameter("@paid", value.paid);
+                System.Data.SqlClient.SqlParameter p_nums = new System.Data.SqlClient.SqlParameter("@nums", value.nums ?? (object)DBNull.Value);
+                System.Data.SqlClient.SqlParameter p_nom_main_docs = new System.Data.SqlClient.SqlParameter("@nom_main_docs", value.nom_main_docs ?? (object)DBNull.Value);
+                System.Data.SqlClient.SqlParameter p_nom_docs = new System.Data.SqlClient.SqlParameter("@nom_docs", value.nom_docs ?? (object)DBNull.Value);
+                System.Data.SqlClient.SqlParameter p_id_operator = new System.Data.SqlClient.SqlParameter("@id_operator",  get_string_of_int(value.id_operator));
+                System.Data.SqlClient.SqlParameter p_id_limiting = new System.Data.SqlClient.SqlParameter("@id_limiting", get_string_of_int(value.id_limiting));
+                System.Data.SqlClient.SqlParameter p_id_owner = new System.Data.SqlClient.SqlParameter("@id_owner", get_string_of_int(value.id_owner));
+                System.Data.SqlClient.SqlParameter p_code_stn_from = new System.Data.SqlClient.SqlParameter("@code_stn_from", get_string_of_int(value.code_stn_from));
+                System.Data.SqlClient.SqlParameter p_id_cargo = new System.Data.SqlClient.SqlParameter("@id_cargo", get_string_of_int(value.id_cargo));
+                System.Data.SqlClient.SqlParameter p_id_certification_data = new System.Data.SqlClient.SqlParameter("@id_certification_data", get_string_of_int(value.id_certification_data));
+                System.Data.SqlClient.SqlParameter p_supply_cargo_code = new System.Data.SqlClient.SqlParameter("@supply_cargo_code", get_string_of_int(value.supply_cargo_code));
+                System.Data.SqlClient.SqlParameter p_id_group_cargo = new System.Data.SqlClient.SqlParameter("@id_group_cargo", get_string_of_int(value.id_group_cargo));
+                System.Data.SqlClient.SqlParameter p_code_consignee = new System.Data.SqlClient.SqlParameter("@code_consignee", get_string_of_int(value.code_consignee));
+                System.Data.SqlClient.SqlParameter p_id_division = new System.Data.SqlClient.SqlParameter("@id_division", get_string_of_int(value.id_division));
+                System.Data.SqlClient.SqlParameter p_id_genus = new System.Data.SqlClient.SqlParameter("@id_genus", get_string_of_int(value.id_genus));
+                System.Data.SqlClient.SqlParameter p_id_condition = new System.Data.SqlClient.SqlParameter("@id_condition", get_string_of_int(value.id_condition));
+                System.Data.SqlClient.SqlParameter p_code_payer_arrival = new System.Data.SqlClient.SqlParameter("@code_payer_arrival", get_string_of_int(value.code_payer_arrival));
+                System.Data.SqlClient.SqlParameter p_code_payer_arrival_name = new System.Data.SqlClient.SqlParameter("@code_payer_arrival_name", get_string_of_int(value.code_payer_arrival_name));
+                System.Data.SqlClient.SqlParameter p_id_station_on = new System.Data.SqlClient.SqlParameter("@id_station_on", get_string_of_int(value.id_station_on));
+
+                string sql = "EXEC [IDS].[get_view_incoming_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @nom_docs, @id_operator, @id_limiting, @id_owner, @code_stn_from, @id_cargo, @id_certification_data, @supply_cargo_code, @code_consignee, @id_division, @id_genus, @id_condition, @code_payer_arrival, @code_payer_arrival_name, @id_station_on";
+                List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_nom_docs, p_id_operator, p_id_limiting, p_id_owner, p_code_stn_from, p_id_cargo, p_id_certification_data, p_supply_cargo_code, p_id_group_cargo, p_code_consignee, p_id_division, p_id_genus, p_id_condition, p_code_payer_arrival, p_code_payer_arrival_name, p_id_station_on).ToList();
                 return Ok(result);
             }
             catch (Exception e)

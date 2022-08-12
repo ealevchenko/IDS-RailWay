@@ -695,7 +695,6 @@
             },
         });
     };
-
     // Операция принять вагон (перенести в левую часть)
     ids_wsd.prototype.postOperationIncomingWagon = function (operation, callback) {
         $.ajax({
@@ -2245,6 +2244,32 @@
             },
         });
     };
+    //Получить принятые вагоны по условию выбора
+    ids_wsd.prototype.postReportAdoptionWagonOfWhere = function (where, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/arrival_cars/view/car/where/',
+            type: 'POST',
+            data: JSON.stringify(where),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReportAdoptionWagonOfWhere", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     App.ids_wsd = ids_wsd;
 
