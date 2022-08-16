@@ -1149,18 +1149,53 @@
             col: 10,
         });
         col_view.$col.append(this.$table_view);
-        //
-        var div_row1 = new this.fe_ui.bs_row();
-        var div_row2 = new this.fe_ui.bs_row();
+
+        // Создадим панель выбора
+        var nav_tabs_arr_cammon = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-arr-common',
+            class_nav: null,
+            id_content: 'tab-arr-common-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'arr-common-report',
+                    aria_controls: 'arr-common-group-tab',
+                    label: 'По грузам',
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'arr-common-searsh',
+                    aria_controls: 'arr-common-detali-tab',
+                    label: 'Детально',
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });     // Переключатели панелей таблиц отчета
+        // Закладка групповой отчет
+        var div_row_cg = $('<div></div>', {
+            class: 'row',
+            style: 'margin-top: 10px;'
+        })
         this.$div_group_sostav = $('<div></div>', {
             id: 'group-sostav',
             class: 'col-xl-12'
         });
-        this.$table_view.append(div_row1.$row.append(this.$div_group_sostav)).append(div_row2.$row.append($('<div id="report-detali"></div>')))
+        var $arr_common_group = nav_tabs_arr_cammon.$content.find('div#arr-common-group-tab'); // Панель отчета
+        $arr_common_group.append(div_row_cg.append(this.$div_group_sostav)); // Добавим div для таблиц
+        // Закладка отчет детально 
+        var div_row_detali = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
+        var $arr_common_detali = nav_tabs_arr_cammon.$content.find('div#arr-common-detali-tab'); // Панель поиска
+        $arr_common_detali.append(div_row_detali.$row.append($('<div id="arr-common-report-detali" class="col-xl-12"></div>')));
+        // Дабавим закладку на форму
+        this.$table_view.append(nav_tabs_arr_cammon.$ul).append(nav_tabs_arr_cammon.$content);
         //
         row_common.$row.append(col_setup.$col).append(col_view.$col)
         this.$main_report.append(row_common.$row);
-
+        //--------------------------------------------------------------------
         // Формируем форму выбора
         var form_setup_select = new this.fe_ui.form({
             class: null,
@@ -1203,43 +1238,7 @@
             }.bind(this),
         });
         row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
-        //-кнопка
-        //var row_setup_bt1 = new this.fe_ui.bs_row();
-        //var col_setup_bt1 = new this.fe_ui.bs_col({
-        //    size: 'xl',
-        //    col: 12,
-        //});
-        //var bt_setup_clear1 = new this.fe_ui.bs_button({
-        //    color: 'warning',
-        //    size: 'sm',
-        //    class: 'mr-1',
-        //    id: null,
-        //    label: langView('vtdr_label_button_setup_clear', App.Langs),
-        //    title: null,
-        //    icon_left: null,
-        //    icon_right: null,
-        //    click: function (event) {
-        //        event.preventDefault();
-        //        //this.action_search_adoption_docs();
-        //    }.bind(this),
-        //});
-        //var bt_setup_select1 = new this.fe_ui.bs_button({
-        //    color: 'primary',
-        //    size: 'sm',
-        //    class: null,
-        //    id: null,
-        //    label: langView('vtdr_label_button_setup_select', App.Langs),
-        //    title: null,
-        //    icon_left: null,
-        //    icon_right: null,
-        //    click: function (event) {
-        //        event.preventDefault();
-        //        //this.action_search_adoption_docs();
-        //    }.bind(this),
-        //});
-        //row_setup_bt1.$row.append(col_setup_bt1.$col.append(bt_setup_clear1.$button).append(bt_setup_select1.$button));
-
-        // Только с грузом
+        //
         var row_setup_sw1 = new this.fe_ui.bs_row();
         var sw_laden = new this.fe_ui.bs_switch({
             id: 'laden',
@@ -1838,7 +1837,7 @@
         });
         row_setup_18.$row.append(select_station_amkr.$element);
         this.select_station_amkr = select_station_amkr.element;
-
+        //
         this.$form_setup_select
             .append(row_setup_bt.$row)
             .append(row_setup_sw1.$row)
@@ -1846,8 +1845,6 @@
             .append(row_setup_sw3.$row)
             .append(row_setup_sw4.$row)
             .append(row_setup_sw5.$row)
-
-            //.append(row_setup_bt1.$row)
             .append(row_setup_1.$row)
             .append(row_setup_2.$row)
             .append(row_setup_3.$row)
@@ -1868,6 +1865,46 @@
             .append(row_setup_18.$row)
             ;
         this.$setup_select.append(this.$form_setup_select);
+
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    switch (event.target.id) {
+                        case 'arr-common-report': {
+
+                            break;
+                        };
+                        case 'arr-common-searsh': {
+
+                            break;
+                        };
+                    };
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                }.bind(this));
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        this.table_arr_common_detali = new TTDR('div#arr-common-report-detali');         // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_arr_common_detali.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_common_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
         /*}.bind(this));*/
     };
     // Показать отчет  "Отчет по прибытию (общий)"
@@ -1964,7 +2001,6 @@
             this.list_payer_code = [];
             this.list_station_amkr = [];
             this.list_group_sostav = [];
-
             // выборка для списков отчета
             $.each(this.wagons_adoption, function (key, value) {
                 //
@@ -1988,7 +2024,7 @@
                             sostav_cargo.push({ id_cargo: el.arrival_uz_vagon_id_cargo, cargo_name: el['arrival_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg, sum_vesg_reweighing: sum_vesg_reweighing });
                         };
                     }.bind(this));
-                    this.list_group_sostav.push({ id: value.arrival_sostav_id, date_adoption: value.arrival_sostav_date_adoption, const_wagon: sostav.length, count_account_balance_wagon: 0, cargo_group: sostav_cargo });
+                    this.list_group_sostav.push({ id: value.arrival_sostav_id, date_adoption: value.arrival_sostav_date_adoption, const_wagon: sostav.length, count_account_balance_wagon: sostav.filter(function (i) { return i.account_balance }.bind(this)).length, cargo_group: sostav_cargo });
 
                 }
                 // выборка для списков отчета
@@ -2054,8 +2090,10 @@
                 }
 
             }.bind(this));
-
+            //
             this.view_table_group_sostav(this.list_group_sostav);
+
+            this.table_arr_common_detali.view(result_wagons);
 
             // обновление списков отчета
             if (!where.id_operator) {
@@ -2122,25 +2160,44 @@
         this.$div_group_sostav.empty();
         var table_group_sostav = new this.fe_ui.table({
             id: 'table-group-sostav',
-            class: 'table table-hover display compact cell-border row-border hover',
+            class: 'display compact cell-border row-border hover',
             title: null,
         });
         this.table_group_sostav = table_group_sostav.$table;
         var $thead = $('<thead></thead>');
         var $tr_h = $('<tr></tr>');
-        var $th1 = $('<th>Дата приема</th>');
-        var $th2 = $('<th>Общее кол.</th>');
-        var $th3 = $('<th>Кол. уч. ваг.</th>');
-        var $th4 = $('<th>Род груза</th>');
-        var $th5 = $('<th>Вес по ЭПД, нт.</th>');
-        var $th6 = $('<th>Вес по перевеске, нт.</th>');
-        var $th7 = $('<th>Разница, нт.</th>');
+        var $th1 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Дата приема'
+        });
+        var $th2 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Общее кол.'
+        });
+        var $th3 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Кол. уч. ваг.'
+        });
+        var $th4 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Род груза'
+        });
+        var $th5 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Вес по ЭПД, нт.'
+        });
+        var $th6 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Вес по перевеске, нт.'
+        });
+        var $th7 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Разница, нт.'
+        });
         $thead.append($tr_h.append($th1).append($th2).append($th3).append($th4).append($th5).append($th6).append($th7));
         var $tbody = $('<tbody></tbody>');
         this.table_group_sostav.append($thead)
-
-
-
+        //
         if (list_group_sostav && list_group_sostav.length > 0) {
             $.each(list_group_sostav, function (i, el) {
                 var $tr_d = $('<tr></tr>', {
@@ -2153,26 +2210,33 @@
                         });
                         var $td_date_adoption = $('<td></td>', {
                             rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
                             text: el.date_adoption ? moment(el.date_adoption).format(format_datetime) : ''
                         });
                         var $td_const_wagon = $('<td></td>', {
                             rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
                             text: el.const_wagon
                         });
                         var $td_count_account_balance_wagon = $('<td></td>', {
                             rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
                             text: el.count_account_balance_wagon
                         });
                         var $td_cargo = $('<td></td>', {
+                            class: 'dt-body-left',
                             text: el1.count + '-' + el1.cargo_name
                         });
                         var $td_sum_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
                         });
                         var $td_sum_vesg_reweighing = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: el1.sum_vesg_reweighing ? Number(el1.sum_vesg_reweighing / 1000).toFixed(3) : 0.000
                         });
                         var $td_def_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: 0.000
                         });
                         $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
@@ -2180,24 +2244,31 @@
                     } else {
                         var $tr_d = $('<tr></tr>');
                         var $td_date_adoption = $('<td></td>', {
+                            class: 'dt-body-center',
                             style: 'display: none;'
                         });
                         var $td_const_wagon = $('<td></td>', {
+                            class: 'dt-body-center',
                             style: 'display: none;'
                         });
                         var $td_count_account_balance_wagon = $('<td></td>', {
+                            class: 'dt-body-center',
                             style: 'display: none;'
                         });
                         var $td_cargo = $('<td></td>', {
+                            class: 'dt-body-left',
                             text: el1.count + '-' + el1.cargo_name
                         });
                         var $td_sum_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
                         });
                         var $td_sum_vesg_reweighing = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: el1.sum_vesg_reweighing ? Number(el1.sum_vesg_reweighing / 1000).toFixed(3) : 0.000
                         });
                         var $td_def_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
                             text: 0.000
                         });
                         $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
@@ -2210,10 +2281,10 @@
 
         this.$div_group_sostav.append(this.table_group_sostav);
         this.table_group_sostav.DataTable({
-            "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, 'All']],
-            "pageLength": 10,
+            "lengthMenu": null,
+            "pageLength": null,
             "deferRender": false,
-            "paging": true,
+            "paging": false,
             "searching": false,
             "ordering": false,
             "info": true,
@@ -2229,28 +2300,27 @@
             jQueryUI: false,
             dom: 'Bfrtip',
             stateSave: false,
+            buttons: {
+                extend: 'collection',
+                text: langView('ttdr_title_button_export', App.Langs),
+                buttons: [
+                    {
+                        text: langView('ttdr_title_button_buffer', App.Langs),
+                        extend: 'copyHtml5',
+                    },
+                    {
+                        text: langView('ttdr_title_button_excel', App.Langs),
+                        extend: 'excelHtml5',
+                        sheetName: langView('ttdr_title_excel_sheet_name', App.Langs),
+                        messageTop: function () {
+                            return '';
+                        }
+                    },
+                ],
+                autoClose: true
+            },
         });
-        //$('#table-group-sostav').DataTable({
-        //    "lengthMenu": null,
-        //    "pageLength": null,
-        //    "deferRender": false,
-        //    "paging": false,
-        //    "searching": false,
-        //    "ordering": false,
-        //    "info": false,
-        //    select: false,
-        //    "autoWidth": false,
-        //    //"filter": true,
-        //    //"scrollY": "600px",
-        //    //sScrollX: "100%",
-        //    scrollX: true,
-        //    //"responsive": true,
-        //    //"bAutoWidth": false,
-        //    language: language_table(App.Langs),
-        //    jQueryUI: false,
-        //    dom: 'Bfrtip',
-        //    stateSave: false,
-        //});
+
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_2_1 = function () {

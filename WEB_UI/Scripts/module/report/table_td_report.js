@@ -18,6 +18,8 @@
     {
         'default':  //default language: ru
         {
+            'ttdr_field_numeration': '№ п.п.',
+
             'ttdr_field_adoption_sostav_station': 'ПРИБЫТИЕ',
             'ttdr_field_adoption_count_wagon': 'Всего вагонов',
             'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
@@ -124,7 +126,7 @@
             'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
             'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
             'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg': 'Вес, тн',
+            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg': 'Вес ЭПД, тн',
 
             'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
             'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
@@ -134,6 +136,23 @@
             'ttdr_field_adoption_wagon_not_operation_nom_doc': 'Доп. накл.',
             'ttdr_field_adoption_wagon_not_operation_station_from_name': 'Станция отправления',
             'ttdr_field_adoption_wagon_not_operation_division_abbr': 'Цех-получатель',
+
+            'ttdr_field_adoption_cammon_arrival_sostav_date_arrival': 'Дата прибытия',
+            'ttdr_field_adoption_cammon_arrival_sostav_date_adoption': 'Дата приема',
+            'ttdr_field_adoption_cammon_arrival_sostav_date_adoption_act': 'Дата приема по акту',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_id_type': 'id тип вагона',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_type': 'Тип вагона',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_vesg_reweighing': 'Вес АМКР, тн',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_deff_vesg': 'Отклонение, тн',
+            'ttdr_field_adoption_cammon_sap_incoming_supply_num': '№ Вх. поставки',
+            'ttdr_field_adoption_cammon_sap_incoming_supply_cargo_code': 'Код груза ПРИБ SAP',
+            'ttdr_field_adoption_cammon_sap_incoming_supply_cargo_name': 'Груз ПРИБ SAP',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ',
+
+            'ttdr_field_adoption_cammon_arrival_uz_document_code_payer_arrival': 'Код платильщика ПРИБ',
+            'ttdr_field_adoption_cammon_arrival_uz_document_payer_arrival_name': 'Платильщик ПРИБ',
+            'ttdr_field_adoption_cammon_arrival_uz_vagon_pay_summa': 'Тариф ПРИБ',
+
 
 
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
@@ -169,6 +188,15 @@
 
     // Перечень полей
     var list_collums = [
+        // Поля составы принятые
+        {
+            field: 'numeration',
+            data: function (row, type, val, meta) {
+                return ++meta.row;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_numeration', App.Langs), width: "30px", orderable: false, searchable: false
+        },
         {
             field: 'details_control',
             className: 'details-control  details-control-wagons-sostav',
@@ -346,7 +374,7 @@
             className: 'dt-body-center sum_count_account_balance',
             title: langView('ttdr_field_outgoing_sostav_detali_count_account_balance', App.Langs), width: "50px", orderable: false, searchable: false
         },
-        // Натурка прибытие
+        // НАТУРКА ПРИБЫТИЯ
         {
             field: 'sostav_naturka_id',
             data: function (row, type, val, meta) {
@@ -815,7 +843,8 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_sostav_naturka_uz_vagon_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
         },
-        // Натурка отправка
+
+        // НАТУРКА ОТПРАВКА
         {
             field: 'sostav_outgoing_naturka_num',
             data: function (row, type, val, meta) {
@@ -1115,6 +1144,124 @@
             className: 'dt-body-left shorten mw-150 operator',
             title: langView('ttdr_field_adoption_wagon_not_operation_division_abbr', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        // ПРИБЫТИЕ ДЕТАЛЬНО
+        {
+            field: 'adoption_cammon_arrival_sostav_date_arrival',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_adoption_cammon_arrival_sostav_date_arrival', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_arrival_sostav_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_adoption_cammon_arrival_sostav_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_arrival_sostav_date_adoption_act',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_adoption_cammon_arrival_sostav_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // тип вагона
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_id_type',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_id_type;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_id_type', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_type',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_type_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_type', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Вес-перевеска АМКР
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_vesg_reweighing',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_vesg_reweighing ? Number(Number(row.arrival_uz_vagon_vesg_reweighing) / 1000).toFixed(3) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_vesg_reweighing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Вес-перевеска АМКР
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_deff_vesg',
+            data: function (row, type, val, meta) {
+                return 0.000;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_deff_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Код груза ЕТСНГ
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_cargo_etsng_code',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_cargo_etsng_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_cargo_etsng_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_sap_incoming_supply_num',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_num;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_sap_incoming_supply_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_sap_incoming_supply_cargo_code',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_cargo_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_sap_incoming_supply_cargo_code', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_sap_incoming_supply_cargo_name',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_cargo_name;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_sap_incoming_supply_cargo_name', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Платильщик
+        {
+            field: 'adoption_cammon_arrival_uz_document_code_payer_arrival',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_code_payer_arrival;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_document_code_payer_arrival', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_arrival_uz_document_payer_arrival_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_document_payer_arrival_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_document_payer_arrival_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'adoption_cammon_arrival_uz_vagon_pay_summa',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_pay_summa;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_adoption_cammon_arrival_uz_vagon_pay_summa', App.Langs), width: "50px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -1350,6 +1497,55 @@
         collums.push({ field: 'adoption_wagon_not_operation_division_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // 
+    table_td_report.prototype.init_columns_adoption_common_detali = function () {
+        var collums = [];
+        collums.push({ field: 'numeration', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_num', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_nom_doc', title: null, class: null });
+        // дата отправления на АМКР
+        collums.push({ field: 'adoption_cammon_arrival_sostav_date_arrival', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_sostav_date_adoption_act', title: null, class: null });
+        // дата раскредитования
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_name_consignee', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_rod_abbr', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_uz_vagon_type', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_wagon_adm', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_condition_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_gruzp', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_u_tara', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_ves_tary_arc', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_vesg', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_uz_vagon_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_uz_vagon_deff_vesg', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_code_stn_from', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_station_from_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_code_border_checkpoint', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_border_checkpoint_station_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_cross_time', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_code_stn_to', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_station_to_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_sertification_data', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_sap_incoming_supply_cargo_code', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_sap_incoming_supply_cargo_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_cargo_group_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_owner_wagon_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_wagon_date_rem_uz', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_code_shipper', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_shipper_name', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_division_abbr', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_commercial_condition', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_vagon_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_uz_document_code_payer_arrival', title: null, class: null });
+        collums.push({ field: 'sostav_naturka_arrival_uz_document_distance_way', title: null, class: null });
+        collums.push({ field: 'adoption_cammon_arrival_uz_vagon_pay_summa', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -1455,6 +1651,20 @@
             }.bind(this)
         });
         /*        buttons.push({ name: 'page_length', action: null });*/
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_adoption_common_detali = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -1580,6 +1790,24 @@
                 this.table_buttons = this.init_button_adoption_wagon_not_operation();
                 break;
             };
+            case 'adoption_common_detali': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [2, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.table_columns = this.init_columns_adoption_common_detali();
+                this.table_buttons = this.init_button_adoption_common_detali();
+                break;
+            };
+
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
