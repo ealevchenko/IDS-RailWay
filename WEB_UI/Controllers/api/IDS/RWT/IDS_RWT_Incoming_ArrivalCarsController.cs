@@ -276,6 +276,7 @@ namespace WEB_UI.Controllers.api
         public int? instructional_letters_station_code { get; set; }
         public string instructional_letters_station_name { get; set; }
         public string instructional_letters_note { get; set; }
+        public bool? account_balance { get; set; }
     }
 
     public class ViewReportAdoptionWagonNotOperation
