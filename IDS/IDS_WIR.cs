@@ -1231,7 +1231,7 @@ namespace IDS
                         create_user = user,
                         change = null,
                         change_user = null,
-                        manual = uz_doc_manual,
+                        manual = uz_doc_manual, 
                     };
                     res.mode = mode_obj.add;
                 }
@@ -2630,7 +2630,7 @@ namespace IDS
                 }
                 if (sostav.date_adoption != null)
                 {
-                    res.result = (int)errors_base.arrival_cars_arrival; // Запрет операции вагон принят
+                    res.result = (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию -принят)
                     return res;
                 }
                 DateTime curr_date = sostav.date_arrival;
