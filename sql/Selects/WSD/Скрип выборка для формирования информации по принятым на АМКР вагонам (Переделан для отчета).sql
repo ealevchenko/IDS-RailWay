@@ -310,6 +310,8 @@ declare @stop datetime = Convert(datetime, '2022-08-01 23:59:59', 120)
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
+		,account_balance = [IDS].[get_count_account_balance_of_id_operator](arr_wag_rent.[id_operator], dir_rod.rod_uz)
+
 		--into view_incoming_cars
 	FROM IDS.ArrivalSostav as arr_sost
 		--> Прибытие вагона
