@@ -1233,10 +1233,10 @@ var is_valid_num_wagon = function (num) {
     return false;
 };
 // Проверка списка вагонов
-var is_valid_nums = function (nums, alert, valid_sys_numbering) {
+var is_valid_nums = function (nums, alert, valid_sys_numbering, valid_not_null) {
     // Проверим список вагонов
     if (!nums || nums === null) {
-        alert.out_warning_message(langView('mess_error_not_cars', App.Langs));
+        if(!valid_not_null) alert.out_warning_message(langView('mess_error_not_cars', App.Langs));
         return null;
     }
     var isNumeric = function (value) {
@@ -1303,10 +1303,10 @@ var is_valid_nums = function (nums, alert, valid_sys_numbering) {
     return valid ? car_out : null;
 }
 // Проверка списка документов
-var is_valid_docs = function (nums, alert, valid_sys_numbering) {
+var is_valid_docs = function (nums, alert, valid_not_null) {
     // Проверим список вагонов
     if (!nums || nums === null) {
-        alert.out_warning_message(langView('mess_error_not_docs', App.Langs));
+        if (!valid_not_null) alert.out_warning_message(langView('mess_error_not_docs', App.Langs));
         return null;
     }
     var isNumeric = function (value) {
