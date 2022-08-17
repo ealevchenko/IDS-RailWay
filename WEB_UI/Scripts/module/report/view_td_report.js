@@ -170,6 +170,41 @@
     var FIL = App.form_inline;
     var TTDR = App.table_td_report;
 
+
+    // асинхронно добавим распарсеный ЭПД
+    var wagons_get_epd_async = function (row, callback) {
+        var base = this;
+        var len = row.length;
+        if (len === 0) {
+            if (typeof callback === 'function') {
+                callback();
+            }
+            return 0;
+        }
+        function GetEPDWagonsAsync(i) {
+            if (i < len) {
+                // Поместим следующий вызов функции в цикл событий.
+                setTimeout(function () {
+                    this.ids_wsd.getOTPR_UZ_DOCOfNum(row[i].arrival_car_num_doc, function (doc_uz_sms) {
+                        row[i].date_otpr = null;
+                        if (doc_uz_sms !== null) {
+                            // Получим дату отправки
+                            row[i].otpr = doc_uz_sms;
+                        };
+                        GetEPDWagonsAsync.call(this, i + 1);
+                    }.bind(this));
+                }.bind(this), 0);
+            } else {
+                // Так как достигнут конец массива, мы вызываем коллбэк
+                if (typeof callback === 'function') {
+                    callback();
+                } else return 0;
+            }
+        }
+        GetEPDWagonsAsync.call(this, 0);
+    };
+
+
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function view_td_report(selector) {
@@ -1963,9 +1998,9 @@
                 client: this.switch_client.val(),
                 not_client: this.switch_not_client.val(),
                 paid: this.switch_paid.val(),
-                nums: get_input_string_value(this.textarea_wagon_nums),
-                nom_main_docs: get_input_string_value(this.textarea_main_epd_docs),
-                nom_docs: get_input_string_value(this.textarea_epd_docs),
+                nums: this.nums,
+                nom_main_docs: this.main_epd_docs,
+                nom_docs: this.epd_docs,
                 id_operator: this.select_operation_amkr.val(),
                 id_limiting: this.select_limiting.val(),
                 id_owner: this.select_owners.val(),
@@ -1985,171 +2020,195 @@
         };
         this.ids_wsd.postReportAdoptionWagonOfWhere(where, function (result_wagons) {
             this.wagons_adoption = result_wagons;
-            this.list_operators_wagons = [];
-            this.list_limiting = [];
-            this.list_owners = [];
-            this.list_station_from = [];
-            this.list_cargo = [];
-            this.list_certification_data = [];
-            this.list_cargo_sap = [];
-            this.list_group_arrival = [];
-            this.list_consignee = [];
-            this.list_division = [];
-            this.list_genus = [];
-            this.list_condition = [];
-            this.list_payer_name = [];
-            this.list_payer_code = [];
-            this.list_station_amkr = [];
-            this.list_group_sostav = [];
-            // выборка для списков отчета
-            $.each(this.wagons_adoption, function (key, value) {
-                //
-                var group_sostav = this.list_group_sostav.find(function (o) { return o.id === value.arrival_sostav_id }.bind(this));
-                if (!group_sostav) {
-                    var sostav = this.wagons_adoption.filter(function (i) { return i.arrival_sostav_id === value.arrival_sostav_id }.bind(this));
-                    var sostav_cargo = [];
-                    $.each(sostav, function (i, el) {
-                        var cargo = sostav_cargo.find(function (o) { return o.id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this))
-                        var sum_vesg = 0;
-                        var sum_vesg_reweighing = 0;
-                        if (!cargo) {
-                            sum_vesg = 0;
-                            sum_vesg_reweighing = 0;
-                            var cargo_list = sostav.filter(function (i) { return i.arrival_uz_vagon_id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this));
-                            // Проссумируем 
-                            $.each(cargo_list, function (i1, el1) {
-                                sum_vesg += el1.arrival_uz_vagon_vesg ? el1.arrival_uz_vagon_vesg : 0;
-                                sum_vesg_reweighing = + el1.arrival_uz_vagon_vesg_reweighing ? el1.arrival_uz_vagon_vesg_reweighing : 0;
-                            }.bind(this));
-                            sostav_cargo.push({ id_cargo: el.arrival_uz_vagon_id_cargo, cargo_name: el['arrival_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg, sum_vesg_reweighing: sum_vesg_reweighing });
-                        };
-                    }.bind(this));
-                    this.list_group_sostav.push({ id: value.arrival_sostav_id, date_adoption: value.arrival_sostav_date_adoption, const_wagon: sostav.length, count_account_balance_wagon: sostav.filter(function (i) { return i.account_balance }.bind(this)).length, cargo_group: sostav_cargo });
-
-                }
+            // Обновим спсисок вагонов распарсиным ЭПД
+            wagons_get_epd_async.call(this, this.wagons_adoption, function () {
+                // Продолжим
+                this.list_operators_wagons = [];
+                this.list_limiting = [];
+                this.list_owners = [];
+                this.list_station_from = [];
+                this.list_cargo = [];
+                this.list_certification_data = [];
+                this.list_cargo_sap = [];
+                this.list_group_arrival = [];
+                this.list_consignee = [];
+                this.list_division = [];
+                this.list_genus = [];
+                this.list_condition = [];
+                this.list_payer_name = [];
+                this.list_payer_code = [];
+                this.list_station_amkr = [];
+                this.list_group_sostav = [];
                 // выборка для списков отчета
-                var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
-                if (!ow) {
-                    this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                $.each(this.wagons_adoption, function (key, value) {
+                    //
+                    var group_sostav = this.list_group_sostav.find(function (o) { return o.id === value.arrival_sostav_id }.bind(this));
+                    if (!group_sostav) {
+                        var sostav = this.wagons_adoption.filter(function (i) { return i.arrival_sostav_id === value.arrival_sostav_id }.bind(this));
+                        var sostav_cargo = [];
+                        $.each(sostav, function (i, el) {
+                            var cargo = sostav_cargo.find(function (o) { return o.id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this))
+                            var sum_vesg = 0;
+                            var sum_vesg_reweighing = 0;
+                            if (!cargo) {
+                                sum_vesg = 0;
+                                sum_vesg_reweighing = 0;
+                                var cargo_list = sostav.filter(function (i) { return i.arrival_uz_vagon_id_cargo === el.arrival_uz_vagon_id_cargo }.bind(this));
+                                // Проссумируем 
+                                $.each(cargo_list, function (i1, el1) {
+                                    sum_vesg += el1.arrival_uz_vagon_vesg ? el1.arrival_uz_vagon_vesg : 0;
+                                    sum_vesg_reweighing = + el1.arrival_uz_vagon_vesg_reweighing ? el1.arrival_uz_vagon_vesg_reweighing : 0;
+                                }.bind(this));
+                                sostav_cargo.push({ id_cargo: el.arrival_uz_vagon_id_cargo, cargo_name: el['arrival_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg, sum_vesg_reweighing: sum_vesg_reweighing });
+                            };
+                        }.bind(this));
+                        this.list_group_sostav.push({ id: value.arrival_sostav_id, date_adoption: value.arrival_sostav_date_adoption, const_wagon: sostav.length, count_account_balance_wagon: sostav.filter(function (i) { return i.account_balance }.bind(this)).length, cargo_group: sostav_cargo });
+
+                    }
+                    // выборка для списков отчета
+                    var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+                    if (!ow) {
+                        this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                    }
+                    var lm = this.list_limiting.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
+                    if (!lm) {
+                        this.list_limiting.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_limiting, text: value['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang] });
+                    }
+                    var own = this.list_owners.find(function (o) { return o.value === value.arrival_uz_vagon_id_owner }.bind(this));
+                    if (!own) {
+                        this.list_owners.push({ value: value.arrival_uz_vagon_id_owner, text: value['arrival_uz_vagon_owner_wagon_abbr_' + App.Lang] });
+                    }
+                    var stfr = this.list_station_from.find(function (o) { return o.value === value.arrival_uz_document_code_stn_from }.bind(this));
+                    if (!stfr) {
+                        this.list_station_from.push({ value: value.arrival_uz_document_code_stn_from, text: value['arrival_uz_document_station_from_name_' + App.Lang] });
+                    }
+                    var crg = this.list_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_cargo }.bind(this));
+                    if (!crg) {
+                        this.list_cargo.push({ value: value.arrival_uz_vagon_id_cargo, text: value['arrival_uz_vagon_cargo_name_' + App.Lang] });
+                    }
+                    var srtdt = this.list_certification_data.find(function (o) { return o.value === value.arrival_uz_vagon_id_certification_data }.bind(this));
+                    if (!srtdt) {
+                        this.list_certification_data.push({ value: value.arrival_uz_vagon_id_certification_data, text: value['arrival_uz_vagon_sertification_data_' + App.Lang] });
+                    }
+                    var crgsap = this.list_cargo_sap.find(function (o) { return o.value === value.sap_incoming_supply_cargo_code }.bind(this));
+                    if (!crgsap) {
+                        this.list_cargo_sap.push({ value: value.sap_incoming_supply_cargo_code, text: value.sap_incoming_supply_cargo_code });
+                    }
+                    var grpcrg = this.list_group_arrival.find(function (o) { return o.value === value.arrival_uz_vagon_id_group }.bind(this));
+                    if (!grpcrg) {
+                        this.list_group_arrival.push({ value: value.arrival_uz_vagon_id_group, text: value['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
+                    }
+                    var cnsg = this.list_consignee.find(function (o) { return o.value === value.arrival_uz_document_code_consignee }.bind(this));
+                    if (!cnsg) {
+                        this.list_consignee.push({ value: value.arrival_uz_document_code_consignee, text: value.arrival_uz_document_name_consignee });
+                    }
+                    var dvsn = this.list_division.find(function (o) { return o.value === value.arrival_uz_vagon_id_division_on_amkr }.bind(this));
+                    if (!dvsn) {
+                        this.list_division.push({ value: value.arrival_uz_vagon_id_division_on_amkr, text: value['arrival_uz_vagon_division_abbr_' + App.Lang] });
+                    }
+                    var genus = this.list_genus.find(function (o) { return o.value === value.arrival_uz_vagon_id_genus }.bind(this));
+                    if (!genus) {
+                        this.list_genus.push({ value: value.arrival_uz_vagon_id_genus, text: value['arrival_uz_vagon_rod_abbr_' + App.Lang] });
+                    }
+                    var condition = this.list_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
+                    if (!condition) {
+                        this.list_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
+                    }
+                    var payer_name = this.list_payer_name.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
+                    if (!payer_name) {
+                        this.list_payer_name.push({ value: value.arrival_uz_document_code_payer_arrival, text: value['arrival_uz_document_payer_arrival_name_' + App.Lang] });
+                    }
+                    var payer_code = this.list_payer_code.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
+                    if (!payer_code) {
+                        this.list_payer_code.push({ value: value.arrival_uz_document_code_payer_arrival, text: value.arrival_uz_document_code_payer_arrival });
+                    }
+                    var station_amkr = this.list_station_amkr.find(function (o) { return o.value === value.arrival_sostav_id_station_on }.bind(this));
+                    if (!station_amkr) {
+                        this.list_station_amkr.push({ value: value.arrival_sostav_id_station_on, text: value['arrival_sostav_station_on_abbr_' + App.Lang] });
+                    }
+
+                }.bind(this));
+                //
+                this.view_table_group_sostav(this.list_group_sostav);
+
+                this.table_arr_common_detali.view(this.wagons_adoption);
+
+                // обновление списков отчета
+                if (!where.id_operator || where.id_operator.length ===0) {
+                    this.select_operation_amkr.update(this.list_operators_wagons, -1);
                 }
-                var lm = this.list_limiting.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
-                if (!lm) {
-                    this.list_limiting.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_limiting, text: value['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang] });
+                if (!where.id_limiting || where.id_limiting.length === 0) {
+                    this.select_limiting.update(this.list_limiting, -1);
                 }
-                var own = this.list_owners.find(function (o) { return o.value === value.arrival_uz_vagon_id_owner }.bind(this));
-                if (!own) {
-                    this.list_owners.push({ value: value.arrival_uz_vagon_id_owner, text: value['arrival_uz_vagon_owner_wagon_abbr_' + App.Lang] });
+                if (!where.id_owner || where.id_owner.length === 0) {
+                    this.select_owners.update(this.list_owners, -1);
                 }
-                var stfr = this.list_station_from.find(function (o) { return o.value === value.arrival_uz_document_code_stn_from }.bind(this));
-                if (!stfr) {
-                    this.list_station_from.push({ value: value.arrival_uz_document_code_stn_from, text: value['arrival_uz_document_station_from_name_' + App.Lang] });
+                if (!where.code_stn_from || where.code_stn_from.length === 0) {
+                    this.select_station_from.update(this.list_station_from, -1);
                 }
-                var crg = this.list_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_cargo }.bind(this));
-                if (!crg) {
-                    this.list_cargo.push({ value: value.arrival_uz_vagon_id_cargo, text: value['arrival_uz_vagon_cargo_name_' + App.Lang] });
+                if (!where.id_cargo || where.id_cargo.length === 0) {
+                    this.select_cargo.update(this.list_cargo, -1);
                 }
-                var srtdt = this.list_certification_data.find(function (o) { return o.value === value.arrival_uz_vagon_id_certification_data }.bind(this));
-                if (!srtdt) {
-                    this.list_certification_data.push({ value: value.arrival_uz_vagon_id_certification_data, text: value['arrival_uz_vagon_sertification_data_' + App.Lang] });
+                if (!where.id_certification_data || where.id_certification_data.length === 0) {
+                    this.select_certification_data.update(this.list_certification_data, -1);
                 }
-                var crgsap = this.list_cargo_sap.find(function (o) { return o.value === value.sap_incoming_supply_cargo_code }.bind(this));
-                if (!crgsap) {
-                    this.list_cargo_sap.push({ value: value.sap_incoming_supply_cargo_code, text: value.sap_incoming_supply_cargo_code });
+                if (!where.supply_cargo_code || where.supply_cargo_code.length === 0) {
+                    this.select_cargo_sap.update(this.list_cargo_sap, -1);
                 }
-                var grpcrg = this.list_group_arrival.find(function (o) { return o.value === value.arrival_uz_vagon_id_group }.bind(this));
-                if (!grpcrg) {
-                    this.list_group_arrival.push({ value: value.arrival_uz_vagon_id_group, text: value['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
+                if (!where.id_group_cargo || where.id_group_cargo.length === 0) {
+                    this.select_group_arrival.update(this.list_group_arrival, -1);
                 }
-                var cnsg = this.list_consignee.find(function (o) { return o.value === value.arrival_uz_document_code_consignee }.bind(this));
-                if (!cnsg) {
-                    this.list_consignee.push({ value: value.arrival_uz_document_code_consignee, text: value.arrival_uz_document_name_consignee });
+                if (!where.code_consignee || where.code_consignee.length === 0) {
+                    this.select_consignee.update(this.list_consignee, -1);
                 }
-                var dvsn = this.list_division.find(function (o) { return o.value === value.arrival_uz_vagon_id_division_on_amkr }.bind(this));
-                if (!dvsn) {
-                    this.list_division.push({ value: value.arrival_uz_vagon_id_division_on_amkr, text: value['arrival_uz_vagon_division_abbr_' + App.Lang] });
+                if (!where.id_division || where.id_division.length === 0) {
+                    this.select_division.update(this.list_division, -1);
                 }
-                var genus = this.list_genus.find(function (o) { return o.value === value.arrival_uz_vagon_id_genus }.bind(this));
-                if (!genus) {
-                    this.list_genus.push({ value: value.arrival_uz_vagon_id_genus, text: value['arrival_uz_vagon_rod_abbr_' + App.Lang] });
+                if (!where.id_genus || where.id_genus.length === 0) {
+                    this.select_genus.update(this.list_genus, -1);
                 }
-                var condition = this.list_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
-                if (!condition) {
-                    this.list_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
+                if (!where.id_condition || where.id_condition.length === 0) {
+                    this.select_condition.update(this.list_condition, -1);
                 }
-                var payer_name = this.list_payer_name.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
-                if (!payer_name) {
-                    this.list_payer_name.push({ value: value.arrival_uz_document_code_payer_arrival, text: value['arrival_uz_document_payer_arrival_name_' + App.Lang] });
+                if (!where.code_payer_arrival || where.code_payer_arrival.length === 0) {
+                    this.select_payer_name.update(this.list_payer_name, -1);
                 }
-                var payer_code = this.list_payer_code.find(function (o) { return o.value === value.arrival_uz_document_code_payer_arrival }.bind(this));
-                if (!payer_code) {
-                    this.list_payer_code.push({ value: value.arrival_uz_document_code_payer_arrival, text: value.arrival_uz_document_code_payer_arrival });
+                if (!where.code_payer_arrival_name || where.code_payer_arrival_name.length === 0) {
+                    this.select_payer_code.update(this.list_payer_code, -1);
                 }
-                var station_amkr = this.list_station_amkr.find(function (o) { return o.value === value.arrival_sostav_id_station_on }.bind(this));
-                if (!station_amkr) {
-                    this.list_station_amkr.push({ value: value.arrival_sostav_id_station_on, text: value['arrival_sostav_station_on_abbr_' + App.Lang] });
+                if (!where.id_station_on || where.id_station_on.length === 0) {
+                    this.select_station_amkr.update(this.list_station_amkr, -1);
                 }
 
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }.bind(this));
-            //
-            this.view_table_group_sostav(this.list_group_sostav);
-
-            this.table_arr_common_detali.view(result_wagons);
-
-            // обновление списков отчета
-            if (!where.id_operator) {
-                this.select_operation_amkr.update(this.list_operators_wagons, -1);
-            }
-            if (!where.id_limiting) {
-                this.select_limiting.update(this.list_limiting, -1);
-            }
-            if (!where.id_owner) {
-                this.select_owners.update(this.list_owners, -1);
-            }
-            if (!where.code_stn_from) {
-                this.select_station_from.update(this.list_station_from, -1);
-            }
-            if (!where.id_cargo) {
-                this.select_cargo.update(this.list_cargo, -1);
-            }
-            if (!where.id_certification_data) {
-                this.select_certification_data.update(this.list_certification_data, -1);
-            }
-            if (!where.supply_cargo_code) {
-                this.select_cargo_sap.update(this.list_cargo_sap, -1);
-            }
-            if (!where.id_group_cargo) {
-                this.select_group_arrival.update(this.list_group_arrival, -1);
-            }
-            if (!where.code_consignee) {
-                this.select_consignee.update(this.list_consignee, -1);
-            }
-            if (!where.id_division) {
-                this.select_division.update(this.list_division, -1);
-            }
-            if (!where.id_genus) {
-                this.select_genus.update(this.list_genus, -1);
-            }
-            if (!where.id_condition) {
-                this.select_condition.update(this.list_condition, -1);
-            }
-            if (!where.code_payer_arrival) {
-                this.select_payer_name.update(this.list_payer_name, -1);
-            }
-            if (!where.code_payer_arrival_name) {
-                this.select_payer_code.update(this.list_payer_code, -1);
-            }
-            if (!where.id_station_on) {
-                this.select_station_amkr.update(this.list_station_amkr, -1);
-            }
-
-            if (typeof callback === 'function') {
-                callback();
-            }
-
         }.bind(this));
     };
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_2_1 = function () {
+        this.out_clear();
+        this.nums = null;
+        var list_nums = this.textarea_wagon_nums.val();
+        if (list_nums !== '') {
+            this.nums = is_valid_nums(list_nums, this.settings.alert, false, true);
+            if (!this.nums) return;
+        };
+        this.main_epd_docs = null;
+        var list_main_epd_docs = this.textarea_main_epd_docs.val();
+        if (list_main_epd_docs !== '') {
+            this.main_epd_docs = is_valid_docs(list_main_epd_docs, this.settings.alert, true);
+            if (!this.main_epd_docs) return;
+        };
+
+        this.epd_docs = null;
+        var list_epd_docs = this.textarea_epd_docs.val();
+        if (list_epd_docs !== '') {
+            this.epd_docs = is_valid_docs(list_epd_docs, this.settings.alert, true);
+            if (!this.epd_docs) return;
+        };
+
         LockScreen(langView('vtdr_load_adoption_cars', App.Langs));
         this.load_select_report_2_1(null, function () {
             LockScreenOff();

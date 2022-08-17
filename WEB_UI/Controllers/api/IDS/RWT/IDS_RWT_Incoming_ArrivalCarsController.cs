@@ -498,9 +498,10 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_client = new System.Data.SqlClient.SqlParameter("@client", value.client);
                 System.Data.SqlClient.SqlParameter p_not_client = new System.Data.SqlClient.SqlParameter("@not_client", value.not_client);
                 System.Data.SqlClient.SqlParameter p_paid = new System.Data.SqlClient.SqlParameter("@paid", value.paid);
-                System.Data.SqlClient.SqlParameter p_nums = new System.Data.SqlClient.SqlParameter("@nums", value.nums ?? (object)DBNull.Value);
-                System.Data.SqlClient.SqlParameter p_nom_main_docs = new System.Data.SqlClient.SqlParameter("@nom_main_docs", value.nom_main_docs ?? (object)DBNull.Value);
-                System.Data.SqlClient.SqlParameter p_nom_docs = new System.Data.SqlClient.SqlParameter("@nom_docs", value.nom_docs ?? (object)DBNull.Value);
+                //System.Data.SqlClient.SqlParameter p_nums = new System.Data.SqlClient.SqlParameter("@nums", value.nums ?? (object)DBNull.Value);
+                System.Data.SqlClient.SqlParameter p_nums = new System.Data.SqlClient.SqlParameter("@nums", get_string_of_int(value.nums));
+                System.Data.SqlClient.SqlParameter p_nom_main_docs = new System.Data.SqlClient.SqlParameter("@nom_main_docs", get_string_of_int(value.nom_main_docs));
+                System.Data.SqlClient.SqlParameter p_nom_docs = new System.Data.SqlClient.SqlParameter("@nom_docs", get_string_of_int(value.nom_docs));
                 System.Data.SqlClient.SqlParameter p_id_operator = new System.Data.SqlClient.SqlParameter("@id_operator",  get_string_of_int(value.id_operator));
                 System.Data.SqlClient.SqlParameter p_id_limiting = new System.Data.SqlClient.SqlParameter("@id_limiting", get_string_of_int(value.id_limiting));
                 System.Data.SqlClient.SqlParameter p_id_owner = new System.Data.SqlClient.SqlParameter("@id_owner", get_string_of_int(value.id_owner));
@@ -517,7 +518,7 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_code_payer_arrival_name = new System.Data.SqlClient.SqlParameter("@code_payer_arrival_name", get_string_of_int(value.code_payer_arrival_name));
                 System.Data.SqlClient.SqlParameter p_id_station_on = new System.Data.SqlClient.SqlParameter("@id_station_on", get_string_of_int(value.id_station_on));
 
-                string sql = "EXEC [IDS].[get_view_incoming_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @nom_docs, @id_operator, @id_limiting, @id_owner, @code_stn_from, @id_cargo, @id_certification_data, @supply_cargo_code, @code_consignee, @id_division, @id_genus, @id_condition, @code_payer_arrival, @code_payer_arrival_name, @id_station_on";
+                string sql = "EXEC [IDS].[get_view_incoming_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @nom_docs, @id_operator, @id_limiting, @id_owner, @code_stn_from, @id_cargo, @id_certification_data, @supply_cargo_code, @id_group_cargo, @code_consignee, @id_division, @id_genus, @id_condition, @code_payer_arrival, @code_payer_arrival_name, @id_station_on";
                 List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_nom_docs, p_id_operator, p_id_limiting, p_id_owner, p_code_stn_from, p_id_cargo, p_id_certification_data, p_supply_cargo_code, p_id_group_cargo, p_code_consignee, p_id_division, p_id_genus, p_id_condition, p_code_payer_arrival, p_code_payer_arrival_name, p_id_station_on).ToList();
                 return Ok(result);
             }
