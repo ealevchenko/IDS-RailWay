@@ -1,7 +1,7 @@
 use [KRR-PA-CNT-Railway]
 
-declare @start datetime = Convert(datetime, '2022-08-01 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-08-09 23:59:59', 120)
+declare @start datetime = Convert(datetime, '2022-08-14 00:00:00', 120)
+declare @stop datetime = Convert(datetime, '2022-08-14 10:59:59', 120)
 
 --select
 --		[arrival_car_id]
@@ -375,6 +375,8 @@ end
 if (@id_station_on is not null) begin
 	SET @SQLString = @SQLString + ' AND arrival_sostav_id_station_on in ('+ @id_station_on +')';  
 end
+
+	SET @SQLString = @SQLString + ' order by arrival_sostav_date_adoption';  
 
 print(@SQLString);
 SET @ParmDefinition = N'@start datetime, @stop datetime';  

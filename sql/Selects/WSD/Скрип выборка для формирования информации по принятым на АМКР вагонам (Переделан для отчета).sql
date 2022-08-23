@@ -1,7 +1,7 @@
 use [KRR-PA-CNT-Railway]
 
-declare @start datetime = Convert(datetime, '2022-07-31 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-08-01 23:59:59', 120)
+declare @start datetime = Convert(datetime, '2022-08-17 22:00:00', 120)
+declare @stop datetime = Convert(datetime, '2022-08-18 21:59:59', 120)
 --declare @id_sostav int = 181948--171467 --171467
 	select 
 		 arr_car.[id] as arrival_car_id
@@ -415,5 +415,5 @@ declare @stop datetime = Convert(datetime, '2022-08-01 23:59:59', 120)
 		Left JOIN [IDS].[Directory_PayerArrival] as arr_payer_arr ON arr_doc_uz.[code_payer_arrival] = arr_payer_arr.[code]
 	WHERE 
 	arr_car.arrival is not null and arr_sost.[date_adoption]>= @start and arr_sost.[date_adoption]<=@stop
-
-	order by arr_car.position	RETURN
+	order by arr_sost.[date_adoption]
+	--order by arr_car.position	--RETURN
