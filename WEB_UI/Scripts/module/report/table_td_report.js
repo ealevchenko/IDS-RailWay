@@ -85,11 +85,11 @@
             'ttdr_field_incoming_cars_uz_document_code_shipper': 'Код гр. отпр.',
             'ttdr_field_incoming_cars_uz_document_shipper_name': 'Гр. отпр.',
             'ttdr_field_incoming_cars_uz_document_code_consignee': 'Код. гр. пол.',
-            'ttdr_field_incoming_cars_uz_document_name_consignee': 'Код. гр. пол.',
+            'ttdr_field_incoming_cars_uz_document_name_consignee': 'Гр. пол.',
             'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код. пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
-            'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес. гр.',
+            'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес, тн.',
             'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз',
             'ttdr_field_incoming_cars_uz_vagon_cargo_group_name': 'Группа груза',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_name': 'Следует на ст.АМКР',
@@ -498,7 +498,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_u_tara',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_u_tara ? Number(Number(row.arrival_uz_vagon_u_tara) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_u_tara ? Number(Number(row.arrival_uz_vagon_u_tara) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_uz_vagon_u_tara', App.Langs), width: "50px", orderable: true, searchable: true
@@ -507,7 +507,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_ves_tary_arc',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_ves_tary_arc ? Number(Number(row.arrival_uz_vagon_ves_tary_arc) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_ves_tary_arc ? Number(Number(row.arrival_uz_vagon_ves_tary_arc) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_uz_vagon_ves_tary_arc', App.Langs), width: "50px", orderable: true, searchable: true
@@ -762,7 +762,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_vesg',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_vesg ? Number(Number(row.arrival_uz_vagon_vesg) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_vesg ? Number(Number(row.arrival_uz_vagon_vesg) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_uz_vagon_vesg', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1165,7 +1165,7 @@
         {
             field: 'incoming_cars_arrival_sostav_date_adoption_act',
             data: function (row, type, val, meta) {
-                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+                return row.arrival_sostav_date_adoption_act ? moment(row.arrival_sostav_date_adoption_act).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1191,7 +1191,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_vesg_reweighing',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_vesg_reweighing ? Number(Number(row.arrival_uz_vagon_vesg_reweighing) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_vesg_reweighing ? Number(Number(row.arrival_uz_vagon_vesg_reweighing) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_vesg_reweighing', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1200,7 +1200,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_deff_vesg',
             data: function (row, type, val, meta) {
-                return 0.000;
+                return row.arrival_uz_vagon_vesg && row.arrival_uz_vagon_vesg_reweighing ? Number(Number(Number(row.arrival_uz_vagon_vesg) - Number(row.arrival_uz_vagon_vesg_reweighing))/1000).toFixed(2) : null ;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_deff_vesg', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1258,7 +1258,7 @@
         {
             field: 'incoming_cars_arrival_uz_vagon_pay_summa',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_pay_summa;
+                return row.arrival_uz_vagon_pay_summa ? Number(Number(row.arrival_uz_vagon_pay_summa) / 100).toFixed(2) : null;;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa', App.Langs), width: "50px", orderable: true, searchable: true

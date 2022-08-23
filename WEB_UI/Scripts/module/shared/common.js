@@ -2403,17 +2403,12 @@
         };
         this.val = function (value) {
             if (value !== undefined) {
-                //var disabled = this.$element.prop("disabled");
-                //if (disabled) {
-                //    this.$element.prop("disabled", false);
-                //}
-                this.$el.multiselect('select', value);
-                //this.$element.val(value);
-                //if (disabled) {
-                //    this.$element.prop("disabled", true);
-                //}
+                if (value === -1) {
+                    this.$el.multiselect('deselectAll', false);
+                } else {
+                    this.$el.multiselect('select', value);
+                }
             } else {
-                //var res = this.$el.multiselect('select');
                 var res = this.$el.val();
                 return res;
             };
@@ -2457,7 +2452,11 @@
                     }
                 }.bind(this));
             };
-            this.$element.val(default_value);
+            if (default_value === -1) {
+                this.$el.multiselect('deselectAll', false);
+            } else {
+                this.$el.multiselect('select', default_value);
+            }
             this.$el.multiselect('rebuild');
         };
         this.show = function () {
