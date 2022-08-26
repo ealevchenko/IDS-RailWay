@@ -722,5 +722,5 @@ WHERE
 
 --out_sost.id =51208 
 --out_sost.id =138457 
-out_sost.id =107420
+out_sost.id =149844
 order by out_car.position
