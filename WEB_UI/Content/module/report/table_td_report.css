@@ -1,6 +1,14 @@
 ﻿body {
 }
 
+table.dataTable {
+/*    width: 100%;*/
+    margin: 0;
+/*    clear: both;
+    border-collapse: separate;
+    border-spacing: 0*/
+}
+
 /*Уменьшить размер таблицы*/
 .table-report {
     font-size: 0.8rem;

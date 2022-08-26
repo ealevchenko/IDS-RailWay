@@ -166,11 +166,8 @@
     var alert = App.alert_form;
     var directory = App.ids_directory;
     var wsd = App.ids_wsd;
-
     var FIL = App.form_inline;
     var TTDR = App.table_td_report;
-
-
     // асинхронно добавим распарсеный ЭПД
     var wagons_get_epd_async = function (row, callback) {
         var base = this;
@@ -203,8 +200,6 @@
         }
         GetEPDWagonsAsync.call(this, 0);
     };
-
-
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function view_td_report(selector) {
@@ -218,7 +213,6 @@
         this.selector = this.$panel.attr('id');
         this.fe_ui = new FE();
     }
-
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     view_td_report.prototype.load_db = function (list, update, callback) {
         if (list) {
@@ -266,6 +260,7 @@
         this.kr_outgoing_sostav = [];
 
         this.wagons_not_operation = [];
+
         this.wagons_adoption = [];
         this.clone_wagons_adoption = [];
         // Сылки на отчеты
@@ -2206,8 +2201,6 @@
             this.select_station_amkr.update(this.list_station_amkr, -1);
         }
     };
-
-
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_2_1 = function () {
         this.out_clear();
@@ -2279,6 +2272,11 @@
         var $tbody = $('<tbody></tbody>');
         this.table_group_sostav.append($thead)
         //
+        var const_wagon = 0;
+        var count_account_balance_wagon = 0;
+        var sum_vesg = 0;
+        var sum_vesg_reweighing = 0;
+        var sum_def_vesg = 0;
         if (list_group_sostav && list_group_sostav.length > 0) {
             $.each(list_group_sostav, function (i, el) {
                 var $tr_d = $('<tr></tr>', {
@@ -2318,10 +2316,12 @@
                         });
                         var $td_def_vesg = $('<td></td>', {
                             class: 'dt-body-right',
-                            text: 0.000
+                            text: el1.sum_vesg & el1.sum_vesg_reweighing ? Number(Number(el1.sum_vesg - el1.sum_vesg_reweighing) / 1000).toFixed(3) : 0.000
                         });
                         $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
                         $tbody.append($tr_d);
+                        const_wagon += el.const_wagon;
+                        count_account_balance_wagon += el.count_account_balance_wagon;
                     } else {
                         var $tr_d = $('<tr></tr>');
                         var $td_date_adoption = $('<td></td>', {
@@ -2350,16 +2350,47 @@
                         });
                         var $td_def_vesg = $('<td></td>', {
                             class: 'dt-body-right',
-                            text: 0.000
+                            text: el1.sum_vesg & el1.sum_vesg_reweighing ? Number(Number(el1.sum_vesg - el1.sum_vesg_reweighing) / 1000).toFixed(3) : 0.000
                         });
                         $tr_d.append($td_date_adoption).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg).append($td_sum_vesg_reweighing).append($td_def_vesg);
                         $tbody.append($tr_d);
                     }
+                    sum_vesg += el1.sum_vesg;
+                    sum_vesg_reweighing += el1.sum_vesg_reweighing;
+                    sum_def_vesg += (el1.sum_vesg & el1.sum_vesg_reweighing ? Number(el1.sum_vesg - el1.sum_vesg_reweighing) : 0);
                 }.bind(this));
             }.bind(this));
         }
         this.table_group_sostav.append($tbody);
-
+        var $tfoot = $('<tfoot></tfoot>');
+        var $tr_f = $('<tr></tr>');
+        var $tdf1 = $('<td></td>', {
+            class: 'dt-right',
+            text: 'ИТОГО:'
+        });
+        var $tdf2 = $('<td></td>', {
+            class: 'dt-center',
+            text: Number(const_wagon)
+        });
+        var $tdf3 = $('<td></td>', {
+            class: 'dt-center',
+            text: Number(count_account_balance_wagon)
+        });
+        var $tdf4 = $('<td></td>');
+        var $tdf5 = $('<td></td>', {
+            class: 'dt-right',
+            text: Number(sum_vesg).toFixed(3)
+        });
+        var $tdf6 = $('<td></td>', {
+            class: 'dt-right',
+            text: Number(sum_vesg_reweighing).toFixed(3)
+        });
+        var $tdf7 = $('<td></td>', {
+            class: 'dt-right',
+            text: Number(sum_def_vesg).toFixed(3)
+        });
+        $tfoot.append($tr_f.append($tdf1).append($tdf2).append($tdf3).append($tdf4).append($tdf5).append($tdf6).append($tdf7));
+        this.table_group_sostav.append($tfoot);
         this.$div_group_sostav.append(this.table_group_sostav);
         this.table_group_sostav.DataTable({
             "lengthMenu": null,
@@ -2434,38 +2465,37 @@
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_2_1 = function () {
-        //this.switch_laden.val(false);
-        //this.switch_accounting.val(false);
-        //this.switch_client.val(false);
-        //this.switch_not_client.val(false);
-        //this.switch_paid.val(false);
-        //this.textarea_wagon_nums.val('');
-        //this.textarea_main_epd_docs.val('');
-        //this.textarea_epd_docs.val('');
-        //this.select_operation_amkr.val(-1);
-        //this.select_limiting.val(-1);
-        //this.select_owners.val(-1);
-        //this.select_station_from.val(-1);
-        //this.select_cargo.val(-1);
-        //this.select_certification_data.val(-1);
-        //this.select_cargo_sap.val(-1);
-        //this.select_group_arrival.val(-1);
-        //this.select_consignee.val(-1);
-        //this.select_division.val(-1);
-        //this.select_genus.val(-1);
-        //this.select_condition.val(-1);
-        //this.select_payer_name.val(-1);
-        //this.select_payer_code.val(-1);
-        //this.select_station_amkr.val(-1);
-        //if (this.table_adop_sostav_all) this.table_adop_sostav_all.view([]);
-        //if (this.table_adop_sostav_detali) this.table_adop_sostav_detali.view([]);
-        //if (this.table_outg_sostav_all) this.table_outg_sostav_all.view([]);
-        //if (this.table_outg_sostav_detali) this.table_outg_sostav_detali.view([]);
-        //if (this.table_adop_wagon_not_operation) this.table_adop_wagon_not_operation.view([]);
-        LockScreenOff();
+        if (this.switch_laden) {
+            this.switch_laden.val(false);
+            this.switch_accounting.val(false);
+            this.switch_client.val(false);
+            this.switch_not_client.val(false);
+            this.switch_paid.val(false);
+            this.textarea_wagon_nums.val('');
+            this.textarea_main_epd_docs.val('');
+            this.textarea_epd_docs.val('');
+            this.select_operation_amkr.val(-1);
+            this.select_limiting.val(-1);
+            this.select_owners.val(-1);
+            this.select_station_from.val(-1);
+            this.select_cargo.val(-1);
+            this.select_certification_data.val(-1);
+            this.select_cargo_sap.val(-1);
+            this.select_group_arrival.val(-1);
+            this.select_consignee.val(-1);
+            this.select_division.val(-1);
+            this.select_genus.val(-1);
+            this.select_condition.val(-1);
+            this.select_payer_name.val(-1);
+            this.select_payer_code.val(-1);
+            this.select_station_amkr.val(-1);
+            this.wagons_adoption = [];
+            this.clone_wagons_adoption = [];
+            this.process_data_view_report_2_1(this.clone_wagons_adoption, null);
+            LockScreenOff();
+        }
+
     };
-
-
     //------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
