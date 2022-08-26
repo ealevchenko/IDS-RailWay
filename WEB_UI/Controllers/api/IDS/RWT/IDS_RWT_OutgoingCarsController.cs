@@ -730,8 +730,28 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
-
+        /// <summary>
+        /// Получить информацию по отправленному вагону предыдущего прибытия вагона на АМКР (по id_wir текущего прибытия)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/outgoing_cars/view/car/previous/wir/id/564009
+        [Route("view/car/previous/wir/id/{id:int}")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewPreviousOutgoingCarsOfIDWIR(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_id = new System.Data.SqlClient.SqlParameter("@id_wir", id);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_id_car]((select [id_outgoing_car] from [IDS].[WagonInternalRoutes] where [id]= (select [parent_id] FROM [IDS].[WagonInternalRoutes] where [id]= @id_wir)))";
+                ViewOutgoingCars result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_id).FirstOrDefault();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // GET: api/ids/rwt/outgoing_cars/num/63303077
         [Route("num/{num:int}")]
         [ResponseType(typeof(OutgoingCars))]

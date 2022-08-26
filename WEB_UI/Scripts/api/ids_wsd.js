@@ -1088,6 +1088,30 @@
             },
         });
     };
+    // Получить информацию по отправленному вагону предыдущего прибытия вагона на АМКР(по id_wir текущего прибытия)
+    ids_wsd.prototype.getViewPreviousOutgoingCarsOfIDWIR = function (id, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/car/previous/wir/id/' + id,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfIDCar", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //================= ОТПРАВКА ВАГОНОВ НА УЗ (Задержания и возвраты) =========================================================
     //======= OutgoingDetentionReturn (Таблица задержаных-возвращеных вагонов) ======================================
     // Получить все задержания и возвраты
