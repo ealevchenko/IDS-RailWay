@@ -23,5 +23,5 @@ WHERE
 GROUP BY
     t.Name, s.Name, p.Rows
 ORDER BY
-    p.rows--t.Name
+    SUM(a.total_pages) * 8 desc --p.rows desc--t.Name
 
