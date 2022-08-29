@@ -197,14 +197,15 @@ namespace UZ
                        | SecurityProtocolType.Tls12
                        | SecurityProtocolType.Ssl3;
 
-                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url+ url_api + api_comand);
+                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + url_api + api_comand);
                 //request.Proxy =  myProxy;
                 request.Method = metod;
                 //request.PreAuthenticate = true;
                 //request.Credentials = CredentialCache.DefaultCredentials;
                 request.Accept = accept;
                 request.ContentType = content_type;
-                if (!String.IsNullOrWhiteSpace(postData)) {
+                if (!String.IsNullOrWhiteSpace(postData))
+                {
                     Encoding encoding = Encoding.UTF8;
                     byte[] byte1 = encoding.GetBytes(postData);
                     request.ContentLength = byte1.Length;
@@ -256,18 +257,22 @@ namespace UZ
 
                 HtmlDocument htmlSnippet = new HtmlDocument();
 
-                string result = Select(this.url_gov,this.url_api_wagon, api_comand, "GET", "text/html", "application/x-www-form-urlencoded", null);
+                string result = Select(this.url_gov, this.url_api_wagon, api_comand, "GET", "text/html", "application/x-www-form-urlencoded", null);
                 if (!String.IsNullOrWhiteSpace(result))
                 {
                     htmlSnippet.LoadHtml(result);
 
                     List<string> hrefTags = new List<string>();
 
-                    foreach (HtmlNode link in htmlSnippet.DocumentNode.SelectNodes("//td"))
+                    var td = htmlSnippet.DocumentNode.SelectNodes("//td");
+                    if (td != null)
                     {
-                        string value = link.InnerHtml;
-                        value = value.Replace("&nbsp;", "");
-                        hrefTags.Add(value);
+                        foreach (HtmlNode link in td)
+                        {
+                            string value = link.InnerHtml;
+                            value = value.Replace("&nbsp;", "");
+                            hrefTags.Add(value);
+                        }
                     }
                     return hrefTags;
                 }
@@ -360,7 +365,7 @@ namespace UZ
                                         // подстрока tr определена
                                         HtmlDocument html_tr = new HtmlDocument();
                                         html_tr.LoadHtml(value);
-                                        
+
                                         foreach (HtmlNode field in html_tr.DocumentNode.SelectNodes("//td"))
                                         {
                                             string value_fl = field.InnerHtml;
@@ -385,7 +390,7 @@ namespace UZ
 
                                     }
                                 }
-                                
+
                             }
                         }
                     }

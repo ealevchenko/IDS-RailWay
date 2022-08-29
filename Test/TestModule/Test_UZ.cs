@@ -41,7 +41,7 @@ namespace Test.TestModule
             WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
-            UZWagonInfo info = client.GetInfoWagonOfNum(52901808);
+            UZWagonInfo info = client.GetInfoWagonOfNum(55590509);
         }
         /// <summary>
         /// Тест нового запроса по коду станции
