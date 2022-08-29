@@ -239,6 +239,8 @@ namespace Test
 
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
 
+            tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();     // Тест обновление принятого вагона по данным обновленного справочника
+
             #endregion
 
             #region Test_Logs тест логирования
@@ -287,7 +289,7 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
