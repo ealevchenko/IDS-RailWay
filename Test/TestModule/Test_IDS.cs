@@ -398,7 +398,7 @@ namespace Test.TestModule
             EFDbContext context = new EFDbContext();
             EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
             ArrivalCars wagon = ef_car.Context.Where(c => c.id == 1120017).FirstOrDefault();
-            int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021,08,30,15,50,00), 113, wagon, @"EUROPE\ealevchenko");
+            int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021, 08, 30, 15, 50, 00), 113, wagon, @"EUROPE\ealevchenko");
             int res_sava = context.SaveChanges();
             //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
         }
@@ -488,6 +488,15 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> nums = new List<int>() { 64072010, 67277707, 60807781 };
             ids.GetReportBorderCrossingOfNums(nums);
+
+        }
+        /// <summary>
+        /// Тест обновление принятого вагона по данным обновленного справочника
+        /// </summary>
+        public void IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            int res = ids.UpdateArrival_UZ_Vagon_Of_CardWagon(55110274, "test");
 
         }
         #endregion

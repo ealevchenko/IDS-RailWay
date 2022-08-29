@@ -1231,7 +1231,7 @@ namespace IDS
                         create_user = user,
                         change = null,
                         change_user = null,
-                        manual = uz_doc_manual, 
+                        manual = uz_doc_manual,
                     };
                     res.mode = mode_obj.add;
                 }
@@ -1885,6 +1885,100 @@ namespace IDS
                 return res;
             }
         }
+        /// <summary>
+        /// Обновить документ вагона по прибытию по справочным данным по вагону (Применять после обновления карточки вагона)  
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int UpdateArrival_UZ_Vagon_Of_CardWagon(int num, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                // Вагоны
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+                EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
+                // Получим вагон
+                Directory_Wagons wagon = ef_vag.Context.Where(w => w.num == num).FirstOrDefault();
+                if (wagon == null) return (int)errors_ids_dir.not_wagon_of_db;// Нет вагона в базе данных
+                // Получим основные обновления
+                int id_countrys = wagon.id_countrys;
+                int id_genus = wagon.id_genus;
+                int id_owner = wagon.id_owner;
+                double gruzp = wagon.gruzp;
+                double? tara = wagon.tara;
+                int kol_os = wagon.kol_os;
+                string usl_tip = wagon.usl_tip;
+                DateTime? date_rem_uz = wagon.date_rem_uz;
+                DateTime? date_rem_vag = wagon.date_rem_vag;
+                int? id_type_ownership = wagon.id_type_ownership;
+
+                Arrival_UZ_Vagon arr_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == num && v.create >= wagon.create).OrderByDescending(c => c.id).FirstOrDefault();
+                if (arr_vag != null)
+                {
+                    bool update = false;
+                    if (arr_vag.id_countrys == 0 && id_countrys != 0 && arr_vag.id_countrys != id_countrys)
+                    {
+                        arr_vag.id_countrys = id_countrys;
+                        update = true;
+                    }
+                    if (arr_vag.id_genus == 0 && id_genus != 0 && arr_vag.id_genus != id_genus)
+                    {
+                        arr_vag.id_genus = id_genus;
+                        update = true;
+                    }
+                    if (arr_vag.id_owner == 0 && id_owner != 0 && arr_vag.id_owner != id_owner)
+                    {
+                        arr_vag.id_owner = id_owner;
+                        update = true;
+                    }
+                    if (arr_vag.gruzp_uz == null && gruzp != 0 && arr_vag.gruzp_uz != gruzp)
+                    {
+                        arr_vag.gruzp_uz = gruzp;
+                        update = true;
+                    }
+                    if ((arr_vag.kol_os == null || arr_vag.kol_os == 0) && kol_os != 0 && arr_vag.kol_os != kol_os)
+                    {
+                        arr_vag.kol_os = kol_os;
+                        update = true;
+                    }
+                    if (arr_vag.date_rem_uz == null && date_rem_uz != null && arr_vag.date_rem_uz != date_rem_uz)
+                    {
+                        arr_vag.date_rem_uz = date_rem_uz;
+                        update = true;
+                    }
+                    if (arr_vag.date_rem_vag == null && date_rem_vag != null && arr_vag.date_rem_vag != date_rem_vag)
+                    {
+                        arr_vag.date_rem_vag = date_rem_vag;
+                        update = true;
+                    }
+                    if (arr_vag.id_type_ownership == null && id_type_ownership != null && arr_vag.id_type_ownership != id_type_ownership)
+                    {
+                        arr_vag.id_type_ownership = id_type_ownership;
+                        update = true;
+                    }
+                    if (update)
+                    {
+                        arr_vag.change_user = user;
+                        arr_vag.change = DateTime.Now;
+                        return context.SaveChanges();
+                    }
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Vagon_Of_CardWagon(num={0}, user={1})", num, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+
         #endregion
 
         /// <summary>

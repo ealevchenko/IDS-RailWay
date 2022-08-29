@@ -178,7 +178,21 @@ namespace WEB_UI.Controllers.api
             try
             {
                 IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 OperationResultWagon result = ids_dir.OperationUpdateWagon(value.num, value.id_countrys, value.id_genus, value.gruzp, value.tara, value.kol_os, value.usl_tip, value.date_rem_vag, value.id_type_ownership, value.sign, value.factory_number, value.inventory_number, value.year_built, value.exit_ban, value.id_operator, value.rent_start, value.id_limiting, value.user);
+                //TODO: Пока отключил
+                //if (result.error == 0)
+                //{
+                //    int res_upd = ids_wir.UpdateArrival_UZ_Vagon_Of_CardWagon(value.num, value.user);
+                //    if (res_upd >= 0)
+                //    {
+                //        result.result += res_upd;
+                //    }
+                //    else
+                //    {
+                //        result.error = res_upd;
+                //    }
+                //}
                 return Ok(result);
             }
             catch (Exception e)
@@ -485,7 +499,7 @@ namespace WEB_UI.Controllers.api
             {
                 IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
                 ResultObject result = ids_dir.OperationCreateUpdateWagon(value.num, value.adm, value.rod, value.kol_os, value.usl_tip, value.not_check_numeration, value.user);
-                result.obj = result.obj!=null ? ((Directory_Wagons)result.obj).GetDirectory_Wagons_Directory_WagonsRent() : null;
+                result.obj = result.obj != null ? ((Directory_Wagons)result.obj).GetDirectory_Wagons_Directory_WagonsRent() : null;
                 return Ok(result);
             }
             catch (Exception e)
