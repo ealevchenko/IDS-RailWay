@@ -2937,6 +2937,137 @@ namespace IDS
 
         }
 
+        public ResultUpdateID UpdateArrival_UZ_Documents(string user)
+        {
+            ResultUpdateID result = new ResultUpdateID(0);
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                //IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
+
+                EFDbContext context = new EFDbContext();
+                EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+                List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 10000000).ToList();
+                result.count = list_arr_uz_doc_vag.Count();
+                foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
+                {
+                    if (vag.num.IsCorrectNumCar())
+                    {
+                        Directory_Wagons dir_wag = ef_vag.Context.Where(d => d.num == vag.num).FirstOrDefault();
+                        if (dir_wag != null)
+                        {
+                            TimeSpan deff = vag.create - dir_wag.create;
+                            // создание двух строк состоит в диапазоне 3 часов (тоесть вагон зашел первый раз, создалась строка справочника затем отметка о прибытии)
+                            if (deff.TotalHours <= 3)
+                            {
+                                // записи находятся в диапазоне
+                                // Получим основные обновления
+                                int id_countrys = dir_wag.id_countrys;
+                                int id_genus = dir_wag.id_genus;
+                                int id_owner = dir_wag.id_owner;
+                                double gruzp = dir_wag.gruzp;
+                                double? tara = dir_wag.tara;
+                                int kol_os = dir_wag.kol_os;
+                                string usl_tip = dir_wag.usl_tip;
+                                DateTime? date_rem_uz = dir_wag.date_rem_uz;
+                                DateTime? date_rem_vag = dir_wag.date_rem_vag;
+                                int? id_type_ownership = dir_wag.id_type_ownership;
+                                // проверим изменения и обновим
+                                bool update = false;
+                                if ((vag.id_countrys == 0 || vag.id_countrys == null) && id_countrys != 0)
+                                {
+                                    vag.id_countrys = id_countrys;
+                                    update = true;
+                                }
+                                if ((vag.id_genus == 0 || vag.id_genus == null) && id_genus != 0)
+                                {
+                                    vag.id_genus = id_genus;
+                                    update = true;
+                                }
+                                if ((vag.id_owner == 0 || vag.id_owner == null) && id_owner != 0)
+                                {
+                                    vag.id_owner = id_owner;
+                                    update = true;
+                                }
+                                if (vag.gruzp_uz == null && gruzp != 0)
+                                {
+                                    vag.gruzp_uz = gruzp;
+                                    update = true;
+                                }
+                                if ((vag.kol_os == null || vag.kol_os == 0) && kol_os != 0)
+                                {
+                                    vag.kol_os = kol_os;
+                                    update = true;
+                                }
+                                if (vag.date_rem_uz == null && date_rem_uz != null)
+                                {
+                                    vag.date_rem_uz = date_rem_uz;
+                                    update = true;
+                                }
+                                if (vag.date_rem_vag == null && date_rem_vag != null)
+                                {
+                                    vag.date_rem_vag = date_rem_vag;
+                                    update = true;
+                                }
+                                if (vag.id_type_ownership == null && id_type_ownership != null)
+                                {
+                                    vag.id_type_ownership = id_type_ownership;
+                                    update = true;
+                                }
+                                if (update)
+                                {
+                                    vag.change_user = user;
+                                    vag.change = DateTime.Now;
+                                    ef_arr_uz_doc_vag.Update(vag);
+                                    result.SetUpdateResult(1, vag.id);
+                                    //int context.SaveChanges();
+                                }
+                                else
+                                {
+                                    // Пропустить
+                                    result.SetUpdateResult(0, vag.id);
+                                }
+                            }
+                            else
+                            {
+                                // Пропустить
+                                result.SetUpdateResult(0, vag.id);
+                            }
+                        }
+                        else
+                        {
+                            // Пропустить
+                            result.SetUpdateResult(0, vag.id);
+                        }
+                    }
+                    else
+                    {
+                        // Пропустить
+                        result.SetCloseResult(1, vag.id);
+                    }
+
+                }
+                // Обновим в базе
+                if (result.count > 0 && result.update > 0)
+                {
+                    // Если без ошибок, тогда записываем результат применения 
+                    result.SetResult(context.SaveChanges());
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrival_UZ_Documents(user={1})", user), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;// Ошибка
+            }
+        }
+
         #endregion
 
         #region ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ - АРМ ДИСПЕТЧЕРА

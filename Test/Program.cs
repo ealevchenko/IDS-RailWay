@@ -239,8 +239,8 @@ namespace Test
 
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
 
-            tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();     // Тест обновление принятого вагона по данным обновленного справочника
-
+            //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
+            tids.IDS_WIR_UpdateArrival_UZ_Documents();                  //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             #endregion
 
             #region Test_Logs тест логирования

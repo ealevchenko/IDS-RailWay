@@ -499,6 +499,15 @@ namespace Test.TestModule
             int res = ids.UpdateArrival_UZ_Vagon_Of_CardWagon(55110274, "test");
 
         }
+        /// <summary>
+        /// Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
+        /// </summary>
+        public void IDS_WIR_UpdateArrival_UZ_Documents()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
+        }
+
         #endregion
 
         #region IDSThread
