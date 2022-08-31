@@ -2774,9 +2774,9 @@ namespace IDS
                             car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
                             if (car != null)
                             {
-                                if (car.ArrivalSostav.status == 2)
+                                if (car.arrival != null && car.ArrivalSostav.status == 2)
                                 {
-                                    type_update = 5; // Состав принят, запрет
+                                    type_update = 5; // Состав и вагон принят, запрет
                                 }
                                 else
                                 {
@@ -2795,8 +2795,15 @@ namespace IDS
                                     }
                                     else
                                     {
-                                        // Вагон свободен для переноса
-                                        type_update = 2; // Состав не обработан или отклонен вагон можно переносить
+                                        if (car.arrival != null)
+                                        {
+                                            type_update = 5; // Состав и вагон принят, запрет
+                                        }
+                                        else
+                                        {
+                                            // Вагон свободен для переноса
+                                            type_update = 2; // Состав не обработан или отклонен вагон можно переносить                                        
+                                        }
                                     }
                                 }
                             }
