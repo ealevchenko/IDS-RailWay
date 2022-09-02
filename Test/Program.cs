@@ -190,11 +190,11 @@ namespace Test
 
             //tids.IDSDirectory_GetID_Directory_StationOfCodeCS();
             //tids.IDSDirectory_GetCurrentDirectory_CarsOfNum();
-            //tids.IDSDirectory_OperationAutoPositionWayOfPark();     // авто-коррекция положения пути в парке
-            //tids.IDSDirectory_OperationSetPositionWayOfPark();      // установить новое положения пути в парке
-            //tids.IDSDirectory_OperationDown1PositionWayOfPark();        // установить положения пути ниже на 1 позицию
+            //tids.IDSDirectory_OperationAutoPositionWayOfPark();       // авто-коррекция положения пути в парке
+            //tids.IDSDirectory_OperationSetPositionWayOfPark();        // установить новое положения пути в парке
+            //tids.IDSDirectory_OperationDown1PositionWayOfPark();      // установить положения пути ниже на 1 позицию
             //tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
-
+            //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();          // Тест обновления владельцев в карточке вагона по данным БД УЗ
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -228,7 +228,7 @@ namespace Test
             //tids.IDS_WIR_GetWagonsOperationOfSend();                // Тест формирования отчета операции отправки (вагоны)
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
 
-            //tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
+            tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
             //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                       // Тест переноса вагона в левую сторону
@@ -240,7 +240,7 @@ namespace Test
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
 
             //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
-            tids.IDS_WIR_UpdateArrival_UZ_Documents();                  //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
+            //tids.IDS_WIR_UpdateArrival_UZ_Documents();                  //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             #endregion
 
             #region Test_Logs тест логирования

@@ -190,6 +190,14 @@ namespace Test.TestModule
             Directory_ExternalStation station = ids.GetDirectory_ExternalStation(887500, "АБАЗА", true, "test");
 
         }
+        /// <summary>
+        /// Тест обновления владельцев в карточке вагона по данным БД УЗ
+        /// </summary>
+        public void IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            ResultUpdateWagon result = ids.UpdateOwnersWagonsOfDB_UZ(@"EUROPE\ealevchenko");
+        }
         #endregion
 
         #region IDSMORS

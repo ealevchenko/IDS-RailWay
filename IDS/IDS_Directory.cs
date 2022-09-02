@@ -987,7 +987,7 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 ResultObject res_obj = OperationCreateUpdateWagon(ref context, num, adm, rod, kol_os, usl_tip, not_check_numeration, user);
-                if (res_obj!= null && res_obj.result>=0 && res_obj.obj != null)
+                if (res_obj != null && res_obj.result >= 0 && res_obj.obj != null)
                 {
                     if (context.Entry((Directory_Wagons)res_obj.obj).State != System.Data.Entity.EntityState.Unchanged)
                     {
@@ -1051,7 +1051,7 @@ namespace IDS
                 }
                 WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(this.servece_owner); // Подключим WebAPI справочник УЗ
                 // Получим информацию из БД УЗ
-                UZWagonInfo info = this.select_uz_info ? client.GetInfoWagonOfNum(num): null;
+                UZWagonInfo info = this.select_uz_info ? client.GetInfoWagonOfNum(num) : null;
                 //int? id_type_ownership = null;
                 // Определим АДМ -> id_countrys
                 Directory_Railway dir_rw = (info != null ? context.Directory_Railway.Where(r => r.railway_abbr_ru == info.admin).FirstOrDefault() : null);
@@ -1191,6 +1191,80 @@ namespace IDS
                 result.result = (int)errors_base.global;
                 return result;
             }
+        }
+        /// <summary>
+        /// Обновить информацию о владельцах по данным БД-УЗ
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateWagon UpdateOwnersWagonsOfDB_UZ(string user)
+        {
+            ResultUpdateWagon result = new ResultUpdateWagon(0);
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(this.servece_owner); // Подключим WebAPI справочник УЗ
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+                List<Directory_Wagons> list_wag = ef_vag.Context.Where(w => w.id_owner == 0 && w.num > 50000000).ToList();
+                result.count = list_wag.Count();
+                int count = result.count;
+                int update = 0;
+                foreach (Directory_Wagons wag in list_wag)
+                {
+                    UZWagonInfo info = client.GetInfoWagonOfNum(wag.num);
+                    Directory_OwnersWagons dir_owner_ids = null;
+                    if (info != null)
+                    {
+                        dir_owner_ids = GetDirectory_OwnersWagons(ref context, info.owner, true, user);
+                        if (dir_owner_ids != null && dir_owner_ids.id > 0)
+                        {
+                            wag.id_owner = dir_owner_ids.id;
+                            wag.change = DateTime.Now;
+                            wag.change_user = user;
+                            ef_vag.Update(wag);
+                            result.SetUpdateResult(1, wag.num);
+                            update++;
+                            Console.WriteLine("Вагон:{0} - ОБНОВЛЕН, осталось:{1}", wag.num, --count);
+                            if (update == 50)
+                            {
+                                int res = context.SaveChanges();
+                                Console.WriteLine("ПРИМЕНИТЬ ОБНОВЛЕНИЕ {0}", res);
+                                update = 0;
+                            }
+                        }
+                        else
+                        {
+                            result.SetUpdateResult(0, wag.num);
+                            Console.WriteLine("Вагон:{0} - пропущен, осталось:{1}", wag.num, --count);
+                        }
+                    }
+                    else
+                    {
+                        result.SetUpdateResult(0, wag.num);
+                        Console.WriteLine("Вагон:{0} - пропущен, осталось:{1}", wag.num, --count);
+                    }
+                }
+                // Обновим в базе
+                if (result.count > 0 && result.update > 0)
+                {
+                    // Если без ошибок, тогда записываем результат применения 
+                    result.SetResult(context.SaveChanges());
+                }
+                Console.WriteLine("Обработано:{0}, ОБНОВЛЕННО:{1}, ПРОПУЩЕНО:{2}", result.count, result.update, result.skip);
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOwnersWagonsOfDB_UZ(user={1})", user), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;// Ошибка
+            }
+
         }
         #endregion
     }

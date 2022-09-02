@@ -2936,7 +2936,11 @@ namespace IDS
             }
 
         }
-
+        /// <summary>
+        /// Метод обновления документов по прибытию зашедших первый раз по которым обновили информацию (Род.. Адм.. ) 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateID UpdateArrival_UZ_Documents(string user)
         {
             ResultUpdateID result = new ResultUpdateID(0);
