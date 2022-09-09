@@ -89,8 +89,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_InlandRailway> Directory_InlandRailway { get; set; }
         public virtual DbSet<Directory_Railway> Directory_Railway { get; set; }
         public virtual DbSet<Directory_BorderCheckpoint> Directory_BorderCheckpoint { get; set; }
-        //public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
         public virtual DbSet<Directory_PayerSender> Directory_PayerSender { get; set; }
+        public virtual DbSet<Directory_PayerArrival> Directory_PayerArrival { get; set; }
         public virtual DbSet<Directory_Wagons> Directory_Wagons { get; set; }
         public virtual DbSet<Directory_WagonsRent> Directory_WagonsRent { get; set; }
         public virtual DbSet<Directory_Countrys> Directory_Countrys { get; set; }
@@ -862,6 +862,14 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Document)
                 .WithOptional(e => e.Directory_PayerSender)
                 .HasForeignKey(e => e.code_payer);
+            #endregion
+
+            #region Directory_PayerArrival
+            modelBuilder.Entity<Directory_PayerArrival>()
+                 .HasMany(e => e.Arrival_UZ_Document)
+                 .WithOptional(e => e.Directory_PayerArrival)
+                 .HasForeignKey(e => e.code_payer_arrival);
+
             #endregion
 
             #region Directory_Railway

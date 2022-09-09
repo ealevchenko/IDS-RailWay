@@ -277,7 +277,7 @@ namespace UZ
             }
         }
 
-        public void GetUZ_Document_Of_doc_id(string documentId)
+        public byte[] GetUZ_Document_Of_doc_id(string documentId)
         {
             try
             {
@@ -289,14 +289,15 @@ namespace UZ
                 if (this.connection != null)
                 {
                     byte[] doc = connection.QueryDocumentPrintableForm(documentId);
-                    File.WriteAllBytes(@"d:\" + documentId + ".pdf", doc);
+                    return doc;
+                    //File.WriteAllBytes(@"d:\" + documentId + ".pdf", doc);
                 }
-                return;
+                return null;
             }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetUZ_Document_Of_doc_id(WagonNumber={0})", documentId), servece_owner, eventID);
-                return;
+                return null;
             }
         }
 

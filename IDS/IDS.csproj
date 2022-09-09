@@ -56,6 +56,7 @@
     <Compile Include="IDSMORS.cs" />
     <Compile Include="IDSTransfer.cs" />
     <Compile Include="IDSThread.cs" />
+    <Compile Include="IDS_Arhiv.cs" />
     <Compile Include="IDS_Base.cs" />
     <Compile Include="IDS_Directory.cs" />
     <Compile Include="IDS_RWT.cs" />
@@ -72,6 +73,10 @@
     <ProjectReference Include="..\EFIDS\EFIDS.csproj">
       <Project>{07a94bbb-16a5-4817-87ea-bb7baea844a7}</Project>
       <Name>EFIDS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFIDS_Arhiv\EFIDS_Arhiv.csproj">
+      <Project>{182770bf-7bf4-44c3-bfee-d855c496009e}</Project>
+      <Name>EFIDS_Arhiv</Name>
     </ProjectReference>
     <ProjectReference Include="..\EFUZ\EFUZ.csproj">
       <Project>{3ac80091-5add-43bd-8875-0f3ce3e86a25}</Project>

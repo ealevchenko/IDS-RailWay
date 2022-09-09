@@ -119,7 +119,7 @@ namespace IDS
                 // если неопределено имя, определим по умолчанию
                 if (string.IsNullOrWhiteSpace(name))
                 {
-                    name = "Неопределённо";
+                    name = "Неопределенно";
                 };
                 // если неопределено имя, определим по умолчанию
                 if (string.IsNullOrWhiteSpace(abbr))
@@ -736,6 +736,91 @@ namespace IDS
         }
         #endregion
 
+        #region СПРАВОЧНИК ПЛАТИЛЬЩИКОВ ПО ПРИБЫТИЮ (Directory_PayerArrival)
+        /// <summary>
+        /// Метод чтения платильщика по прибытию из справочника "Платильщики по прибытию ИДС" по коду, если платильщика нет в справочнике и установлен признак add=true, 
+        /// платильщик будет создан по вх данным и добавлен в справочник "Платильщики по прибытию ИДС".
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <param name="add"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Directory_PayerArrival GetDirectory_PayerArrival(string code, string name, bool add, string user)
+        {
+            try
+            {
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDbContext context = new EFDbContext();
+                Directory_PayerArrival ps = GetDirectory_PayerArrival(ref context, code, name, add, user);
+                if (ps != null)
+                {
+                    if (context.Entry(ps).State != System.Data.Entity.EntityState.Unchanged)
+                    {
+                        int res_add = context.SaveChanges();
+                    }
+                }
+                return ps;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_PayerArrival(code={0}, name={1}, add={2}, user={3})", code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Метод чтения платильщика по отправке из справочника "Платильщики по отправке ИДС" по коду, если платильщика нет в справочнике и установлен признак add=true, 
+        /// платильщик будет создан по вх данным и добавлен в справочник "Платильщики по отправке ИДС". (но изменения будут приняты после выполнения context.SaveChanges())
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <param name="add"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public Directory_PayerArrival GetDirectory_PayerArrival(ref EFDbContext context, string code, string name, bool add, string user)
+        {
+            try
+            {
+                //Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+
+                EFDirectory_PayerArrival ef_ps = new EFDirectory_PayerArrival(context);
+
+                Directory_PayerArrival ps = ef_ps.Context.Where(s => s.code == code).FirstOrDefault();
+                // Проверим наличие станции
+                if (ps == null && add)
+                {
+                    // Определим по умолчанию
+                    ps = new Directory_PayerArrival()
+                    {
+                        code = code,
+                        payer_name_ru = name,
+                        payer_name_en = name,
+                        create = DateTime.Now,
+                        create_user = user
+                    };
+
+                    ef_ps.Add(ps);
+                }
+                return ps;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDirectory_PayerArrival(context={0}, code={1}, name={2}, add={3}, user={4})", context, code, name, add, user), servece_owner, eventID);
+                return null;
+            }
+        }
+        #endregion
+
         #region СПРАВОЧНИК ГРУЗОВ ЕТСНГ (Directory_CargoETSNG)
         /// <summary>
         /// Метод чтения груза ЕТСНГ из справочника "Грузов ЕТ СНГ ИДС" по коду, если груза нет в справочнике и установлен признак add=true, 
@@ -1210,7 +1295,7 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(this.servece_owner); // Подключим WebAPI справочник УЗ
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
-                List<Directory_Wagons> list_wag = ef_vag.Context.Where(w => w.id_owner == 0 && w.num > 50000000).ToList();
+                List<Directory_Wagons> list_wag = ef_vag.Context.Where(w => w.id_owner == 0 && w.num >= 61297289).ToList();
                 result.count = list_wag.Count();
                 int count = result.count;
                 int update = 0;
@@ -1266,6 +1351,33 @@ namespace IDS
             }
 
         }
+
+        public int ChangeNumWagon(int num_old, int num,  string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+
+                Directory_Wagons wag_old = ef_vag.Context.FirstOrDefault(w => w.num == num_old);
+                if (wag_old == null) return (int)errors_base.not_dir_wagon_of_db;
+                Directory_Wagons wag_new = ef_vag.Context.FirstOrDefault(w => w.num == num);
+                if (wag_new != null) return (int)errors_base.exists_dir_wagon_of_db;
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+
         #endregion
     }
 }

@@ -85,7 +85,7 @@ namespace EFIDS.Entities
 
         public virtual Directory_ExternalStation Directory_ExternalStation1 { get; set; }
 
-        //public virtual Directory_PayerArrival Directory_PayerArrival { get; set; }
+        public virtual Directory_PayerArrival Directory_PayerArrival { get; set; }
 
         public virtual Directory_PayerSender Directory_PayerSender { get; set; }
 

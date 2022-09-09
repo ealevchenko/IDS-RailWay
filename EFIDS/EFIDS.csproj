@@ -59,6 +59,7 @@
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OperatorsWagonsGroup.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Reason_Discrepancy.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_DetentionReturn.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Locomotive.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="Concrete\Directory\EFDirectory_CargoETSNG.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CertificationData.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_HazardClass.cs" />
-    <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_LimitingLoading.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Countrys.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_ExternalStation.cs" />
