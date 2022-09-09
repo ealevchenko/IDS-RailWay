@@ -433,9 +433,9 @@ select
 	,out_dir_cargo_gng.[cargo_gng_name_ru] as outgoing_uz_vagon_cargo_gng_name_ru			-- Груз ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_dir_cargo_gng.[cargo_gng_name_en] as outgoing_uz_vagon_cargo_gng_name_en			-- Груз ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Outgoing_UZ_Vagon]
 	,out_doc_vag.[vesg] as outgoing_uz_vagon_vesg											-- Вес груза ГНГ [IDS].[Directory_CargoGNG] по отправке [IDS].[Outgoing_UZ_Vagon]
-	--> СПРАВОЧНИК СТАНЦИИ УЗ ПО ОТПРАВКЕ [UZ].[Directory_Stations]
+	--> СПРАВОЧНИК СТАНЦИИ УЗ ПО ОТПРАВКЕ [IDS].[Directory_ExternalStation]
 	,out_doc_vag.[code_stn_to] as outgoing_uz_vagon_to_station_uz_code						-- Код станции УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,out_vag_station_uz.[station] as outgoing_uz_vagon_to_station_uz_name						-- Станция УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_vag_station_uz.[station_name_ru] as outgoing_uz_vagon_to_station_uz_name			-- Станция УЗ [UZ].[Directory_Stations] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--,out_doc_vag.[create]
 	--,out_doc_vag.[create_user]
 	--,out_doc_vag.[change]
@@ -686,7 +686,8 @@ select
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
 		--> Справочник Внешних станций УЗ (по отправке)
-		Left JOIN [UZ].[Directory_Stations] as out_vag_station_uz ON  out_doc_vag.[code_stn_to] = out_vag_station_uz.code_cs
+		--Left JOIN [UZ].[Directory_Stations] as out_vag_station_uz ON  out_doc_vag.[code_stn_to] = out_vag_station_uz.code_cs
+		Left JOIN [IDS].[Directory_ExternalStation] as out_vag_station_uz ON  out_doc_vag.[code_stn_to] = out_vag_station_uz.code
 		--> Справочник Внешних станций (по прибытию from)
 		Left JOIN [IDS].[Directory_ExternalStation] as arr_ext_station_from ON arr_doc_uz.[code_stn_from] = arr_ext_station_from.code
 		--> Справочник Внешних станций (по прибытию to)

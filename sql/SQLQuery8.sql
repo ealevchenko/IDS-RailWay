@@ -1,4 +1,38 @@
+/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+SELECT TOP (1000) [id]
+      ,[id_doc_uz]
+      ,[nom_doc]
+      ,[nom_main_doc]
+      ,[code_stn_from]
+      ,[code_stn_to]
+      ,[code_border_checkpoint]
+      ,[cross_time]
+      ,[code_shipper]
+      ,[code_consignee]
+      ,[klient]
+      ,[code_payer_sender]
+      ,[code_payer_arrival]
+      ,[distance_way]
+      ,[note]
+      ,[parent_id]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[manual]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+  where [code_payer_arrival] is null
+  order by 1 desc
 
-
-select * from [IDS].[get_view_incoming_cars_of_id_sostav](149632) order by arrival_car_position
-select * from [IDS].[get_view_incoming_cars_of_id_car](1283802)
+  SELECT TOP (1000) [num_doc]
+      ,[revision]
+      ,[status]
+      ,[code_from]
+      ,[code_on]
+      ,[dt]
+      ,[xml_doc]
+      ,[num_uz]
+      ,[close]
+      ,[close_message]
+  FROM [KRR-PA-CNT-Railway].[IDS].[UZ_DOC]
+  where [num_doc] in (select [id_doc_uz] FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document] where [code_payer_arrival] is null) and [status]>=8
