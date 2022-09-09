@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace IDS
 {
-    public enum mode_obj { 
-      not = 0,
-      add = 1,
-      update = 2,
+    public enum mode_obj
+    {
+        not = 0,
+        add = 1,
+        update = 2,
     }
     public enum errors_base : int
     {
@@ -69,6 +70,7 @@ namespace IDS
 
         // документы по прибытию
         not_inp_uz_vag_db = -551,                   // В базе данных нет записи документа на вагон.
+        not_inp_uz_doc_db = -552,                   // В базе данных нет записи документа на состав.
 
         // документы по прибытию
         error_update_arr_doc_pay = -561,            // Ошибка обновления документов (платильщики)
@@ -117,7 +119,7 @@ namespace IDS
 
         // СМС
         error_connect_sms = -900,                           // Ошибка Подкллючения к модулю согласования
-        
+
         error_convert_epd = -950,                           // Ошибка конвертации данных ЭПД
         not_epd_document = -951,                            // Нет ЭПД
         not_vagon_epd_document = -952,                      // Указанного вагона нет в ЭПД
@@ -140,8 +142,10 @@ namespace IDS
 
         // Directory_Wagons -1400..
         not_dir_wagon_of_db = -1401,                        // В базе данных нет записи указанной строки вагона
-        error_sys_numeration_wagon  = -1402,                // Ошибка системной нумерации вагона
-        error_numeration_wagon  = -1403,                    // Ошибка нумерации вагона (- или =0)
+        error_sys_numeration_wagon = -1402,                // Ошибка системной нумерации вагона
+        error_numeration_wagon = -1403,                    // Ошибка нумерации вагона (- или =0)
+        exists_dir_wagon_of_db = -1404,                     // В базе данных уже есть запись по указаному вагону
+
         // Directory_OuterWays -1500..
         not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
@@ -150,7 +154,7 @@ namespace IDS
     public class ResultObject
     {
         public Object obj { get; set; }
-        public mode_obj mode  { get; set; }
+        public mode_obj mode { get; set; }
         public int result { get; set; }
         public ResultObject()
         {
@@ -163,7 +167,7 @@ namespace IDS
     {
         public Object obj1 { get; set; }
         public Object obj2 { get; set; }
-        public mode_obj mode  { get; set; }
+        public mode_obj mode { get; set; }
         public int result { get; set; }
         public ResultTwoObject()
         {
@@ -188,6 +192,7 @@ namespace IDS
     {
         public long id { get; set; }
         public int result { get; set; }
+        public int? type { get; set; }
     }
     /// <summary>
     /// 
@@ -386,6 +391,7 @@ namespace IDS
         public int skip { get; set; }
         public int error { get; set; }
         public int close { get; set; }
+
         public List<ResultID> listResult = new List<ResultID>();
 
         public ResultUpdateID(int count)
@@ -426,6 +432,20 @@ namespace IDS
             }
             AddSkip(); return;
         }
+        public void SetUpdateResult(int result, long id, int? type)
+        {
+            listResult.Add(new ResultID() { id = id, result = result, type = type });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
         public void SetCloseResult(int result, long id)
         {
             listResult.Add(new ResultID() { id = id, result = result });
@@ -440,7 +460,20 @@ namespace IDS
             }
             AddSkip(); return;
         }
+        public void SetCloseResult(int result, long id, int? type)
+        {
+            listResult.Add(new ResultID() { id = id, result = result, type = type });
 
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddClose(); return;
+            }
+            AddSkip(); return;
+        }
         public void SetResult(int code)
         {
             this.result = code;
