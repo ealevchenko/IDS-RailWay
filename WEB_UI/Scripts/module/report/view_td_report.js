@@ -2258,15 +2258,15 @@
         });
         var $th5 = $('<th></th>', {
             class: 'dt-head-center',
-            text: 'Вес по ЭПД, нт.'
+            text: 'Вес по ЭПД, тн.'
         });
         var $th6 = $('<th></th>', {
             class: 'dt-head-center',
-            text: 'Вес по перевеске, нт.'
+            text: 'Вес по перевеске, тн.'
         });
         var $th7 = $('<th></th>', {
             class: 'dt-head-center',
-            text: 'Разница, нт.'
+            text: 'Разница, тн.'
         });
         $thead.append($tr_h.append($th1).append($th2).append($th3).append($th4).append($th5).append($th6).append($th7));
         var $tbody = $('<tbody></tbody>');
@@ -2379,15 +2379,15 @@
         var $tdf4 = $('<td></td>');
         var $tdf5 = $('<td></td>', {
             class: 'dt-right',
-            text: Number(sum_vesg).toFixed(3)
+            text: sum_vesg > 0 ? Number(sum_vesg / 1000).toFixed(3) : 0
         });
         var $tdf6 = $('<td></td>', {
             class: 'dt-right',
-            text: Number(sum_vesg_reweighing).toFixed(3)
+            text: sum_vesg_reweighing > 0 ? Number(sum_vesg_reweighing).toFixed(3) : 0
         });
         var $tdf7 = $('<td></td>', {
             class: 'dt-right',
-            text: Number(sum_def_vesg).toFixed(3)
+            text: sum_vesg_reweighing > 0 ? Number(sum_def_vesg).toFixed(3) : 0
         });
         $tfoot.append($tr_f.append($tdf1).append($tdf2).append($tdf3).append($tdf4).append($tdf5).append($tdf6).append($tdf7));
         this.table_group_sostav.append($tfoot);

@@ -772,6 +772,15 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Разметка ком. сотояния.
+        /// </summary>
+        public static string title_link_com_condition {
+            get {
+                return ResourceManager.GetString("title_link_com_condition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Инструктивные письма.
         /// </summary>
         public static string title_link_letters {
