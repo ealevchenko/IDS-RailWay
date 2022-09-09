@@ -198,6 +198,14 @@ namespace Test.TestModule
             IDS_Directory ids = new IDS_Directory(service.Test);
             ResultUpdateWagon result = ids.UpdateOwnersWagonsOfDB_UZ(@"EUROPE\ealevchenko");
         }
+        /// <summary>
+        /// Тест перенумерации вагона
+        /// </summary>
+        public void IDS_GetDirectory_ChangeNumWagon()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int result = ids.ChangeNumWagon(8978, 33304, @"EUROPE\ealevchenko");
+        }
         #endregion
 
         #region IDSMORS
@@ -515,7 +523,50 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
         }
+        /// <summary>
+        /// Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему) 
+        /// </summary>
+        public void IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC()
+        {
+            string id_doc = "85960095";
 
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
+            string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where num_doc =N'" + id_doc + "'";
+            UZ_DOC_Arrival uz_doc = context.Database.SqlQuery<UZ_DOC_Arrival>(sql).FirstOrDefault();
+            if (uz_doc == null) return;
+            UZ.UZ_DOC upd_doc_uz = ids.getUpdate_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+            if (upd_doc_uz == null)
+            {
+                upd_doc_uz = ids.getUpdateSMS_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+            }
+            if (upd_doc_uz == null) return;
+            ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
+        }
+        #endregion
+
+        #region IDS_Arhiv
+        /// <summary>
+        /// Тестируем обновление документов в архиве
+        /// </summary>
+        public void IDS_Arhiv_Update_UZ_DOC_PDF()
+        {
+            string id_doc = "85960095";
+
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            IDS_Arhiv ids_arhiv = new IDS_Arhiv(service.Test);
+            EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
+            string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where num_doc =N'" + id_doc + "'";
+            UZ_DOC_Arrival uz_doc = context.Database.SqlQuery<UZ_DOC_Arrival>(sql).FirstOrDefault();
+            if (uz_doc == null) return;
+            UZ.UZ_DOC upd_doc_uz = ids.getUpdate_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+            if (upd_doc_uz == null)
+            {
+                upd_doc_uz = ids.getUpdateSMS_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+            }
+            if (upd_doc_uz == null) return;
+            int res = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, @"EUROPE\ealevchenko");
+        }
         #endregion
 
         #region IDSThread

@@ -194,7 +194,8 @@ namespace Test
             //tids.IDSDirectory_OperationSetPositionWayOfPark();        // установить новое положения пути в парке
             //tids.IDSDirectory_OperationDown1PositionWayOfPark();      // установить положения пути ниже на 1 позицию
             //tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
-            //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();          // Тест обновления владельцев в карточке вагона по данным БД УЗ
+            //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();        // Тест обновления владельцев в карточке вагона по данным БД УЗ
+            //tids.IDS_GetDirectory_ChangeNumWagon();                     // Тест перенумерации вагона
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -213,34 +214,38 @@ namespace Test
             //tids.IDS_SAP_UpdateIncomingSupply();                  // Обновление данных по входящей поставке
             //tids.IDSThread_Start_UpdateIncomingSupply();          // Тест потока "Обновление данных по входящей поставке"
 
-            //tids.IDS_SAP_UpdateSAPOutgoingSupply();                 // Тест "Обновление данных по исходящей поставке поставке"
+            //tids.IDS_SAP_UpdateSAPOutgoingSupply();                   // Тест "Обновление данных по исходящей поставке поставке"
 
-            //tids.IDS_WIR_RenumberingWagons();                       // Перенумерация с указанной позиции
-            //tids.IDS_WIR_DislocationWagons();                       // Операция дислокация
+            //tids.IDS_WIR_RenumberingWagons();                         // Перенумерация с указанной позиции
+            //tids.IDS_WIR_DislocationWagons();                         // Операция дислокация
             //tids.IDS_WIR_DislocationWagonsOfStation();                // Операция дислокация
             //tids.IDS_WIR_DissolutionWagonsOfStation();                // Операция роспуск
-            //tids.IDS_WIR_SendingWagonsOfStation();                // Операция роспуск
-            //tids.IDS_WIR_ArrivalWagonsOfStation();                // Операция роспуск
-            //tids.IDS_WIR_OperationReturnProvideWagons();            // Тест операции вернуть пръедявленый состав
+            //tids.IDS_WIR_SendingWagonsOfStation();                    // Операция роспуск
+            //tids.IDS_WIR_ArrivalWagonsOfStation();                    // Операция роспуск
+            //tids.IDS_WIR_OperationReturnProvideWagons();              // Тест операции вернуть пръедявленый состав
 
-            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
+            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();           // Тест операции обновления ЭПД состава который отправили
 
-            //tids.IDS_WIR_GetWagonsOperationOfSend();                // Тест формирования отчета операции отправки (вагоны)
-            //tids.IDS_WIR_GetSostavWagonsOperationOfSend();          // Тест формирования отчета операции отправки (состав-вагоны)
+            //tids.IDS_WIR_GetWagonsOperationOfSend();                  // Тест формирования отчета операции отправки (вагоны)
+            //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
 
-            tids.IDS_WIR_UpdateArrivalEPD();                            // Тест функции сервиса обновления входящих документов
-            //tids.IDS_WIR_UpdateSendingEPD();                            // Тест функции сервиса обновления исходящих документов
+            //tids.IDS_WIR_UpdateArrivalEPD();                          // Тест функции сервиса обновления входящих документов
+            //tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
 
-            //tids.IDS_WIR_OperationIncomingWagon();                       // Тест переноса вагона в левую сторону
-            //tids.IDS_WIR_OperationUpdateUZ_DOC1();                         // Тест поиска документа по номеру накладной и номеру вагона
-            //tids.IDS_WIR_OperationUpdateUZ_DOC2();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
-            //tids.IDS_WIR_OperationUpdateUZ_DOC3();                         // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
-            //tids.IDS_WIR_OperationManualSearchIncomingWagon();          // Тест поиска вагонов введенных в ручную
+            //tids.IDS_WIR_OperationIncomingWagon();                    // Тест переноса вагона в левую сторону
+            //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
+            //tids.IDS_WIR_OperationUpdateUZ_DOC2();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+            //tids.IDS_WIR_OperationUpdateUZ_DOC3();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+            //tids.IDS_WIR_OperationManualSearchIncomingWagon();        // Тест поиска вагонов введенных в ручную
 
-            //tids.IDS_WIR_GetReportBorderCrossingOfNums();          // Тест поиска вагонов прошедших погран переход
+            //tids.IDS_WIR_GetReportBorderCrossingOfNums();             // Тест поиска вагонов прошедших погран переход
 
             //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
-            //tids.IDS_WIR_UpdateArrival_UZ_Documents();                  //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
+            //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
+            //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
+
+            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                         // Тестируем обновление документов в архиве
+
             #endregion
 
             #region Test_Logs тест логирования
@@ -284,7 +289,7 @@ namespace Test
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
 
-            //tuz.UZ_SMS_GetDocument_of_id_doc();
+            tuz.UZ_SMS_GetDocument_of_id_doc();
             #endregion
 
             #region Администрирование
