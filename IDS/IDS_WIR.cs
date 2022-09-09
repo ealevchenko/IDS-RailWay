@@ -689,7 +689,6 @@ namespace IDS
         private List<int> list_stations_searsh_arrival_epd = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
         private int min_period_searsh_arrival_epd = -36;
 
-
         public IDS_WIR()
             : base()
         {
@@ -2956,7 +2955,7 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
-                List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 10000000).ToList();
+                List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 50000000).ToList();
                 result.count = list_arr_uz_doc_vag.Count();
                 foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
                 {
@@ -6204,6 +6203,12 @@ namespace IDS
         {
             try
             {
+                string user = null;
+                IDS_Arhiv ids_arhiv = new IDS_Arhiv(this.servece_owner);
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
                 int count = list_uz_doc.Count();
                 int index = 0;
                 // Начнем обработку раскредитованых с датой ниже мак даты хранения на сервере
@@ -6227,6 +6232,9 @@ namespace IDS
                             if (((int)upd_doc_uz.status) >= 8)
                             {
                                 // Достигли конца обновления
+
+                                ResultUpdateID res_upd_arr = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user); // обновим документ прибытия в БД ИДС
+                                int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
                                 res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт.");
                                 res.SetCloseResult(res_upd, doc.num_doc);
                                 Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
@@ -6264,6 +6272,8 @@ namespace IDS
                                     if (((int)sms_doc_uz.status) >= 8)
                                     {
                                         // Достигли конца обновления
+                                        ResultUpdateID res_upd_arr = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user); // обновим документ прибытия в БД ИДС
+                                        int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
                                         res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, DateTime.Now, "ЭПД найден на УЗ обновлен и закрыт.");
                                         res.SetCloseResult(res_upd, doc.num_doc);
                                         Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
@@ -6292,8 +6302,6 @@ namespace IDS
                             }
                         }
                     }
-
-
                     index++;
                     if (max_index > 0 && index > max_index)
                     {
@@ -6304,6 +6312,133 @@ namespace IDS
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("Update_List_UZ_DOC(context={0}, res={1}, list_uz_doc={2}, searsh_uz={3})", context, res, list_uz_doc, searsh_uz), servece_owner, eventID);
+            }
+        }
+        // TODO: !Убрал использовал для проверки
+        //public int Update_Arrival_UZ_Doc_Of_ID_DOC(string id_doc, string user)
+        //{
+        //    try
+        //    {
+        //        EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
+        //        string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where num_doc =N'" + id_doc + "'";
+        //        UZ_DOC_Arrival uz_doc = context.Database.SqlQuery<UZ_DOC_Arrival>(sql).FirstOrDefault();
+        //        if (uz_doc == null) return 0;
+        //        UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+        //        if (upd_doc_uz == null)
+        //        {
+        //            upd_doc_uz = getUpdateSMS_UZ_DOC(uz_doc.num_doc, uz_doc.num_uz.ToString());
+        //        }
+        //        if (upd_doc_uz == null) return 0;
+
+        //        ResultUpdateID res = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user);
+
+        //        return 0;
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("Update_Arrival_UZ_Doc(id_doc_uz={0}, user={1})", id_doc, user), servece_owner, eventID);
+        //        return (int)errors_base.global; ;
+        //    }
+        //}
+        /// <summary>
+        /// Обновить БД ИДС документов по прибытию по ЭПД (Платильщик по прибытию, тариф при выдачи по вагонам)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="doc_uz"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateID Update_Arrival_UZ_Doc(ref EFIDS.Concrete.EFDbContext context, UZ.UZ_DOC doc_uz, string user)
+        {
+            ResultUpdateID result = new ResultUpdateID(0);
+            try
+            {
+                if (doc_uz == null)
+                {
+                    result.SetResult((int)errors_base.not_input_value);
+                    return result;// Ошибка нет входных данных
+                }
+                if (doc_uz.otpr == null || doc_uz.otpr.pl.Count() == 0)
+                {
+                    result.SetResult(0);
+                    return result;// Нет документа ЭПД или отсутсвует PL              
+                }
+                IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
+                EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                Arrival_UZ_Document doc_vag = ef_arr_uz_doc.Context.FirstOrDefault(v => v.id_doc_uz == doc_uz.id_doc);
+                if (doc_vag == null)
+                {
+                    result.SetResult((int)errors_base.not_inp_uz_doc_db);
+                    return result; // В базе данных нет записи документа на состав.          
+                }
+                List<Arrival_UZ_Vagon> list_vagon = doc_vag.Arrival_UZ_Vagon.ToList();
+                result.count = list_vagon.Count();
+                bool upd_pl = false;
+                // Проверим если нет платильщика по прибытию, обновим его из ЭПД
+                if (doc_vag.code_payer_arrival == null)
+                {
+                    foreach (PL pl in doc_uz.otpr.pl)
+                    {
+                        if (pl.type == "1")
+                        {
+                            string kod_plat = pl.kod_plat;
+                            string name_plat = pl.name_plat;
+                            //Directory_PayerArrival dir_pa = ids_dir.GetDirectory_PayerArrival(ref context, kod_plat, name_plat, true, user);
+                            Directory_PayerArrival dir_pa = ids_dir.GetDirectory_PayerArrival(kod_plat, name_plat, true, user);
+                            if (dir_pa != null)
+                            {
+                                doc_vag.code_payer_arrival = dir_pa.code;
+                                doc_vag.change = DateTime.Now;
+                                doc_vag.change_user = user;
+                                ef_arr_uz_doc.Update(doc_vag);
+                                upd_pl = true;
+                                result.result = result.result >= 0 ? ++result.result : result.result;
+                                Console.WriteLine("Документ по прибытию БД ИДС ID:{0} - добавлен платильщик по прибытию, Код:{1}", doc_vag.id, dir_pa.code);
+                            }
+                        }
+                    }
+                }
+                result.SetUpdateResult(upd_pl ? 1 : 0, doc_vag.id, 0); //  Обновил информацию по документу
+                // проверим есть информация по вагонам в ЭПД
+                if (doc_uz.otpr != null && doc_uz.otpr.vagon != null && doc_uz.otpr.vagon.Count() > 0)
+                {
+                    foreach (Arrival_UZ_Vagon vag in list_vagon)
+                    {
+                        bool upd = false;
+                        VAGON vagon = doc_uz.otpr.vagon.ToList().FirstOrDefault(w => w.nomer == vag.num.ToString());
+                        if (vagon != null && vagon.pay_v != null && vagon.pay_v.Count() > 0)
+                        {
+
+                            int summ = 0;
+                            foreach (PAY_V pay in vagon.pay_v)
+                            {
+                                if (pay.kod == "001" || pay.kod == "022")
+                                {
+                                    summ += pay.summa != null ? (int)pay.summa : 0;
+                                }
+                            }
+                            if (summ > 0 && vag.pay_summa != summ)
+                            {
+                                vag.pay_summa = summ;
+                                vag.change = DateTime.Now;
+                                vag.change_user = user;
+                                ef_arr_uz_doc_vag.Update(vag);
+                                upd = true;
+                                result.result = result.result >= 0 ? ++result.result : result.result;
+                                Console.WriteLine("Документ по прибытию БД ИДС ID:{0}, вагон №{1} - добавлен тариф при выдаче :{2}", doc_vag.id, vag.num, summ);
+                            }
+                        }
+                        result.SetUpdateResult(upd ? 1 : 0, vag.id, 1); //  Обновил информацию по вагону
+                    }
+                };
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Update_Arrival_UZ_Doc(context={0}, doc_uz={1}, user={2})", context, doc_uz, user), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;// Ошибка
             }
         }
         /// <summary>
@@ -6323,6 +6458,7 @@ namespace IDS
 
                 // Выполним запрос и получим все ЭПД с признапком не закрыт
                 string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where [close] is null";
+                //string sql = "select * from [IDS].[get_view_uz_doc_arrival]() where [dt]>= '2022-09-01 00:00:00'";
                 List<UZ_DOC_Arrival> list_uz_doc = context_ids.Database.SqlQuery<UZ_DOC_Arrival>(sql).ToList();
                 res.count = list_uz_doc != null ? list_uz_doc.Count() : 0;
                 List<UZ_DOC_Arrival> uz_doc_ids_uncredited = new List<UZ_DOC_Arrival>();

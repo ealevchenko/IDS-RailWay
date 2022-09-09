@@ -92,8 +92,10 @@ namespace IDS
                     try
                     {
                         string[] list_str = exceptions_cargo.Split(';');
-                        if (list_str != null && list_str.Length > 0) {
-                            foreach (string id in list_str) {
+                        if (list_str != null && list_str.Length > 0)
+                        {
+                            foreach (string id in list_str)
+                            {
                                 list_exceptions_cargo.Add(int.Parse(id));
                             }
                         }
@@ -236,17 +238,20 @@ namespace IDS
                     ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
                 }
                 int res_update = 0;
+                ResultUpdateID result = null;
                 lock (locker_epd_arrival)
                 {
                     IDS_WIR ids_epd = new IDS_WIR(service);
                     ids_epd.Day_arhive_epd_arrival = day_arhive_epd;
                     ids_epd.Searsh_in_sms_arrival = searsh_in_sms;
                     res_update = ids_epd.UpdateArrivalEPD();
+                    result = ids_epd.UpdateArrival_UZ_Documents(null); // обновим Род и администрацию
+
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
-                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
+                string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения обновлений ЭПД: res_update:{6}, обновлений по картачкам вагонам:{7}", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update, result.result);
                 mes_service_exec.InformationLog(servece_owner, eventID);
-                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_update);
+                service.ServicesToLog(service.ToString() + " - выполнен.", dt_start, DateTime.Now, res_update + result.result);
             }
             catch (ThreadAbortException exc)
             {
