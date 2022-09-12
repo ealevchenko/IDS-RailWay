@@ -43,7 +43,7 @@ namespace IDS
                 if (doc_uz == null) return (int)errors_base.not_inp_uz_doc_db; // Нет входных данных
 
                 EFDbContext context = new EFDbContext();
-                UZ.UZ_SMS sms = new UZ.UZ_SMS();
+                UZ.UZ_SMS sms = new UZ.UZ_SMS(this.servece_owner);
 
                 EFUZ_DOC_PDF ef_uz_doc_pdf = new EFUZ_DOC_PDF(context);
 
@@ -106,7 +106,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("Update_UZ_DOC_PDF(doc_uz={0}, user={1})", doc_uz, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("Update_UZ_DOC_PDF(doc_uz={0}, user={1})", (doc_uz != null ? doc_uz.id_doc : null), user), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
             }
         }
