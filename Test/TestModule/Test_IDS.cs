@@ -551,7 +551,7 @@ namespace Test.TestModule
         /// </summary>
         public void IDS_Arhiv_Update_UZ_DOC_PDF()
         {
-            string id_doc = "85960095";
+            string id_doc = "86057790";
 
             IDS_WIR ids = new IDS_WIR(service.Test);
             IDS_Arhiv ids_arhiv = new IDS_Arhiv(service.Test);
