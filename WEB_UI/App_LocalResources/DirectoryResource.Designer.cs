@@ -19,7 +19,7 @@ namespace WEB_UI.App_LocalResources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class DirectoryResource {
@@ -759,6 +759,24 @@ namespace WEB_UI.App_LocalResources {
         public static string title_change_group_cargo_group {
             get {
                 return ResourceManager.GetString("title_change_group_cargo_group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новый номер.
+        /// </summary>
+        public static string title_change_num_new {
+            get {
+                return ResourceManager.GetString("title_change_num_new", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Старый номер.
+        /// </summary>
+        public static string title_change_num_old {
+            get {
+                return ResourceManager.GetString("title_change_num_old", resourceCulture);
             }
         }
         

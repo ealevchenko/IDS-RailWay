@@ -53,6 +53,7 @@
             'title_button_edit': 'Править',
             'title_button_del': 'Удалить',
             'title_button_edit_group': 'Править оператора или ограничение',
+            'title_button_edit_num': 'Перенумеровать',
 
         },
         'en':  //default language: English
@@ -105,6 +106,7 @@
             'title_button_edit': 'Edit',
             'title_button_del': 'Remove',
             'title_button_edit_group': 'Edit operator or restriction',
+            'title_button_edit_num': 'Renumber',
         }
     };
 
@@ -1120,7 +1122,7 @@
                             {
                                 lang: pn_add_edit.lang
                             },
-                            [{value: 0, text: "0"}, { value: 4, text: "4" },{ value: 6, text: "6" },{ value: 8, text: "8" }, { value: 12, text: "12" }, { value: 16, text: "16" }, {value: 32, text: "32"}],
+                            [{ value: 0, text: "0" }, { value: 4, text: "4" }, { value: 6, text: "6" }, { value: 8, text: "8" }, { value: 12, text: "12" }, { value: 16, text: "16" }, { value: 32, text: "32" }],
                             null,
                             -1,
                             function (event) {
@@ -1157,7 +1159,7 @@
                         pn_add_edit.add_edit_change_operator = cd_initDateTimeRangePicker(pn_add_edit.add_edit_change_operator, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Оператор УЗ
+                            // Оператор УЗ
                             pn_add_edit.add_edit_operator_car = cd_initSelect(
                                 pn_add_edit.add_edit_operator_car,
                                 {
@@ -1174,7 +1176,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // Признак собственности
+                            // Признак собственности
                             pn_add_edit.add_edit_type_ownership = cd_initSelect(
                                 pn_add_edit.add_edit_type_ownership,
                                 {
@@ -1216,7 +1218,7 @@
                         pn_add_edit.add_edit_operator_car_rent_start_now = cd_initDateTimeRangePicker(pn_add_edit.add_edit_operator_car_rent_start_now, { lang: lang, time: true }, function (datetime) {
 
                         }),
-                        // ограничение ограничения
+                            // ограничение ограничения
                             pn_add_edit.add_edit_limiting = cd_initSelect(
                                 pn_add_edit.add_edit_limiting,
                                 {
@@ -1250,11 +1252,11 @@
                         pn_add_edit.add_edit_date_rem_uz = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_uz, { lang: lang, time: false }, function (datetime) {
 
                         }),
-                        // Дата ремонта вагона
+                            // Дата ремонта вагона
                             pn_add_edit.add_edit_date_rem_vag = cd_initDateTimeRangePicker(pn_add_edit.add_edit_date_rem_vag, { lang: lang, time: false }, function (datetime) {
 
                             }),
-                        // Соберем все элементы в массив
+                            // Соберем все элементы в массив
                             pn_add_edit.all_obj = $([])
                                 .add(pn_add_edit.add_edit_num)
                                 .add(pn_add_edit.add_edit_kod_adm)
@@ -1282,7 +1284,7 @@
                                 .add(pn_add_edit.add_edit_date_rem_uz.obj)
                                 .add(pn_add_edit.add_edit_date_rem_vag.obj)
                                 .add(pn_add_edit.add_edit_note)
-                        ;
+                            ;
                         // создадим классы 
 
                         //pn_add_edit.alert = new ALERT($('div#add_edit_alert'));// Создадим класс ALERTG
@@ -1733,6 +1735,128 @@
             },
         },
         //*************************************************************************************
+        // ОКНО ИЗМЕНИТЬ НОМЕР ВАГОНА
+        //*************************************************************************************
+        pn_change_num = {
+            obj: null,
+            lang: null,
+            user_name: null,
+            ids_dir: null,
+            alert: $('div#change_num_alert'),                                             // Сообщения
+            all_obj: null,                                                              // массив всех элементов формы 
+            val: null,                                                                  // класс валидации
+            // Проверка номера вагона
+            add_edit_valodation_num: $('input#change_num_valodation_num'),
+            // Поля формы
+            change_num_old: $('input#change_num_old'),
+            change_num_new: $('input#change_num_new'),
+            // инициализвция Окна
+            init: function (user_name, callback_ok) {
+                pn_change_num.user_name = user_name;
+                pn_change_num.ids_dir = new IDS_DIRECTORY(pn_change_num.lang), // Создадим класс IDS_DIRECTORY
+                // Соберем все элементы в массив
+                pn_change_num.all_obj = $([])
+                    .add(pn_change_num.change_num_old)
+                    .add(pn_change_num.change_num_new);
+
+                pn_change_num.val = new VALIDATION(pn_change_num.lang, pn_change_num.alert, pn_change_num.all_obj); // Создадим класс VALIDATION
+
+                pn_change_num.obj = $("div#change_num").dialog({
+                    resizable: false,
+                    title: 'Изменить номер',
+                    modal: true,
+                    autoOpen: false,
+                    height: "auto",
+                    width: 400,
+                    classes: {
+                        "ui-dialog": "card change_num_form",
+                        "ui-dialog-titlebar": "card-header bg-primary text-white",
+                        "ui-dialog-content": "card-body",
+                        "ui-dialog-buttonpane": "card-footer text-muted"
+                    },
+                    open: function (event, ui) {
+
+                    },
+                    buttons: [
+                        {
+                            //disabled: false,
+                            text: "Ок",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                pn_change_num.save(callback_ok);
+                            }
+                        },
+                        {
+                            text: "Отмена",
+                            class: "btn btn-outline-primary btn",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                    ]
+                });
+                // Sumbit form
+                $("form#form_change_num").on("submit", function (event) {
+                    event.preventDefault();
+                });
+
+            },
+            // открыть окно добавмить вагоны вручную
+            Open: function (num) {
+                LockScreen(langView('mess_operation', langs));
+                pn_change_num.val.clear_all();
+                // Убрать кнопку Ок
+                //pn_change_num.button_ok(false);
+                pn_change_num.change_num_old.val(num).prop('disabled', true);
+                pn_change_num.change_num_new.val('');
+                //pn_change_num.obj.dialog("option", "title", "Добавить вагон");
+                // Добавим запись
+                pn_change_num.obj.dialog("open");
+                LockScreenOff();
+            },
+            //// Активация кнопки ок
+            //button_ok: function (active) {
+            //    var buttons = pn_change_num.obj.dialog("option", "buttons");
+            //    buttons[0].disabled = !active;
+            //    pn_change_num.obj.dialog("option", "buttons", buttons);
+            //},
+            // Валидация данных вагона
+            validation: function () {
+                pn_change_num.val.clear_all();
+                var valid = true;
+                valid = valid & pn_change_num.val.checkInputOfRange(pn_change_num.change_num_new, 1, 50000000, "Введите правильно номер вагона 1-50000000", "", false);
+                return valid;
+            },
+            // Сохранить прибытие состава
+            save: function (callback_ok) {
+                var valid = pn_change_num.validation();
+                if (valid) {
+                    LockScreen(langView('mess_save', langs));
+                    // Получим строку обновлений
+                    var operation_change_num_wagon = {
+                        "num_old": Number(pn_change_num.change_num_old.val()),
+                        "num_new": Number(pn_change_num.change_num_new.val()),
+                        "user": pn_change_num.user_name,
+                    }
+                    // Обновим
+                    pn_change_num.ids_dir.postOperationChangeNumWagon(operation_change_num_wagon, function (result_operation) {
+                        if (result_operation > 0) {
+                            if (typeof callback_ok === 'function') {
+                                pn_change_num.obj.dialog("close");
+                                callback_ok({ result: result_operation });
+                            }
+                        } else {
+                            pn_change_num.val.clear_all();
+                            pn_change_num.val.out_error_message("При изменении номера вагона, произошла ошибка. Код ошибки = " + result_operation.result);
+                            LockScreenOff();
+                        }
+                    });
+                } else {
+                    LockScreenOff();
+                }
+            },
+        },
+        //*************************************************************************************
         // ОСНОВНАЯ ТАБЛИЦА СПРАВОЧНИКА
         //*************************************************************************************
         table_directory = {
@@ -1986,15 +2110,20 @@
                             },
                             enabled: false
                         },
-                        //{
-                        //    text: langView('title_button_edit_limit', langs),
-                        //    action: function (e, dt, node, config) {
-                        //        var items = table_directory.obj.rows({ selected: true });
-                        //        var row_cargo = table_directory.obj.rows(items[0]).data();
-                        //        pn_change_group_limit.Open(row_cargo);
-                        //    },
-                        //    enabled: false
-                        //},
+                        {
+                            text: langView('title_button_edit_num', langs),
+                            action: function (e, dt, node, config) {
+                                var rows = table_directory.html_table.find('tbody tr.selected');
+                                if (rows && rows.length === 1) {
+                                    var num = $(rows[0]).attr("id")
+                                    var sysnum = is_valid_num_wagon(num)
+                                    if (num) {
+                                        pn_change_num.Open(Number(num));
+                                    }
+                                }
+                            },
+                            enabled: false
+                        },
                         {
                             extend: 'pageLength',
                         }
@@ -2052,14 +2181,16 @@
                     if (table_directory.count_string > 0) {
                         table_directory.obj.button(3).enable(true);
                         table_directory.obj.button(6).enable(true);
-                        //table_directory.obj.button(7).enable(true);
+                        table_directory.obj.button(7).enable(false);
                         if (table_directory.count_string === 1) {
                             table_directory.obj.button(5).enable(true);
                             //table_directory.obj.button(6).enable(true);
+                            table_directory.obj.button(7).enable(true);
                         } else {
 
                             table_directory.obj.button(5).enable(false);
                             //table_directory.obj.button(6).enable(false);
+                            table_directory.obj.button(7).enable(false);
                         }
                     } else {
                         table_directory.deselect();
@@ -2234,14 +2365,6 @@
     loadReference(function (result) {
         //if (lang === 'ru') $.datepicker.setDefaults($.datepicker.regional.ru);
         pn_search.init();
-        //// Инициализация окна править группу ограничений
-        //pn_change_group_limit.init(lang, user_name, function (result_change_group) {
-        //    if (result_change_group > 0) {
-        //        // Показать после изменения
-        //        pn_search.view_cars();
-        //        alert.out_info_message('Обновлены огранечения по группе вагонов в количестве - ' + result_change_group + ' записей');
-        //    }
-        //});
         // Инициализация окна править группу операторов
         pn_change_group.init(lang, user_name, function (result_operation) {
             if (result_operation) {
@@ -2257,33 +2380,16 @@
                 pn_search.view_cars();
                 alert.out_info_message('Обновлена информация по вагону № ' + result_operation.result.listResultWagon[0].num + ', код выполнения :' + result_operation.result.listResultWagon[0].result + ', обновлено таблиц : ' + result_operation.result.result);
             }
-
-            //if (result_add_edit) {
-            //    // Загрузить новый справочник
-            //    //alert.clear_message();
-            //    // Показать после изменения
-            //    pn_search.view_cars();
-            //    var num = result_add_edit.num;
-            //    if (result_add_edit.type_vagon === 1) {
-            //        alert.out_info_message('Строка справочника вагона №' + num + ' - обновлена!');
-            //    }
-            //    if (result_add_edit.type_vagon === 0) {
-            //        alert.out_info_message('Строка справочника вагона №' + num + ' - добавлена!');
-            //    }
-            //    if (result_add_edit.type_vagon_rent === 1 && result_add_edit.result_new_wagon_rent > 0) {
-            //        alert.out_info_message('Строка аренды вагона №' + num + ' - закрыта! ID строки = ' + result_add_edit.result_vagon_rent);
-            //    }
-            //    if (result_add_edit.type_vagon_rent === 1 && result_add_edit.result_new_wagon_rent === 0) {
-            //        alert.out_info_message('Строка аренды вагона №' + num + ' - обновлена! ID строки = ' + result_add_edit.result_vagon_rent);
-            //    }
-            //    if (result_add_edit.type_vagon_rent === 0) {
-            //        alert.out_info_message('Строка аренды вагона №' + num + ' - добавлена! ID строки = ' + result_add_edit.result_vagon_rent);
-            //    }
-            //    if (result_add_edit.result_new_wagon_rent > 0) {
-            //        alert.out_info_message('Добавлена новая строка аренды вагона №' + num + ', ID строки = ' + result_add_edit.result_new_wagon_rent);
-            //    }
-            //}
         });
+        // Инициализация окна изменить номер
+        pn_change_num.init(user_name, function (result_operation) {
+            if (result_operation) {
+                // Показать после изменения
+                pn_search.view_cars();
+                alert.out_info_message('Обновлена информация по вагону, код выполнения :' + result_operation);
+            }
+        });
+
         table_directory.init();
         LockScreenOff();
     });

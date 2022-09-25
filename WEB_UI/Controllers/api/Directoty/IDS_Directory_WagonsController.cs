@@ -131,6 +131,12 @@ namespace WEB_UI.Controllers.api
         public bool not_check_numeration { get; set; }
         public string user { get; set; }
     }
+    public class OperationChangeNumWagon
+    {
+        public int num_old { get; set; }
+        public int num_new { get; set; }
+        public string user { get; set; }
+    }
 
     /// <summary>
     /// СПИСОК ВАГОНОВ
@@ -203,8 +209,6 @@ namespace WEB_UI.Controllers.api
 
         #endregion
 
-
-
         // GET: api/ids/directory/wagon/is_correct/num/24119703
         [Route("is_correct/num/{num:int}")]
         [ResponseType(typeof(bool))]
@@ -221,7 +225,6 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
 
         // GET: api/ids/directory/wagon/all
         [Route("all")]
@@ -500,6 +503,24 @@ namespace WEB_UI.Controllers.api
                 IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
                 ResultObject result = ids_dir.OperationCreateUpdateWagon(value.num, value.adm, value.rod, value.kol_os, value.usl_tip, value.not_check_numeration, value.user);
                 result.obj = result.obj != null ? ((Directory_Wagons)result.obj).GetDirectory_Wagons_Directory_WagonsRent() : null;
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST: api/ids/directory/wagon/operation/change_num_wagon/
+        [HttpPost]
+        [Route("operation/change_num_wagon/")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostChangeNumWagon([FromBody] OperationChangeNumWagon value)
+        {
+            try
+            {
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
+                int result = ids_dir.ChangeNumWagon(value.num_old, value.num_new, value.user);
                 return Ok(result);
             }
             catch (Exception e)

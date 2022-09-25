@@ -195,7 +195,7 @@ namespace Test
             //tids.IDSDirectory_OperationDown1PositionWayOfPark();      // установить положения пути ниже на 1 позицию
             //tids.IDSDirectory_OperationUp1PositionWayOfPark();        // установить положения пути выше на 1 позицию
             //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();        // Тест обновления владельцев в карточке вагона по данным БД УЗ
-            //tids.IDS_GetDirectory_ChangeNumWagon();                     // Тест перенумерации вагона
+            tids.IDS_GetDirectory_ChangeNumWagon();                     // Тест перенумерации вагона
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -244,7 +244,7 @@ namespace Test
             //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
-            tids.IDS_Arhiv_Update_UZ_DOC_PDF();                         // Тестируем обновление документов в архиве
+            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                         // Тестируем обновление документов в архиве
 
             #endregion
 

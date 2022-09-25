@@ -1351,8 +1351,14 @@ namespace IDS
             }
 
         }
-
-        public int ChangeNumWagon(int num_old, int num,  string user)
+        /// <summary>
+        /// Метод изменения номеров вагона
+        /// </summary>
+        /// <param name="num_old"></param>
+        /// <param name="num"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ChangeNumWagon(int num_old, int num, string user)
         {
             try
             {
@@ -1368,8 +1374,120 @@ namespace IDS
                 if (wag_old == null) return (int)errors_base.not_dir_wagon_of_db;
                 Directory_Wagons wag_new = ef_vag.Context.FirstOrDefault(w => w.num == num);
                 if (wag_new != null) return (int)errors_base.exists_dir_wagon_of_db;
-
-                return 0;
+                // Создадим копию нового вагона
+                wag_new = new Directory_Wagons()
+                {
+                    num = num,
+                    id_countrys = wag_old.id_countrys,
+                    id_genus = wag_old.id_genus,
+                    id_owner = wag_old.id_owner,
+                    bit_warning = wag_old.bit_warning,
+                    id_operator = wag_old.id_operator,
+                    change_operator = wag_old.change_operator,
+                    gruzp = wag_old.gruzp,
+                    tara = wag_old.tara,
+                    kol_os = wag_old.kol_os,
+                    usl_tip = wag_old.usl_tip,
+                    date_rem_uz = wag_old.date_rem_uz,
+                    date_rem_vag = wag_old.date_rem_vag,
+                    id_type_ownership = wag_old.id_type_ownership,
+                    factory_number = wag_old.factory_number,
+                    inventory_number = wag_old.inventory_number,
+                    year_built = wag_old.year_built,
+                    exit_ban = wag_old.exit_ban,
+                    sign = wag_old.sign,
+                    note = wag_old.note,
+                    closed_route = wag_old.closed_route,
+                    new_construction = wag_old.new_construction,
+                    create = wag_old.create,
+                    create_user = wag_old.create_user,
+                    change = DateTime.Now,
+                    change_user = user,
+                };
+                // Добавим
+                ef_vag.Add(wag_new);
+                int result = context.SaveChanges();
+                // Проверим
+                if (result < 0) return result; // Ошибка добавления нового вагона
+                // Начинаем перенос
+                // КАРТОЧКА ВАГОНА
+                EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(context);
+                List<Directory_WagonsRent> list_wag_rent = ef_wag_rent.Context.Where(c => c.num == num_old).ToList();
+                foreach (Directory_WagonsRent obj in list_wag_rent)
+                {
+                    obj.num = num;
+                    ef_wag_rent.Update(obj);
+                }
+                // ПРИБЫТИЕ
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                List<ArrivalCars> list_arr_car = ef_arr_car.Context.Where(c => c.num == num_old).ToList();
+                foreach (ArrivalCars obj in list_arr_car)
+                {
+                    obj.num = num;
+                    ef_arr_car.Update(obj);
+                }
+                EFArrival_UZ_Vagon ef_uz_vag = new EFArrival_UZ_Vagon(context);
+                List<Arrival_UZ_Vagon> list_uz_vag = ef_uz_vag.Context.Where(c => c.num == num_old).ToList();
+                foreach (Arrival_UZ_Vagon obj in list_uz_vag)
+                {
+                    obj.num = num;
+                    ef_uz_vag.Update(obj);
+                }
+                EFSAPIncomingSupply ef_sap_is = new EFSAPIncomingSupply(context);
+                List<SAPIncomingSupply> list_sap_is = ef_sap_is.Context.Where(c => c.num == num_old).ToList();
+                foreach (SAPIncomingSupply obj in list_sap_is)
+                {
+                    obj.num = num;
+                    ef_sap_is.Update(obj);
+                }
+                // ВНУТРЕНЕЕ ПЕРЕМЕЩЕНИЕ
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                List<WagonInternalRoutes> list_wir = ef_wir.Context.Where(c => c.num == num_old).ToList();
+                foreach (WagonInternalRoutes obj in list_wir)
+                {
+                    obj.num = num;
+                    ef_wir.Update(obj);
+                }
+                EFOutgoingDetentionReturn ef_out_dr = new EFOutgoingDetentionReturn(context);
+                List<OutgoingDetentionReturn> list_out_dr = ef_out_dr.Context.Where(c => c.num == num_old).ToList();
+                foreach (OutgoingDetentionReturn obj in list_out_dr)
+                {
+                    obj.num = num;
+                    ef_out_dr.Update(obj);
+                }
+                // ОТПРАВКА
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                List<OutgoingCars> list_out_car = ef_out_car.Context.Where(c => c.num == num_old).ToList();
+                foreach (OutgoingCars obj in list_out_car)
+                {
+                    obj.num = num;
+                    ef_out_car.Update(obj);
+                }
+                EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+                List<Outgoing_UZ_Vagon> list_out_uz_vag = ef_out_uz_vag.Context.Where(c => c.num == num_old).ToList();
+                foreach (Outgoing_UZ_Vagon obj in list_out_uz_vag)
+                {
+                    obj.num = num;
+                    ef_out_uz_vag.Update(obj);
+                }
+                EFSAPOutgoingSupply ef_sap_os = new EFSAPOutgoingSupply(context);
+                List<SAPOutgoingSupply> list_sap_os = ef_sap_os.Context.Where(c => c.num == num_old).ToList();
+                foreach (SAPOutgoingSupply obj in list_sap_os)
+                {
+                    obj.num = num;
+                    ef_sap_os.Update(obj);
+                }
+                int res_upd = context.SaveChanges();
+                if (res_upd >= 0)
+                {
+                    ef_vag.Delete(wag_old.num);
+                    int res_del = context.SaveChanges();
+                    return res_del;
+                }
+                else
+                {
+                    return res_upd;
+                }
             }
             catch (Exception e)
             {

@@ -204,7 +204,8 @@ namespace Test.TestModule
         public void IDS_GetDirectory_ChangeNumWagon()
         {
             IDS_Directory ids = new IDS_Directory(service.Test);
-            int result = ids.ChangeNumWagon(8978, 33304, @"EUROPE\ealevchenko");
+            int result = ids.ChangeNumWagon(27015, 22012, @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
         }
         #endregion
 

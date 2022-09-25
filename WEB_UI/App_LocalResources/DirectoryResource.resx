@@ -381,4 +381,10 @@
   <data name="commercial_condition_title" xml:space="preserve">
     <value>Коммерческое состояние</value>
   </data>
+  <data name="title_change_num_new" xml:space="preserve">
+    <value>Новый номер</value>
+  </data>
+  <data name="title_change_num_old" xml:space="preserve">
+    <value>Старый номер</value>
+  </data>
 </root>

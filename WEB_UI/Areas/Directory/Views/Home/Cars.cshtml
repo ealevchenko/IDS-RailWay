@@ -491,4 +491,30 @@
     </form>
 </div>
 
+<div id="change_num" title="" style="display:none">
+    <div class="alert" id="change_num_alert"></div>
+    <form id="form_change_num">
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="change_num_old" class="col-sm-5 col-form-label">@DirectoryResource.title_change_num_old:</label>
+            <div class="col-sm-7">
+                <input type="number" class="form-control" id="change_num_old" name="change_num_old" disabled>
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0.5rem">
+            <label for="change_num_new" class="col-sm-5 col-form-label">@DirectoryResource.title_change_num_new:</label>
+            <div class="col-sm-7">
+                <input type="number" class="form-control" id="change_num_new" name="change_num_new">
+                <div class="invalid-feedback">
+
+                </div>
+            </div>
+        </div>
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </form>
+</div>
+
 
