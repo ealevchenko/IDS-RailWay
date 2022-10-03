@@ -721,6 +721,6 @@
     <value>Оперативный остаток вагонов на АМКР</value>
   </data>
   <data name="title_link_com_condition" xml:space="preserve">
-    <value>Разметка ком. сотояния</value>
+    <value>Разметка ком. соcтояния</value>
   </data>
 </root>

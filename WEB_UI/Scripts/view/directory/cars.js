@@ -1847,7 +1847,7 @@
                             }
                         } else {
                             pn_change_num.val.clear_all();
-                            pn_change_num.val.out_error_message("При изменении номера вагона, произошла ошибка. Код ошибки = " + result_operation.result);
+                            pn_change_num.val.out_error_message("При изменении номера вагона, произошла ошибка. Код ошибки = " + result_operation);
                             LockScreenOff();
                         }
                     });

@@ -772,7 +772,7 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Разметка ком. сотояния.
+        ///   Ищет локализованную строку, похожую на Разметка ком. соcтояния.
         /// </summary>
         public static string title_link_com_condition {
             get {
