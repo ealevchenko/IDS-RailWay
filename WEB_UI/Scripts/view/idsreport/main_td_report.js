@@ -28,15 +28,9 @@
     var VTDR = App.view_td_report;
     var view_td_report = new VTDR('#report');
 
-    //var IDS_DIRECTORY = App.ids_directory;
-    //var ids_dir = new IDS_DIRECTORY();
-
     var IDS_WSD = App.ids_wsd;
     var ids_wsd = new IDS_WSD();
     // Модуль инициализаии компонентов формы
-    //var FE = App.form_element;
-    //var fe_ui = new FE();
-    //var alert = App.alert_form;
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
@@ -52,12 +46,6 @@
 
     // После загрузки документа
     $(document).ready(function ($) {
-        //    LockScreen(langView('mi_init_main', App.Langs));
-        //    // Загрузим справочники, с признаком обязательно
-        //    load_db(['station'], true, function (result) {
-        //        LockScreenOff();
-        //    }.bind(this));
-
         view_td_report.init({
             alert: null,
             ids_wsd: ids_wsd,
@@ -66,9 +54,4 @@
             }.bind(this),
         });
     });
-
-
-
-
-
 })(jQuery); // End of use strict
