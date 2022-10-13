@@ -1879,6 +1879,7 @@
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
     <Content Include="Scripts\module\directory\table_dir_park_station.js" />
+    <Content Include="Scripts\module\shared\chart_amcharts.js" />
     <Content Include="Scripts\module\report\table_td_report.js" />
     <Content Include="Scripts\module\report\view_td_report.js" />
     <Content Include="Scripts\module\report\view_sd_report.js" />
