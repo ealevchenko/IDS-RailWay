@@ -172,6 +172,7 @@
     var wsd = App.ids_wsd;
     var FIL = App.form_inline;
     var TTDR = App.table_td_report;
+    var CAM = App.chart_amcharts;
     // асинхронно добавим распарсеный ЭПД
     var wagons_get_epd_async = function (row, callback) {
         var base = this;
@@ -1956,6 +1957,7 @@
 
             },
         });
+
         /*}.bind(this));*/
     };
     // Показать отчет  "Отчет по прибытию (общий)"
@@ -2484,7 +2486,7 @@
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_2_1 = function () {
-        if (this.switch_laden) {
+        if (this.textarea_wagon_nums) {
             this.switch_laden.val(false);
             this.switch_accounting.val(false);
             this.switch_client.val(false);
@@ -2513,7 +2515,6 @@
             this.process_data_view_report_2_1(this.clone_wagons_adoption, null);
             LockScreenOff();
         }
-
     };
     //------------------------------------------------------------------------------------------------
     // Инициализировать отчет "Прибытие ИТОГ"
@@ -2611,10 +2612,19 @@
         });
 
         var div_col_total_1_2_2 = $('<div></div>', {
-            id: 'adoption-cargo-operation-amkr-chart',
             class: 'col-xl-6'
         });
-        div_row_total_1_2.append(div_col_total_1_2_1.append(div_row_total_1_2_1_table.append(div_col_total_1_2_1_table))).append(div_col_total_1_2_2);
+        var div_row_total_1_2_1_chart = $('<div></div>', {
+            class: 'row'
+        });
+        var div_col_total_1_2_1_chart = $('<div></div>', {
+            id: 'adoption-cargo-operation-amkr-chart',
+            class: 'col-xl-11'
+        });
+        // 
+        div_row_total_1_2
+            .append(div_col_total_1_2_1.append(div_row_total_1_2_1_table.append(div_col_total_1_2_1_table)))
+            .append(div_col_total_1_2_2.append(div_row_total_1_2_1_chart.append(div_col_total_1_2_1_chart)));
 
         // Создадим форму выбора для отчета
         this.form_panel_total_1 = new FIL();
@@ -2852,7 +2862,7 @@
         this.$setup_select.append(this.$form_setup_select);
         // иницируем таблицы
         // Запускаем 6 процесса инициализации (паралельно)
-        var process = 1;
+        var process = 2;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -2874,6 +2884,7 @@
         }.bind(this);
         // Таблица-Груз по Оператору АМКР
         this.table_total_cargo_operation_amkr = new TTDR('div#adoption-cargo-operation-amkr');         // Создадим экземпляр
+
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_total_cargo_operation_amkr.init({
             alert: null,
@@ -2888,6 +2899,18 @@
             },
             fn_action_view_detali: function (rows) {
 
+            },
+        });
+        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        this.chart_total_cargo_operation_amkr = new CAM('div#adoption-cargo-operation-amkr-chart');         // Создадим экземпляр
+        //
+        this.chart_total_cargo_operation_amkr.init({
+            alert: null,
+            type_chart: 'stacked_column_chart_percent',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
             },
         });
     };
@@ -2974,7 +2997,7 @@
             }.bind(this));
             if (!op) {
                 // Не данных 
-                
+
                 this.list_cargo_operation_amkr.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
                     id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator,
@@ -3032,7 +3055,7 @@
             // Применим фильтр
             if (id_operator > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_operator === (id_operator > 0 ? id_operator: null);
+                    return i.id_operator === (id_operator > 0 ? id_operator : null);
                 }.bind(this));
             }
             if (id_limiting > -1) {
@@ -3042,7 +3065,60 @@
             }
             // Отобразим
             this.table_total_cargo_operation_amkr.view(list_view);
-            this.chart_3_1();
+
+            var data = [];
+            $.each(list_view, function (key, element) {
+                data.push({ "group": element.operator_abbr, "name": element.cargo_name, "fieldName": element.id_cargo, "value": element.count_wagon});
+            }.bind(this));
+
+            //var data = [
+            //    {
+            //        "group": "АМКР",
+            //        "name": "Концентрат",
+            //        "fieldName": "1",
+            //        "value": 100
+
+            //    },
+            //    {
+            //        "group": "АМКР",
+            //        "name": "Порожняк",
+            //        "fieldName": "2",
+            //        "value": 50
+            //    },
+            //    {
+            //        "group": "ЦТД",
+            //        "name": "Порожняк",
+            //        "fieldName": "2",
+            //        "value": 67
+            //    },
+            //    {
+            //        "group": "ЦТД",
+            //        "name": "Кокс",
+            //        "fieldName": "3",
+            //        "value": 85
+            //    },
+            //    {
+            //        "group": "ООО",
+            //        "name": "Кокс",
+            //        "fieldName": "3",
+            //        "value": 13
+            //    },
+            //    {
+            //        "group": "ООО",
+            //        "name": "Концентрат",
+            //        "fieldName": "1",
+            //        "value": 35
+            //    },
+            //    {
+            //        "group": "ООО",
+            //        "name": "Порожняк",
+            //        "fieldName": "2",
+            //        "value": 8
+            //    },
+            //]
+
+            this.chart_total_cargo_operation_amkr.view(data);
+
             LockScreenOff();
         }
     };
