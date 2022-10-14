@@ -18,7 +18,7 @@
     {
         'default':  //default language: ru
         {
-            'ttdr_field_numeration': '№ п.п.',
+            'camc_mess_init_module': 'Инициализация модуля chart_amcharts...',
         },
         'en':  //default language: English
         {
@@ -89,24 +89,21 @@
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
-        am5.ready(function () {
-            switch (this.settings.type_chart) {
-                case 'stacked_column_chart_percent': {
-                    this.init_stacked_column_chart_percent();
-                    break;
-                };
-                // 
-                default: {
-                    break;
-                };
-            }
-        }.bind(this));
-
+        switch (this.settings.type_chart) {
+            case 'stacked_column_chart_percent': {
+                this.init_stacked_column_chart_percent();
+                break;
+            };
+            // 
+            default: {
+                break;
+            };
+        };
     };
     // Инициализация диаграмы
     chart_amcharts.prototype.init = function (options) {
         this.result_init = true;
-        LockScreen(langView('ttdr_mess_init_module', App.Langs));
+        LockScreen(langView('camc_mess_init_module', App.Langs));
         // теперь выполним инициализацию
         // Определим основные свойства
         this.settings = $.extend({
@@ -121,14 +118,17 @@
         this.yAxis = null;
         this.legend = null;
 
-        // Создадим элемент root
-        this.root = am5.Root.new(this.selector);
-        // Установим тему
-        this.root.setThemes([
-            am5themes_Animated.new(this.root)
-        ]);
+        //am5.ready(function () {
+        //    // Создадим элемент root
+        //    this.root = am5.Root.new(this.selector);
+        //    // Установим тему
+        //    this.root.setThemes([
+        //        am5themes_Animated.new(this.root)
+        //    ]);
+        //    //
+        //    this.init_type_chart();
+        //}.bind(this));
 
-        this.init_type_chart();
         this.data = [];
 
         //----------------------------------
@@ -154,76 +154,78 @@
     };
     // Гистограмма с накоплением
     chart_amcharts.prototype.view_stacked_column_chart_percent = function (data) {
-        // Очистим отчет
-        this.chart.series.clear();
-        this.legend.data.clear();
-        // Очистим данные для отчета
-        var dchart = [];        // Данные для отчета
-        var list_series = [];   // Список Series
-        // Сформируем данные для отчета 
-        $.each(data, function (key, element) {
-            var gr = dchart.find(function (o) { return o.group === element.group }.bind(this));
-            if (!gr) {
-                var list_gr = data.filter(function (i) { return i.group === element.group }.bind(this));
-                var element_gr = {};
-                element_gr["group"] = element.group;
-                $.each(list_gr, function (key, el_gr) {
-                    element_gr[el_gr.fieldName] = el_gr.value;
-                    // Проверим список series
-                    var ser = list_series.find(function (o) { return o.fieldName === el_gr.fieldName }.bind(this));
-                    if (!ser) {
-                        list_series.push({ "fieldName": el_gr.fieldName, "name": el_gr.name });
-                    }
-                }.bind(this));
-                dchart.push(element_gr);
-            }
-        }.bind(this));
-        // Применим данные для отчета
-        this.xAxis.data.setAll(dchart);
-        // Добавим серию
-        function makeSeries(name, fieldName) {
-            var series = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
-                name: name,
-                stacked: true,
-                xAxis: this.xAxis,
-                yAxis: this.yAxis,
-                valueYField: fieldName,
-                valueYShow: "valueYTotalPercent",
-                categoryXField: "group",
-            }));
-
-            series.columns.template.setAll({
-                tooltipText: "{name}, {categoryX}:{valueYTotalPercent.formatNumber('#.#')}%",
-                tooltipY: am5.percent(10)
-            });
-            series.data.setAll(dchart);
-
-            // Заставить вещи анимироваться при загрузке
-            // https://www.amcharts.com/docs/v5/concepts/animations/
-            series.appear();
-
-            series.bullets.push(function () {
-                return am5.Bullet.new(this.root, {
-                    sprite: am5.Label.new(this.root, {
-                        //text: "{name}:{valueYTotalPercent.formatNumber('#.#')}%",
-                        text: "{valueYTotalPercent.formatNumber('#.#')}%",
-                        fill: this.root.interfaceColors.get("alternativeText"),
-                        centerY: am5.p50,
-                        centerX: am5.p50,
-                        populateText: true
-                    })
-                });
+        if (this.chart) {
+            // Очистим отчет
+            this.chart.series.clear();
+            this.legend.data.clear();
+            // Очистим данные для отчета
+            var dchart = [];        // Данные для отчета
+            var list_series = [];   // Список Series
+            // Сформируем данные для отчета 
+            $.each(data, function (key, element) {
+                var gr = dchart.find(function (o) { return o.group === element.group }.bind(this));
+                if (!gr) {
+                    var list_gr = data.filter(function (i) { return i.group === element.group }.bind(this));
+                    var element_gr = {};
+                    element_gr["group"] = element.group;
+                    $.each(list_gr, function (key, el_gr) {
+                        element_gr[el_gr.fieldName] = el_gr.value;
+                        // Проверим список series
+                        var ser = list_series.find(function (o) { return o.fieldName === el_gr.fieldName }.bind(this));
+                        if (!ser) {
+                            list_series.push({ "fieldName": el_gr.fieldName, "name": el_gr.name });
+                        }
+                    }.bind(this));
+                    dchart.push(element_gr);
+                }
             }.bind(this));
+            // Применим данные для отчета
+            this.xAxis.data.setAll(dchart);
+            // Добавим серию
+            function makeSeries(name, fieldName) {
+                var series = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
+                    name: name,
+                    stacked: true,
+                    xAxis: this.xAxis,
+                    yAxis: this.yAxis,
+                    valueYField: fieldName,
+                    valueYShow: "valueYTotalPercent",
+                    categoryXField: "group",
+                }));
 
-            this.legend.data.push(series);
+                series.columns.template.setAll({
+                    tooltipText: "{name}, {categoryX}:{valueYTotalPercent.formatNumber('#.#')}%",
+                    tooltipY: am5.percent(10)
+                });
+                series.data.setAll(dchart);
+
+                // Заставить вещи анимироваться при загрузке
+                // https://www.amcharts.com/docs/v5/concepts/animations/
+                series.appear();
+
+                series.bullets.push(function () {
+                    return am5.Bullet.new(this.root, {
+                        sprite: am5.Label.new(this.root, {
+                            //text: "{name}:{valueYTotalPercent.formatNumber('#.#')}%",
+                            text: "{valueYTotalPercent.formatNumber('#.#')}%",
+                            fill: this.root.interfaceColors.get("alternativeText"),
+                            centerY: am5.p50,
+                            centerX: am5.p50,
+                            populateText: true
+                        })
+                    });
+                }.bind(this));
+
+                this.legend.data.push(series);
+            }
+            // Создадим все Series
+            $.each(list_series, function (key, el_ser) {
+                makeSeries.call(this, el_ser.name, el_ser.fieldName);
+            }.bind(this));
+            // Заставьте вещи анимироваться при загрузке
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            this.chart.appear(1000, 100);
         }
-        // Создадим все Series
-        $.each(list_series, function (key, el_ser) {
-            makeSeries.call(this, el_ser.name, el_ser.fieldName);
-        }.bind(this));
-        // Заставьте вещи анимироваться при загрузке
-        // https://www.amcharts.com/docs/v5/concepts/animations/
-        this.chart.appear(1000, 100);
     }
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения

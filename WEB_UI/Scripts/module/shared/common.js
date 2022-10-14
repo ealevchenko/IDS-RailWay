@@ -1212,9 +1212,7 @@
     //================================================================================
     // Конструктор формы с элементами по вертикали
     function form_inline() {
-        //this.fc = new form_control();
         this.fe = new form_element();
-
     }
     // Инициализация формы
     form_inline.prototype.init = function (options) {
@@ -1312,11 +1310,6 @@
                 }
             };
             if (el.type === 'select') {
-                //var element = new this.fc.el_form_inline_select(el.id, el.prefix, el.title);
-                //if (element && element.$element && element.$element.length > 0) {
-                //    this.$form.append(element.$element);
-                //    el['element'] = new this.fc.init_select(element.$select, el.list, -1, null, el.select);
-                //}
                 var element = new this.fe.bs_select({
                     id: el.id,
                     form_group_size: null,
@@ -1341,6 +1334,33 @@
                     element_default: el.default,
                     element_change: el.select,
                     element_check: null,
+                });
+                if (element && element.$element && element.$element.length > 0) {
+                    this.$form.append(element.$element);
+                    el['element'] = element.element;
+                }
+            };
+            if (el.type === 'select_multiple') {
+                var element = new this.fe.bs_select_multiple({
+                    id: el.id,
+                    form_group_size: null,
+                    form_group_col: null,
+                    form_group_class: null,
+                    label: el.title,
+                    label_class: 'col-form-label' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_size: null,
+                    input_class: 'form-control' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_title: null,
+                    input_placeholder: null,
+                    input_required: null,
+                    input_multiple: true,
+                    input_group: true,
+                    element_data: [],
+                    element_default: null,
+                    element_change: function (e) {
+                    }.bind(this),
+                    element_check: function (value) {
+                    }.bind(this),
                 });
                 if (element && element.$element && element.$element.length > 0) {
                     this.$form.append(element.$element);
@@ -2368,7 +2388,7 @@
         };
         this.init();
     };
-    //
+    // Инициализация поля дата "INPUT" типа SELECT multiple
     form_element.prototype.init_select_multiple = function (element, options) {
         //TODO: создать и настроить SELECT сделать надпись выберите через placeholder, чтобы работала required
         this.$element = element;
