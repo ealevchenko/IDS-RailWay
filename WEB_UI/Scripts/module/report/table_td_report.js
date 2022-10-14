@@ -1718,6 +1718,16 @@
 
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей adoption_cargo_operation_amkr
+    table_td_report.prototype.init_columns_adoption_operator_to_arr = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_operation_amkr_period', title: null, class: null });
+        collums.push({ field: 'total_cargo_operation_amkr_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_operation_amkr_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_operation_amkr_count_wagon', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -1841,6 +1851,20 @@
     };
     //
     table_td_report.prototype.init_button_adoption_cargo_operation_amkr = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_adoption_operator_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -2028,6 +2052,25 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            case 'adoption_operator_to_arr': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_adoption_operator_to_arr();
+                this.table_buttons = this.init_button_adoption_operator_to_arr();
+                this.dom = 'Bfrtip';
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -2102,6 +2145,9 @@
         }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'adoption_operator_to_arr') {
+            //this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);

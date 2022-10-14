@@ -2575,17 +2575,8 @@
             ],
         });
         // Переключатели панелей таблиц отчета
-        //-------------------------------------------
-        // Закладка Отчет-Груз по Оператору АМКР
-        //var div_row_total_cargo_operation_amkr = $('<div></div>', {
-        //    class: 'row',
-        //    style: 'margin-top: 10px;'
-        //});
-        this.$div_total_cargo_operation_amkr = $('<div></div>', {
-            id: 'total-cargo-operator-amkr',
-            class: 'col-xl-12'
-        });
-
+        //----------------------------------------
+        // Груз по Оператору АМКР
         var div_row_total_1_1 = $('<div></div>', {
             class: 'row',
             style: 'margin-top: 10px;'
@@ -2593,9 +2584,7 @@
         var div_col_total_1_1 = $('<div></div>', {
             class: 'col-xl-12'
         });
-
         div_row_total_1_1.append(div_col_total_1_1);
-
         var div_row_total_1_2 = $('<div></div>', {
             class: 'row',
             style: 'margin-top: 10px;'
@@ -2610,7 +2599,6 @@
             id: 'adoption-cargo-operation-amkr',
             class: 'col-xl-12'
         });
-
         var div_col_total_1_2_2 = $('<div></div>', {
             class: 'col-xl-6'
         });
@@ -2621,11 +2609,9 @@
             id: 'adoption-cargo-operation-amkr-chart',
             class: 'col-xl-11'
         });
-        // 
         div_row_total_1_2
             .append(div_col_total_1_2_1.append(div_row_total_1_2_1_table.append(div_col_total_1_2_1_table)))
             .append(div_col_total_1_2_2.append(div_row_total_1_2_1_chart.append(div_col_total_1_2_1_chart)));
-
         // Создадим форму выбора для отчета
         this.form_panel_total_1 = new FIL();
         var fl_select_total_1_operation_amkr = {
@@ -2663,21 +2649,86 @@
         });
         // Отображение формы выбора 
         div_col_total_1_1.append(this.form_panel_total_1.$form);
-
+        // Добавим в панель
         var $arr_total_cargo_operation_amkr = nav_tabs_arr_total.$content.find('div#arr-total-cargo-operator-amkr-tab'); // Панель - Груз по Оператору АМКР
         $arr_total_cargo_operation_amkr.append(div_row_total_1_1).append(div_row_total_1_2);
-
         //-------------------------------------------
         // Закладка Отчет-Оператор по ПРИБ
-        var div_row_total_operator_to_arr = $('<div></div>', {
-            class: 'row mt-2'
+        var div_row_total_2_1 = $('<div></div>', {
+            class: 'row',
+            style: 'margin-top: 10px;'
         });
-        this.$div_total_operator_to_arr = $('<div></div>', {
-            id: 'total-operator-to-arr',
+        var div_col_total_2_1 = $('<div></div>', {
             class: 'col-xl-12'
         });
-        var $arr_total_operator_to_arr = nav_tabs_arr_total.$content.find('div#arr-total-operator-to-arr-tab'); // Панель поиска
-        $arr_total_operator_to_arr.append(div_row_total_operator_to_arr.append(this.$div_total_operator_to_arr));
+        div_row_total_2_1.append(div_col_total_2_1);
+        var div_row_total_2_2 = $('<div></div>', {
+            class: 'row',
+            style: 'margin-top: 10px;'
+        });
+        var div_col_total_2_2_1 = $('<div></div>', {
+            class: 'col-xl-6'
+        });
+        var div_row_total_2_2_1_table = $('<div></div>', {
+            class: 'row'
+        });
+        var div_col_total_2_2_1_table = $('<div></div>', {
+            id: 'adoption-operator-to-arr',
+            class: 'col-xl-12'
+        });
+        var div_col_total_2_2_2 = $('<div></div>', {
+            class: 'col-xl-6'
+        });
+        var div_row_total_2_2_1_chart = $('<div></div>', {
+            class: 'row'
+        });
+        var div_col_total_2_2_1_chart = $('<div></div>', {
+            id: 'adoption-operator-to-arr-chart',
+            class: 'col-xl-11'
+        });
+        div_row_total_2_2
+            .append(div_col_total_2_2_1.append(div_row_total_2_2_1_table.append(div_col_total_2_2_1_table)))
+            .append(div_col_total_2_2_2.append(div_row_total_2_2_1_chart.append(div_col_total_2_2_1_chart)));
+        // Создадим форму выбора для отчета
+        this.form_panel_total_2 = new FIL();
+        var fl_select_total_2_operation_amkr = {
+            type: 'select_multiple',
+            id: 'select_total_2_operation_amkr',
+            prefix: 'sm',
+            title: langView('vtdr_label_operation_amkr', App.Langs),
+            list: [],
+            default: this.type,
+            select: function (event, ui) {
+                // Обработать выбор
+                event.preventDefault();
+                //this.view_filter_report_total_cargo_operation_amkr();
+            }.bind(this),
+        };
+        var fl_select_total_2_limiting = {
+            type: 'select',
+            id: 'select_total_2_limiting',
+            prefix: 'sm',
+            title: langView('vtdr_label_limiting', App.Langs),
+            list: [],
+            default: this.type,
+            select: function (event, ui) {
+                event.preventDefault();
+                //this.view_filter_report_total_cargo_operation_amkr();
+            }.bind(this),
+        };
+        var fields = [];
+        fields.push(fl_select_total_2_operation_amkr);
+        fields.push(fl_select_total_2_limiting);
+        // Инициализация формы
+        this.form_panel_total_2.init({
+            fields: fields,
+            cl_form: 'd-flex w-100 mb-2'
+        });
+        // Отображение формы выбора 
+        div_col_total_2_1.append(this.form_panel_total_2.$form);
+        // Добавим в панель
+        var $arr_total_operator_to_arr = nav_tabs_arr_total.$content.find('div#arr-total-operator-to-arr-tab'); // Панель Оператор по ПРИБ
+        $arr_total_operator_to_arr.append(div_row_total_2_1).append(div_row_total_2_2);
         // Дабавим закладку на форму
         this.$table_view.append(nav_tabs_arr_total.$ul).append(nav_tabs_arr_total.$content);
 
@@ -2860,9 +2911,9 @@
             .append(row_setup3_1.$row)
             ;
         this.$setup_select.append(this.$form_setup_select);
-        // иницируем таблицы
-        // Запускаем 6 процесса инициализации (паралельно)
-        var process = 2;
+        // ------------------------------------------------
+        // Запускаем 2 процесса инициализации (паралельно)
+        var process = 3;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -2882,10 +2933,9 @@
                 LockScreenOff();
             }
         }.bind(this);
+        //-----------------------------------------------
         // Таблица-Груз по Оператору АМКР
         this.table_total_cargo_operation_amkr = new TTDR('div#adoption-cargo-operation-amkr');         // Создадим экземпляр
-
-        // Инициализация модуля "Таблица прибывающих составов"
         this.table_total_cargo_operation_amkr.init({
             alert: null,
             detali_table: true,
@@ -2903,7 +2953,6 @@
         });
         // Инициализация модуля графиков тип: Гистограмма с накоплением
         this.chart_total_cargo_operation_amkr = new CAM('div#adoption-cargo-operation-amkr-chart');         // Создадим экземпляр
-        //
         this.chart_total_cargo_operation_amkr.init({
             alert: null,
             type_chart: 'stacked_column_chart_percent',     //
@@ -2911,6 +2960,23 @@
                 // На проверку окончания инициализации
                 process--;
                 out_init(process);
+            },
+        });
+        // Оператор по ПРИБ
+        this.table_total_cargo_operation_amkr = new TTDR('div#adoption-operator-to-arr');         // Создадим экземпляр
+        this.table_total_cargo_operation_amkr.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_operator_to_arr',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
             },
         });
     };
@@ -2968,6 +3034,8 @@
             }
             // Обработать и показать данные
             this.process_data_view_report_3_1(this.wagons_adoption, cur_where);
+            this.process_data_view_report_3_2(this.wagons_adoption, cur_where);
+
             // Выход
             if (typeof callback === 'function') {
                 callback();
@@ -2985,8 +3053,6 @@
         this.list_operators_wagons = [];
         this.list_limiting = [];
         this.list_station_amkr = [];
-        /*        this.list_group_sostav = [];*/
-
         this.list_cargo_operation_amkr = []; // список Груз по Оператору АМКР
         // выборка для списков Отчет-Груз по Оператору АМКР
         $.each(wagons_adoption, function (key, el_wag) {
@@ -2997,7 +3063,6 @@
             }.bind(this));
             if (!op) {
                 // Не данных 
-
                 this.list_cargo_operation_amkr.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
                     id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator,
@@ -3019,7 +3084,6 @@
                 op.sum_vesg_reweighing = el_wag.arrival_uz_vagon_vesg_reweighing ? op.sum_vesg_reweighing + el_wag.arrival_uz_vagon_vesg_reweighing : op.sum_vesg_reweighing;
                 op.sum_vesg_deff = el_wag.arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? op.sum_vesg_deff + (el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing) : op.sum_vesg_deff;
             };
-            //
             // выборка для списков отчета
             var ow = this.list_operators_wagons.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
             if (!ow) {
@@ -3045,6 +3109,53 @@
             this.select_station_amkr.update(this.list_station_amkr, -1);
         };
     };
+
+    view_td_report.prototype.process_data_view_report_3_2 = function (wagons_adoption, where) {
+        // Продолжим
+        this.list_operators_wagons = [];
+        this.list_limiting = [];
+        this.list_station_amkr = [];
+        this.list_cargo_operation_amkr = []; // список Груз по Оператору АМКР
+        // выборка для списков Отчет-Груз по Оператору АМКР
+        $.each(wagons_adoption, function (key, el_wag) {
+            var op = this.list_cargo_operation_amkr.find(function (o) {
+                return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator &&
+                    o.id_limiting === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting
+            }.bind(this));
+            if (!op) {
+                // Не данных 
+                this.list_cargo_operation_amkr.push({
+                    period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
+                    id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator,
+                    operators: el_wag['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang],
+                    operator_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang],
+                    id_limiting: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting,
+                    limiting_name: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_name_' + App.Lang],
+                    limiting_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang],
+                    count_wagon: 1,
+                    count_persent : 0
+                });
+            } else {
+                op.count_wagon = op.count_wagon + 1;
+            };
+            // выборка для списков отчета
+            var ow = this.list_operators_wagons.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+            if (!ow) {
+                this.list_operators_wagons.push({ value: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+            }
+            var lm = this.list_limiting.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
+            if (!lm) {
+                this.list_limiting.push({ value: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting, text: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang] });
+            }
+        }.bind(this));
+        // Отобразить данные в таблице Груз по Оператору АМКР
+        //this.view_filter_report_total_cargo_operation_amkr();
+
+        // Обновим элементы выбора
+        this.form_panel_total_2.settings.fields[0].element.update(this.list_operators_wagons, -1);
+        this.form_panel_total_2.settings.fields[1].element.update(this.list_limiting, -1);
+    };
+
     // Выполнить фильтрацию и вывести данные по отчету "Груз по Оператору АМКР"
     view_td_report.prototype.view_filter_report_total_cargo_operation_amkr = function () {
         if (this.list_cargo_operation_amkr) {
