@@ -46,7 +46,7 @@
         this.selector = this.$td_report.attr('id');
     }
     //==========================================================================================
-    // Инициализация графика Гистограмма с накоплением
+    // Инициализация диаграммы Гистограмма с накоплением
     chart_amcharts.prototype.init_stacked_column_chart_percent = function () {
         this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
             panX: false,
@@ -86,12 +86,47 @@
             x: am5.p50
         }));
     };
+    // Инициализация диаграммы Простая древовидная карта
+    chart_amcharts.prototype.init_simple_treemap = function () {
+        // Create wrapper container
+        this.container = this.root.container.children.push(
+            am5.Container.new(this.root, {
+                width: am5.percent(100),
+                height: am5.percent(100),
+                layout: this.root.verticalLayout
+            })
+        );
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
+        this.series = this.container.children.push(
+            am5hierarchy.Treemap.new(this.root, {
+                singleBranchOnly: false,
+                downDepth: 1,
+                upDepth: -1,
+                initialDepth: 2,
+                valueField: "value",
+                categoryField: "name",
+                childDataField: "children",
+                nodePaddingOuter: 0,
+                nodePaddingInner: 0
+            })
+        );
+
+        this.series.rectangles.template.setAll({
+            strokeWidth: 2
+        });
+    };
+
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
         switch (this.settings.type_chart) {
             case 'stacked_column_chart_percent': {
                 this.init_stacked_column_chart_percent();
+                break;
+            };
+            case 'simple_treemap': {
+                this.init_simple_treemap();
                 break;
             };
             // 
@@ -113,21 +148,23 @@
         }, options);
 
         this.root = null;
+        this.container = null;
+        this.series = null;
         this.chart = null;
         this.xAxis = null;
         this.yAxis = null;
         this.legend = null;
 
-        //am5.ready(function () {
-        //    // Создадим элемент root
-        //    this.root = am5.Root.new(this.selector);
-        //    // Установим тему
-        //    this.root.setThemes([
-        //        am5themes_Animated.new(this.root)
-        //    ]);
-        //    //
-        //    this.init_type_chart();
-        //}.bind(this));
+        am5.ready(function () {
+            // Создадим элемент root
+            this.root = am5.Root.new(this.selector);
+            // Установим тему
+            this.root.setThemes([
+                am5themes_Animated.new(this.root)
+            ]);
+            //
+            this.init_type_chart();
+        }.bind(this));
 
         this.data = [];
 
@@ -144,6 +181,10 @@
             //Гистограмма с накоплением
             case 'stacked_column_chart_percent': {
                 this.view_stacked_column_chart_percent(data);
+                break;
+            };
+            case 'simple_treemap': {
+                this.view_simple_treemap(data);
                 break;
             };
             // 
@@ -227,6 +268,28 @@
             this.chart.appear(1000, 100);
         }
     }
+    // Простая древовидная карта
+    chart_amcharts.prototype.view_simple_treemap = function (data) {
+
+        if (this.series) {
+            // Очистим отчет
+            this.series.data.clear();
+
+            // Generate and set data
+            // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
+            var maxLevels = 2;
+            var maxNodes = 10;
+            var maxValue = 100;
+
+            this.series.data.setAll([data]);
+            this.series.set("selectedDataItem", this.series.dataItems[0]);
+
+            // Make stuff animate on load
+            this.series.appear(1000, 100);
+        }
+
+    };
+
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     chart_amcharts.prototype.out_clear = function () {

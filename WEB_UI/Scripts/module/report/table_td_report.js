@@ -1360,31 +1360,31 @@
                 return row.period;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_total_cargo_operation_amkr_period', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_cargo_operation_amkr_period', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'total_cargo_operation_amkr_operator_abbr',
             data: function (row, type, val, meta) {
                 return row.operator_abbr;
             },
-            className: 'dt-body-center shorten mw-50',
-            title: langView('ttdr_field_total_cargo_operation_amkr_operator_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-center shorten mw-100',
+            title: langView('ttdr_field_total_cargo_operation_amkr_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
             field: 'total_cargo_operation_amkr_limiting_abbr',
             data: function (row, type, val, meta) {
                 return row.limiting_abbr;
             },
-            className: 'dt-body-center shorten mw-50',
-            title: langView('ttdr_field_total_cargo_operation_amkr_limiting_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-center shorten mw-100',
+            title: langView('ttdr_field_total_cargo_operation_amkr_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
             field: 'total_cargo_operation_amkr_cargo_name',
             data: function (row, type, val, meta) {
                 return row.cargo_name;
             },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_total_cargo_operation_amkr_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_total_cargo_operation_amkr_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'total_cargo_operation_amkr_count_wagon',
@@ -2147,7 +2147,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_operator_to_arr') {
-            //this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
@@ -2450,6 +2450,18 @@
                 });
                 this.obj_t_report.columns('.fl-total_cargo_operation_amkr_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'adoption_operator_to_arr': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_cargo_operation_amkr_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
                 });
                 break;
             };
