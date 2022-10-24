@@ -2523,8 +2523,8 @@
         }
     };
     //------------------------------------------------------------------------------------------------
-    // Инициализация панели
-    view_td_report.prototype.init_panel_report = function (name_panel, name_div) {
+    // Инициализация панели c вертикальным расположением карточек
+    view_td_report.prototype.init_panel_vertical_report = function (name_panel, name_div) {
         // Груз по Оператору АМКР
         var card_chart = new this.fe_ui.bs_card({
             id: null,
@@ -2565,6 +2565,47 @@
         var $panel = this.nav_tabs_arr_total.$content.find('div#' + name_panel); // Панель
         $panel.append(row_table.$row).append(row_chart.$row);
     };
+    // Инициализация панели c горизонтальным расположением карточек
+    view_td_report.prototype.init_panel_horizontal_report = function (name_panel, name_div, tab_col, char_col) {
+        // Груз по Оператору АМКР
+        var card_chart = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-info',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_chart', App.Langs),
+        });
+        card_chart.$body.append($('<div>', {
+            id: name_div + '-chart',
+        }))
+        var card_table = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-primary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-primary',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_table', App.Langs),
+        });
+        card_table.$body.append($('<div>', {
+            id: name_div,
+        }))
+        var row = new this.fe_ui.bs_row();
+        var col_chart = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: char_col ? char_col : 6,
+        });
+        var col_table = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: tab_col ? tab_col : 6,
+        });
+        row.$row.append(col_table.$col.append(card_table.$card)).append(col_chart.$col.append(card_chart.$card));
+        //
+        // Добавим в панель
+        var $panel = this.nav_tabs_arr_total.$content.find('div#' + name_panel); // Панель
+        $panel.append(row.$row);
+    };
+
     // Инициализировать отчет "Прибытие ИТОГ"
     view_td_report.prototype.init_report_3_1 = function () {
         // очистим основное окно отчета
@@ -2870,7 +2911,7 @@
                 }
                 if (this.report_panel === 1) {
                     this.view_filter_report_total_operation_to_arr();
-                }                
+                }
             }.bind(this),
             element_check: function (value) {
 
@@ -3088,10 +3129,10 @@
         // Переключатели панелей таблиц отчета
         //----------------------------------------
         // Груз по Оператору АМКР
-        this.init_panel_report('arr-total-cargo-operator-amkr-tab', 'adoption-cargo-operation-amkr');
+        this.init_panel_vertical_report('arr-total-cargo-operator-amkr-tab', 'adoption-cargo-operation-amkr');
         //-------------------------------------------
         // Закладка Отчет-Оператор по ПРИБ
-        this.init_panel_report('arr-total-operator-to-arr-tab', 'adoption-operator-to-arr');
+        this.init_panel_horizontal_report('arr-total-operator-to-arr-tab', 'adoption-operator-to-arr', 5, 7);
         // Дабавим закладку на форму
         this.$table_view.append(this.nav_tabs_arr_total.$ul).append(this.nav_tabs_arr_total.$content);
         //-----------------------------------------------------------------
@@ -3474,10 +3515,14 @@
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_cargo_operation_amkr));
             // Применим фильтр
-            if (operators && operators.length>0) {
-                //list_view = list_view.filter(function (i) {
-                //    return i.id_operator === (id_operator > 0 ? id_operator : null);
-                //}.bind(this));
+            if (operators && operators.length > 0) {
+                list_view = list_view.filter(function (i) {
+
+                    var op = operators.find(function (o) {
+                        return Number(o) === i.id_operator;
+                    }.bind(this));
+                    return op ? true : false;
+                }.bind(this));
             };
             if (id_limiting > -1) {
                 list_view = list_view.filter(function (i) {
