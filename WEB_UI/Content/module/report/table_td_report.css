@@ -152,3 +152,28 @@ th.details-control, td.details-control {
 th.button-control, td.button-control {
     width: 20px !important;
 }
+
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
+tr.group-total,
+tr.group-total:hover {
+    background-color: #808080 !important;
+}
+td.total-text {
+    color: #fff !important;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+td.total-count {
+    color: #fff !important;
+    text-align: center;
+    text-transform: uppercase;
+}
+td.total-value {
+    color: #fff !important;
+    text-align: right;
+    text-transform: uppercase;
+}

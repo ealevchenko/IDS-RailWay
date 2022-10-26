@@ -111,12 +111,79 @@
                 nodePaddingInner: 0
             })
         );
-
         this.series.rectangles.template.setAll({
             strokeWidth: 2
         });
-    };
 
+        var data = {
+            name: "Root",
+            children: []
+        };
+    };
+    // Инициализация диаграммы Столбец с повернутыми метками
+    chart_amcharts.prototype.init_column_with_rotated_labels = function () {
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/
+        this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
+            panX: true,
+            panY: true,
+            wheelX: "panX",
+            wheelY: "zoomX",
+            pinchZoomX: true
+        }));
+
+        // Add cursor
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+        this.cursor = this.chart.set("cursor", am5xy.XYCursor.new(this.root, {}));
+        this.cursor.lineY.set("visible", false);
+
+        // Create axes
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+        this.xRenderer = am5xy.AxisRendererX.new(this.root, { minGridDistance: 30 });
+        this.xRenderer.labels.template.setAll({
+            //rotation: -90,
+            //centerY: am5.p50,
+            //centerX: am5.p100,
+            paddingRight: 15
+        });
+
+        this.xAxis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
+            maxDeviation: 0.3,
+            categoryField: "country",
+            renderer: this.xRenderer,
+            tooltip: am5.Tooltip.new(this.root, {})
+        }));
+
+        this.yAxis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
+            maxDeviation: 0.3,
+            renderer: am5xy.AxisRendererY.new(this.root, {})
+        }));
+
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+        this.series = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
+            name: "Series 1",
+            xAxis: this.xAxis,
+            yAxis: this.yAxis,
+            valueYField: "value",
+            sequencedInterpolation: true,
+            categoryXField: "country",
+            tooltip: am5.Tooltip.new(this.root, {
+                labelText: "{valueY}"
+            })
+        }));
+
+        this.series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+        this.series.columns.template.adapters.add("fill", function (fill, target) {
+            return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
+        }.bind(this));
+
+        this.series.columns.template.adapters.add("stroke", function (stroke, target) {
+            return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
+        }.bind(this));
+
+
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -129,6 +196,11 @@
                 this.init_simple_treemap();
                 break;
             };
+            case 'column_with_rotated_labels': {
+                this.init_column_with_rotated_labels();
+                break;
+            };
+
             // 
             default: {
                 break;
@@ -148,9 +220,11 @@
         }, options);
 
         this.root = null;
+        this.xRenderer = null;
         this.container = null;
         this.series = null;
         this.chart = null;
+        this.cursor = null;
         this.xAxis = null;
         this.yAxis = null;
         this.legend = null;
@@ -185,6 +259,10 @@
             };
             case 'simple_treemap': {
                 this.view_simple_treemap(data);
+                break;
+            };
+            case 'column_with_rotated_labels': {
+                this.view_column_with_rotated_labels(data);
                 break;
             };
             // 
@@ -267,28 +345,42 @@
             // https://www.amcharts.com/docs/v5/concepts/animations/
             this.chart.appear(1000, 100);
         }
-    }
+    };
     // Простая древовидная карта
     chart_amcharts.prototype.view_simple_treemap = function (data) {
+        //&& data.children && data.children.length>0
+        if (this.series && data) {
+            am5.ready(function () {
+                // Очистим отчет
+                //this.series.data.clear();
+                // Generate and set data
+                // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
+                //var maxLevels = 2;
+                //var maxNodes = 10;
+                //var maxValue = 100;
 
-        if (this.series) {
-            // Очистим отчет
-            this.series.data.clear();
+                this.series.data.setAll([data]);
+                this.series.set("selectedDataItem", this.series.dataItems[0]);
 
-            // Generate and set data
-            // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
-            var maxLevels = 2;
-            var maxNodes = 10;
-            var maxValue = 100;
+                // Make stuff animate on load
+               this.series.appear(1000, 100);
+            }.bind(this));
+        };
+    };
+    // Столбец с повернутыми метками
+    chart_amcharts.prototype.view_column_with_rotated_labels = function (data) {
+        if (this.chart) {
+            this.xAxis.data.setAll(data);
+            this.series.data.setAll(data);
 
-            this.series.data.setAll([data]);
-            this.series.set("selectedDataItem", this.series.dataItems[0]);
 
             // Make stuff animate on load
-            this.series.appear(1000, 100);
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            this.series.appear(1000);
+            this.chart.appear(1000, 100);
         }
-
     };
+
 
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения

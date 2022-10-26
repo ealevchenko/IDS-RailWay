@@ -11738,3 +11738,10 @@ fieldset {
     padding: 10px;
     border-radius: 3px;
 }
+
+#adoption-cargo-operation-amkr-chart,
+#adoption-operator-to-arr-chart,
+#adoption-cargo-to-arr-chart {
+    width: 100%;
+    height: 500px;
+}
