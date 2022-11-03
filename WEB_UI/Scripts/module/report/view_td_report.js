@@ -3014,7 +3014,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.view_filter_report_total_group_cargo();
             }.bind(this),
             element_check: function (value) {
 
@@ -3042,7 +3042,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.view_filter_report_total_genus();
             }.bind(this),
             element_check: function (value) {
 
@@ -3051,7 +3051,7 @@
         row_setup_detali_genus.$row.append(select_detali_genus.$element);
         this.row_setup_detali_genus = row_setup_detali_genus.$row;
         this.select_detali_genus = select_detali_genus.element;
-        // Род вагона
+        // Код груза ПРИБ SAP
         var row_setup_detali_cargo_sap = new this.fe_ui.bs_row();
         var select_detali_cargo_sap = new this.fe_ui.bs_select({
             id: 'detali_cargo_sap',
@@ -3073,7 +3073,7 @@
                 // var code = Number($(e.currentTarget).val());
             }.bind(this),
             element_check: function (value) {
-
+                this.view_filter_report_total_cargo_sap();
             }.bind(this),
         });
         row_setup_detali_cargo_sap.$row.append(select_detali_cargo_sap.$element);
@@ -3232,7 +3232,7 @@
 
         // ------------------------------------------------
         // Запускаем 4 процесса инициализации (паралельно)
-        var process = 6;
+        var process = 12;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -3266,6 +3266,7 @@
                         case 'arr-total-group-cargo-to-arr': {
                             this.report_panel = 3;
                             this.view_setup_detali_report_3_1(this.report_panel);
+                            this.view_chart_total_group_cargo();
                             break;
                         };
                         case 'arr-total-genus-to-arr': {
@@ -3383,6 +3384,90 @@
                 out_init(process);
             },
         });
+        // Группа ПРИБ
+        this.table_total_group_cargo_to_arr = new TTDR('div#adoption-group-cargo-to-arr');         // Создадим экземпляр
+        this.table_total_group_cargo_to_arr.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_group_cargo_to_arr',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        this.chart_total_group_cargo_to_arr = new CAM('div#adoption-group-cargo-to-arr-chart');         // Создадим экземпляр
+        this.chart_total_group_cargo_to_arr.init({
+            alert: null,
+            type_chart: 'pie_chart',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        // Род вагона ПРИБ  
+        this.table_total_genus_to_arr = new TTDR('div#adoption-genus-to-arr');         // Создадим экземпляр
+        this.table_total_genus_to_arr.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_genus_to_arr',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        this.chart_total_genus_to_arr = new CAM('div#adoption-genus-to-arr-chart');         // Создадим экземпляр
+        this.chart_total_genus_to_arr.init({
+            alert: null,
+            type_chart: 'pie_chart',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        // Груз ПРИБ SAP
+        this.table_total_cargo_sap_to_arr = new TTDR('div#adoption-sap-to-arr');         // Создадим экземпляр
+        this.table_total_cargo_sap_to_arr.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_genus_to_arr',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        this.chart_total_cargo_sap_to_arr = new CAM('div#adoption-sap-to-arr-chart');         // Создадим экземпляр
+        this.chart_total_cargo_sap_to_arr.init({
+            alert: null,
+            type_chart: 'pie_chart',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
     };
     // Показать отчет  "Отчет по прибытию (общий)"
     view_td_report.prototype.view_report_3_1 = function (start, stop) {
@@ -3485,7 +3570,18 @@
             if (!cd) {
                 this.list_certification_data.push({ value: el_wag.arrival_uz_vagon_id_certification_data, text: el_wag['arrival_uz_vagon_sertification_data_' + App.Lang] });
             }
-
+            var group_arrival = this.list_group_arrival.find(function (o) { return o.value === el_wag.arrival_uz_vagon_id_cargo }.bind(this));
+            if (!group_arrival) {
+                this.list_group_arrival.push({ value: el_wag.arrival_uz_vagon_id_cargo, text: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang] });
+            }
+            var genus = this.list_genus.find(function (o) { return o.value === el_wag.arrival_uz_vagon_id_genus }.bind(this));
+            if (!genus) {
+                this.list_genus.push({ value: el_wag.arrival_uz_vagon_id_genus, text: el_wag['arrival_uz_vagon_rod_abbr_' + App.Lang] });
+            }
+            var cargo_sap = this.list_cargo_sap.find(function (o) { return o.value === el_wag.sap_incoming_supply_cargo_code }.bind(this));
+            if (!cargo_sap) {
+                this.list_cargo_sap.push({ value: el_wag.sap_incoming_supply_cargo_code, text: el_wag.sap_incoming_supply_cargo_name });
+            }
         }.bind(this));
         if (typeof callback === 'function') {
             callback();
@@ -3592,15 +3688,104 @@
             callback(list_result);
         }
     };
+    view_td_report.prototype.process_data_report_3_4 = function (data, callback) {
+        var list_result = [];
+        // выборка для списков Отчет-Группа ПРИБ.
+        $.each(data, function (key, el_wag) {
+            var obj = list_result.find(function (o) {
+                return o.id_group === el_wag.arrival_uz_vagon_id_group
+            }.bind(this));
+            if (!obj) {
+                // Не данных 
+                list_result.push({
+                    period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
+                    id_group: el_wag.arrival_uz_vagon_id_group,
+                    group_name: el_wag['arrival_uz_vagon_cargo_group_name_' + App.Lang],
+                    count_wagon: 1,
+                    sum_vesg: el_wag.arrival_uz_vagon_vesg ? el_wag.arrival_uz_vagon_vesg : 0,
+                    sum_vesg_reweighing: el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+                    sum_vesg_deff: el_wag.arrival_uz_vagon_arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+                });
+            } else {
+                obj.count_wagon = obj.count_wagon + 1;
+                obj.sum_vesg = el_wag.arrival_uz_vagon_vesg ? obj.sum_vesg + el_wag.arrival_uz_vagon_vesg : obj.sum_vesg;
+                obj.sum_vesg_reweighing = el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_reweighing + el_wag.arrival_uz_vagon_vesg_reweighing : obj.sum_vesg_reweighing;
+                obj.sum_vesg_deff = el_wag.arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_deff + (el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing) : obj.sum_vesg_deff;
+            };
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(list_result);
+        }
+    };
+    view_td_report.prototype.process_data_report_3_5 = function (data, callback) {
+        var list_result = [];
+        // выборка для списков Отчет-Род вагона ПРИБ.
+        var sum_count = 0;
+        $.each(data, function (key, el_wag) {
+            var obj = list_result.find(function (o) {
+                return o.id_genus === el_wag.arrival_uz_vagon_id_genus
+            }.bind(this));
+            if (!obj) {
+                sum_count++;
+                // Не данных 
+                list_result.push({
+                    period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
+                    id_genus: el_wag.arrival_uz_vagon_id_genus,
+                    rod_abbr: el_wag['arrival_uz_vagon_rod_abbr_' + App.Lang],
+                    count_wagon: 1,
+                    perent_wagon: Number(100/sum_count).toFixed(2),
+                });
+            } else {
+                sum_count++;
+                obj.count_wagon = obj.count_wagon + 1;
+                obj.perent_wagon = Number((obj.count_wagon*100)/sum_count).toFixed(2);
+            };
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(list_result);
+        }
+    };
+    view_td_report.prototype.process_data_report_3_6 = function (data, callback) {
+        var list_result = [];
+        // выборка для списков Отчет-Груз ПРИБ SAP.
+        $.each(data, function (key, el_wag) {
+            var obj = list_result.find(function (o) {
+                return o.code === el_wag.sap_incoming_supply_cargo_code
+            }.bind(this));
+            if (!obj) {
+                // Не данных 
+                list_result.push({
+                    period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
+                    code : el_wag.sap_incoming_supply_cargo_code,
+                    sap_cargo_name: el_wag.sap_incoming_supply_cargo_name,
+                    count_wagon: 1,
+                    sum_vesg: el_wag.arrival_uz_vagon_vesg ? el_wag.arrival_uz_vagon_vesg : 0,
+                    sum_vesg_reweighing: el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+                    sum_vesg_deff: el_wag.arrival_uz_vagon_arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+
+                });
+            } else {
+                obj.count_wagon = obj.count_wagon + 1;
+                obj.sum_vesg = el_wag.arrival_uz_vagon_vesg ? obj.sum_vesg + el_wag.arrival_uz_vagon_vesg : obj.sum_vesg;
+                obj.sum_vesg_reweighing = el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_reweighing + el_wag.arrival_uz_vagon_vesg_reweighing : obj.sum_vesg_reweighing;
+                obj.sum_vesg_deff = el_wag.arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_deff + (el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing) : obj.sum_vesg_deff;
+            };
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(list_result);
+        }
+    };
     // Обработать и отображение данных на экране
     view_td_report.prototype.process_data_view_report_3_1 = function (wagons_adoption, where) {
         // Продолжим
-        this.total_cargo_operation_amkr = [];   // список Груз по Оператору АМКР
-        this.total_operation_amkr = [];         // список Оператор по ПРИБ
-        this.total_cargo = [];         // список Оператор по ПРИБ
-
-        // Запускаем 4 процесса инициализации (паралельно)
-        var process = 4;
+        this.total_cargo_operation_amkr = [];       // список Груз по Оператору АМКР
+        this.total_operation_amkr = [];             // список Оператор по ПРИБ
+        this.total_cargo = [];                      // список Оператор по ПРИБ
+        this.total_group_cargo = [];                // список Группы ПРИБ
+        this.total_genus = [];                      // список Род вагона ПРИБ  
+        this.total_cargo_sap = [];                  // список Груз ПРИБ SAP
+        // Запускаем 7 процесса инициализации (паралельно)
+        var process = 7;
         // Выход из инициализации
         var out_process_data = function (process) {
             if (process === 0) {
@@ -3610,6 +3795,9 @@
                 this.select_detali_limiting.update(this.list_limiting, -1);
                 this.select_detali_cargo.update(this.list_cargo, -1);
                 this.select_detali_certification_data.update(this.list_certification_data, -1);
+                this.select_detali_group_arrival.update(this.list_group_arrival, -1);
+                this.select_detali_genus.update(this.list_genus, -1);
+                this.select_detali_cargo_sap.update(this.list_cargo_sap, -1);
                 // Обновим спсисок станции "Внешнее прибытие"
                 if (!where || !where.id_station_on || where.id_station_on.length === 0) {
                     this.select_station_amkr.update(this.list_station_amkr, -1);
@@ -3620,7 +3808,12 @@
                 this.view_filter_report_total_operation_to_arr();
                 // Отобразить данные в таблице  Груз ПРИБ
                 this.view_filter_report_total_cargo();
-
+                // Отобразить данные в таблице группы ПРИБ
+                this.view_filter_report_total_group_cargo();
+                // Отобразить данные в таблице Род вагона ПРИБ
+                this.view_filter_report_total_genus();
+                // Отобразить данные в таблице Груз ПРИБ SAP
+                this.view_filter_report_total_cargo_sap();
             }
         }.bind(this);
         this.process_data_select_report_3_1(wagons_adoption, function (result) {
@@ -3639,6 +3832,21 @@
         }.bind(this));
         this.process_data_report_3_3(wagons_adoption, function (result) {
             this.total_cargo = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_3_4(wagons_adoption, function (result) {
+            this.total_group_cargo = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_3_5(wagons_adoption, function (result) {
+            this.total_genus = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_3_6(wagons_adoption, function (result) {
+            this.total_cargo_sap = result;
             process--;
             out_process_data(process);
         }.bind(this));
@@ -3952,6 +4160,175 @@
             this.chart_total_cargo_to_arr.view(this.chart_data[2]);
         }
     };
+    // Выполнить фильтрацию и вывести данные по отчету "Группы ПРИБ"
+    view_td_report.prototype.view_filter_report_total_group_cargo = function () {
+        if (this.total_group_cargo) {
+            var id_group = Number(this.select_detali_group_arrival.val());
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_group_cargo));
+            // Применим фильтр
+            if (id_group > -1) {
+                list_view = list_view.filter(function (i) {
+                    return i.id_group === (id_group > 0 ? id_group : null);
+                }.bind(this));
+            };
+            // Отобразим
+            this.table_total_group_cargo_to_arr.view(list_view);
+
+
+            //var data = [{
+            //    category: "Lithuania",
+            //    value: 501.9
+            //}, {
+            //    category: "Czechia",
+            //    value: 301.9
+            //}, {
+            //    category: "Ireland",
+            //    value: 201.1
+            //}, {
+            //    category: "Germany",
+            //    value: 165.8
+            //}, {
+            //    category: "Australia",
+            //    value: 139.9
+            //}, {
+            //    category: "Austria",
+            //    value: 128.3
+            //}, {
+            //    category: "UK",
+            //    value: 99
+            //}];
+
+            var data = [];
+            $.each(list_view, function (key, element) {
+                data.push({ "category": element.group_name, "value": element.count_wagon });
+            }.bind(this));
+
+            this.chart_data[3] = data;
+
+            this.view_chart_total_group_cargo();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Оператор по ПРИБ"
+    view_td_report.prototype.view_chart_total_group_cargo = function () {
+        if (this.report_panel === 3 && this.chart_data) {
+            this.chart_total_group_cargo_to_arr.view(this.chart_data[3]);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Род вагона ПРИБ"
+    view_td_report.prototype.view_filter_report_total_genus = function () {
+        if (this.total_group_cargo) {
+            var id_genus = Number(this.select_detali_genus.val());
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_genus));
+            // Применим фильтр
+            if (id_genus > -1) {
+                list_view = list_view.filter(function (i) {
+                    return i.id_genus === (id_genus > 0 ? id_genus : null);
+                }.bind(this));
+            };
+            // Отобразим
+            this.table_total_genus_to_arr.view(list_view);
+
+
+            //var data = [{
+            //    category: "Lithuania",
+            //    value: 501.9
+            //}, {
+            //    category: "Czechia",
+            //    value: 301.9
+            //}, {
+            //    category: "Ireland",
+            //    value: 201.1
+            //}, {
+            //    category: "Germany",
+            //    value: 165.8
+            //}, {
+            //    category: "Australia",
+            //    value: 139.9
+            //}, {
+            //    category: "Austria",
+            //    value: 128.3
+            //}, {
+            //    category: "UK",
+            //    value: 99
+            //}];
+
+            var data = [];
+            $.each(list_view, function (key, element) {
+                data.push({ "category": element.rod_abbr, "value": element.count_wagon });
+            }.bind(this));
+
+            this.chart_data[4] = data;
+
+            this.view_chart_total_genus();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Род вагона ПРИБ"
+    view_td_report.prototype.view_chart_total_genus = function () {
+        if (this.report_panel === 4 && this.chart_data) {
+            this.chart_total_genus_to_arr.view(this.chart_data[4]);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Груз ПРИБ SAP"
+    view_td_report.prototype.view_filter_report_total_cargo_sap = function () {
+        if (this.total_cargo_sap) {
+            var code = Number(this.select_detali_cargo_sap.val());
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_cargo_sap));
+            // Применим фильтр
+            if (code > -1) {
+                list_view = list_view.filter(function (i) {
+                    return i.sap_incoming_supply_cargo_code === (code > 0 ? code : null);
+                }.bind(this));
+            };
+            // Отобразим
+            this.table_total_cargo_sap_to_arr.view(list_view);
+
+
+            //var data = [{
+            //    category: "Lithuania",
+            //    value: 501.9
+            //}, {
+            //    category: "Czechia",
+            //    value: 301.9
+            //}, {
+            //    category: "Ireland",
+            //    value: 201.1
+            //}, {
+            //    category: "Germany",
+            //    value: 165.8
+            //}, {
+            //    category: "Australia",
+            //    value: 139.9
+            //}, {
+            //    category: "Austria",
+            //    value: 128.3
+            //}, {
+            //    category: "UK",
+            //    value: 99
+            //}];
+
+            var data = [];
+            $.each(list_view, function (key, element) {
+                data.push({ "category": element.rod_abbr, "value": element.count_wagon });
+            }.bind(this));
+
+            this.chart_data[5] = data;
+
+            this.view_chart_total_cargo_sap();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Груз ПРИБ SAP"
+    view_td_report.prototype.view_chart_total_cargo_sap = function () {
+        if (this.report_panel === 5 && this.chart_data) {
+            this.chart_total_cargo_sap_to_arr.view(this.chart_data[5]);
+        }
+    };
+
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_3_1 = function () {
         this.out_clear();
@@ -3988,286 +4365,286 @@
         }
     };
 
-    view_td_report.prototype.chart_3_1 = function () {
-        am5.ready(function () {
+    //view_td_report.prototype.chart_3_1 = function () {
+    //    am5.ready(function () {
 
-            // Create root element
-            // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-            var root = am5.Root.new("adoption-operator-to-arr-chart");
-
-
-            // Set themes
-            // https://www.amcharts.com/docs/v5/concepts/themes/
-            root.setThemes([
-                am5themes_Animated.new(root)
-            ]);
+    //        // Create root element
+    //        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    //        var root = am5.Root.new("adoption-operator-to-arr-chart");
 
 
-            // Create chart
-            // https://www.amcharts.com/docs/v5/charts/xy-chart/
-            var chart = root.container.children.push(am5xy.XYChart.new(root, {
-                panX: true,
-                panY: true,
-                wheelX: "panX",
-                wheelY: "zoomX",
-                pinchZoomX: true
-            }));
-
-            // Add cursor
-            // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
-            var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-            cursor.lineY.set("visible", false);
+    //        // Set themes
+    //        // https://www.amcharts.com/docs/v5/concepts/themes/
+    //        root.setThemes([
+    //            am5themes_Animated.new(root)
+    //        ]);
 
 
-            // Create axes
-            // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-            var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
-            xRenderer.labels.template.setAll({
-                rotation: -90,
-                centerY: am5.p50,
-                centerX: am5.p100,
-                paddingRight: 15
-            });
+    //        // Create chart
+    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/
+    //        var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    //            panX: true,
+    //            panY: true,
+    //            wheelX: "panX",
+    //            wheelY: "zoomX",
+    //            pinchZoomX: true
+    //        }));
 
-            var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-                maxDeviation: 0.3,
-                categoryField: "country",
-                renderer: xRenderer,
-                tooltip: am5.Tooltip.new(root, {})
-            }));
-
-            var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-                maxDeviation: 0.3,
-                renderer: am5xy.AxisRendererY.new(root, {})
-            }));
+    //        // Add cursor
+    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+    //        var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+    //        cursor.lineY.set("visible", false);
 
 
-            // Create series
-            // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-            var series = chart.series.push(am5xy.ColumnSeries.new(root, {
-                name: "Series 1",
-                xAxis: xAxis,
-                yAxis: yAxis,
-                valueYField: "value",
-                sequencedInterpolation: true,
-                categoryXField: "country",
-                tooltip: am5.Tooltip.new(root, {
-                    labelText: "{valueY}"
-                })
-            }));
+    //        // Create axes
+    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+    //        var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+    //        xRenderer.labels.template.setAll({
+    //            rotation: -90,
+    //            centerY: am5.p50,
+    //            centerX: am5.p100,
+    //            paddingRight: 15
+    //        });
 
-            series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
-            series.columns.template.adapters.add("fill", function (fill, target) {
-                return chart.get("colors").getIndex(series.columns.indexOf(target));
-            });
+    //        var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+    //            maxDeviation: 0.3,
+    //            categoryField: "country",
+    //            renderer: xRenderer,
+    //            tooltip: am5.Tooltip.new(root, {})
+    //        }));
 
-            series.columns.template.adapters.add("stroke", function (stroke, target) {
-                return chart.get("colors").getIndex(series.columns.indexOf(target));
-            });
-
-
-            // Set data
-            var data = [{
-                country: "USA",
-                value: 2025
-            }, {
-                country: "China",
-                value: 1882
-            }, {
-                country: "Japan",
-                value: 1809
-            }, {
-                country: "Germany",
-                value: 1322
-            }, {
-                country: "UK",
-                value: 1122
-            }, {
-                country: "France",
-                value: 1114
-            }, {
-                country: "India",
-                value: 984
-            }, {
-                country: "Spain",
-                value: 711
-            }, {
-                country: "Netherlands",
-                value: 665
-            }, {
-                country: "South Korea",
-                value: 443
-            }, {
-                country: "Canada",
-                value: 441
-            }];
-
-            xAxis.data.setAll(data);
-            series.data.setAll(data);
+    //        var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    //            maxDeviation: 0.3,
+    //            renderer: am5xy.AxisRendererY.new(root, {})
+    //        }));
 
 
-            // Make stuff animate on load
-            // https://www.amcharts.com/docs/v5/concepts/animations/
-            series.appear(1000);
-            chart.appear(1000, 100);
+    //        // Create series
+    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+    //        var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    //            name: "Series 1",
+    //            xAxis: xAxis,
+    //            yAxis: yAxis,
+    //            valueYField: "value",
+    //            sequencedInterpolation: true,
+    //            categoryXField: "country",
+    //            tooltip: am5.Tooltip.new(root, {
+    //                labelText: "{valueY}"
+    //            })
+    //        }));
 
-        }); // end am5.ready()
-    };
-    view_td_report.prototype.chart_3_2 = function () {
-        am5.ready(function () {
+    //        series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+    //        series.columns.template.adapters.add("fill", function (fill, target) {
+    //            return chart.get("colors").getIndex(series.columns.indexOf(target));
+    //        });
 
-            // Create root element
-            // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-            var root = am5.Root.new("adoption-operator-to-arr-chart");
+    //        series.columns.template.adapters.add("stroke", function (stroke, target) {
+    //            return chart.get("colors").getIndex(series.columns.indexOf(target));
+    //        });
 
-            // Set themes
-            // https://www.amcharts.com/docs/v5/concepts/themes/
-            root.setThemes([
-                am5themes_Animated.new(root)
-            ]);
 
-            // Create wrapper container
-            var container = root.container.children.push(
-                am5.Container.new(root, {
-                    width: am5.percent(100),
-                    height: am5.percent(100),
-                    layout: root.verticalLayout
-                })
-            );
+    //        // Set data
+    //        var data = [{
+    //            country: "USA",
+    //            value: 2025
+    //        }, {
+    //            country: "China",
+    //            value: 1882
+    //        }, {
+    //            country: "Japan",
+    //            value: 1809
+    //        }, {
+    //            country: "Germany",
+    //            value: 1322
+    //        }, {
+    //            country: "UK",
+    //            value: 1122
+    //        }, {
+    //            country: "France",
+    //            value: 1114
+    //        }, {
+    //            country: "India",
+    //            value: 984
+    //        }, {
+    //            country: "Spain",
+    //            value: 711
+    //        }, {
+    //            country: "Netherlands",
+    //            value: 665
+    //        }, {
+    //            country: "South Korea",
+    //            value: 443
+    //        }, {
+    //            country: "Canada",
+    //            value: 441
+    //        }];
 
-            // Create series
-            // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
-            var series = container.children.push(
-                am5hierarchy.Treemap.new(root, {
-                    singleBranchOnly: false,
-                    downDepth: 1,
-                    upDepth: -1,
-                    initialDepth: 2,
-                    valueField: "value",
-                    categoryField: "name",
-                    childDataField: "children",
-                    nodePaddingOuter: 0,
-                    nodePaddingInner: 0
-                })
-            );
+    //        xAxis.data.setAll(data);
+    //        series.data.setAll(data);
 
-            series.rectangles.template.setAll({
-                strokeWidth: 2
-            });
 
-            // Generate and set data
-            // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
-            var maxLevels = 2;
-            var maxNodes = 10;
-            var maxValue = 100;
+    //        // Make stuff animate on load
+    //        // https://www.amcharts.com/docs/v5/concepts/animations/
+    //        series.appear(1000);
+    //        chart.appear(1000, 100);
 
-            var data = {
-                name: "Root",
-                children: [
-                    {
-                        name: "First",
-                        children: [
-                            {
-                                name: "A1",
-                                value: 100
-                            },
-                            //{
-                            //    name: "A2",
-                            //    value: 60
-                            //},
-                            //{
-                            //    name: "A3",
-                            //    value: 30
-                            //}
-                        ]
-                    },
-                    {
-                        name: "Second",
-                        children: [
-                            {
-                                name: "B1",
-                                value: 135
-                            },
-                            //{
-                            //    name: "B2",
-                            //    value: 98
-                            //},
-                            //{
-                            //    name: "B3",
-                            //    value: 56
-                            //}
-                        ]
-                    },
-                    {
-                        name: "Third",
-                        children: [
-                            {
-                                name: "C1",
-                                value: 335
-                            },
-                            //{
-                            //    name: "C2",
-                            //    value: 148
-                            //},
-                            //{
-                            //    name: "C3",
-                            //    value: 126
-                            //},
-                            //{
-                            //    name: "C4",
-                            //    value: 26
-                            //}
-                        ]
-                    },
-                    {
-                        name: "Fourth",
-                        children: [
-                            {
-                                name: "D1",
-                                value: 415
-                            },
-                            //{
-                            //    name: "D2",
-                            //    value: 148
-                            //},
-                            //{
-                            //    name: "D3",
-                            //    value: 89
-                            //},
-                            //{
-                            //    name: "D4",
-                            //    value: 64
-                            //},
-                            //{
-                            //    name: "D5",
-                            //    value: 16
-                            //}
-                        ]
-                    },
-                    {
-                        name: "Fifth",
-                        children: [
-                            {
-                                name: "E1",
-                                value: 687
-                            },
-                            //{
-                            //    name: "E2",
-                            //    value: 148
-                            //}
-                        ]
-                    }
-                ]
-            };
+    //    }); // end am5.ready()
+    //};
+    //view_td_report.prototype.chart_3_2 = function () {
+    //    am5.ready(function () {
 
-            series.data.setAll([data]);
-            series.set("selectedDataItem", series.dataItems[0]);
+    //        // Create root element
+    //        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+    //        var root = am5.Root.new("adoption-operator-to-arr-chart");
 
-            // Make stuff animate on load
-            series.appear(1000, 100);
+    //        // Set themes
+    //        // https://www.amcharts.com/docs/v5/concepts/themes/
+    //        root.setThemes([
+    //            am5themes_Animated.new(root)
+    //        ]);
 
-        }); // end am5.ready()
-    };
+    //        // Create wrapper container
+    //        var container = root.container.children.push(
+    //            am5.Container.new(root, {
+    //                width: am5.percent(100),
+    //                height: am5.percent(100),
+    //                layout: root.verticalLayout
+    //            })
+    //        );
+
+    //        // Create series
+    //        // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
+    //        var series = container.children.push(
+    //            am5hierarchy.Treemap.new(root, {
+    //                singleBranchOnly: false,
+    //                downDepth: 1,
+    //                upDepth: -1,
+    //                initialDepth: 2,
+    //                valueField: "value",
+    //                categoryField: "name",
+    //                childDataField: "children",
+    //                nodePaddingOuter: 0,
+    //                nodePaddingInner: 0
+    //            })
+    //        );
+
+    //        series.rectangles.template.setAll({
+    //            strokeWidth: 2
+    //        });
+
+    //        // Generate and set data
+    //        // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
+    //        var maxLevels = 2;
+    //        var maxNodes = 10;
+    //        var maxValue = 100;
+
+    //        var data = {
+    //            name: "Root",
+    //            children: [
+    //                {
+    //                    name: "First",
+    //                    children: [
+    //                        {
+    //                            name: "A1",
+    //                            value: 100
+    //                        },
+    //                        //{
+    //                        //    name: "A2",
+    //                        //    value: 60
+    //                        //},
+    //                        //{
+    //                        //    name: "A3",
+    //                        //    value: 30
+    //                        //}
+    //                    ]
+    //                },
+    //                {
+    //                    name: "Second",
+    //                    children: [
+    //                        {
+    //                            name: "B1",
+    //                            value: 135
+    //                        },
+    //                        //{
+    //                        //    name: "B2",
+    //                        //    value: 98
+    //                        //},
+    //                        //{
+    //                        //    name: "B3",
+    //                        //    value: 56
+    //                        //}
+    //                    ]
+    //                },
+    //                {
+    //                    name: "Third",
+    //                    children: [
+    //                        {
+    //                            name: "C1",
+    //                            value: 335
+    //                        },
+    //                        //{
+    //                        //    name: "C2",
+    //                        //    value: 148
+    //                        //},
+    //                        //{
+    //                        //    name: "C3",
+    //                        //    value: 126
+    //                        //},
+    //                        //{
+    //                        //    name: "C4",
+    //                        //    value: 26
+    //                        //}
+    //                    ]
+    //                },
+    //                {
+    //                    name: "Fourth",
+    //                    children: [
+    //                        {
+    //                            name: "D1",
+    //                            value: 415
+    //                        },
+    //                        //{
+    //                        //    name: "D2",
+    //                        //    value: 148
+    //                        //},
+    //                        //{
+    //                        //    name: "D3",
+    //                        //    value: 89
+    //                        //},
+    //                        //{
+    //                        //    name: "D4",
+    //                        //    value: 64
+    //                        //},
+    //                        //{
+    //                        //    name: "D5",
+    //                        //    value: 16
+    //                        //}
+    //                    ]
+    //                },
+    //                {
+    //                    name: "Fifth",
+    //                    children: [
+    //                        {
+    //                            name: "E1",
+    //                            value: 687
+    //                        },
+    //                        //{
+    //                        //    name: "E2",
+    //                        //    value: 148
+    //                        //}
+    //                    ]
+    //                }
+    //            ]
+    //        };
+
+    //        series.data.setAll([data]);
+    //        series.set("selectedDataItem", series.dataItems[0]);
+
+    //        // Make stuff animate on load
+    //        series.appear(1000, 100);
+
+    //    }); // end am5.ready()
+    //};
 
     // обновим выбор детально
     view_td_report.prototype.view_setup_detali_report_3_1 = function (rep) {
@@ -4294,6 +4671,18 @@
             case 2: {
                 this.row_setup_detali_cargo.show();
                 this.row_setup_detali_certification_data.show();
+                break;
+            };
+            case 3: {
+                this.row_setup_detali_group_arrival.show();
+                break;
+            };
+            case 4: {
+                this.row_setup_detali_genus.show();
+                break;
+            };
+            case 5: {
+                this.row_setup_detali_cargo_sap.show();
                 break;
             };
         }

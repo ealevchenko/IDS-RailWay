@@ -11741,7 +11741,10 @@ fieldset {
 
 #adoption-cargo-operation-amkr-chart,
 #adoption-operator-to-arr-chart,
-#adoption-cargo-to-arr-chart {
+#adoption-cargo-to-arr-chart,
+#adoption-group-cargo-to-arr-chart,
+#adoption-genus-to-arr-chart,
+#adoption-sap-to-arr-chart {
     width: 100%;
     height: 500px;
 }

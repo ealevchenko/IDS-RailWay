@@ -184,6 +184,31 @@
 
 
     };
+    // Инициализация круговая диаграмма
+    chart_amcharts.prototype.init_pie_chart = function () {
+
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        this.chart = this.root.container.children.push(
+            am5percent.PieChart.new(this.root, {
+                endAngle: 270
+            })
+        );
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        this.series = this.chart.series.push(
+            am5percent.PieSeries.new(this.root, {
+                valueField: "value",
+                categoryField: "category",
+                endAngle: 270
+            })
+        );
+
+        this.series.states.create("hidden", {
+            endAngle: -90
+        });
+    };
+
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -200,7 +225,11 @@
                 this.init_column_with_rotated_labels();
                 break;
             };
-
+            // круговая диаграмма
+            case 'pie_chart': {
+                this.init_pie_chart();
+                break;
+            };
             // 
             default: {
                 break;
@@ -263,6 +292,10 @@
             };
             case 'column_with_rotated_labels': {
                 this.view_column_with_rotated_labels(data);
+                break;
+            };
+            case 'pie_chart': {
+                this.view_pie_chart(data);
                 break;
             };
             // 
@@ -380,7 +413,16 @@
             this.chart.appear(1000, 100);
         }
     };
+    // Круговая диаграмма
+    chart_amcharts.prototype.view_pie_chart = function (data) {
+        if (this.chart) {
+            // Set data
+            // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+            this.series.data.setAll(data);
 
+            this.series.appear(1000, 100);
+        }
+    };
 
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
