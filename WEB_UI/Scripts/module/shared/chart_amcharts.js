@@ -140,19 +140,35 @@
         // Create axes
         // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
         this.xRenderer = am5xy.AxisRendererX.new(this.root, { minGridDistance: 30 });
-        this.xRenderer.labels.template.setAll({
-            //rotation: -90,
-            //centerY: am5.p50,
-            //centerX: am5.p100,
-            paddingRight: 15
-        });
 
         this.xAxis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
             maxDeviation: 0.3,
-            categoryField: "country",
+            categoryField: "name",
             renderer: this.xRenderer,
             tooltip: am5.Tooltip.new(this.root, {})
         }));
+
+        this.xRenderer.labels.template.setAll({
+            //rotation: -90,
+            //oversizedBehavior: "wrap",
+            //textAlign: "center",
+            //centerY: am5.p50,
+            //centerX: am5.p100,
+            //paddingRight: 15
+
+            oversizedBehavior: "wrap",
+            maxWidth: 100,
+            //maxHeight: 100,
+            textAlign: "center"
+        });
+
+        // Set up automatic width calculation using an adapter
+        //this.xRenderer.labels.template.adapters.add("width", function (width, target) {
+        //    var x0 = this.xAxis.getDataItemCoordinateY(this.xAxis.dataItems[0], "category", 0);
+        //    var x1 = this.xAxis.getDataItemCoordinateY(this.xAxis.dataItems[0], "category", 1);
+        //    target.set("maxWidth", x1 - x0)
+        //    return x1 - x0;
+        //}.bind(this));
 
         this.yAxis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
             maxDeviation: 0.3,
@@ -167,7 +183,7 @@
             yAxis: this.yAxis,
             valueYField: "value",
             sequencedInterpolation: true,
-            categoryXField: "country",
+            categoryXField: "name",
             tooltip: am5.Tooltip.new(this.root, {
                 labelText: "{valueY}"
             })
@@ -181,7 +197,6 @@
         this.series.columns.template.adapters.add("stroke", function (stroke, target) {
             return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
         }.bind(this));
-
 
     };
     // Инициализация круговая диаграмма
@@ -199,7 +214,7 @@
         this.series = this.chart.series.push(
             am5percent.PieSeries.new(this.root, {
                 valueField: "value",
-                categoryField: "category",
+                categoryField: "name",
                 endAngle: 270
             })
         );
@@ -423,7 +438,6 @@
             this.series.appear(1000, 100);
         }
     };
-
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     chart_amcharts.prototype.out_clear = function () {
