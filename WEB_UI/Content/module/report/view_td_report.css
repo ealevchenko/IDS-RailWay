@@ -11746,7 +11746,8 @@ fieldset {
 #adoption-genus-to-arr-chart,
 #adoption-sap-to-arr-chart,
 #adoption-station-to-arr-chart,
-#adoption-division-to-arr-chart {
+#adoption-division-to-arr-chart,
+#adoption-to-gs-chart {
     width: 100%;
     height: 500px;
 }

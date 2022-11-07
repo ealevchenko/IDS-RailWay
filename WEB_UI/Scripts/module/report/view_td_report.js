@@ -2533,6 +2533,31 @@
         }
     };
     //------------------------------------------------------------------------------------------------
+    // Инициализация панели только c карточкой таблица
+    view_td_report.prototype.init_panel_table_report = function (name_panel, name_div) {
+        // 
+        var card_table = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-primary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-primary',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_table', App.Langs),
+        });
+        card_table.$body.append($('<div>', {
+            id: name_div,
+        }))
+        var row_table = new this.fe_ui.bs_row();
+        var col_table = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        //
+        row_table.$row.append(col_table.$col.append(card_table.$card));
+        // Добавим в панель
+        var $panel = this.nav_tabs_arr_total.$content.find('div#' + name_panel); // Панель
+        $panel.append(row_table.$row);
+    };
     // Инициализация панели c вертикальным расположением карточек
     view_td_report.prototype.init_panel_vertical_report = function (name_panel, name_div) {
         // Груз по Оператору АМКР
@@ -3250,7 +3275,7 @@
         this.init_panel_vertical_report('arr-total-division-to-arr-tab', 'adoption-division-to-arr');
         //----------------------------------------
         // Закладка Отчет для ГС
-        this.init_panel_vertical_report('arr-total-to-gs-tab', 'adoption-to-gs');
+        this.init_panel_table_report('arr-total-to-gs-tab', 'adoption-to-gs');
 
         // Дабавим закладку на форму
         this.$table_view.append(this.nav_tabs_arr_total.$ul).append(this.nav_tabs_arr_total.$content);
@@ -3260,8 +3285,8 @@
         //--------------------------------------------------------------------
 
         // ------------------------------------------------
-        // Запускаем 4 процесса инициализации (паралельно)
-        var process = 16;
+        // Запускаем 18 процесса инициализации (паралельно)
+        var process = 17;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -3319,12 +3344,13 @@
                         case 'arr-total-division-to-arr': {
                             this.report_panel = 7;
                             this.view_setup_detali_report_3_1(this.report_panel);
-                            this.view_chart_total_division();
+                            this.view_chart_total_division_from();
                             break;
                         };
                         case 'arr-total-to-gs': {
                             this.report_panel = 8;
                             this.view_setup_detali_report_3_1(this.report_panel);
+                            this.view_chart_total_gs();
                             break;
                         };
                     };
@@ -3557,6 +3583,34 @@
                 out_init(process);
             },
         });
+        // Отчет для ГС
+        this.table_total_adoption_to_gs = new TTDR('div#adoption-to-gs');         // Создадим экземпляр
+        this.table_total_adoption_to_gs.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_to_gs',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        //// Инициализация модуля графиков тип: Круговая диаграмма
+        //this.chart_total_adoption_to_gs = new CAM('div#adoption-to-gs-chart');         // Создадим экземпляр
+        //this.chart_total_adoption_to_gs.init({
+        //    alert: null,
+        //    type_chart: 'pie_chart',     //
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //});
     };
     // Показать отчет  "Отчет по прибытию (общий)"
     view_td_report.prototype.view_report_3_1 = function (start, stop) {
@@ -3637,6 +3691,7 @@
         this.list_cargo_sap = [];
         this.list_station_from = [];
         this.list_division = [];
+
         // выборка для списков Отчет-Груз по Оператору АМКР
         $.each(data, function (key, el_wag) {
             // выборка для списков отчета
@@ -3831,12 +3886,12 @@
                     id_genus: el_wag.arrival_uz_vagon_id_genus,
                     rod_abbr: el_wag['arrival_uz_vagon_rod_abbr_' + App.Lang],
                     count_wagon: 1,
-                    perent_wagon: Number(100/sum_count).toFixed(2),
+                    perent_wagon: Number(100 / sum_count).toFixed(2),
                 });
             } else {
                 sum_count++;
                 obj.count_wagon = obj.count_wagon + 1;
-                obj.perent_wagon = Number((obj.count_wagon*100)/sum_count).toFixed(2);
+                obj.perent_wagon = Number((obj.count_wagon * 100) / sum_count).toFixed(2);
             };
         }.bind(this));
         if (typeof callback === 'function') {
@@ -3854,7 +3909,7 @@
                 // Не данных 
                 list_result.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
-                    sap_cargo_code : el_wag.sap_incoming_supply_cargo_code,
+                    sap_cargo_code: el_wag.sap_incoming_supply_cargo_code,
                     sap_cargo_name: el_wag.sap_incoming_supply_cargo_name,
                     count_wagon: 1,
                     sum_vesg: el_wag.arrival_uz_vagon_vesg ? el_wag.arrival_uz_vagon_vesg : 0,
@@ -3942,6 +3997,41 @@
             callback(list_result);
         }
     };
+    view_td_report.prototype.process_data_report_3_9 = function (data, callback) {
+        var list_result = [];
+        // выборка для списков Цех-грузополучатель.
+        $.each(data, function (key, el_wag) {
+            var obj = list_result.find(function (o) {
+                return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo &&
+                    o.id_station_on === el_wag.arrival_sostav_id_station_on &&
+                    o.id_division === el_wag.arrival_uz_vagon_id_division_on_amkr
+            }.bind(this));
+            if (!obj) {
+                // Не данных 
+                list_result.push({
+                    period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
+                    id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                    cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                    id_station_on: el_wag.arrival_sostav_id_station_on,
+                    station_on_name: el_wag['arrival_sostav_station_on_name_' + App.Lang],
+                    id_division: el_wag.arrival_uz_vagon_id_division_on_amkr,
+                    division_abbr: el_wag['arrival_uz_vagon_division_abbr_' + App.Lang],
+                    count_wagon: 1,
+                    sum_vesg: el_wag.arrival_uz_vagon_vesg ? el_wag.arrival_uz_vagon_vesg : 0,
+                    sum_vesg_reweighing: el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+                    sum_vesg_deff: el_wag.arrival_uz_vagon_arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing : 0,
+                });
+            } else {
+                obj.count_wagon = obj.count_wagon + 1;
+                obj.sum_vesg = el_wag.arrival_uz_vagon_vesg ? obj.sum_vesg + el_wag.arrival_uz_vagon_vesg : obj.sum_vesg;
+                obj.sum_vesg_reweighing = el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_reweighing + el_wag.arrival_uz_vagon_vesg_reweighing : obj.sum_vesg_reweighing;
+                obj.sum_vesg_deff = el_wag.arrival_uz_vagon_vesg && el_wag.arrival_uz_vagon_vesg_reweighing ? obj.sum_vesg_deff + (el_wag.arrival_uz_vagon_vesg - el_wag.arrival_uz_vagon_vesg_reweighing) : obj.sum_vesg_deff;
+            };
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(list_result);
+        }
+    };
     // Обработать и отображение данных на экране
     view_td_report.prototype.process_data_view_report_3_1 = function (wagons_adoption, where) {
         // Продолжим
@@ -3953,8 +4043,9 @@
         this.total_cargo_sap = [];                  // список Груз ПРИБ SAP
         this.total_station_from = [];               // список Станция ПРИБ 
         this.total_division = [];                   // список Цех-грузополучатель
-        // Запускаем 7 процесса инициализации (паралельно)
-        var process = 9;
+        this.total_gs = [];                         // список Отчет для ГС
+        // Запускаем 10 процесса инициализации (паралельно)
+        var process = 10;
         // Выход из инициализации
         var out_process_data = function (process) {
             if (process === 0) {
@@ -3989,6 +4080,8 @@
                 this.view_filter_report_total_station_from();
                 // Отобразить данные в таблице Цех-грузополучатель
                 this.view_filter_report_total_division();
+                // Отобразить данные в таблице Отчет для ГС
+                this.view_filter_report_total_gs();
             }
         }.bind(this);
         this.process_data_select_report_3_1(wagons_adoption, function (result) {
@@ -4032,6 +4125,11 @@
         }.bind(this));
         this.process_data_report_3_8(wagons_adoption, function (result) {
             this.total_division = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_3_9(wagons_adoption, function (result) {
+            this.total_gs = result;
             process--;
             out_process_data(process);
         }.bind(this));
@@ -4621,6 +4719,52 @@
     view_td_report.prototype.view_chart_total_division_from = function () {
         if (this.report_panel === 7 && this.chart_data) {
             this.chart_total_division_to_arr.view(this.chart_data[7]);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Отчет для ГС"
+    view_td_report.prototype.view_filter_report_total_gs = function () {
+        if (this.total_gs) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_gs));
+            // Отобразим
+            this.table_total_adoption_to_gs.view(list_view);
+            //var data = [{
+            //    name: "Lithuania",
+            //    value: 501.9
+            //}, {
+            //    name: "Czechia",
+            //    value: 301.9
+            //}, {
+            //    name: "Ireland",
+            //    value: 201.1
+            //}, {
+            //    name: "Germany",
+            //    value: 165.8
+            //}, {
+            //    name: "Australia",
+            //    value: 139.9
+            //}, {
+            //    name: "Austria",
+            //    value: 128.3
+            //}, {
+            //    name: "UK",
+            //    value: 99
+            //}];
+            var data = [];
+            //$.each(list_view, function (key, element) {
+            //    data.push({ "name": element.division_abbr, "value": element.count_wagon });
+            //}.bind(this));
+
+            this.chart_data[8] = data;
+
+            this.view_chart_total_gs();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Отчет для ГС"
+    view_td_report.prototype.view_chart_total_gs = function () {
+        if (this.report_panel === 8 && this.chart_data) {
+            //this.chart_total_adoption_to_gs.view(this.chart_data[8]);
         }
     };
 
