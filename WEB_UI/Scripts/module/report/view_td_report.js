@@ -24,11 +24,12 @@
             'vtdr_link_title_report_1_1': 'Статистика',
             'vtdr_link_title_report_2_1': 'Отчет по прибытию (общий)',
             'vtdr_link_title_report_3_1': 'Прибытие ИТОГ',
-
+            'vtdr_link_title_report_4_1': 'Информация по вагону и собственнику',
 
             'vtdr_title_report_1_1': 'Статистика {0}',
             'vtdr_title_report_2_1': 'Отчет по прибытию (общий) {0}',
             'vtdr_title_report_3_1': 'Прибытие ИТОГ {0}',
+            'vtdr_title_report_4_1': 'Информация по вагону и собственнику {0}',
 
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
@@ -45,6 +46,8 @@
 
             'vtdr_card_header_chart': 'ДИАГРАММА',
             'vtdr_card_header_table': 'ДАННЫЕ',
+
+            'vtdr_card_header_common': 'ВАГОН',
 
             'vtdr_load_adoption_cars': 'Выполняю операцию выборка принятых вагонов ...',
 
@@ -306,6 +309,13 @@
                     this.init_report_3_1();
                 }.bind(this),
             },
+            {
+                text: langView('vtdr_link_title_report_4_1', App.Langs),
+                icon: 'fa-solid fa-diagram-project mr-1',
+                click: function () {
+                    this.init_report_4_1();
+                }.bind(this),
+            },
             //<i class="fa-sharp fa-solid fa-chart-simple"></i>
         ];
         // Очистим экран
@@ -519,6 +529,7 @@
             case 1: this.clear_report_1_1(); break;
             case 2: this.clear_report_2_1(); break;
             case 3: this.clear_report_3_1(); break;
+            case 4: this.clear_report_4_1(); break;
         }
         switch (this.type) {
             case 1: {
@@ -561,8 +572,8 @@
             case 1: this.$title_report.text(langView('vtdr_title_report_1_1', App.Langs).format(message_report)); break;
             case 2: this.$title_report.text(langView('vtdr_title_report_2_1', App.Langs).format(message_report)); break;
             case 3: this.$title_report.text(langView('vtdr_title_report_3_1', App.Langs).format(message_report)); break;
+            case 4: this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(message_report)); break;
         }
-
     };
     // Показать отчет
     view_td_report.prototype.view_report = function () {
@@ -577,6 +588,10 @@
             }
             case 3: {
                 this.view_report_3_1(this.start, this.stop);
+                break;
+            }
+            case 4: {
+                this.view_report_4_1(this.start, this.stop);
                 break;
             }
         }
@@ -4767,7 +4782,6 @@
             //this.chart_total_adoption_to_gs.view(this.chart_data[8]);
         }
     };
-
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_3_1 = function () {
         this.out_clear();
@@ -5134,7 +5148,105 @@
             };
         }
     };
+    //--------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Информация по вагону и собственнику"
+    view_td_report.prototype.init_report_4_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 4;        // номер отчета
+        this.report_panel = 0;  // номер под-отчета
 
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        //------
+        //-кнопка
+        var row_common = new this.fe_ui.bs_row();
+        var col_common = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        row_common.$row.append(col_common.$col);
+
+        var card_common = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-primary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-primary',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_common', App.Langs),
+        });
+
+        var div1 = $('<div class="form-group row"></div>');
+        var lab1 = $('<label for="inputEmail3" class="col-sm-2 col-form-label">Информация по вагону №</label>');
+        var div_inp = $('<div class="col-sm-3"></div>');
+        var inp = $('<input type="number" class="form-control" id="num_wag" name="num_wag">');
+        var button = $('<button type="submit" class="btn btn-light">Найти</button>');
+        div_inp.append(inp);
+        div1.append(lab1).append(div_inp).append(button);
+        card_common.$header.append(div1);
+        card_common.$body.append($('<div>', {
+            id: null,
+        }));
+        //    <div class="form-group row">
+        //        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+        //        <div class="col-sm-10">
+        //            <input type="email" class="form-control" id="inputEmail3">
+        //        </div>
+        //    </div>
+
+        col_common.$col.append(card_common.$card);
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+
+        // ------------------------------------------------
+        // Запускаем ? процесса инициализации (паралельно)
+        var process = 0;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                this.report_panel = 0;
+                LockScreenOff();
+            }
+        }.bind(this);
+        out_init(process);
+        //-----------------------------------------------
+        //// Таблица-Груз по Оператору АМКР
+        //this.table_total_cargo_operation_amkr = new TTDR('div#adoption-cargo-operation-amkr');         // Создадим экземпляр
+        //this.table_total_cargo_operation_amkr.init({
+        //    alert: null,
+        //    detali_table: true,
+        //    type_report: 'adoption_cargo_operation_amkr',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //});
+
+    };
+
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_4_1 = function () {
+
+        //if (this.switch_laden) {
+        //    this.switch_laden.val(false);
+        //    this.switch_accounting.val(false);
+        //    this.switch_client.val(false);
+        //    this.switch_not_client.val(false);
+        //    this.switch_paid.val(false);
+        //    this.select_station_amkr.val(-1);
+        //    this.wagons_adoption = [];
+        //    this.clone_wagons_adoption = [];
+        //    this.process_data_view_report_3_1(this.clone_wagons_adoption, null);
+        //    LockScreenOff();
+        //}
+    };
     //--------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
