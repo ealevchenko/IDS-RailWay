@@ -1367,6 +1367,35 @@
                     el['element'] = element.element;
                 }
             };
+            if (el.type === 'input_number') {
+                var element = new this.fe.bs_input_number({
+                    id: el.id,
+                    form_group_size: null,
+                    form_group_col: null,
+                    form_group_class: null,
+                    label: el.title,
+                    label_class: 'col-form-label' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_size: null,
+                    input_class: 'form-control' + (el.prefix ? '-' + el.prefix + ' ' : ' ') + 'mr-2',
+                    input_title: null,
+                    input_placeholder: null,
+                    input_multiple: null,
+                    input_required: null,
+                    input_readonly: null,
+                    input_group: true,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_default: el.default,
+                    element_fn_change: el.change,
+                });
+                if (element && element.$element && element.$element.length > 0) {
+                    this.$form.append(element.$element);
+                    el['element'] = element.element;
+                }
+            };
             if (el.type === 'button') {
                 //var element = function (prefix, cl_bt, id, title, icon)
                 //var element = new this.fc.el_button(el.prefix, 'btn-primary ml-2', el.id, el.title, el.icon);
@@ -3721,12 +3750,15 @@
         if (this.settings.input_group) {
             add_class(this.$element, 'form-group');
         }
-        var cl = 'col';
-        if (this.settings.form_group_size && this.settings.form_group_size !== '') {
-            cl += '-' + this.settings.form_group_size;
-        }
-        if (this.settings.form_group_col && this.settings.form_group_col !== '') {
-            cl += '-' + this.settings.form_group_col;
+
+        if ((this.settings.form_group_size && this.settings.form_group_size !== '') || (this.settings.form_group_col && this.settings.form_group_col !== '')) {
+            var cl = 'col';
+            if (this.settings.form_group_size && this.settings.form_group_size !== '') {
+                cl += '-' + this.settings.form_group_size;
+            }
+            if (this.settings.form_group_col && this.settings.form_group_col !== '') {
+                cl += '-' + this.settings.form_group_col;
+            }
         }
         add_class(this.$element, cl);
         add_class(this.$element, this.settings.form_group_class);
@@ -4668,7 +4700,7 @@
         add_class(this.$element, cl);
         add_class(this.$element, this.settings.form_group_class);
         //
-        var custom_switch= new this.fe.div({
+        var custom_switch = new this.fe.div({
             class: 'custom-control custom-switch',
         });
         // Input
