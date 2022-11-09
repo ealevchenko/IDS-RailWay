@@ -111,7 +111,9 @@
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_label_interval_date': ' период:',
             'vtdr_title_label_date': ' с даты:',
+            'vtdr_title_num_wag': ' ИНФОРМАЦИЯ ПО ВАГОНУ №',
             'vtdr_title_button': ' Применить',
+            'vtdr_title_button_searsh': 'НАЙТИ',
 
             'vtdr_link_report_1': 'Погран-переход',
             'vtdr_title_report_1': 'Статистика',
@@ -125,6 +127,10 @@
             'vtdr_title_button_buffer': 'Буфер',
             'vtdr_title_button_excel': 'Excel',
             'vtdr_title_excel_sheet_name': 'Погран переходы',
+
+            'vtdr_title_common_wagon_legend': 'Общая информация по вагону',
+            'vtdr_title_report_wagon_legend': 'Отчет по вагону',
+            'vtdr_title_report_operation_legend': 'Отчет  оператору АМКР',
 
             'vtdr_field_border_crossing_num': '№ вагона',
             'vtdr_field_border_crossing_status': 'Статус вагона',
@@ -5160,43 +5166,80 @@
         this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(''));   // выведем название отчета
         this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
         //------
-        //-кнопка
         var row_common = new this.fe_ui.bs_row();
         var col_common = new this.fe_ui.bs_col({
             size: 'xl',
             col: 12,
         });
         row_common.$row.append(col_common.$col);
-
         var card_common = new this.fe_ui.bs_card({
             id: null,
             class_card: 'border-primary mb-1',
             header: true,
             class_header: 'text-center text-white bg-primary',
             class_body: 'text-center',
-            title_header: langView('vtdr_card_header_common', App.Langs),
+            title_header: null,
         });
-
-        var div1 = $('<div class="form-group row"></div>');
-        var lab1 = $('<label for="inputEmail3" class="col-sm-2 col-form-label">Информация по вагону №</label>');
-        var div_inp = $('<div class="col-sm-3"></div>');
-        var inp = $('<input type="number" class="form-control" id="num_wag" name="num_wag">');
-        var button = $('<button type="submit" class="btn btn-light">Найти</button>');
-        div_inp.append(inp);
-        div1.append(lab1).append(div_inp).append(button);
-        card_common.$header.append(div1);
-        card_common.$body.append($('<div>', {
-            id: null,
-        }));
-        //    <div class="form-group row">
-        //        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-        //        <div class="col-sm-10">
-        //            <input type="email" class="form-control" id="inputEmail3">
-        //        </div>
-        //    </div>
-
+        // Создадим форму выбора для отчета
+        this.form_select_num = new FIL();
+        var fl_input_num = {
+            type: 'input_number',
+            id: 'num_wag',
+            prefix: 'sm',
+            title: langView('vtdr_title_num_wag', App.Langs),
+            default: 53984753,
+            change: function (event, ui) {
+                //event.preventDefault();
+                //// Обработать выбор
+                //var id = Number($(event.currentTarget).val());
+                //this.select_report(id);
+            }.bind(this),
+        };
+        var fl_button_searsh = {
+            type: 'button',
+            id: 'button_searsh',
+            prefix: 'sm',
+            title: langView('vtdr_title_button_searsh', App.Langs),
+            icon: 'fas fa-retweet',
+            select: function (e, ui) {
+                event.preventDefault();
+                //this.view_report();
+            }.bind(this),
+        };
+        var fields = [];
+        fields.push(fl_input_num);
+        fields.push(fl_button_searsh);
+        // Инициализация формы
+        this.form_select_num.init({
+            fields: fields,
+            cl_form: null
+        });
+        //------
+        var fieldset_common_wagon = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: langView('vtdr_title_common_wagon_legend', App.Langs),
+            class_legend: 'border-primary',
+        });
+        this.$common_wagon = fieldset_common_wagon.$fieldset;
+        var fieldset_report_wagon = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: langView('vtdr_title_report_wagon_legend', App.Langs),
+            class_legend: 'border-primary',
+        });
+        this.$report_wagon = fieldset_report_wagon.$fieldset;
+        var fieldset_report_operation = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: langView('vtdr_title_report_operation_legend', App.Langs),
+            class_legend: 'border-primary',
+        });
+        this.$report_operation = fieldset_report_operation.$fieldset;
+        //
+        card_common.$header.append(this.form_select_num.$form);
+        card_common.$body.append(this.$common_wagon).append(this.$report_wagon).append(this.$report_operation);
+        //
         col_common.$col.append(card_common.$card);
         this.$main_report.append(row_common.$row);
+
         //--------------------------------------------------------------------
 
         // ------------------------------------------------
