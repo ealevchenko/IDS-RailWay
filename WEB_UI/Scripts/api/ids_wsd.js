@@ -2293,7 +2293,29 @@
             },
         });
     };
-
+    // Получить отчет по вагону (прибытие и отправка) по номеру вагона
+    ids_wsd.prototype.getViewIncomingOutgoingCarsOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/incoming_outgoing/car/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewIncomingOutgoingCarsOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 
