@@ -1428,9 +1428,16 @@
             if (el.type === 'interval_date' && el.element) {
                 result[el.id] = el.element.val();
             }
+            if (el.type === 'date' && el.element) {
+                result[el.id] = el.element.val();
+            }
             if (el.type === 'select' && el.element) {
                 result[el.id] = el.element.val();
             }
+            if (el.type === 'input_number' && el.element) {
+                result[el.id] = el.element.val();
+            }
+
         }.bind(this));
         return result;
     };
@@ -1453,6 +1460,34 @@
                     case 'select': {
                         field.element.val(value)
                         break;
+                    };
+                    case 'input_number': {
+                        field.element.val(value)
+                        break;
+                    };
+                }
+            }
+        }
+    };
+    // Прочесть значение компонента
+    form_inline.prototype.get = function (id, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                switch (field.type) {
+                    case 'interval_date': {
+                        return field.element.val()
+                    };
+                    case 'date': {
+                        return field.element.val()
+                    };
+                    case 'select': {
+                        return field.element.val()
+                    };
+                    case 'input_number': {
+                        return field.element.val()
                     };
                 }
             }
