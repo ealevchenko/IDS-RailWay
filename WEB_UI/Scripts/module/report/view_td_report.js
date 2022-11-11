@@ -5203,7 +5203,7 @@
             icon: 'fas fa-retweet',
             select: function (e, ui) {
                 event.preventDefault();
-                //this.view_report();
+                this.view_report_4_1(this.start, this.stop);
             }.bind(this),
         };
         var fields = [];
@@ -5272,6 +5272,25 @@
         //    },
         //});
 
+    };
+
+    // Показать отчет  "Информация по вагону и собственнику"
+    view_td_report.prototype.view_report_4_1 = function (start, stop) {
+        this.load_report_4_1(function () {
+            LockScreenOff();
+        }.bind(this));
+    };
+    // Загрузить отчет  "Информация по вагону и собственнику"
+    view_td_report.prototype.load_report_4_1 = function (callback) {
+        var num = this.form_select_num.get('num_wag');
+        this.ids_wsd.getViewIncomingOutgoingCarsOfNum_Period(num, this.start, this.stop, function (result_wagons) {
+            // Обработать и показать данные
+            //this.process_data_view_report_4_1(result_wagons);
+            // Выход
+            if (typeof callback === 'function') {
+                callback();
+            }
+        }.bind(this));
     };
 
     // Очистить таблицы
