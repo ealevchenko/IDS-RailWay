@@ -1235,7 +1235,31 @@ namespace WEB_UI.Controllers.api
             {
                 System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
                 string sql = "select * from [IDS].[get_view_incoming_outgoing_cars_of_num](@num)";
-                ViewIncomingOutgoing result = this.ef_ids.Database.SqlQuery<ViewIncomingOutgoing>(sql, p_num).FirstOrDefault();
+                List<ViewIncomingOutgoing> result = this.ef_ids.Database.SqlQuery<ViewIncomingOutgoing>(sql, p_num).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        /// <summary>
+        /// Получить информацию по истории прибытия и отправке вагона, по номеру вагона
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        // GET: api/ids/rwt/outgoing_cars/view/incoming_outgoing/car/num/53984753/start/2021-03-01T00:00:00/stop/2021-03-20T23:59:59
+        [Route("view/incoming_outgoing/car/num/{num:int}/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewIncomingOutgoing))]
+        public IHttpActionResult GetViewIncomingOutgoingCarsOfNumPeriod(int num, DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);                
+                System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_incoming_outgoing_cars_of_num](@num) WHERE arrival_sostav_date_adoption>=@start and arrival_sostav_date_adoption<=@stop";
+                List<ViewIncomingOutgoing> result = this.ef_ids.Database.SqlQuery<ViewIncomingOutgoing>(sql, p_num,d_start,d_stop).ToList();
                 return Ok(result);
             }
             catch (Exception e)
