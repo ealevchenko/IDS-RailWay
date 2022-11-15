@@ -1073,6 +1073,8 @@ namespace WEB_UI.Controllers.api
         public string sap_outgoing_supply_responsible_fio { get; set; }
         public string sap_outgoing_supply_payer_code { get; set; }
         public string sap_outgoing_supply_payer_name { get; set; }
+        public int? simple_car { get; set; }
+        public decimal? pay_car { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/outgoing_cars")]
