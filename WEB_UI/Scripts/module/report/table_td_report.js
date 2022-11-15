@@ -59,6 +59,7 @@
             'ttdr_field_incoming_cars_uz_vagon_wagon_usl_tip': 'Тип цс',
             'ttdr_field_incoming_cars_uz_vagon_u_tara': 'Тара (ут.),т.',
             'ttdr_field_incoming_cars_uz_vagon_ves_tary_arc': 'Тара,т.',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_route': 'Маршрут',
             'ttdr_field_incoming_cars_uz_vagon_wagon_date_rem_uz': 'Рем. УЗ',
             'ttdr_field_incoming_cars_uz_vagon_wagon_date_rem_vag': 'Рем. вагон',
             'ttdr_field_incoming_cars_uz_vagon_owner_wagon': 'Собственник',
@@ -100,33 +101,33 @@
             'ttdr_field_incoming_cars_uz_vagon_commercial_condition': 'Ком состояние',
             'ttdr_field_incoming_cars_uz_vagon_sertification_data': 'Серт. данные',
 
-            'ttdr_field_sostav_outgoing_naturka_outgoing_car_position_outgoing': '№ поз.',
+            'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
             'ttdr_field_sostav_outgoing_naturka_num': '№ вагона',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_document_nom_doc': '№ накл.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name': 'Груз',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name': 'Груз',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name': 'Станция назначения',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_name': 'Адм.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr': 'Адм.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod': 'Код Род.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_name': 'Род.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr': 'Род.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_code': 'Шифр Цех',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_name_division': 'Цех погр.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr': 'Цех погр.',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon': 'Собственник',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr': 'Собственник',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator': 'id Опер. по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators': 'Оператор по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr': 'Оператор по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start': 'Опер. по отпр. нач. аренды',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end': 'Опер. по отпр. кон. аренды',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid': 'Опер. по отпр. платный',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
-            'ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg': 'Вес ЭПД, тн',
+            'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_group_name': 'Груз',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_to_station_uz_name': 'Станция назначения',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_name': 'Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_abbr': 'Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod': 'Код Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_name': 'Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_abbr': 'Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_division_code': 'Шифр Цех',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_name_division': 'Цех погр.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_division_abbr': 'Цех погр.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon': 'Собственник',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon_abbr': 'Собственник',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_operator': 'id Опер. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators': 'Оператор по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr': 'Оператор по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_start': 'Опер. по отпр. нач. аренды',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_end': 'Опер. по отпр. кон. аренды',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid': 'Опер. по отпр. платный',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_vesg': 'Вес ЭПД, тн',
 
             'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
             'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
@@ -181,6 +182,14 @@
             'ttdr_field_total_arrival_division_abbr': 'Цех-грузоп.',
             'ttdr_field_total_arrival_station_on_name': 'Пункт погрузки',
 
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
+
+            'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
+            'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
+
+            'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
 
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
@@ -191,6 +200,8 @@
             'ttdr_title_all': 'Все',
             'ttdr_title_not_epd': 'Без ЭПД',
             'ttdr_title_for_loading': 'Под погрузку',
+            'ttdr_title_route': 'маршрут',
+            'ttdr_title_not_route': 'не маршрут',
 
             'ttdr_title_button_export': 'Экспорт',
             'ttdr_title_button_buffer': 'Буфер',
@@ -546,6 +557,24 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_uz_vagon_ves_tary_arc', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        // Маршрут
+        {
+            field: 'incoming_cars_arrival_uz_vagon_route',
+            data: function (row, type, val, meta) {
+                if (row.arrival_uz_vagon_route !== null) {
+                    if (row.arrival_uz_vagon_route) {
+                        return langView('ttdr_title_route', App.Langs);
+                    } else {
+                        return langView('ttdr_title_not_route', App.Langs);
+                    }
+                } else {
+                    return null;
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
         // Ремонт УЗ и вагон
         {
             field: 'incoming_cars_arrival_uz_vagon_wagon_date_rem_uz',
@@ -869,7 +898,7 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_commercial_condition', App.Langs), width: "100px", orderable: true, searchable: true
         },
-        // Ком сертиыикационные данные
+        // Ком сертификационные данные
         {
             field: 'incoming_cars_arrival_uz_vagon_sertification_data',
             data: function (row, type, val, meta) {
@@ -898,230 +927,230 @@
             title: langView('ttdr_field_sostav_outgoing_naturka_num', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_car_position_outgoing',
+            field: 'outgoing_cars_car_position_outgoing',
             data: function (row, type, val, meta) {
                 return row.outgoing_car_position_outgoing;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_car_position_outgoing', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_car_position_outgoing', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_document_nom_doc',
+            field: 'outgoing_cars_uz_document_nom_doc',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_document_nom_doc;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_cargo_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_cargo_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_cargo_group_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_cargo_group_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_to_station_uz_name',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_document_code_stn_to ? row['outgoing_uz_document_station_to_name_' + App.Lang] : row.outgoing_uz_vagon_to_station_uz_name;
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Станция назначения основное поле по документу САП если пусто тогда по ручному вводу
         {
-            field: 'sostav_outgoing_naturka_outgoing_to_station_uz_name',
+            field: 'outgoing_cars_to_station_uz_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_document_station_to_name_' + App.Lang] !== null && row['outgoing_uz_document_station_to_name_' + App.Lang] !== '' ? row['outgoing_uz_document_station_to_name_' + App.Lang] : row.outgoing_uz_vagon_to_station_uz_name;
                 //return row.sap_outgoing_supply_destination_station_name !== null && row.sap_outgoing_supply_destination_station_name !== '' ? row.sap_outgoing_supply_destination_station_name : row.outgoing_uz_vagon_to_station_uz_name;
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_to_station_uz_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Администрация по отправке
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm',
+            field: 'outgoing_cars_outgoing_uz_vagon_wagon_adm',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_wagon_adm;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_wagon_adm', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_adm_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_adm_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_adm_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_adm_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-50',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_abbr', App.Langs), width: "50px", orderable: true, searchable: true
         },
         //Род по отправке
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod',
+            field: 'outgoing_cars_outgoing_uz_vagon_rod',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_rod;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_rod', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_rod_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_rod_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_rod_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_rod_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-50',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Цех отправитель
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_code',
+            field: 'outgoing_cars_outgoing_uz_vagon_division_code',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_division_code;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_code', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_division_code', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_name_division',
+            field: 'outgoing_cars_outgoing_uz_vagon_name_division',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_name_division_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_name_division', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_name_division', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_division_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_division_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Собственник
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon',
+            field: 'outgoing_cars_outgoing_uz_vagon_owner_wagon',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_owner_wagon_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-150',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon', App.Langs), width: "150px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_owner_wagon_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_owner_wagon_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // ОПЕРАТОР ПО ОТПРАВКЕ [IDS].[Directory_OperatorsWagons]
         // Оператор
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_operator',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_outgoing_wagons_rent_id_operator;
             },
             className: 'dt-body-center operator',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-150 operator',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators', App.Langs), width: "150px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100 operator',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_start',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_outgoing_wagons_rent_start ? moment(row.outgoing_uz_vagon_outgoing_wagons_rent_start).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_start', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_end',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_outgoing_wagons_rent_end ? moment(row.outgoing_uz_vagon_outgoing_wagons_rent_end).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_end', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_outgoing_wagons_rent_operator_paid ? langView('togc_title_yes', App.Langs) : '';
             },
             className: 'dt-body-centr',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
         },
         // field: 'operator_color'
         //Ограничение
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', App.Langs), width: "30px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_outgoing_wagons_rent_limiting_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-150',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', App.Langs), width: "150px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr',
+            field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr',
             data: function (row, type, val, meta) {
                 return row['outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'sostav_outgoing_naturka_outgoing_uz_vagon_vesg',
+            field: 'outgoing_cars_outgoing_uz_vagon_vesg',
             data: function (row, type, val, meta) {
                 return row.outgoing_uz_vagon_vesg ? Number(Number(row.outgoing_uz_vagon_vesg) / 1000).toFixed(3) : null;
             },
             className: 'dt-body-left shorten mw-50',
-            title: langView('ttdr_field_sostav_outgoing_naturka_outgoing_uz_vagon_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_vesg', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Груз по прибытию
         {
@@ -1499,6 +1528,55 @@
             className: 'dt-body-center mw-100',
             title: langView('ttdr_field_total_arrival_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        //----------------------------------------------------
+        // ОТПРАВКА ДЕТАЛЬНО
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing ? moment(row.outgoing_sostav_date_outgoing).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_outgoing_act',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing_act ? moment(row.outgoing_sostav_date_outgoing_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
+        //----------------------------------------------------
+        // Простой
+        {
+            field: 'incoming_outgoing_car_simple_car',
+            data: function (row, type, val, meta) {
+                return row.simple_car;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_incoming_outgoing_car_simple_car', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Оплата
+        {
+            field: 'incoming_outgoing_car_pay_car',
+            data: function (row, type, val, meta) {
+                return row.pay_car;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_incoming_outgoing_car_pay_car', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //----------------------------------------------------
+        {
+            field: 'incoming_outgoing_car_wir_note',
+            data: function (row, type, val, meta) {
+                return row.wir_note;
+            },
+            className: 'dt-body-left mw-200',
+            title: langView('ttdr_field_incoming_outgoing_car_wir_note', App.Langs), width: "200px", orderable: true, searchable: true
+        },
+        //shorten mw-100
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -1696,33 +1774,33 @@
         var collums = [];
         collums.push({ field: 'sostav_outgoing_naturka_number_in_sequence', title: null, class: null });
         collums.push({ field: 'sostav_outgoing_naturka_num', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_document_nom_doc', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_name', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_abbr', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_wagon_adm', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_abbr', title: null, class: null });
-        collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_vesg', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_wagon_adm', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod_abbr', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_vesg', title: null, class: null });
         collums.push({ field: 'sostav_outgoing_naturka_arrival_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'sostav_outgoing_naturka_arrival_sostav_date_arrival', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_cargo_group_name', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_name', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_adm_abbr', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_rod_name', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_division_code', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_name_division', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_owner_wagon_abbr', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_start', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_end', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', title: null, class: null });
-        //collums.push({ field: 'sostav_outgoing_naturka_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_group_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_adm_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_adm_abbr', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_code', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_name_division', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_owner_wagon', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_owner_wagon_abbr', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_operator', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_start', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_end', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -1900,6 +1978,7 @@
     // инициализация полей incoming_outgoing_car
     table_td_report.prototype.init_columns_incoming_outgoing_car = function () {
         var collums = [];
+        collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
         collums.push({ field: 'incoming_cars_num', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
@@ -1910,7 +1989,14 @@
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operators', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
-
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };

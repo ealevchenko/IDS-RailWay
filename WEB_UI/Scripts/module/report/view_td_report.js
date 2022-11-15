@@ -5188,7 +5188,7 @@
             id: 'num_wag',
             prefix: 'sm',
             title: langView('vtdr_title_num_wag', App.Langs),
-            default: 53984753,
+            default: 63530935,
             change: function (event, ui) {
                 //event.preventDefault();
                 //// Обработать выбор
