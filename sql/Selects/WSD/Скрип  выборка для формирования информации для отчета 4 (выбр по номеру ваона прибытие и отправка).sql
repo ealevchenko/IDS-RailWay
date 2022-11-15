@@ -576,7 +576,10 @@ SELECT
 		,sap_os.[ZZFIO] as sap_outgoing_supply_responsible_fio
 		,sap_os.[ZZPLATEL] as sap_outgoing_supply_payer_code
 		,sap_os.[ZZNAME_PLATEL] as sap_outgoing_supply_payer_name
-		into incoming_outgoing_cars
+		,[simple_car] = DATEDIFF (hour, arr_sost.[date_adoption], out_sost.[date_outgoing])
+		,[pay_car] =0
+
+		--into incoming_outgoing_cars
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] as wir
 		--==== œ–»¡€“»≈ » œ–»≈Ã ¬¿√ŒÕ¿ =====================================================================
 		Left JOIN IDS.ArrivalCars as arr_car ON wir.[id_arrival_car] = arr_car.id
