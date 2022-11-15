@@ -40,6 +40,7 @@
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
             'vtdr_card_header_report_1_1_not_oper': 'ВАГОНЫ БЕЗ ОПЕРАТОРОВ',
             'vtdr_load_adoption_sostav': 'Выполняю операцию выборка принятых составов ...',
+            'vtdr_load_incoming_outgoing_car': 'Выполняю операцию выборки информации по вагону ...',
 
             'vtdr_card_header_report_2_1_group': 'Общая информация',
             'vtdr_card_header_report_2_1_detali': 'Детально информация',
@@ -5240,11 +5241,13 @@
         col_common.$col.append(card_common.$card);
         this.$main_report.append(row_common.$row);
 
+        this.$report_wagon.append($('<div id="incoming-outgoing-car"></div>'));
+
         //--------------------------------------------------------------------
 
         // ------------------------------------------------
         // Запускаем ? процесса инициализации (паралельно)
-        var process = 0;
+        var process = 1;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -5254,23 +5257,23 @@
         }.bind(this);
         out_init(process);
         //-----------------------------------------------
-        //// Таблица-Груз по Оператору АМКР
-        //this.table_total_cargo_operation_amkr = new TTDR('div#adoption-cargo-operation-amkr');         // Создадим экземпляр
-        //this.table_total_cargo_operation_amkr.init({
-        //    alert: null,
-        //    detali_table: true,
-        //    type_report: 'adoption_cargo_operation_amkr',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        // Таблица : Отчет по вагону  
+        this.table_incoming_outgoing_car = new TTDR('div#incoming-outgoing-car');         // Создадим экземпляр
+        this.table_incoming_outgoing_car.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'incoming_outgoing_car',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
 
-        //    },
-        //});
+            },
+        });
 
     };
 
@@ -5282,10 +5285,11 @@
     };
     // Загрузить отчет  "Информация по вагону и собственнику"
     view_td_report.prototype.load_report_4_1 = function (callback) {
+        LockScreen(langView('vtdr_load_incoming_outgoing_car', App.Langs));
         var num = this.form_select_num.get('num_wag');
         this.ids_wsd.getViewIncomingOutgoingCarsOfNum_Period(num, this.start, this.stop, function (result_wagons) {
             // Обработать и показать данные
-            //this.process_data_view_report_4_1(result_wagons);
+            this.table_incoming_outgoing_car.view(result_wagons);
             // Выход
             if (typeof callback === 'function') {
                 callback();

@@ -1212,7 +1212,7 @@
         {
             field: 'incoming_cars_arrival_sostav_date_arrival',
             data: function (row, type, val, meta) {
-                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+                return row.arrival_sostav_date_arrival ? moment(row.arrival_sostav_date_arrival).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_date_arrival', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1897,6 +1897,23 @@
         collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей incoming_outgoing_car
+    table_td_report.prototype.init_columns_incoming_outgoing_car = function () {
+        var collums = [];
+        collums.push({ field: 'incoming_cars_num', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operators', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -2132,6 +2149,20 @@
     };
     //
     table_td_report.prototype.init_button_adoption_to_gs = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_incoming_outgoing_car = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -2558,7 +2589,26 @@
                 this.dom = 'Bfrtip';
                 break;
             };
-
+            case 'incoming_outgoing_car': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_incoming_outgoing_car();
+                this.table_buttons = this.init_button_incoming_outgoing_car();
+                this.dom = 'Bfrtip';
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
