@@ -2687,8 +2687,8 @@
                 this.leftColumns = 0;
                 this.columnDefs = null;
                 this.order_column = [1, 'asc'];
-                this.type_select_rows = 0; // Выбирать одну
-                this.table_select = false;
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
                 this.autoWidth = true;
                 this.table_columns = this.init_columns_incoming_outgoing_car();
                 this.table_buttons = this.init_button_incoming_outgoing_car();
@@ -2918,6 +2918,17 @@
                     }
                 }.bind(this));
                 if (this.settings.detali_table) this.init_outgoing_detali();
+                break;
+            };
+            case 'incoming_outgoing_car': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
                 break;
             };
         };

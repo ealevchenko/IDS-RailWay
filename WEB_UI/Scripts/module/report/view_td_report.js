@@ -123,6 +123,14 @@
             'vtdr_title_list_nums': 'Добавте номера вагонов',
             'vtdr_placeholder_list_nums': '00000001;00000002;00000003',
 
+            'vtdr_label_cw_arrival_station_on_name': 'Станция приема:',
+            'vtdr_label_cw_outgoing_from_station_amkr_name': 'Станция отправления:',
+            'vtdr_label_cw_arrival_num_doc': '№ вед. прибытия:',
+            'vtdr_label_cw_arrival_ext_station_from_name': 'Станция отправления:',
+            'vtdr_label_cw_outgoing_ext_station_to_name': 'Станция прибытия:',
+            'vtdr_label_cw_arrival_nom_main_doc': '№ ж.д. накладной ПРИБ:',
+            'vtdr_label_cw_outgoing_nom_doc': '№ ж.д. накладной ОТПР:',
+
             'vtdr_title_all': 'Все',
             'vtdr_title_button_export': 'Экспорт',
             'vtdr_title_button_buffer': 'Буфер',
@@ -5177,8 +5185,8 @@
             id: null,
             class_card: 'border-primary mb-1',
             header: true,
-            class_header: 'text-center text-white bg-primary',
-            class_body: 'text-center',
+            class_header: 'text-centr text-white bg-primary',
+            class_body: 'text-left',
             title_header: null,
         });
         // Создадим форму выбора для отчета
@@ -5240,7 +5248,73 @@
         //
         col_common.$col.append(card_common.$card);
         this.$main_report.append(row_common.$row);
+        // добавим поля детально информация по внутреннему перемещению
+        var $form_cw = $('<form></form>');
+        // --
+        var $div_row_cw1 = $('<div></div>', { class: 'form-row' });
+        // 
+        var $div_group_cw1_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw1_1_1 = $('<label></label>', { for: 'arrival_station_on_name', text: langView('vtdr_label_cw_arrival_station_on_name', App.Langs) });
+        this.$input_arrival_station_on_name = $('<input>', { id: 'arrival_station_on_name', name: 'arrival_station_on_name', class: 'form-control', type: 'text' });
+        $div_group_cw1_1.append($lab_cw1_1_1).append(this.$input_arrival_station_on_name);
+        // outgoing_sostav_from_station_amkr_name
+        var $div_group_cw1_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw1_2_1 = $('<label></label>', { for: 'outgoing_from_station_amkr_name', text: langView('vtdr_label_cw_outgoing_from_station_amkr_name', App.Langs) });
+        this.$input_outgoing_from_station_amkr_name = $('<input>', { id: 'outgoing_from_station_amkr_name', name: 'outgoing_from_station_amkr_name', class: 'form-control', type: 'text' });
+        $div_group_cw1_2.append($lab_cw1_2_1).append(this.$input_outgoing_from_station_amkr_name);
+        // arrival_sostav_num_doc
+        var $div_group_cw1_3 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw1_3_1 = $('<label></label>', { for: 'arrival_num_doc', text: langView('vtdr_label_cw_arrival_num_doc', App.Langs) });
+        this.$input_arrival_num_doc = $('<input>', { id: 'arrival_num_doc', name: 'arrival_num_doc', class: 'form-control', type: 'text' });
+        $div_group_cw1_3.append($lab_cw1_3_1).append(this.$input_arrival_num_doc);
+        // --
+        var $div_row_cw2 = $('<div></div>', { class: 'form-row' });
+        // arrival_uz_document_station_from_name
+        var $div_group_cw2_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw2_1_1 = $('<label></label>', { for: 'arrival_ext_station_from_name', text: langView('vtdr_label_cw_arrival_ext_station_from_name', App.Langs) });
+        var $div_input_group_cw2_1 = $('<div></div>', { class: 'input-group' });
+        this.$input_arrival_ext_station_from_name = $('<input>', { id: 'arrival_ext_station_from_name', name: 'arrival_ext_station_from_name', class: 'form-control', type: 'text' });
+        var $div_input_group_append_cw2_1 = $('<div></div>', { class: 'input-group-append' });
+        this.$button_arrival_ext_station_from_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        var $icon_cw2_1 = $('<i class="fa-solid fa-eye"></i>');
+        //$div_group_cw2_1.append($lab_cw2_1_1).append(this.$input_arrival_ext_station_from_name);
+        $div_input_group_append_cw2_1.append(this.$button_arrival_ext_station_from_name.append($icon_cw2_1));
+        $div_input_group_cw2_1.append(this.$input_arrival_ext_station_from_name).append($div_input_group_append_cw2_1);
+        $div_group_cw2_1.append($lab_cw2_1_1).append($div_input_group_cw2_1);
+        // outgoing_uz_document_station_to_name
+        var $div_group_cw2_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw2_2_1 = $('<label></label>', { for: 'outgoing_ext_station_to_name', text: langView('vtdr_label_cw_outgoing_ext_station_to_name', App.Langs) });
+        var $div_input_group_cw2_2 = $('<div></div>', { class: 'input-group' });
+        this.$input_outgoing_ext_station_to_name = $('<input>', { id: 'outgoing_ext_station_to_name', name: 'outgoing_ext_station_to_name', class: 'form-control', type: 'text' });
+        var $div_input_group_append_cw2_2 = $('<div></div>', { class: 'input-group-append' });
+        this.$button_outgoing_ext_station_to_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        var $icon_cw2_2 = $('<i class="fa-solid fa-eye"></i>');
+        //$div_group_cw2_2.append($lab_cw2_2_1).append(this.$input_outgoing_ext_station_to_name);
+        $div_input_group_append_cw2_2.append(this.$button_outgoing_ext_station_to_name.append($icon_cw2_2));
+        $div_input_group_cw2_2.append(this.$input_outgoing_ext_station_to_name).append($div_input_group_append_cw2_2);
+        $div_group_cw2_2.append($lab_cw2_2_1).append($div_input_group_cw2_2);
+        // --
+        var $div_row_cw3 = $('<div></div>', { class: 'form-row' });
+        // arrival_uz_document_nom_main_doc
+        var $div_group_cw3_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw3_1_1 = $('<label></label>', { for: 'arrival_nom_main_doc', text: langView('vtdr_label_cw_arrival_nom_main_doc', App.Langs) });
+        this.$input_arrival_nom_main_doc = $('<input>', { id: 'arrival_nom_main_doc', name: 'arrival_nom_main_doc', class: 'form-control', type: 'text' });
+        $div_group_cw3_1.append($lab_cw3_1_1).append(this.$input_arrival_nom_main_doc);
+        // outgoing_uz_document_nom_doc
+        var $div_group_cw3_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $lab_cw3_2_1 = $('<label></label>', { for: 'outgoing_nom_doc', text: langView('vtdr_label_cw_outgoing_nom_doc', App.Langs) });
+        this.$input_outgoing_nom_doc = $('<input>', { id: 'outgoing_nom_doc', name: 'outgoing_nom_doc', class: 'form-control', type: 'text' });
+        $div_group_cw3_2.append($lab_cw3_2_1).append(this.$input_outgoing_nom_doc);
 
+        $div_row_cw1.append($div_group_cw1_1).append($div_group_cw1_2).append($div_group_cw1_3);
+        $div_row_cw2.append($div_group_cw2_1).append($div_group_cw2_2);
+        $div_row_cw3.append($div_group_cw3_1).append($div_group_cw3_2);
+
+        $form_cw.append($div_row_cw1).append($div_row_cw2).append($div_row_cw3);
+
+        this.$common_wagon.append($form_cw);
+
+        // Добавим div для таблицы
         this.$report_wagon.append($('<div id="incoming-outgoing-car"></div>'));
 
         //--------------------------------------------------------------------
@@ -5273,6 +5347,14 @@
             fn_action_view_detali: function (rows) {
 
             },
+            fn_select_rows: function (rows) {
+                if (rows && rows.length > 0 && rows[0].wir_id) {
+                    this.view_common_wagon(rows[0]);
+                } else {
+                    this.view_common_wagon(null);
+                }
+                LockScreenOff();
+            }.bind(this),
         });
 
     };
@@ -5283,6 +5365,27 @@
             LockScreenOff();
         }.bind(this));
     };
+    // отобразить информацию по вагону детально
+    view_td_report.prototype.view_common_wagon = function (row) {
+        if (row) {
+            this.$input_arrival_station_on_name.val(row['arrival_sostav_station_on_name_' + App.Lang]);
+            this.$input_outgoing_from_station_amkr_name.val(row['outgoing_sostav_from_station_amkr_name_' + App.Lang]);
+            this.$input_arrival_num_doc.val(row.arrival_sostav_num_doc);
+            this.$input_arrival_ext_station_from_name.val(row['arrival_uz_document_station_from_name_' + App.Lang]);
+            this.$input_outgoing_ext_station_to_name.val(row['outgoing_uz_document_station_to_name_' + App.Lang]);
+            this.$input_arrival_nom_main_doc.val(row.arrival_uz_document_nom_main_doc);
+            this.$input_outgoing_nom_doc.val(row.outgoing_uz_document_nom_doc);
+        } else {
+            this.$input_arrival_station_on_name.val('');
+            this.$input_outgoing_from_station_amkr_name.val('');
+            this.$input_arrival_num_doc.val('');
+            this.$input_arrival_ext_station_from_name.val('');
+            this.$input_outgoing_ext_station_to_name.val('');
+            this.$input_arrival_nom_main_doc.val('');
+            this.$input_outgoing_nom_doc.val('');
+        }
+    };
+
     // Загрузить отчет  "Информация по вагону и собственнику"
     view_td_report.prototype.load_report_4_1 = function (callback) {
         LockScreen(langView('vtdr_load_incoming_outgoing_car', App.Langs));
