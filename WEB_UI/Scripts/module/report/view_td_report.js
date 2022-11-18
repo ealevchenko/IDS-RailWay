@@ -126,8 +126,9 @@
             'vtdr_label_cw_arrival_station_on_name': 'Станция приема:',
             'vtdr_label_cw_outgoing_from_station_amkr_name': 'Станция отправления:',
             'vtdr_label_cw_arrival_num_doc': '№ вед. прибытия:',
+            'vtdr_label_cw_outgoing_num_doc': '№ вед. отправки:',
             'vtdr_label_cw_arrival_ext_station_from_name': 'Станция отправления:',
-            'vtdr_label_cw_outgoing_ext_station_to_name': 'Станция прибытия:',
+            'vtdr_label_cw_outgoing_ext_station_to_name': 'Станция назначения:',
             'vtdr_label_cw_arrival_nom_main_doc': '№ ж.д. накладной ПРИБ:',
             'vtdr_label_cw_outgoing_nom_doc': '№ ж.д. накладной ОТПР:',
 
@@ -138,6 +139,7 @@
             'vtdr_title_excel_sheet_name': 'Погран переходы',
 
             'vtdr_title_common_wagon_legend': 'Общая информация по вагону',
+            'vtdr_title_operator_wagon_legend': 'Информация по операторам АМКР',
             'vtdr_title_report_wagon_legend': 'Отчет по вагону',
             'vtdr_title_report_operation_legend': 'Отчет  оператору АМКР',
 
@@ -511,13 +513,23 @@
         this.div_select_date = $('input#select_date').closest("div").prev().closest("div");
         this.div_select_date.hide();
         this.div_interval_date.hide();
-        this.select_report(1);
+        this.form_panel.enable('type_select');
+        this.type = 1; // по умолчанию
+        this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        if (this.report === 4) {
+            this.start = moment().subtract(5, 'years').set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+            this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+            this.type = 4;
+            this.form_panel.disable('type_select', null);
+        }
+        this.select_report(this.type);
     };
     // Выбор типа отчета
     view_td_report.prototype.select_report = function (type) {
         this.type = type;
-        this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
-        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        this.form_panel.set('type_select', this.type);
+
         if (type === 4) {
             this.div_select_date.hide();
             this.div_interval_date.show();
@@ -606,6 +618,9 @@
                 break;
             }
             case 4: {
+                //this.select_report(4);
+                //this.start = moment().subtract(5,'years').set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+                //this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
                 this.view_report_4_1(this.start, this.stop);
                 break;
             }
@@ -5180,6 +5195,15 @@
             size: 'xl',
             col: 12,
         });
+        var row_common_wagon = new this.fe_ui.bs_row();
+        var col_common_wagon1 = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 5,
+        });
+        var col_common_wagon2 = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 7,
+        });
         row_common.$row.append(col_common.$col);
         var card_common = new this.fe_ui.bs_card({
             id: null,
@@ -5230,87 +5254,119 @@
             class_legend: 'border-primary',
         });
         this.$common_wagon = fieldset_common_wagon.$fieldset;
+        var fieldset_operator_wagon = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: langView('vtdr_title_operator_wagon_legend', App.Langs),
+            class_legend: 'border-primary',
+        });
+        this.$operator_wagon = fieldset_operator_wagon.$fieldset;
         var fieldset_report_wagon = new this.fe_ui.fieldset({
             class: 'border-primary',
             legend: langView('vtdr_title_report_wagon_legend', App.Langs),
             class_legend: 'border-primary',
         });
         this.$report_wagon = fieldset_report_wagon.$fieldset;
-        var fieldset_report_operation = new this.fe_ui.fieldset({
-            class: 'border-primary',
-            legend: langView('vtdr_title_report_operation_legend', App.Langs),
-            class_legend: 'border-primary',
-        });
-        this.$report_operation = fieldset_report_operation.$fieldset;
+        //var fieldset_report_operation = new this.fe_ui.fieldset({
+        //    class: 'border-primary',
+        //    legend: langView('vtdr_title_report_operation_legend', App.Langs),
+        //    class_legend: 'border-primary',
+        //});
+        //this.$report_operation = fieldset_report_operation.$fieldset;
         //
         card_common.$header.append(this.form_select_num.$form);
-        card_common.$body.append(this.$common_wagon).append(this.$report_wagon).append(this.$report_operation);
+        row_common_wagon.$row.append(col_common_wagon1.$col.append(this.$common_wagon)).append(col_common_wagon2.$col.append(this.$operator_wagon))
+
+        card_common.$body.append(row_common_wagon.$row).append(this.$report_wagon);
         //
         col_common.$col.append(card_common.$card);
         this.$main_report.append(row_common.$row);
         // добавим поля детально информация по внутреннему перемещению
         var $form_cw = $('<form></form>');
         // --
+        var $div_row_cw0 = $('<div></div>', { class: 'form-row' });
+        // arrival_sostav_num_doc
+        var $div_group_cw0_1 = $('<div></div>', { class: 'form-group col-md-6' });
+        var $lab_cw0_1_1 = $('<label></label>', { for: 'arrival_num_doc', text: langView('vtdr_label_cw_arrival_num_doc', App.Langs) });
+        var $div_input_group_cw0_1 = $('<div></div>', { class: 'input-group' });
+        this.$input_arrival_num_doc = $('<input>', { id: 'arrival_num_doc', name: 'arrival_num_doc', class: 'form-control', type: 'number' });
+        var $div_input_group_append_cw0_1 = $('<div></div>', { class: 'input-group-append' });
+        this.$button_arrival_num_doc = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        var $icon_cw0_1 = $('<i class="fa-solid fa-eye"></i>');
+        //$div_group_cw0_1.append($lab_cw0_1_1).append(this.$input_arrival_num_doc);
+        $div_input_group_append_cw0_1.append(this.$button_arrival_num_doc.append($icon_cw0_1));
+        $div_input_group_cw0_1.append(this.$input_arrival_num_doc).append($div_input_group_append_cw0_1);
+        $div_group_cw0_1.append($lab_cw0_1_1).append($div_input_group_cw0_1);
+
+        // outgoing_sostav_num_doc
+        var $div_group_cw0_2 = $('<div></div>', { class: 'form-group col-md-6' });
+        var $lab_cw0_2_1 = $('<label></label>', { for: 'outgoing_num_doc', text: langView('vtdr_label_cw_outgoing_num_doc', App.Langs) });
+        var $div_input_group_cw0_2 = $('<div></div>', { class: 'input-group' });
+        this.$input_outgoing_num_doc = $('<input>', { id: 'outgoing_num_doc', name: 'outgoing_num_doc', class: 'form-control', type: 'number' });
+        var $div_input_group_append_cw0_2 = $('<div></div>', { class: 'input-group-append' });
+        this.$button_outgoing_num_doc = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        var $icon_cw0_2 = $('<i class="fa-solid fa-eye"></i>');
+        //$div_group_cw0_2.append($lab_cw0_2_1).append(this.$input_outgoing_num_doc);
+        $div_input_group_append_cw0_2.append(this.$button_outgoing_num_doc.append($icon_cw0_2));
+        $div_input_group_cw0_2.append(this.$input_outgoing_num_doc).append($div_input_group_append_cw0_2);
+        $div_group_cw0_2.append($lab_cw0_2_1).append($div_input_group_cw0_2);
+
         var $div_row_cw1 = $('<div></div>', { class: 'form-row' });
         // 
-        var $div_group_cw1_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw1_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw1_1_1 = $('<label></label>', { for: 'arrival_station_on_name', text: langView('vtdr_label_cw_arrival_station_on_name', App.Langs) });
         this.$input_arrival_station_on_name = $('<input>', { id: 'arrival_station_on_name', name: 'arrival_station_on_name', class: 'form-control', type: 'text' });
         $div_group_cw1_1.append($lab_cw1_1_1).append(this.$input_arrival_station_on_name);
         // outgoing_sostav_from_station_amkr_name
-        var $div_group_cw1_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw1_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw1_2_1 = $('<label></label>', { for: 'outgoing_from_station_amkr_name', text: langView('vtdr_label_cw_outgoing_from_station_amkr_name', App.Langs) });
         this.$input_outgoing_from_station_amkr_name = $('<input>', { id: 'outgoing_from_station_amkr_name', name: 'outgoing_from_station_amkr_name', class: 'form-control', type: 'text' });
         $div_group_cw1_2.append($lab_cw1_2_1).append(this.$input_outgoing_from_station_amkr_name);
-        // arrival_sostav_num_doc
-        var $div_group_cw1_3 = $('<div></div>', { class: 'form-group col-md-4' });
-        var $lab_cw1_3_1 = $('<label></label>', { for: 'arrival_num_doc', text: langView('vtdr_label_cw_arrival_num_doc', App.Langs) });
-        this.$input_arrival_num_doc = $('<input>', { id: 'arrival_num_doc', name: 'arrival_num_doc', class: 'form-control', type: 'text' });
-        $div_group_cw1_3.append($lab_cw1_3_1).append(this.$input_arrival_num_doc);
+
         // --
         var $div_row_cw2 = $('<div></div>', { class: 'form-row' });
         // arrival_uz_document_station_from_name
-        var $div_group_cw2_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw2_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw2_1_1 = $('<label></label>', { for: 'arrival_ext_station_from_name', text: langView('vtdr_label_cw_arrival_ext_station_from_name', App.Langs) });
-        var $div_input_group_cw2_1 = $('<div></div>', { class: 'input-group' });
+        //var $div_input_group_cw2_1 = $('<div></div>', { class: 'input-group' });
         this.$input_arrival_ext_station_from_name = $('<input>', { id: 'arrival_ext_station_from_name', name: 'arrival_ext_station_from_name', class: 'form-control', type: 'text' });
-        var $div_input_group_append_cw2_1 = $('<div></div>', { class: 'input-group-append' });
+        //var $div_input_group_append_cw2_1 = $('<div></div>', { class: 'input-group-append' });
         this.$button_arrival_ext_station_from_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
-        var $icon_cw2_1 = $('<i class="fa-solid fa-eye"></i>');
-        //$div_group_cw2_1.append($lab_cw2_1_1).append(this.$input_arrival_ext_station_from_name);
-        $div_input_group_append_cw2_1.append(this.$button_arrival_ext_station_from_name.append($icon_cw2_1));
-        $div_input_group_cw2_1.append(this.$input_arrival_ext_station_from_name).append($div_input_group_append_cw2_1);
-        $div_group_cw2_1.append($lab_cw2_1_1).append($div_input_group_cw2_1);
+        //var $icon_cw2_1 = $('<i class="fa-solid fa-eye"></i>');
+        $div_group_cw2_1.append($lab_cw2_1_1).append(this.$input_arrival_ext_station_from_name);
+        //$div_input_group_append_cw2_1.append(this.$button_arrival_ext_station_from_name.append($icon_cw2_1));
+        //$div_input_group_cw2_1.append(this.$input_arrival_ext_station_from_name).append($div_input_group_append_cw2_1);
+        //$div_group_cw2_1.append($lab_cw2_1_1).append($div_input_group_cw2_1);
         // outgoing_uz_document_station_to_name
-        var $div_group_cw2_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw2_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw2_2_1 = $('<label></label>', { for: 'outgoing_ext_station_to_name', text: langView('vtdr_label_cw_outgoing_ext_station_to_name', App.Langs) });
-        var $div_input_group_cw2_2 = $('<div></div>', { class: 'input-group' });
+        //var $div_input_group_cw2_2 = $('<div></div>', { class: 'input-group' });
         this.$input_outgoing_ext_station_to_name = $('<input>', { id: 'outgoing_ext_station_to_name', name: 'outgoing_ext_station_to_name', class: 'form-control', type: 'text' });
-        var $div_input_group_append_cw2_2 = $('<div></div>', { class: 'input-group-append' });
+        //var $div_input_group_append_cw2_2 = $('<div></div>', { class: 'input-group-append' });
         this.$button_outgoing_ext_station_to_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
-        var $icon_cw2_2 = $('<i class="fa-solid fa-eye"></i>');
-        //$div_group_cw2_2.append($lab_cw2_2_1).append(this.$input_outgoing_ext_station_to_name);
-        $div_input_group_append_cw2_2.append(this.$button_outgoing_ext_station_to_name.append($icon_cw2_2));
-        $div_input_group_cw2_2.append(this.$input_outgoing_ext_station_to_name).append($div_input_group_append_cw2_2);
-        $div_group_cw2_2.append($lab_cw2_2_1).append($div_input_group_cw2_2);
+        //var $icon_cw2_2 = $('<i class="fa-solid fa-eye"></i>');
+        $div_group_cw2_2.append($lab_cw2_2_1).append(this.$input_outgoing_ext_station_to_name);
+        //$div_input_group_append_cw2_2.append(this.$button_outgoing_ext_station_to_name.append($icon_cw2_2));
+        //$div_input_group_cw2_2.append(this.$input_outgoing_ext_station_to_name).append($div_input_group_append_cw2_2);
+        //$div_group_cw2_2.append($lab_cw2_2_1).append($div_input_group_cw2_2);
         // --
         var $div_row_cw3 = $('<div></div>', { class: 'form-row' });
         // arrival_uz_document_nom_main_doc
-        var $div_group_cw3_1 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw3_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw3_1_1 = $('<label></label>', { for: 'arrival_nom_main_doc', text: langView('vtdr_label_cw_arrival_nom_main_doc', App.Langs) });
         this.$input_arrival_nom_main_doc = $('<input>', { id: 'arrival_nom_main_doc', name: 'arrival_nom_main_doc', class: 'form-control', type: 'text' });
         $div_group_cw3_1.append($lab_cw3_1_1).append(this.$input_arrival_nom_main_doc);
         // outgoing_uz_document_nom_doc
-        var $div_group_cw3_2 = $('<div></div>', { class: 'form-group col-md-4' });
+        var $div_group_cw3_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw3_2_1 = $('<label></label>', { for: 'outgoing_nom_doc', text: langView('vtdr_label_cw_outgoing_nom_doc', App.Langs) });
         this.$input_outgoing_nom_doc = $('<input>', { id: 'outgoing_nom_doc', name: 'outgoing_nom_doc', class: 'form-control', type: 'text' });
         $div_group_cw3_2.append($lab_cw3_2_1).append(this.$input_outgoing_nom_doc);
 
-        $div_row_cw1.append($div_group_cw1_1).append($div_group_cw1_2).append($div_group_cw1_3);
+        $div_row_cw0.append($div_group_cw0_1).append($div_group_cw0_2);
+        $div_row_cw1.append($div_group_cw1_1).append($div_group_cw1_2);
         $div_row_cw2.append($div_group_cw2_1).append($div_group_cw2_2);
         $div_row_cw3.append($div_group_cw3_1).append($div_group_cw3_2);
 
-        $form_cw.append($div_row_cw1).append($div_row_cw2).append($div_row_cw3);
+        $form_cw.append($div_row_cw0).append($div_row_cw1).append($div_row_cw2).append($div_row_cw3);
 
         this.$common_wagon.append($form_cw);
 
@@ -5368,17 +5424,19 @@
     // отобразить информацию по вагону детально
     view_td_report.prototype.view_common_wagon = function (row) {
         if (row) {
+            this.$input_arrival_num_doc.val(row.arrival_sostav_num_doc);
+            this.$input_outgoing_num_doc.val(row.outgoing_sostav_num_doc);
             this.$input_arrival_station_on_name.val(row['arrival_sostav_station_on_name_' + App.Lang]);
             this.$input_outgoing_from_station_amkr_name.val(row['outgoing_sostav_from_station_amkr_name_' + App.Lang]);
-            this.$input_arrival_num_doc.val(row.arrival_sostav_num_doc);
             this.$input_arrival_ext_station_from_name.val(row['arrival_uz_document_station_from_name_' + App.Lang]);
             this.$input_outgoing_ext_station_to_name.val(row['outgoing_uz_document_station_to_name_' + App.Lang]);
-            this.$input_arrival_nom_main_doc.val(row.arrival_uz_document_nom_main_doc);
+            this.$input_arrival_nom_main_doc.val((row.arrival_uz_document_nom_main_doc !== null ? row.arrival_uz_document_nom_main_doc : '') + (row.arrival_uz_document_nom_doc !== null ? '/' + row.arrival_uz_document_nom_doc : ''));
             this.$input_outgoing_nom_doc.val(row.outgoing_uz_document_nom_doc);
         } else {
+            this.$input_arrival_num_doc.val('');
+            this.$input_outgoing_num_doc.val('');
             this.$input_arrival_station_on_name.val('');
             this.$input_outgoing_from_station_amkr_name.val('');
-            this.$input_arrival_num_doc.val('');
             this.$input_arrival_ext_station_from_name.val('');
             this.$input_outgoing_ext_station_to_name.val('');
             this.$input_arrival_nom_main_doc.val('');
