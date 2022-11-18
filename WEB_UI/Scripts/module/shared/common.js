@@ -1470,7 +1470,7 @@
         }
     };
     // Прочесть значение компонента
-    form_inline.prototype.get = function (id, value) {
+    form_inline.prototype.get = function (id) {
         if (this.settings.fields) {
             var field = this.settings.fields.find(function (o) {
                 return o.id === id
@@ -1493,6 +1493,28 @@
             }
         }
     };
+     // Установит значение enable
+    form_inline.prototype.enable = function (id) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                field.element.enable();
+            }
+        }
+    };   
+     // Установит значение enable
+    form_inline.prototype.disable = function (id, clear) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                field.element.disable(clear);
+            }
+        }
+    };  
     // Удаление формы
     form_inline.prototype.destroy = function () {
         $.each(this.el_destroy, function (i, el) {
