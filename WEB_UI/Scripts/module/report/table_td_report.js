@@ -190,6 +190,16 @@
 
             'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
 
+            'ttdr_field_curr_wagons_rent_id_operator': 'id_operator',
+            'ttdr_field_curr_wagons_rent_operators': 'Оператор АМКР',
+            'ttdr_field_curr_wagons_rent_operator_abbr': 'Оператор АМКР',
+            'ttdr_field_curr_wagons_rent_start': 'Начало аренды',
+            'ttdr_field_curr_wagons_rent_end': 'Окончание арены',
+            'ttdr_field_curr_wagons_rent_operator_paid': 'Платный',
+            'ttdr_field_curr_wagons_rent_id_limiting': 'id_limiting',
+            'ttdr_field_curr_wagons_rent_limiting_name': 'Ограничение',
+            'ttdr_field_curr_wagons_rent_limiting_abbr': 'Ограничение',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
 
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
@@ -1546,7 +1556,6 @@
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act', App.Langs), width: "100px", orderable: true, searchable: true
         },
-
         //----------------------------------------------------
         // Простой
         {
@@ -1575,8 +1584,80 @@
             className: 'dt-body-left mw-200',
             title: langView('ttdr_field_incoming_outgoing_car_wir_note', App.Langs), width: "200px", orderable: true, searchable: true
         },
-        //shorten mw-100
-
+        // История аренд операторов
+        {
+            field: 'curr_wagons_rent_id_operator',
+            data: function (row, type, val, meta) {
+                return row.curr_wagons_rent_id_operator;
+            },
+            className: 'dt-body-center operator',
+            title: langView('ttdr_field_curr_wagons_rent_id_operator', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_operators',
+            data: function (row, type, val, meta) {
+                return row['curr_wagons_rent_operators_' + App.Lang];
+            },
+            className: 'dt-body-left mw-200',
+            title: langView('ttdr_field_curr_wagons_rent_operators', App.Langs), width: "200px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['curr_wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left mw-200',
+            title: langView('ttdr_field_curr_wagons_rent_operator_abbr', App.Langs), width: "200px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_start',
+            data: function (row, type, val, meta) {
+                return row.curr_wagons_rent_start ? moment(row.curr_wagons_rent_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_curr_wagons_rent_start', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_end',
+            data: function (row, type, val, meta) {
+                return row.curr_wagons_rent_end ? moment(row.curr_wagons_rent_end).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_curr_wagons_rent_end', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_operator_paid',
+            data: function (row, type, val, meta) {
+                return row.curr_wagons_rent_operator_paid ? langView('togc_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-centr',
+            title: langView('ttdr_field_curr_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        //
+        {
+            field: 'curr_wagons_rent_id_limiting',
+            data: function (row, type, val, meta) {
+                return row.curr_wagons_rent_id_limiting;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_curr_wagons_rent_id_limiting', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_limiting_name',
+            data: function (row, type, val, meta) {
+                return row['curr_wagons_rent_limiting_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_curr_wagons_rent_limiting_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'curr_wagons_rent_limiting_abbr',
+            data: function (row, type, val, meta) {
+                return row['curr_wagons_rent_limiting_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_curr_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -2000,6 +2081,16 @@
 
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей incoming_outgoing_car
+    table_td_report.prototype.init_columns_list_wagons_rent = function () {
+        var collums = [];
+        collums.push({ field: 'curr_wagons_rent_operators', title: null, class: null });
+        collums.push({ field: 'curr_wagons_rent_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'curr_wagons_rent_start', title: null, class: null });
+        collums.push({ field: 'curr_wagons_rent_end', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -2249,6 +2340,20 @@
     };
     //
     table_td_report.prototype.init_button_incoming_outgoing_car = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_list_wagons_rent = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -2692,6 +2797,26 @@
                 this.autoWidth = true;
                 this.table_columns = this.init_columns_incoming_outgoing_car();
                 this.table_buttons = this.init_button_incoming_outgoing_car();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'list_wagons_rent': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_list_wagons_rent();
+                this.table_buttons = this.init_button_list_wagons_rent();
                 this.dom = 'Bfrtip';
                 break;
             };
