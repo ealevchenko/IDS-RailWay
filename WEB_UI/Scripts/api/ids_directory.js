@@ -549,7 +549,7 @@ IDS_DIRECTORY.prototype.load = function (list, lockOff, callback) {
             });
         };
         if (el === 'wagon_rent') {
-            IDS_DIRECTORY.prototype.getWagonRent(function (result_wagon_rent) {
+            IDS_DIRECTORY.prototype.getWagonsRent(function (result_wagon_rent) {
                 obj.list_wagon_rent = result_wagon_rent;
                 count -= 1;
                 if (count === 0) {
@@ -673,14 +673,13 @@ IDS_DIRECTORY.prototype.loadWagon = function (callback) {
 // Загрузка справочника аренд вагонов новый
 IDS_DIRECTORY.prototype.loadWagonRent = function (callback) {
     var obj = this;
-    IDS_DIRECTORY.prototype.getWagonRent(function (result_cars) {
-        obj.getWagonRent = result_cars;
+    IDS_DIRECTORY.prototype.getWagonsRent(function (result_cars) {
+        obj.list_wagon_rent = result_cars;
         if (typeof callback === 'function') {
             callback();
         }
     });
 };
-
 // Загрузка справочника владельцев вагонов
 IDS_DIRECTORY.prototype.loadOwnersWagons = function (callback) {
     var obj = this;
@@ -1264,6 +1263,29 @@ IDS_DIRECTORY.prototype.getWagonsRentOfNum = function (num, callback) {
         },
         error: function (x, y, z) {
             OnAJAXError("IDS_DIRECTORY.getWagonsRentOfNum", x, y, z);
+        },
+        complete: function () {
+            AJAXComplete();
+        },
+    });
+};
+// Получить аренды по номеру вагона (полная выбрка)
+IDS_DIRECTORY.prototype.getViewWagonsRentOfNum = function (num, callback) {
+    $.ajax({
+        type: 'GET',
+        url: '../../api/ids/directory/wagon_rent/view/num/' + num,
+        async: true,
+        dataType: 'json',
+        beforeSend: function () {
+            AJAXBeforeSend();
+        },
+        success: function (data) {
+            if (typeof callback === 'function') {
+                callback(data);
+            }
+        },
+        error: function (x, y, z) {
+            OnAJAXError("IDS_DIRECTORY.getViewWagonsRentOfNum", x, y, z);
         },
         complete: function () {
             AJAXComplete();
@@ -6156,6 +6178,13 @@ IDS_DIRECTORY.prototype.getCloneWagons = function (wagon) {
     };
 }
 //*======= IDS_DIRECTORY.list_wagon_rent  (Справочник аренд вагонов) ======================================
+IDS_DIRECTORY.prototype.geWagonsRent_Of_num = function (num) {
+    var wagon = null;
+    if (this.list_wagon_rent && this.list_wagon_rent.length > 0) {
+        wagon = this.list_wagon_rent.filter(function (i) { return o.num === num });
+    }
+    return wagon;
+};
 // Вернуть текущую аренду вагона
 IDS_DIRECTORY.prototype.getCurrentRentOfWagon = function (vagon) {
     if (vagon && vagon.Directory_WagonsRent && vagon.Directory_WagonsRent.length > 0) {
