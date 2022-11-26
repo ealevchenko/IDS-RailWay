@@ -16,6 +16,35 @@ using WEB_UI.Infrastructure;
 
 namespace WEB_UI.Controllers.api
 {
+    public class view_wagons_rent
+    {
+        public int id { get; set; }
+        public int num { get; set; }
+        public int? curr_wagons_rent_id_operator { get; set; }
+        public string curr_wagons_rent_operators_ru { get; set; }
+        public string curr_wagons_rent_operators_en { get; set; }
+        public string curr_wagons_rent_operator_abbr_ru { get; set; }
+        public string curr_wagons_rent_operator_abbr_en { get; set; }
+        public DateTime? curr_wagons_rent_start { get; set; }
+        public DateTime? curr_wagons_rent_end { get; set; }
+        public bool? curr_wagons_rent_operator_paid { get; set; }
+        public string curr_wagons_rent_operator_color { get; set; }
+        public int? curr_wagons_rent_id_limiting { get; set; }
+        public string curr_wagons_rent_limiting_name_ru { get; set; }
+        public string curr_wagons_rent_limiting_name_en { get; set; }
+        public string curr_wagons_rent_limiting_abbr_ru { get; set; }
+        public string curr_wagons_rent_limiting_abbr_en { get; set; }
+        public int? id_operator { get; set; }
+        public int? id_limiting { get; set; }
+        public DateTime? rent_start { get; set; }
+        public DateTime? rent_end { get; set; }
+        public DateTime create { get; set; }
+        public string create_user { get; set; }
+        public DateTime? change { get; set; }
+        public string change_user { get; set; }
+        public int? parent_id { get; set; }
+    }
+
     /// <summary>
     /// СПИСОК СТРАН
     /// </summary>
@@ -85,6 +114,25 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/directory/wagon_rent/view/num/65201857
+        [Route("view/num/{num:int}")]
+        [ResponseType(typeof(view_wagons_rent))]
+        public IHttpActionResult GetViewWagonsRentOfNum(int num)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                string sql = "select * from [IDS].[get_view_wagons_rent_of_num](@num) order by id";
+                List<view_wagons_rent> list = this.ef_dir.Database.SqlQuery<view_wagons_rent>(sql, p_num).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST: api/ids/directory/wagon_rent/current/list_nums/
         [HttpPost]
