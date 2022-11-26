@@ -132,6 +132,23 @@
             'vtdr_label_cw_arrival_nom_main_doc': '№ ж.д. накладной ПРИБ:',
             'vtdr_label_cw_outgoing_nom_doc': '№ ж.д. накладной ОТПР:',
 
+            'vtdr_label_od_last_date_outgoing': 'Дата последней сдачи:',
+            'vtdr_label_od_instructional_letters_datetime': 'Дата последней инструкции:',
+            'vtdr_label_od_wagon_rod_abbr': 'Род вагона:',
+            'vtdr_label_od_wagon_date_rem_uz': 'Дата деп. ремонта:',
+            'vtdr_label_od_wir_note': 'Примечание:',
+            'vtdr_label_od_curr_wagons_rent_operator_abbr': 'Оператор АМКР:',
+            'vtdr_label_od_curr_wagons_rent_limiting_abbr': 'Ограничение:',
+            'vtdr_label_od_curr_wagons_rent_start': 'Начало аренды:',
+            'vtdr_label_od_curr_wagons_rent_end': 'Окончание арены:',
+            'vtdr_label_od_arrival_condition_abbr': 'Разметка ПРИБ:',
+            'vtdr_label_od_current_condition_abbr': 'Разметка текущ:',
+            'vtdr_label_od_current_condition_create': 'Дата изменения разметки:',
+            'vtdr_label_od_current_condition_create_user': 'Польз. изм. разм.:',
+            'vtdr_label_od_instructional_letters_num': '№ инструкции:',
+            'vtdr_label_od_instructional_letters_datetime': 'Дата инструкции:',
+            'vtdr_label_od_instructional_letters_station_name': 'Станция по инструкции:',
+
             'vtdr_title_all': 'Все',
             'vtdr_title_button_export': 'Экспорт',
             'vtdr_title_button_buffer': 'Буфер',
@@ -5220,7 +5237,7 @@
             id: 'num_wag',
             prefix: 'sm',
             title: langView('vtdr_title_num_wag', App.Langs),
-            default: 63530935,
+            default: null,
             change: function (event, ui) {
                 //event.preventDefault();
                 //// Обработать выбор
@@ -5266,12 +5283,6 @@
             class_legend: 'border-primary',
         });
         this.$report_wagon = fieldset_report_wagon.$fieldset;
-        //var fieldset_report_operation = new this.fe_ui.fieldset({
-        //    class: 'border-primary',
-        //    legend: langView('vtdr_title_report_operation_legend', App.Langs),
-        //    class_legend: 'border-primary',
-        //});
-        //this.$report_operation = fieldset_report_operation.$fieldset;
         //
         card_common.$header.append(this.form_select_num.$form);
         row_common_wagon.$row.append(col_common_wagon1.$col.append(this.$common_wagon)).append(col_common_wagon2.$col.append(this.$operator_wagon))
@@ -5288,9 +5299,18 @@
         var $div_group_cw0_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw0_1_1 = $('<label></label>', { for: 'arrival_num_doc', text: langView('vtdr_label_cw_arrival_num_doc', App.Langs) });
         var $div_input_group_cw0_1 = $('<div></div>', { class: 'input-group' });
-        this.$input_arrival_num_doc = $('<input>', { id: 'arrival_num_doc', name: 'arrival_num_doc', class: 'form-control', type: 'number' });
+        this.$input_arrival_num_doc = $('<input>', { id: 'arrival_num_doc', name: 'arrival_num_doc', class: 'form-control', type: 'number', disabled: '' });
         var $div_input_group_append_cw0_1 = $('<div></div>', { class: 'input-group-append' });
         this.$button_arrival_num_doc = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        this.$button_arrival_num_doc.on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var id = $(e.currentTarget).attr('id-arrival');
+            var date = $(e.currentTarget).attr('date');
+            if (id && date) {
+                window.open(url_incoming + '?id_arrival=' + id + '&arrival=' + date, '', '');
+            };
+        }.bind(this));
         var $icon_cw0_1 = $('<i class="fa-solid fa-eye"></i>');
         //$div_group_cw0_1.append($lab_cw0_1_1).append(this.$input_arrival_num_doc);
         $div_input_group_append_cw0_1.append(this.$button_arrival_num_doc.append($icon_cw0_1));
@@ -5301,9 +5321,19 @@
         var $div_group_cw0_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw0_2_1 = $('<label></label>', { for: 'outgoing_num_doc', text: langView('vtdr_label_cw_outgoing_num_doc', App.Langs) });
         var $div_input_group_cw0_2 = $('<div></div>', { class: 'input-group' });
-        this.$input_outgoing_num_doc = $('<input>', { id: 'outgoing_num_doc', name: 'outgoing_num_doc', class: 'form-control', type: 'number' });
+        this.$input_outgoing_num_doc = $('<input>', { id: 'outgoing_num_doc', name: 'outgoing_num_doc', class: 'form-control', type: 'number', disabled: '' });
         var $div_input_group_append_cw0_2 = $('<div></div>', { class: 'input-group-append' });
         this.$button_outgoing_num_doc = $('<button class="btn btn-outline-secondary" type="button"></button>');
+        this.$button_outgoing_num_doc.on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var id = $(e.currentTarget).attr('id-outgoing');
+            var date = $(e.currentTarget).attr('date');
+            if (id && date) {
+                //window.open(url_incoming + '?id_arrival=' + id + '&arrival=' + date, '', '');
+                window.open(url_outgoing + '?id=' + id + '&readiness=' + date, '', '');
+            };
+        }.bind(this));
         var $icon_cw0_2 = $('<i class="fa-solid fa-eye"></i>');
         //$div_group_cw0_2.append($lab_cw0_2_1).append(this.$input_outgoing_num_doc);
         $div_input_group_append_cw0_2.append(this.$button_outgoing_num_doc.append($icon_cw0_2));
@@ -5314,12 +5344,12 @@
         // 
         var $div_group_cw1_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw1_1_1 = $('<label></label>', { for: 'arrival_station_on_name', text: langView('vtdr_label_cw_arrival_station_on_name', App.Langs) });
-        this.$input_arrival_station_on_name = $('<input>', { id: 'arrival_station_on_name', name: 'arrival_station_on_name', class: 'form-control', type: 'text' });
+        this.$input_arrival_station_on_name = $('<input>', { id: 'arrival_station_on_name', name: 'arrival_station_on_name', class: 'form-control', type: 'text', disabled: '' });
         $div_group_cw1_1.append($lab_cw1_1_1).append(this.$input_arrival_station_on_name);
         // outgoing_sostav_from_station_amkr_name
         var $div_group_cw1_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw1_2_1 = $('<label></label>', { for: 'outgoing_from_station_amkr_name', text: langView('vtdr_label_cw_outgoing_from_station_amkr_name', App.Langs) });
-        this.$input_outgoing_from_station_amkr_name = $('<input>', { id: 'outgoing_from_station_amkr_name', name: 'outgoing_from_station_amkr_name', class: 'form-control', type: 'text' });
+        this.$input_outgoing_from_station_amkr_name = $('<input>', { id: 'outgoing_from_station_amkr_name', name: 'outgoing_from_station_amkr_name', class: 'form-control', type: 'text', disabled: '' });
         $div_group_cw1_2.append($lab_cw1_2_1).append(this.$input_outgoing_from_station_amkr_name);
 
         // --
@@ -5328,7 +5358,7 @@
         var $div_group_cw2_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw2_1_1 = $('<label></label>', { for: 'arrival_ext_station_from_name', text: langView('vtdr_label_cw_arrival_ext_station_from_name', App.Langs) });
         //var $div_input_group_cw2_1 = $('<div></div>', { class: 'input-group' });
-        this.$input_arrival_ext_station_from_name = $('<input>', { id: 'arrival_ext_station_from_name', name: 'arrival_ext_station_from_name', class: 'form-control', type: 'text' });
+        this.$input_arrival_ext_station_from_name = $('<input>', { id: 'arrival_ext_station_from_name', name: 'arrival_ext_station_from_name', class: 'form-control', type: 'text', disabled: '' });
         //var $div_input_group_append_cw2_1 = $('<div></div>', { class: 'input-group-append' });
         this.$button_arrival_ext_station_from_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
         //var $icon_cw2_1 = $('<i class="fa-solid fa-eye"></i>');
@@ -5340,7 +5370,7 @@
         var $div_group_cw2_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw2_2_1 = $('<label></label>', { for: 'outgoing_ext_station_to_name', text: langView('vtdr_label_cw_outgoing_ext_station_to_name', App.Langs) });
         //var $div_input_group_cw2_2 = $('<div></div>', { class: 'input-group' });
-        this.$input_outgoing_ext_station_to_name = $('<input>', { id: 'outgoing_ext_station_to_name', name: 'outgoing_ext_station_to_name', class: 'form-control', type: 'text' });
+        this.$input_outgoing_ext_station_to_name = $('<input>', { id: 'outgoing_ext_station_to_name', name: 'outgoing_ext_station_to_name', class: 'form-control', type: 'text', disabled: '' });
         //var $div_input_group_append_cw2_2 = $('<div></div>', { class: 'input-group-append' });
         this.$button_outgoing_ext_station_to_name = $('<button class="btn btn-outline-secondary" type="button"></button>');
         //var $icon_cw2_2 = $('<i class="fa-solid fa-eye"></i>');
@@ -5353,12 +5383,12 @@
         // arrival_uz_document_nom_main_doc
         var $div_group_cw3_1 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw3_1_1 = $('<label></label>', { for: 'arrival_nom_main_doc', text: langView('vtdr_label_cw_arrival_nom_main_doc', App.Langs) });
-        this.$input_arrival_nom_main_doc = $('<input>', { id: 'arrival_nom_main_doc', name: 'arrival_nom_main_doc', class: 'form-control', type: 'text' });
+        this.$input_arrival_nom_main_doc = $('<input>', { id: 'arrival_nom_main_doc', name: 'arrival_nom_main_doc', class: 'form-control', type: 'text', disabled: '' });
         $div_group_cw3_1.append($lab_cw3_1_1).append(this.$input_arrival_nom_main_doc);
         // outgoing_uz_document_nom_doc
         var $div_group_cw3_2 = $('<div></div>', { class: 'form-group col-md-6' });
         var $lab_cw3_2_1 = $('<label></label>', { for: 'outgoing_nom_doc', text: langView('vtdr_label_cw_outgoing_nom_doc', App.Langs) });
-        this.$input_outgoing_nom_doc = $('<input>', { id: 'outgoing_nom_doc', name: 'outgoing_nom_doc', class: 'form-control', type: 'text' });
+        this.$input_outgoing_nom_doc = $('<input>', { id: 'outgoing_nom_doc', name: 'outgoing_nom_doc', class: 'form-control', type: 'text', disabled: '' });
         $div_group_cw3_2.append($lab_cw3_2_1).append(this.$input_outgoing_nom_doc);
 
         $div_row_cw0.append($div_group_cw0_1).append($div_group_cw0_2);
@@ -5369,23 +5399,160 @@
         $form_cw.append($div_row_cw0).append($div_row_cw1).append($div_row_cw2).append($div_row_cw3);
 
         this.$common_wagon.append($form_cw);
-
-        // Добавим div для таблицы
+        // ------------------------------------------------------------------
+        // Создадим панель выбора "Оператор текущий детально - таблица всех операторов"
+        var nav_tabs_operators_wagon = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-operators-wagon',
+            class_nav: null,
+            id_content: 'tab-operators-wagon-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'operators-wagon-detali',
+                    aria_controls: 'operators-wagon-detali-tab',
+                    label: 'Детально',
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'operators-wagon-list',
+                    aria_controls: 'operators-wagon-list-tab',
+                    label: 'Все операторы',
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });
+        // Закладка отчет детально -----------------
+        // Создадим форму вывода детальной информации
+        var $form_od = $('<form></form>');
+        var $div_row_od1 = $('<div></div>', { class: 'form-row' });
+        // даты
+        var $div_group_od1_1 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od1_1_1 = $('<label></label>', { for: 'arrival_station_on_name', text: langView('vtdr_label_od_last_date_outgoing', App.Langs) });
+        this.$input_last_date_outgoing = $('<input>', { id: 'last_date_outgoing', name: 'last_date_outgoing', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od1_1.append($lab_od1_1_1).append(this.$input_last_date_outgoing);
+        // 
+        var $div_group_od1_2 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od1_2_1 = $('<label></label>', { for: 'instructional_letters_datetime', text: langView('vtdr_label_od_instructional_letters_datetime', App.Langs) });
+        this.$input_instructional_letters_datetime = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od1_2.append($lab_od1_2_1).append(this.$input_instructional_letters_datetime);
+        var $div_group_od1_3 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od1_3_1 = $('<label></label>', { for: 'wagon_rod_abbr', text: langView('vtdr_label_od_wagon_rod_abbr', App.Langs) });
+        this.$input_wagon_rod_abbr = $('<input>', { id: 'wagon_rod_abbr', name: 'wagon_rod_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od1_3.append($lab_od1_3_1).append(this.$input_wagon_rod_abbr);
+        var $div_group_od1_4 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od1_4_1 = $('<label></label>', { for: 'wagon_date_rem_uz', text: langView('vtdr_label_od_wagon_date_rem_uz', App.Langs) });
+        this.$input_wagon_date_rem_uz = $('<input>', { id: 'wagon_date_rem_uz', name: 'wagon_date_rem_uz', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od1_4.append($lab_od1_4_1).append(this.$input_wagon_date_rem_uz);
+        // node
+        var $div_row_od2 = $('<div></div>', { class: 'form-row' });
+        var $div_group_od2_1 = $('<div></div>', { class: 'form-group col-md-12' });
+        var $lab_od2_1_1 = $('<label></label>', { for: 'wir_note', text: langView('vtdr_label_od_wir_note', App.Langs) });
+        this.$textarea_wir_note = $('<textarea></textarea>', { id: 'wir_note', name: 'wir_note', class: 'form-control form-control-sm', rows: '3', disabled: '' });
+        $div_group_od2_1.append($lab_od2_1_1).append(this.$textarea_wir_note);
+        // Операторы АМКР
+        var $div_row_od3 = $('<div></div>', { class: 'form-row' });
+        var $div_group_od3_1 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od3_1_1 = $('<label></label>', { for: 'curr_wagons_rent_operator_abbr', text: langView('vtdr_label_od_curr_wagons_rent_operator_abbr', App.Langs) });
+        this.$input_curr_wagons_rent_operator_abbr = $('<input>', { id: 'curr_wagons_rent_operator_abbr', name: 'curr_wagons_rent_operator_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od3_1.append($lab_od3_1_1).append(this.$input_curr_wagons_rent_operator_abbr);
+        var $div_group_od3_2 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od3_2_1 = $('<label></label>', { for: 'curr_wagons_rent_limiting_abbr', text: langView('vtdr_label_od_curr_wagons_rent_limiting_abbr', App.Langs) });
+        this.$input_curr_wagons_rent_limiting_abbr = $('<input>', { id: 'curr_wagons_rent_limiting_abbr', name: 'curr_wagons_rent_limiting_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od3_2.append($lab_od3_2_1).append(this.$input_curr_wagons_rent_limiting_abbr);
+        var $div_group_od3_3 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od3_3_1 = $('<label></label>', { for: 'curr_wagons_rent_start', text: langView('vtdr_label_od_curr_wagons_rent_start', App.Langs) });
+        this.$input_curr_wagons_rent_start = $('<input>', { id: 'curr_wagons_rent_start', name: 'curr_wagons_rent_start', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od3_3.append($lab_od3_3_1).append(this.$input_curr_wagons_rent_start);
+        var $div_group_od3_4 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od3_4_1 = $('<label></label>', { for: 'curr_wagons_rent_end', text: langView('vtdr_label_od_curr_wagons_rent_end', App.Langs) });
+        this.$input_curr_wagons_rent_end = $('<input>', { id: 'curr_wagons_rent_end', name: 'curr_wagons_rent_end', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od3_4.append($lab_od3_4_1).append(this.$input_curr_wagons_rent_end);
+        // Разметка
+        var $div_row_od4 = $('<div></div>', { class: 'form-row' });
+        var $div_group_od4_1 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od4_1_1 = $('<label></label>', { for: 'arrival_condition_abbr', text: langView('vtdr_label_od_arrival_condition_abbr', App.Langs) });
+        this.$input_arrival_condition_abbr = $('<input>', { id: 'arrival_condition_abbr', name: 'arrival_condition_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od4_1.append($lab_od4_1_1).append(this.$input_arrival_condition_abbr);
+        var $div_group_od4_2 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od4_2_1 = $('<label></label>', { for: 'current_condition_abbr', text: langView('vtdr_label_od_current_condition_abbr', App.Langs) });
+        this.$input_current_condition_abbr = $('<input>', { id: 'current_condition_abbr', name: 'current_condition_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od4_2.append($lab_od4_2_1).append(this.$input_current_condition_abbr);
+        var $div_group_od4_3 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od4_3_1 = $('<label></label>', { for: 'current_condition_create', text: langView('vtdr_label_od_current_condition_create', App.Langs) });
+        this.$input_current_condition_create = $('<input>', { id: 'current_condition_create', name: 'current_condition_create', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od4_3.append($lab_od4_3_1).append(this.$input_current_condition_create);
+        var $div_group_od4_4 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od4_4_1 = $('<label></label>', { for: 'current_condition_create_user', text: langView('vtdr_label_od_current_condition_create_user', App.Langs) });
+        this.$input_current_condition_create_user = $('<input>', { id: 'current_condition_create_user', name: 'current_condition_create_user', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od4_4.append($lab_od4_4_1).append(this.$input_current_condition_create_user);
+        // Инструкция
+        var $div_row_od5 = $('<div></div>', { class: 'form-row' });
+        var $div_group_od5_1 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od5_1_1 = $('<label></label>', { for: 'instructional_letters_num', text: langView('vtdr_label_od_instructional_letters_num', App.Langs) });
+        this.$input_instructional_letters_num = $('<input>', { id: 'instructional_letters_num', name: 'v', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od5_1.append($lab_od5_1_1).append(this.$input_instructional_letters_num);
+        var $div_group_od5_2 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od5_2_1 = $('<label></label>', { for: 'instructional_letters_datetime', text: langView('vtdr_label_od_instructional_letters_datetime', App.Langs) });
+        this.$input_instructional_letters_datetime1 = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od5_2.append($lab_od5_2_1).append(this.$input_instructional_letters_datetime1);
+        var $div_group_od5_3 = $('<div></div>', { class: 'form-group col-md-3' });
+        var $lab_od5_3_1 = $('<label></label>', { for: 'instructional_letters_station_name', text: langView('vtdr_label_od_instructional_letters_station_name', App.Langs) });
+        this.$input_instructional_letters_station_name = $('<input>', { id: 'instructional_letters_station_name', name: 'instructional_letters_station_name', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        $div_group_od5_3.append($lab_od5_3_1).append(this.$input_instructional_letters_station_name);
+        //
+        $div_row_od1.append($div_group_od1_1).append($div_group_od1_2).append($div_group_od1_3).append($div_group_od1_4);
+        $div_row_od2.append($div_group_od2_1);
+        $div_row_od3.append($div_group_od3_1).append($div_group_od3_2).append($div_group_od3_3).append($div_group_od3_4);
+        $div_row_od4.append($div_group_od4_1).append($div_group_od4_2).append($div_group_od4_3).append($div_group_od4_4);
+        $div_row_od5.append($div_group_od5_1).append($div_group_od5_2).append($div_group_od5_3);
+        $form_od.append($div_row_od1).append($div_row_od2).append($div_row_od3).append($div_row_od4).append($div_row_od5);
+        //
+        var div_row_detali = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
+        var $operators_wagon_detali = nav_tabs_operators_wagon.$content.find('div#operators-wagon-detali-tab'); // Все операторы
+        $operators_wagon_detali.append(div_row_detali.$row.append($('<div id="detali-operators-wagon" class="col-xl-12"></div>').append($form_od)));
+        // Закладка отчет таблица операторов 
+        var div_row_list = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
+        var $operators_wagon_list = nav_tabs_operators_wagon.$content.find('div#operators-wagon-list-tab'); // Все операторы
+        $operators_wagon_list.append(div_row_list.$row.append($('<div id="list-operators-wagon" class="col-xl-12"></div>')));
+        //
+        this.$operator_wagon.append(nav_tabs_operators_wagon.$ul).append(nav_tabs_operators_wagon.$content);
+        //--------------------------------------------------------------------
+        // Добавим div для таблицы история прибытия и отправк
         this.$report_wagon.append($('<div id="incoming-outgoing-car"></div>'));
 
         //--------------------------------------------------------------------
 
         // ------------------------------------------------
         // Запускаем ? процесса инициализации (паралельно)
-        var process = 1;
+        var process = 2;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
                 this.report_panel = 0;
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    switch (event.target.id) {
+                        case 'operators-wagon-detali': {
+
+                            break;
+                        };
+                        case 'operators-wagon-list': {
+
+                            break;
+                        };
+                    };
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                }.bind(this));
+
                 LockScreenOff();
             }
         }.bind(this);
-        out_init(process);
+
         //-----------------------------------------------
         // Таблица : Отчет по вагону  
         this.table_incoming_outgoing_car = new TTDR('div#incoming-outgoing-car');         // Создадим экземпляр
@@ -5412,11 +5579,30 @@
                 LockScreenOff();
             }.bind(this),
         });
+        // Таблица : Отчет по вагону  
+        this.table_wagons_rent = new TTDR('div#list-operators-wagon');         // Создадим экземпляр
+        this.table_wagons_rent.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'list_wagons_rent',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
 
+            },
+            fn_select_rows: function (rows) {
+
+            }.bind(this),
+        });
     };
-
     // Показать отчет  "Информация по вагону и собственнику"
     view_td_report.prototype.view_report_4_1 = function (start, stop) {
+        this.view_common_wagon(null); // очистим общую инормацию детально
         this.load_report_4_1(function () {
             LockScreenOff();
         }.bind(this));
@@ -5425,7 +5611,11 @@
     view_td_report.prototype.view_common_wagon = function (row) {
         if (row) {
             this.$input_arrival_num_doc.val(row.arrival_sostav_num_doc);
+            this.$button_arrival_num_doc.attr('id-arrival', row.arrival_sostav_id);
+            this.$button_arrival_num_doc.attr('date', row.arrival_sostav_date_arrival);
             this.$input_outgoing_num_doc.val(row.outgoing_sostav_num_doc);
+            this.$button_outgoing_num_doc.attr('id-outgoing', row.outgoing_sostav_id);
+            this.$button_outgoing_num_doc.attr('date', row.outgoing_sostav_date_readiness_uz);
             this.$input_arrival_station_on_name.val(row['arrival_sostav_station_on_name_' + App.Lang]);
             this.$input_outgoing_from_station_amkr_name.val(row['outgoing_sostav_from_station_amkr_name_' + App.Lang]);
             this.$input_arrival_ext_station_from_name.val(row['arrival_uz_document_station_from_name_' + App.Lang]);
@@ -5434,7 +5624,11 @@
             this.$input_outgoing_nom_doc.val(row.outgoing_uz_document_nom_doc);
         } else {
             this.$input_arrival_num_doc.val('');
+            this.$button_arrival_num_doc.attr('id-arrival', '');
+            this.$button_arrival_num_doc.attr('date', '');
             this.$input_outgoing_num_doc.val('');
+            this.$button_outgoing_num_doc.attr('id-outgoing', '');
+            this.$button_outgoing_num_doc.attr('date', '');
             this.$input_arrival_station_on_name.val('');
             this.$input_outgoing_from_station_amkr_name.val('');
             this.$input_arrival_ext_station_from_name.val('');
@@ -5443,36 +5637,102 @@
             this.$input_outgoing_nom_doc.val('');
         }
     };
-
+    // отобразить информацию по оператору АМКР детально
+    view_td_report.prototype.view_current_operator = function (row) {
+        if (row) {
+            this.$input_last_date_outgoing.val(row.last_date_outgoing);
+            this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime);
+            this.$input_wagon_rod_abbr.val(row['wagon_rod_abbr_' + App.Lang]);
+            this.$input_wagon_date_rem_uz.val(row.wagon_date_rem_uz);
+            this.$textarea_wir_note.val(row.wir_note);
+            this.$input_curr_wagons_rent_operator_abbr.val(row['curr_wagons_rent_operator_abbr_' + App.Lang]);
+            this.$input_curr_wagons_rent_limiting_abbr.val(row['curr_wagons_rent_limiting_abbr_' + App.Lang]);
+            this.$input_curr_wagons_rent_start.val(row.curr_wagons_rent_start);
+            this.$input_curr_wagons_rent_end.val(row.curr_wagons_rent_end);
+            this.$input_arrival_condition_abbr.val(row['arrival_condition_abbr_' + App.Lang]);
+            this.$input_current_condition_abbr.val(row['current_condition_abbr_' + App.Lang]);
+            this.$input_current_condition_create.val(row.current_condition_create);
+            this.$input_current_condition_create_user.val(row.current_condition_create_user);
+            this.$input_instructional_letters_num.val(row.instructional_letters_num);
+            this.$input_instructional_letters_datetime1.val(row.instructional_letters_datetime);
+            this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
+        } else {
+            this.$input_last_date_outgoing.val('');
+            this.$input_instructional_letters_datetime.val('');
+            this.$input_wagon_rod_abbr.val('');
+            this.$input_wagon_date_rem_uz.val('');
+            this.$textarea_wir_note.val('');
+            this.$input_curr_wagons_rent_operator_abbr.val('');
+            this.$input_curr_wagons_rent_limiting_abbr.val('');
+            this.$input_curr_wagons_rent_start.val('');
+            this.$input_curr_wagons_rent_end.val('');
+            this.$input_arrival_condition_abbr.val('');
+            this.$input_current_condition_abbr.val('');
+            this.$input_current_condition_create.val('');
+            this.$input_current_condition_create_user.val('');
+            this.$input_instructional_letters_num.val('');
+            this.$input_instructional_letters_datetime1.val('');
+            this.$input_instructional_letters_station_name.val('');
+        }
+    };
     // Загрузить отчет  "Информация по вагону и собственнику"
     view_td_report.prototype.load_report_4_1 = function (callback) {
         LockScreen(langView('vtdr_load_incoming_outgoing_car', App.Langs));
         var num = this.form_select_num.get('num_wag');
-        this.ids_wsd.getViewIncomingOutgoingCarsOfNum_Period(num, this.start, this.stop, function (result_wagons) {
-            // Обработать и показать данные
-            this.table_incoming_outgoing_car.view(result_wagons);
+        if (num) {
+            // Запускаем 3 процесса выборки
+            var process = 3;
+            // Выход из инициализации
+            var out_load = function (process) {
+                if (process === 0) {
+                    // Выход
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            }.bind(this);
+            // Выборка истории прибытия и отправки
+            this.ids_wsd.getViewIncomingOutgoingCarsOfNum_Period(num, this.start, this.stop, function (result_wagons) {
+                // Обработать и показать данные
+                this.table_incoming_outgoing_car.view(result_wagons);
+                // На проверку окончания загрузки
+                process--;
+                out_load(process);
+
+            }.bind(this));
+            // Выборка информации о текущем операторе АМКР вагона
+            this.ids_wsd.getReportCurrentOperationWagonOfNum(num, function (result_wagons_operation) {
+                // Обработать и показать данные
+                this.view_current_operator(result_wagons_operation);
+                // На проверку окончания загрузки
+                process--;
+                out_load(process);
+            }.bind(this));
+            // Выборка информации о текущем операторе АМКР вагона
+            this.ids_dir.getViewWagonsRentOfNum(num, function (result_wagons_rent) {
+                // Обработать и показать данные
+                this.table_wagons_rent.view(result_wagons_rent);
+                // На проверку окончания загрузки
+                process--;
+                out_load(process);
+            }.bind(this));
+        } else {
             // Выход
             if (typeof callback === 'function') {
                 callback();
             }
-        }.bind(this));
-    };
+        }
 
+    };
     // Очистить таблицы
     view_td_report.prototype.clear_report_4_1 = function () {
-
-        //if (this.switch_laden) {
-        //    this.switch_laden.val(false);
-        //    this.switch_accounting.val(false);
-        //    this.switch_client.val(false);
-        //    this.switch_not_client.val(false);
-        //    this.switch_paid.val(false);
-        //    this.select_station_amkr.val(-1);
-        //    this.wagons_adoption = [];
-        //    this.clone_wagons_adoption = [];
-        //    this.process_data_view_report_3_1(this.clone_wagons_adoption, null);
-        //    LockScreenOff();
-        //}
+        if (this.table_incoming_outgoing_car) {
+            this.table_incoming_outgoing_car.view([]);
+            this.view_common_wagon(null);
+            this.view_current_operator([]);
+            this.table_wagons_rent.view([]);
+        };
+        LockScreenOff();
     };
     //--------------------------------------------------------------------------------------------------
     view_td_report.prototype.out_clear = function () {
