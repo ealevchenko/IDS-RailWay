@@ -1391,6 +1391,29 @@
             },
         });
     };
+    // Получить аренды по номеру вагона (полная выбрка)
+    ids_directory.prototype.getViewWagonsRentOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/wagon_rent/view/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getViewWagonsRentOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= Directory_Reason_Discrepancy (Справочник причин расхождения) ===============================
     ids_directory.prototype.getReason_Discrepancy = function (callback) {
         $.ajax({
