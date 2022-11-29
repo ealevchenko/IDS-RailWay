@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @id_sostav int = 182071--171467 --171467
+declare @id_sostav int = 182058
 
 
 	select 
