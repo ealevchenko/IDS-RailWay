@@ -546,7 +546,7 @@
                 }
             },
             error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getViewOutgoingSostav", x, y, z);
+                OnAJAXError("ids_wsd.getViewIncomingSostav", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
