@@ -1165,25 +1165,29 @@
     view_td_report.prototype.get_adoption_sostav = function (station_name, list_sostav, type) {
         if (list_sostav === null) return null;
         var count_wagon = 0;
+        var count_return_wagon = 0;
         var count_account_balance = 0;
         var count_not_operator = 0;
         $.each(list_sostav, function (i, s) {
             count_wagon += s.count_wagon;
+            count_return_wagon += s.count_return_wagon;
             count_account_balance += s.count_account_balance;
             count_not_operator += s.count_not_operator;
         });
-        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, count_not_operator: count_not_operator, adoption_sostav: list_sostav }
+        return { type: type, station: station_name, count_wagon: count_wagon, count_return_wagon: count_return_wagon, count_account_balance: count_account_balance, count_not_operator: count_not_operator, adoption_sostav: list_sostav }
     };
     // Получим строку для отчета отправка
     view_td_report.prototype.get_outgoing_sostav = function (station_name, list_sostav, type) {
         if (list_sostav === null) return null;
         var count_wagon = 0;
+        var count_return_wagon = 0;
         var count_account_balance = 0;
         $.each(list_sostav, function (i, s) {
             count_wagon += s.count_wagon;
+            count_return_wagon += s.count_return_wagon;
             count_account_balance += s.count_account_balance;
         });
-        return { type: type, station: station_name, count_wagon: count_wagon, count_account_balance: count_account_balance, outgoing_sostav: list_sostav }
+        return { type: type, station: station_name, count_wagon: count_wagon, count_return_wagon: count_return_wagon, count_account_balance: count_account_balance, outgoing_sostav: list_sostav }
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_1_1 = function () {

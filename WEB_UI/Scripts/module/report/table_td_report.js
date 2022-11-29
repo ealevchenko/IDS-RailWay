@@ -22,11 +22,13 @@
 
             'ttdr_field_adoption_sostav_station': 'ПРИБЫТИЕ',
             'ttdr_field_adoption_count_wagon': 'Всего вагонов',
+            'ttdr_field_adoption_sostav_count_return_wagon': 'Возврат',
             'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
             'ttdr_field_adoption_count_not_operator': 'Без оператора',
 
             'ttdr_field_outgoing_sostav_station': 'ОТПРАВЛЕНИЕ',
-            'ttdr_field_outgoing_sostav_wagon': 'Всего вагонов',
+            'ttdr_field_outgoing_sostav_count_wagon': 'Всего вагонов',
+            'ttdr_field_outgoing_sostav_count_return_wagon': 'Вернуло УЗ',
             'ttdr_field_outgoing_sostav_account_balance': 'Учетные вагоны',
 
             'ttdr_field_adoption_sostav_detali_num_doc': '№ ведомости',
@@ -271,6 +273,14 @@
             title: langView('ttdr_field_adoption_count_wagon', App.Langs), width: "50px", orderable: false, searchable: false
         },
         {
+            field: 'adoption_sostav_count_return_wagon',
+            data: function (row, type, val, meta) {
+                return row.count_return_wagon;
+            },
+            className: 'dt-body-center sum_count_return_wagon',
+            title: langView('ttdr_field_adoption_sostav_count_return_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
             field: 'adoption_sostav_count_account_balance',
             data: function (row, type, val, meta) {
                 return row.count_account_balance;
@@ -301,7 +311,15 @@
                 return row.count_wagon;
             },
             className: 'dt-body-center sum_count_wagon',
-            title: langView('ttdr_field_outgoing_sostav_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+            title: langView('ttdr_field_outgoing_sostav_count_wagon', App.Langs), width: "50px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_sostav_count_return_wagon',
+            data: function (row, type, val, meta) {
+                return row.count_return_wagon;
+            },
+            className: 'dt-body-center sum_count_return_wagon',
+            title: langView('ttdr_field_outgoing_sostav_count_return_wagon', App.Langs), width: "50px", orderable: false, searchable: false
         },
         {
             field: 'outgoing_sostav_count_account_balance',
@@ -1747,6 +1765,7 @@
         collums.push({ field: 'adoption_sostav_count_wagon', title: null, class: null });
         collums.push({ field: 'adoption_sostav_count_account_balance', title: null, class: null });
         collums.push({ field: 'adoption_sostav_count_not_operator', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_count_return_wagon', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей outgoing_sostav
@@ -1755,6 +1774,7 @@
         collums.push({ field: 'outgoing_sostav_station', title: null, class: null });
         collums.push({ field: 'outgoing_sostav_count_wagon', title: null, class: null });
         collums.push({ field: 'outgoing_sostav_count_account_balance', title: null, class: null });
+        collums.push({ field: 'outgoing_sostav_count_return_wagon', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // 
@@ -2884,10 +2904,10 @@
             title: null,
         });
         if (this.settings.type_report === 'adoption_sostav') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_sostav') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_sostav_detali') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
@@ -3117,6 +3137,8 @@
                 if (data) {
                     var sum_count_wagon = 0;
                     var sum_count_wagon_all = 0;
+                    var sum_count_return_wagon = 0;
+                    var sum_count_return_wagon_all = 0;
                     var sum_count_account_balance = 0;
                     var sum_count_account_balance_all = 0;
                     var sum_count_not_operator = 0;
@@ -3126,10 +3148,14 @@
                             sum_count_wagon += el.count_wagon;
                             sum_count_account_balance += el.count_account_balance;
                             sum_count_not_operator += el.count_not_operator;
-                        }
-                        sum_count_wagon_all += el.count_wagon;
-                        sum_count_account_balance_all += el.count_account_balance;
-                        sum_count_not_operator_all += el.count_not_operator;
+                            sum_count_return_wagon += el.count_return_wagon;
+                        } else {
+                            sum_count_wagon_all += el.count_wagon;
+                            sum_count_account_balance_all += el.count_account_balance;
+                            sum_count_not_operator_all += el.count_not_operator;
+                            sum_count_return_wagon += el.count_return_wagon;
+                        };
+
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
@@ -3141,6 +3167,9 @@
                 this.obj_t_report.columns('.sum_count_not_operator').every(function () {
                     $(this.footer()).html(sum_count_not_operator_all + '(' + sum_count_not_operator + ')');
                 });
+                this.obj_t_report.columns('.sum_count_return_wagon').every(function () {
+                    $(this.footer()).html(sum_count_return_wagon_all + '(' + sum_count_return_wagon + ')');
+                });
                 break;
             };
             case 'outgoing_sostav': {
@@ -3149,14 +3178,18 @@
                     var sum_count_wagon_all = 0;
                     var sum_count_account_balance = 0;
                     var sum_count_account_balance_all = 0;
+                    var sum_count_return_wagon = 0;
+                    var sum_count_return_wagon_all = 0;
                     $.each(data, function (i, el) {
                         if (el.type === 0) {
                             sum_count_wagon += el.count_wagon;
+                            sum_count_return_wagon += el.count_return_wagon;
                             sum_count_account_balance += el.count_account_balance;
+                        } else {
+                            sum_count_wagon_all += el.count_wagon;
+                            sum_count_return_wagon_all += el.count_return_wagon;
+                            sum_count_account_balance_all += el.count_account_balance;
                         }
-                        sum_count_wagon_all += el.count_wagon;
-                        sum_count_account_balance_all += el.count_account_balance;
-
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
@@ -3164,6 +3197,9 @@
                 });
                 this.obj_t_report.columns('.sum_count_account_balance').every(function () {
                     $(this.footer()).html(sum_count_account_balance_all + '(' + sum_count_account_balance + ')');
+                });
+                this.obj_t_report.columns('.sum_count_return_wagon').every(function () {
+                    $(this.footer()).html(sum_count_return_wagon_all + '(' + sum_count_return_wagon + ')');
                 });
                 break;
             };

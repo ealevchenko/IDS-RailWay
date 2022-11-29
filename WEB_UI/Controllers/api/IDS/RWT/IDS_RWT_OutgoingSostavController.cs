@@ -85,6 +85,7 @@ namespace WEB_UI.Controllers.api
         public bool? route_sign { get; set; }
         public string vagonnik_user { get; set; }
         public int? count_wagon { get; set; }
+        public int? count_return_wagon { get; set; }
         public int? count_account_balance { get; set; }
     }
 
