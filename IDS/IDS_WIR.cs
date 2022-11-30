@@ -2956,6 +2956,7 @@ namespace IDS
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
                 List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 50000000).ToList();
+                //List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == 64238173).ToList();
                 result.count = list_arr_uz_doc_vag.Count();
                 foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
                 {
@@ -2966,7 +2967,8 @@ namespace IDS
                         {
                             TimeSpan deff = vag.create - dir_wag.create;
                             // создание двух строк состоит в диапазоне 3 часов (тоесть вагон зашел первый раз, создалась строка справочника затем отметка о прибытии)
-                            if (deff.TotalHours <= 3)
+                            // Определится с временем задержки
+                            if (deff.TotalHours <= 24*6)
                             {
                                 // записи находятся в диапазоне
                                 // Получим основные обновления
