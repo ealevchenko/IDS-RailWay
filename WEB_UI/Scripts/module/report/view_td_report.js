@@ -1291,14 +1291,14 @@
             class_content: null,
             list_link: [
                 {
-                    id: 'arr-common-report',
+                    id: 'arr-common-group',
                     aria_controls: 'arr-common-group-tab',
                     label: 'По грузам',
                     disable: false,
                     click: null,
                 },
                 {
-                    id: 'arr-common-searsh',
+                    id: 'arr-common-detali',
                     aria_controls: 'arr-common-detali-tab',
                     label: 'Детально',
                     disable: false,
@@ -1319,10 +1319,16 @@
         var $arr_common_group = nav_tabs_arr_cammon.$content.find('div#arr-common-group-tab'); // Панель отчета
         $arr_common_group.append(div_row_cg.append(this.$div_group_sostav)); // Добавим div для таблиц
         // Закладка отчет детально 
+        var div_row_detali_stat = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
         var div_row_detali = new this.fe_ui.bs_row({
             class: 'mt-2',
         });
+        var tab_nagr = $('<table class="table table-bordered"><thead><tr><th>кол.</th><th>ГП, т</th><th>Вес, тн</th><th>АМКР, тн</th></tr></thead><tbody><tr><td class="dt-centr" id="count_wagon"></td><td class="dt-centr" id="avg_gruzp"></td><td class="dt-centr" id="avg_vesg"></td><td class="dt-centr" id="avg_vesg_reweighing">0</td></tr></tbody></table>');
+        var col_nagr = $('<div id="arr-common-report-detali-stat-nagr" class="col-xl-6"></div>');
         var $arr_common_detali = nav_tabs_arr_cammon.$content.find('div#arr-common-detali-tab'); // Панель поиска
+        $arr_common_detali.append(div_row_detali_stat.$row.append(col_nagr.append(tab_nagr)));
         $arr_common_detali.append(div_row_detali.$row.append($('<div id="arr-common-report-detali" class="col-xl-12"></div>')));
         // Дабавим закладку на форму
         this.$table_view.append(nav_tabs_arr_cammon.$ul).append(nav_tabs_arr_cammon.$content);
@@ -2007,16 +2013,19 @@
             if (process === 0) {
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                     switch (event.target.id) {
-                        case 'arr-common-report': {
-
+                        case 'arr-common-group': {
+                            //if (this.table_group_sostav) {
+                            //    this.table_group_sostav[0]. .columns.adjust().draw();
+                            //}
+                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
                             break;
                         };
-                        case 'arr-common-searsh': {
-
+                        case 'arr-common-detali': {
+                            this.table_arr_common_detali.obj_t_report.columns.adjust().draw();
                             break;
                         };
                     };
-                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
                 }.bind(this));
                 LockScreenOff();
             }
@@ -2163,8 +2172,15 @@
         this.list_station_amkr = [];
         this.list_group_sostav = [];
         // выборка для списков отчета
+        var sum_gruzp = 0;
+        var sum_vesg = 0;
+        var sum_vesg_reweighing = 0;
+
 
         $.each(wagons_adoption, function (key, value) {
+            sum_gruzp += value.arrival_uz_vagon_gruzp;
+            sum_vesg += value.arrival_uz_vagon_vesg;
+            sum_vesg_reweighing += value.arrival_uz_vagon_vesg_reweighing;
             //
             var group_sostav = this.list_group_sostav.find(function (o) { return o.id === value.arrival_sostav_id }.bind(this));
             if (!group_sostav) {
@@ -2256,6 +2272,21 @@
         this.view_table_group_sostav(this.list_group_sostav);
 
         this.table_arr_common_detali.view(wagons_adoption);
+
+        // обновим Стат. нагр
+        var avg_gruzp = 0;
+        var avg_vesg = 0;
+        var avg_vesg_reweighing = 0;
+        if (wagons_adoption.length > 0) {
+            avg_gruzp = sum_gruzp > 0 ? sum_gruzp / wagons_adoption.length : 0;
+            avg_vesg = sum_vesg > 0 ? (sum_vesg/1000) / wagons_adoption.length : 0;
+            avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / wagons_adoption.length : 0;
+        };
+
+        $('td#count_wagon').text(wagons_adoption.length);
+        $('td#avg_gruzp').text(avg_gruzp.toFixed(2));
+        $('td#avg_vesg').text(avg_vesg.toFixed(2));
+        $('td#avg_vesg_reweighing').text(avg_vesg_reweighing.toFixed(2));
 
         // обновление списков отчета
         if (!where || !where.id_operator || where.id_operator.length === 0) {

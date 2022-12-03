@@ -73,6 +73,9 @@ table.dataTable.display tbody tr td a.idle-time-error {
 table.dataTable.display thead tr th.fixed-column {
     background-color: #ffffff;
 }
+table.dataTable.display tfoot tr th.fixed-column {
+    background-color: #ffffff;
+}
 
 /*Состав сдан*/
 table.dataTable tbody tr:not(.selected).green.odd, table.dataTable tbody tr:not(.selected).green.even {

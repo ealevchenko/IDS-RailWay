@@ -72,11 +72,11 @@
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_start': 'Опер. по АМКР. нач. аренды',
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_end': 'Опер. по АМКР. кон. аренды',
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. по АМКР. платный',
-            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран. по отправке',
-            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. по отправке',
-            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран. ПОГР',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. ПОГР',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. ПОГР',
 
-            'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Огран. по отправке',
+            'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Огран. ПОГР',
             'ttdr_field_incoming_cars_uz_vagon_condition_abbr': 'Разм. по приб.',
             'ttdr_field_incoming_cars_uz_document_code_stn_from': 'Код ст. отпр.',
             'ttdr_field_incoming_cars_uz_document_station_from_name': 'Cт. отпр.',
@@ -92,7 +92,7 @@
             'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код. пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
-            'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес, тн.',
+            'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес ЭПД, тн.',
             'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз',
             'ttdr_field_incoming_cars_uz_vagon_cargo_group_name': 'Группа груза',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_name': 'Следует на ст.АМКР',
@@ -102,6 +102,8 @@
             'ttdr_field_incoming_cars_uz_vagon_division_abbr': 'Цех получатель',
             'ttdr_field_incoming_cars_uz_vagon_commercial_condition': 'Ком состояние',
             'ttdr_field_incoming_cars_uz_vagon_sertification_data': 'Серт. данные',
+            'ttdr_field_incoming_cars_arrival_sostav_station_on_name': 'Станц. примыкания',
+            'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
 
             'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
             'ttdr_field_sostav_outgoing_naturka_num': '№ вагона',
@@ -935,6 +937,24 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Станция назначения АМКР        
+        {
+            field: 'incoming_cars_arrival_sostav_station_on_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_on_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_incoming_cars_arrival_sostav_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'incoming_cars_arrival_sostav_station_on_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_incoming_cars_arrival_sostav_station_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
 
         // НАТУРКА ОТПРАВКА
         // № п.п
@@ -1921,8 +1941,8 @@
     // инициализация полей adoption_common_detali
     table_td_report.prototype.init_columns_adoption_common_detali = function () {
         var collums = [];
-        collums.push({ field: 'numeration', title: null, class: null });
-        collums.push({ field: 'incoming_cars_num', title: null, class: null });
+        collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        collums.push({ field: 'incoming_cars_num', title: null, class: 'fixed-column' });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР
@@ -1965,6 +1985,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_arrival', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_distance_way', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_pay_summa', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_station_on_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_cargo_operation_amkr
@@ -2538,10 +2559,10 @@
                 this.searching = true;
                 this.ordering = true;
                 this.info = true;
-                this.fixedHeader = false;            // вкл. фикс. заголовка
-                this.leftColumns = 0;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 2;
                 this.columnDefs = null;
-                this.order_column = [2, 'asc'];
+                this.order_column = [1, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = false;
@@ -2915,6 +2936,12 @@
         if (this.settings.type_report === 'outgoing_sostav_detali') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
+        if (this.settings.type_report === 'adoption_common_detali') {
+            this.$table_report = table_report.$table.append($('<tfoot>'+
+                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
+                //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="12" class="dt-right">СТАТ.НАГРУЗКА:</th><td id="avg_vesg" class="dt-centr"></td><th colspan="2" class="dt-right">:</th><td id="avg_gruzp" class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
+                '</tfoot > '));
+        }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
@@ -3239,6 +3266,39 @@
                 });
                 this.obj_t_report.columns('.sum_count_account_balance').every(function () {
                     $(this.footer()).html(sum_count_account_balance);
+                });
+                break;
+            };
+            case 'adoption_common_detali': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    var sum_vesg_reweighing = 0;
+                    var sum_vesg_deff = 0;
+                    //var sum_gruzp = 0;
+
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon++;
+                        sum_vesg += el.arrival_uz_vagon_vesg;
+                        sum_vesg_reweighing += el.arrival_uz_vagon_vesg_reweighing;
+                        sum_vesg_deff += el.arrival_uz_vagon_vesg && el.arrival_uz_vagon_vesg_reweighing ? Number(Number(Number(el.arrival_uz_vagon_vesg) - Number(el.arrival_uz_vagon_vesg_reweighing)) / 1000) : 0;
+                        //sum_gruzp += el.arrival_uz_vagon_gruzp;
+                    });
+                    //var avg_vesg = sum_vesg / sum_count_wagon;
+                    //var avg_gruzp = sum_gruzp / sum_count_wagon;
+                }
+                this.obj_t_report.columns('.fl-incoming_cars_num').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_vesg_reweighing').every(function () {
+                    $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_deff_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
             };
