@@ -190,12 +190,27 @@
         }));
 
         this.series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+        // Сделайте так, чтобы каждый столбец был другого цвета
         this.series.columns.template.adapters.add("fill", function (fill, target) {
             return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
         }.bind(this));
 
         this.series.columns.template.adapters.add("stroke", function (stroke, target) {
             return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
+        }.bind(this));
+
+        // Маркер "Добавить метку"
+        this.series.bullets.push(function () {
+            return am5.Bullet.new(this.root, {
+                locationY: 1,
+                sprite: am5.Label.new(this.root, {
+                    text: "{valueYWorking.formatNumber('#.')}",
+                    fill: this.root.interfaceColors.get("alternativeText"),
+                    centerY: 0,
+                    centerX: am5.p50,
+                    populateText: true
+                })
+            });
         }.bind(this));
 
     };
@@ -223,6 +238,111 @@
             endAngle: -90
         });
     };
+    // Инициализация Пончик с радиальным градиентом
+    chart_amcharts.prototype.init_donut_with_radial_gradient = function () {
+
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        this.chart = this.root.container.children.push(
+            am5percent.PieChart.new(this.root, {
+                radius: am5.percent(90),
+                innerRadius: am5.percent(50),
+                layout: this.root.horizontalLayout
+            }));
+
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        this.series = this.chart.series.push(am5percent.PieSeries.new(this.root, {
+            name: "Series",
+            valueField: "value",
+            categoryField: "name",
+        }));
+
+        // Отключение меток и тиков
+        this.series.labels.template.set("visible", false);
+        this.series.ticks.template.set("visible", false);
+
+        // Adding gradients
+        this.series.slices.template.set("strokeOpacity", 0);
+        this.series.slices.template.set("fillGradient", am5.RadialGradient.new(this.root, {
+            stops: [{
+                brighten: -0.8
+            }, {
+                brighten: -0.8
+            }, {
+                brighten: -0.5
+            }, {
+                brighten: 0
+            }, {
+                brighten: -0.5
+            }]
+        }));
+
+        // Create legend
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/legend-percent-series/
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {
+            centerY: am5.percent(50),
+            y: am5.percent(50),
+            layout: this.root.verticalLayout
+        }));
+        // set value labels align to right
+        this.legend.valueLabels.template.setAll({ textAlign: "right" })
+        // set width and max width of labels
+        this.legend.labels.template.setAll({
+            maxWidth: 140,
+            width: 140,
+            oversizedBehavior: "wrap"
+        });
+
+    };
+    // Инициализация Круговая диаграмма переменного радиуса
+    chart_amcharts.prototype.init_variable_radius_pie_chart = function () {
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {
+            layout: this.root.verticalLayout
+        }));
+
+
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        this.series = this.chart.series.push(am5percent.PieSeries.new(this.root, {
+            alignLabels: true,
+            calculateAggregates: true,
+            valueField: "value",
+            categoryField: "name",
+        }));
+
+        this.series.slices.template.setAll({
+            strokeWidth: 3,
+            stroke: am5.color(0xffffff)
+        });
+
+        this.series.labelsContainer.set("paddingTop", 30)
+
+
+        // Set up adapters for variable slice radius
+        // https://www.amcharts.com/docs/v5/concepts/settings/adapters/
+        this.series.slices.template.adapters.add("radius", function (radius, target) {
+            var dataItem = target.dataItem;
+            var high = this.series.getPrivate("valueHigh");
+
+            if (dataItem) {
+                var value = target.dataItem.get("valueWorking", 0);
+                return radius * value / high
+            }
+            return radius;
+        }.bind(this));
+
+        // Create legend
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/legend-percent-series/
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {
+            centerX: am5.p50,
+            x: am5.p50,
+            marginTop: 15,
+            marginBottom: 15
+        }));
+    };
 
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
@@ -243,6 +363,16 @@
             // круговая диаграмма
             case 'pie_chart': {
                 this.init_pie_chart();
+                break;
+            };
+            // Пончик с радиальным градиентом
+            case 'donut_with_radial_gradient': {
+                this.init_donut_with_radial_gradient();
+                break;
+            };
+            // Круговая диаграмма переменного радиуса
+            case 'variable_radius_pie_chart': {
+                this.init_variable_radius_pie_chart();
                 break;
             };
             // 
@@ -311,6 +441,14 @@
             };
             case 'pie_chart': {
                 this.view_pie_chart(data);
+                break;
+            };
+            case 'donut_with_radial_gradient': {
+                this.view_donut_with_radial_gradient(data);
+                break;
+            };
+            case 'variable_radius_pie_chart': {
+                this.view_variable_radius_pie_chart(data);
                 break;
             };
             // 
@@ -411,13 +549,64 @@
                 this.series.set("selectedDataItem", this.series.dataItems[0]);
 
                 // Make stuff animate on load
-               this.series.appear(1000, 100);
+                this.series.appear(1000, 100);
             }.bind(this));
         };
     };
     // Столбец с повернутыми метками
     chart_amcharts.prototype.view_column_with_rotated_labels = function (data) {
         if (this.chart) {
+
+            // Get series item by category
+            function getSeriesItem(category, series) {
+                for (var i = 0; i < series.dataItems.length; i++) {
+                    var dataItem = series.dataItems[i];
+                    if (dataItem.get("categoryX") == category) {
+                        return dataItem;
+                    }
+                }
+            };
+
+            // Axis sorting
+            function sortCategoryAxis(series, xAxis) {
+                // Sort by value
+                series.dataItems.sort(function (x, y) {
+                    return y.get("valueY") - x.get("valueY"); // descending
+                    //return y.get("valueY") - x.get("valueY"); // ascending
+                })
+
+                // Go through each axis item
+                am5.array.each(xAxis.dataItems, function (dataItem) {
+                    // get corresponding series item
+                    var seriesDataItem = getSeriesItem(dataItem.get("category"), series);
+
+                    if (seriesDataItem) {
+                        // get index of series data item
+                        var index = series.dataItems.indexOf(seriesDataItem);
+                        // calculate delta position
+                        var deltaPosition = (index - dataItem.get("index", 0)) / series.dataItems.length;
+                        // set index to be the same as series data item index
+                        dataItem.set("index", index);
+                        // set deltaPosition instanlty
+                        dataItem.set("deltaPosition", -deltaPosition);
+                        // animate delta position to 0
+                        dataItem.animate({
+                            key: "deltaPosition",
+                            to: 0,
+                            duration: 1000,
+                            easing: am5.ease.out(am5.ease.cubic)
+                        })
+                    }
+                });
+
+                // Sort axis items by index.
+                // This changes the order instantly, but as deltaPosition is set,
+                // they keep in the same places and then animate to true positions.
+                xAxis.dataItems.sort(function (x, y) {
+                    return x.get("index") - y.get("index");
+                });
+            };
+
             this.xAxis.data.setAll(data);
             this.series.data.setAll(data);
 
@@ -426,6 +615,8 @@
             // https://www.amcharts.com/docs/v5/concepts/animations/
             this.series.appear(1000);
             this.chart.appear(1000, 100);
+            // сортируем
+            sortCategoryAxis(this.series, this.xAxis);
         }
     };
     // Круговая диаграмма
@@ -434,6 +625,30 @@
             // Set data
             // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
             this.series.data.setAll(data);
+
+            this.series.appear(1000, 100);
+        }
+    };
+    // Пончик с радиальным градиентом
+    chart_amcharts.prototype.view_donut_with_radial_gradient = function (data) {
+        if (this.chart) {
+            // Set data
+            // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+            this.series.data.setAll(data);
+
+            this.legend.data.setAll(this.series.dataItems);
+
+            this.series.appear(1000, 100);
+        }
+    };
+    // Круговая диаграмма переменного радиуса
+    chart_amcharts.prototype.view_variable_radius_pie_chart = function (data) {
+        if (this.chart) {
+            // Set data
+            // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+            this.series.data.setAll(data);
+
+            this.legend.data.setAll(this.series.dataItems);
 
             this.series.appear(1000, 100);
         }

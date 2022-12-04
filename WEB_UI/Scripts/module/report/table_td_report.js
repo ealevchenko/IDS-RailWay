@@ -1839,7 +1839,8 @@
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_vesg', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_code', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_uz_vagon_name_division', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_name_division', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
@@ -2937,7 +2938,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_common_detali') {
-            this.$table_report = table_report.$table.append($('<tfoot>'+
+            this.$table_report = table_report.$table.append($('<tfoot>' +
                 '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
                 //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="12" class="dt-right">СТАТ.НАГРУЗКА:</th><td id="avg_vesg" class="dt-centr"></td><th colspan="2" class="dt-right">:</th><td id="avg_gruzp" class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
                 '</tfoot > '));
@@ -2947,6 +2948,9 @@
         }
         if (this.settings.type_report === 'adoption_operator_to_arr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'adoption_cargo_to_arr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_group_cargo_to_arr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
@@ -2992,6 +2996,7 @@
             scrollX: true,
             //"responsive": true,
             //"bAutoWidth": false,
+            //order: this.order_column,
             language: language_table(App.Langs),
             jQueryUI: false,
             drawCallback: this.drawCallback,
@@ -3151,6 +3156,7 @@
         LockScreen(langView('ttdr_mess_view_report', App.Langs));
         this.obj_t_report.clear();
         this.obj_t_report.rows.add(data);
+        this.obj_t_report.order(this.order_column);
         this.obj_t_report.draw();
         this.view_footer(data);
         this.select_rows();
@@ -3340,6 +3346,34 @@
                 }
                 this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
+                });
+                break;
+            };
+            case 'adoption_cargo_to_arr': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    var sum_vesg_reweighing = 0;
+                    var sum_vesg_deff = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                        sum_vesg_reweighing += el.sum_vesg_reweighing;
+                        sum_vesg_deff += el.sum_vesg_deff;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                    $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                    $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
             };

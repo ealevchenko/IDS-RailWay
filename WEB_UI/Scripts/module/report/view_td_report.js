@@ -2279,7 +2279,7 @@
         var avg_vesg_reweighing = 0;
         if (wagons_adoption.length > 0) {
             avg_gruzp = sum_gruzp > 0 ? sum_gruzp / wagons_adoption.length : 0;
-            avg_vesg = sum_vesg > 0 ? (sum_vesg/1000) / wagons_adoption.length : 0;
+            avg_vesg = sum_vesg > 0 ? (sum_vesg / 1000) / wagons_adoption.length : 0;
             avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / wagons_adoption.length : 0;
         };
 
@@ -3589,7 +3589,7 @@
         this.chart_total_genus_to_arr = new CAM('div#adoption-genus-to-arr-chart');         // Создадим экземпляр
         this.chart_total_genus_to_arr.init({
             alert: null,
-            type_chart: 'pie_chart',     //
+            type_chart: 'donut_with_radial_gradient',     //pie_chart
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -3673,7 +3673,7 @@
         this.chart_total_division_to_arr = new CAM('div#adoption-division-to-arr-chart');         // Создадим экземпляр
         this.chart_total_division_to_arr.init({
             alert: null,
-            type_chart: 'pie_chart',     //
+            type_chart: 'variable_radius_pie_chart',     //pie_chart
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -3812,9 +3812,9 @@
             if (!cd) {
                 this.list_certification_data.push({ value: el_wag.arrival_uz_vagon_id_certification_data, text: el_wag['arrival_uz_vagon_sertification_data_' + App.Lang] });
             }
-            var group_arrival = this.list_group_arrival.find(function (o) { return o.value === el_wag.arrival_uz_vagon_id_cargo }.bind(this));
+            var group_arrival = this.list_group_arrival.find(function (o) { return o.value === el_wag.arrival_uz_vagon_id_group }.bind(this));
             if (!group_arrival) {
-                this.list_group_arrival.push({ value: el_wag.arrival_uz_vagon_id_cargo, text: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang] });
+                this.list_group_arrival.push({ value: el_wag.arrival_uz_vagon_id_group, text: el_wag['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
             }
             var genus = this.list_genus.find(function (o) { return o.value === el_wag.arrival_uz_vagon_id_genus }.bind(this));
             if (!genus) {
@@ -4492,7 +4492,12 @@
 
             var data = [];
             $.each(list_view, function (key, element) {
-                data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                var gn = data.find(function (o) { return o.name === element.cargo_name; });
+                if (gn===undefined) {
+                    data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
             }.bind(this));
             this.chart_data[2] = data;
             // Set data
@@ -4747,7 +4752,13 @@
             //}];
             var data = [];
             $.each(list_view, function (key, element) {
-                data.push({ "name": element.station_from_name, "value": element.count_wagon });
+                var gn = data.find(function (o) { return o.name === element.station_from_name; });
+                if (gn === undefined) {
+                    data.push({ "name": element.station_from_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+                //data.push({ "name": element.station_from_name, "value": element.count_wagon });
             }.bind(this));
 
             this.chart_data[6] = data;
@@ -4803,7 +4814,13 @@
             //}];
             var data = [];
             $.each(list_view, function (key, element) {
-                data.push({ "name": element.division_abbr, "value": element.count_wagon });
+                var gn = data.find(function (o) { return o.name === element.division_abbr; });
+                if (gn === undefined) {
+                    data.push({ "name": element.division_abbr, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+                //data.push({ "name": element.division_abbr, "value": element.count_wagon });
             }.bind(this));
 
             this.chart_data[7] = data;

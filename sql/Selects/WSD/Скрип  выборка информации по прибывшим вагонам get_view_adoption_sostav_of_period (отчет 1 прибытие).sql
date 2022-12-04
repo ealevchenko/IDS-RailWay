@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @start datetime = Convert(datetime, '2022-08-03 22:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-08-04 21:59:59', 120)
+declare @start datetime = Convert(datetime, '2022-12-01 22:00:00', 120)
+declare @stop datetime = Convert(datetime, '2022-12-02 21:59:59', 120)
 
 	SELECT 
 	   arr_sost.[id]
@@ -25,7 +25,7 @@ declare @stop datetime = Convert(datetime, '2022-08-04 21:59:59', 120)
       ,arr_sost.[change_user]
 	  --,count_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null)
 	  ,count_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON ac.id_arrival_uz_vagon = arr_doc_vag.id where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null and arr_doc_vag.cargo_returns is null)
-		,count_return_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON ac.id_arrival_uz_vagon = arr_doc_vag.id where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null and arr_doc_vag.cargo_returns = 1)
+	  ,count_return_wagon = (SELECT count(ac.id) FROM  [IDS].[ArrivalCars] as ac Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON ac.id_arrival_uz_vagon = arr_doc_vag.id where ac.[id_arrival]=arr_sost.id and ac.[arrival] is not null and arr_doc_vag.cargo_returns = 1)
 	  ,count_account_balance = ([IDS].[get_count_account_balance_of_arrival_sostav](arr_sost.id))
 	  ,count_not_operator = ([IDS].[get_count_not_operation_of_arrival_sostav](arr_sost.id))
   FROM  [IDS].[ArrivalSostav] as arr_sost
