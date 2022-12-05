@@ -12,6 +12,9 @@
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
 
+    var test1 = 0;
+    var test2 = 0;
+    var test3 = 0;
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -3393,22 +3396,29 @@
                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     switch (event.target.id) {
                         case 'arr-total-cargo-operator-amkr': {
+                            //test1++;
+                            //$('#test1').text(test1)
                             this.report_panel = 0;
                             this.view_setup_detali_report_3_1(this.report_panel);
                             this.view_chart_total_cargo_operation_amkr();
                             break;
                         };
                         case 'arr-total-operator-to-arr': {
+                            //test2++;
+                            //$('#test1').text(test2)
                             this.report_panel = 1;
-                            setInterval(function () {
-                                this.view_setup_detali_report_3_1(this.report_panel);
-                            }.bind(this), 0);
+                            //setInterval(function () {
+                            //    this.view_setup_detali_report_3_1(this.report_panel);
+                            //}.bind(this), 0);
+                            this.view_setup_detali_report_3_1(this.report_panel);
                             setTimeout(function () {
                                 this.view_chart_total_operation_to_arr();
-                            }.bind(this), 1);
+                            }.bind(this), 500);
                             break;
                         };
                         case 'arr-total-cargo-to-arr': {
+                            //test3++;
+                            //$('#test1').text(test3)
                             this.report_panel = 2;
                             this.view_setup_detali_report_3_1(this.report_panel);
                             this.view_chart_total_cargo();
@@ -3441,7 +3451,10 @@
                         case 'arr-total-division-to-arr': {
                             this.report_panel = 7;
                             this.view_setup_detali_report_3_1(this.report_panel);
-                            this.view_chart_total_division_from();
+                            setTimeout(function () {
+                                this.view_chart_total_division_from();
+                            }.bind(this), 500);
+                            //this.view_chart_total_division_from();
                             break;
                         };
                         case 'arr-total-to-gs': {
@@ -3477,7 +3490,7 @@
         this.chart_total_cargo_operation_amkr = new CAM('div#adoption-cargo-operation-amkr-chart');         // Создадим экземпляр
         this.chart_total_cargo_operation_amkr.init({
             alert: null,
-            type_chart: 'stacked_column_chart_percent',     //
+            type_chart: 'stacked_column_chart_percent',     //stacked_column_chart_percent
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -3669,11 +3682,11 @@
 
             },
         });
-        // Инициализация модуля графиков тип: Круговая диаграмма
+        // Инициализация модуля графиков тип: radial_histogram
         this.chart_total_division_to_arr = new CAM('div#adoption-division-to-arr-chart');         // Создадим экземпляр
         this.chart_total_division_to_arr.init({
             alert: null,
-            type_chart: 'variable_radius_pie_chart',     //pie_chart
+            type_chart: 'radial_histogram',     //pie_chart
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -5213,16 +5226,23 @@
             case 0: {
                 this.row_setup_detali_operation_amkr.show();
                 this.row_setup_detali_limiting.show();
+                test1++;
+                $('#test1').text(test1)
                 break;
             };
             case 1: {
                 this.row_setup_detali_operation_amkr_multiple.show();
                 this.row_setup_detali_limiting.show();
+                test2++;
+                $('#test2').text(test2)
                 break;
             };
             case 2: {
                 this.row_setup_detali_cargo.show();
                 this.row_setup_detali_certification_data.show();
+                test3++;
+                $('#test3').text(test3)
+                this.select_detali_certification_data.update(this.list_certification_data, -1);
                 break;
             };
             case 3: {

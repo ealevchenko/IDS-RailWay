@@ -343,7 +343,88 @@
             marginBottom: 15
         }));
     };
+    // Инициализация Радиальная гистограмма
+    chart_amcharts.prototype.init_radial_histogram = function () {
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/
+        this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
+            panX: false,
+            panY: false,
+            wheelX: "none",
+            wheelY: "none",
+            startAngle: -84,
+            endAngle: 264,
+            innerRadius: am5.percent(40)
+        }));
 
+
+        // Add cursor
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+        const cursor = this.chart.set("cursor", am5radar.RadarCursor.new(this.root, {
+            behavior: "zoomX"
+        }));
+        cursor.lineY.set("forceHidden", true);
+
+
+        // Add scrollbar
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/scrollbars/
+        this.chart.set("scrollbarX", am5.Scrollbar.new(this.root, {
+            orientation: "horizontal",
+            exportable: false
+        }));
+
+        // Create axes
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+        this.xRenderer = am5radar.AxisRendererCircular.new(this.root, {
+            minGridDistance: 30
+        });
+
+        this.xRenderer.grid.template.set("forceHidden", true);
+
+        this.xAxis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
+            maxDeviation: 0,
+            categoryField: "category",//category
+            renderer: this.xRenderer
+        }));
+
+        this.yRenderer = am5radar.AxisRendererRadial.new(this.root, {});
+        this.yRenderer.labels.template.set("centerX", am5.p50);
+
+        this.yAxis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
+            maxDeviation: 0.3,
+            min: 0,
+            renderer: this.yRenderer
+        }));
+
+        // Add series
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+        this.series = this.chart.series.push(am5radar.RadarColumnSeries.new(this.root, {
+            name: "Series 1",
+            sequencedInterpolation: true,
+            xAxis: this.xAxis,
+            yAxis: this.yAxis,
+            valueField: "value", //value
+            categoryField: "category",//category
+
+            //valueYField: "value",
+            //valueXField: "category"
+        }));
+
+        // Rounded corners for columns
+        this.series.columns.template.setAll({
+            cornerRadius: 5,
+            tooltipText: "{categoryX}: {valueY}"
+        });
+
+        // Make each column to be of a different color
+        this.series.columns.template.adapters.add("fill", function (fill, target) {
+            return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
+        }.bind(this));
+
+        this.series.columns.template.adapters.add("stroke", function (stroke, target) {
+            return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
+        }.bind(this));
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -373,6 +454,11 @@
             // Круговая диаграмма переменного радиуса
             case 'variable_radius_pie_chart': {
                 this.init_variable_radius_pie_chart();
+                break;
+            };
+            // Радиальная гистограмма
+            case 'radial_histogram': {
+                this.init_radial_histogram();
                 break;
             };
             // 
@@ -449,6 +535,10 @@
             };
             case 'variable_radius_pie_chart': {
                 this.view_variable_radius_pie_chart(data);
+                break;
+            };
+            case 'radial_histogram': {
+                this.view_radial_histogram(data);
                 break;
             };
             // 
@@ -652,6 +742,24 @@
 
             this.series.appear(1000, 100);
         }
+    };
+    // Радиальная гистограмма
+    chart_amcharts.prototype.view_radial_histogram = function (data) {
+        if (this.chart) {
+
+            var data = [];
+
+            for (var i = 1; i < 21; i++) {
+                data.push({ category: i, value: Math.round(Math.random() * 100) });
+            }
+
+            this.xAxis.data.setAll(data);
+            this.series.data.setAll(data);
+            // Make stuff animate on load
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            this.series.appear(1000);
+            this.chart.appear(1000, 100);
+       }
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
