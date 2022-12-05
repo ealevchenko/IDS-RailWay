@@ -3018,6 +3018,12 @@
                         }
                         break;
                     };
+                    case 'incoming_outgoing_car': {
+                        if (data.wir_highlight_color !== null) {
+                            $(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
+                        }
+                        break;
+                    };
                 };
             }.bind(this),
             footerCallback: this.footerCallback,

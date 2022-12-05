@@ -4493,7 +4493,7 @@
             var data = [];
             $.each(list_view, function (key, element) {
                 var gn = data.find(function (o) { return o.name === element.cargo_name; });
-                if (gn===undefined) {
+                if (gn === undefined) {
                     data.push({ "name": element.cargo_name, "value": element.count_wagon });
                 } else {
                     gn.value += element.count_wagon;
@@ -5485,10 +5485,10 @@
         this.$input_last_date_outgoing = $('<input>', { id: 'last_date_outgoing', name: 'last_date_outgoing', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
         $div_group_od1_1.append($lab_od1_1_1).append(this.$input_last_date_outgoing);
         // 
-        var $div_group_od1_2 = $('<div></div>', { class: 'form-group col-md-3' });
-        var $lab_od1_2_1 = $('<label></label>', { for: 'instructional_letters_datetime', text: langView('vtdr_label_od_instructional_letters_datetime', App.Langs) });
-        this.$input_instructional_letters_datetime = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
-        $div_group_od1_2.append($lab_od1_2_1).append(this.$input_instructional_letters_datetime);
+        //var $div_group_od1_2 = $('<div></div>', { class: 'form-group col-md-3' });
+        //var $lab_od1_2_1 = $('<label></label>', { for: 'instructional_letters_datetime', text: langView('vtdr_label_od_instructional_letters_datetime', App.Langs) });
+        //this.$input_instructional_letters_datetime = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
+        //$div_group_od1_2.append($lab_od1_2_1).append(this.$input_instructional_letters_datetime);
         var $div_group_od1_3 = $('<div></div>', { class: 'form-group col-md-3' });
         var $lab_od1_3_1 = $('<label></label>', { for: 'wagon_rod_abbr', text: langView('vtdr_label_od_wagon_rod_abbr', App.Langs) });
         this.$input_wagon_rod_abbr = $('<input>', { id: 'wagon_rod_abbr', name: 'wagon_rod_abbr', class: 'form-control form-control-sm', type: 'text', disabled: '' });
@@ -5547,14 +5547,14 @@
         $div_group_od5_1.append($lab_od5_1_1).append(this.$input_instructional_letters_num);
         var $div_group_od5_2 = $('<div></div>', { class: 'form-group col-md-3' });
         var $lab_od5_2_1 = $('<label></label>', { for: 'instructional_letters_datetime', text: langView('vtdr_label_od_instructional_letters_datetime', App.Langs) });
-        this.$input_instructional_letters_datetime1 = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'text', disabled: '' });
-        $div_group_od5_2.append($lab_od5_2_1).append(this.$input_instructional_letters_datetime1);
+        this.$input_instructional_letters_datetime = $('<input>', { id: 'instructional_letters_datetime', name: 'instructional_letters_datetime', class: 'form-control form-control-sm', type: 'text', disabled: '' });
+        $div_group_od5_2.append($lab_od5_2_1).append(this.$input_instructional_letters_datetime);
         var $div_group_od5_3 = $('<div></div>', { class: 'form-group col-md-3' });
         var $lab_od5_3_1 = $('<label></label>', { for: 'instructional_letters_station_name', text: langView('vtdr_label_od_instructional_letters_station_name', App.Langs) });
         this.$input_instructional_letters_station_name = $('<input>', { id: 'instructional_letters_station_name', name: 'instructional_letters_station_name', class: 'form-control form-control-sm', type: 'datetime', disabled: '' });
         $div_group_od5_3.append($lab_od5_3_1).append(this.$input_instructional_letters_station_name);
         //
-        $div_row_od1.append($div_group_od1_1).append($div_group_od1_2).append($div_group_od1_3).append($div_group_od1_4);
+        $div_row_od1.append($div_group_od1_1).append($div_group_od1_3).append($div_group_od1_4);
         $div_row_od2.append($div_group_od2_1);
         $div_row_od3.append($div_group_od3_1).append($div_group_od3_2).append($div_group_od3_3).append($div_group_od3_4);
         $div_row_od4.append($div_group_od4_1).append($div_group_od4_2).append($div_group_od4_3).append($div_group_od4_4);
@@ -5692,25 +5692,30 @@
     // отобразить информацию по оператору АМКР детально
     view_td_report.prototype.view_current_operator = function (row) {
         if (row) {
-            this.$input_last_date_outgoing.val(row.last_date_outgoing);
-            this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime);
+            this.$input_last_date_outgoing.val(row.last_date_outgoing ? moment(row.last_date_outgoing).format(format_datetime) : '');
+            //this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime);
             this.$input_wagon_rod_abbr.val(row['wagon_rod_abbr_' + App.Lang]);
-            this.$input_wagon_date_rem_uz.val(row.wagon_date_rem_uz);
+            this.$input_wagon_date_rem_uz.val(row.wagon_date_rem_uz ? moment(row.wagon_date_rem_uz).format(format_datetime) : '');
+            if (row.wir_highlight_color !== '') {
+                this.$textarea_wir_note.attr('style', 'background-color:' + row.wir_highlight_color);
+            } else {
+                this.$textarea_wir_note.attr('style', '');
+            }
             this.$textarea_wir_note.val(row.wir_note);
             this.$input_curr_wagons_rent_operator_abbr.val(row['curr_wagons_rent_operator_abbr_' + App.Lang]);
             this.$input_curr_wagons_rent_limiting_abbr.val(row['curr_wagons_rent_limiting_abbr_' + App.Lang]);
-            this.$input_curr_wagons_rent_start.val(row.curr_wagons_rent_start);
-            this.$input_curr_wagons_rent_end.val(row.curr_wagons_rent_end);
+            this.$input_curr_wagons_rent_start.val(row.curr_wagons_rent_start ? moment(row.curr_wagons_rent_start).format(format_datetime) : '');
+            this.$input_curr_wagons_rent_end.val(row.curr_wagons_rent_end ? moment(row.curr_wagons_rent_end).format(format_datetime) : '');
             this.$input_arrival_condition_abbr.val(row['arrival_condition_abbr_' + App.Lang]);
             this.$input_current_condition_abbr.val(row['current_condition_abbr_' + App.Lang]);
-            this.$input_current_condition_create.val(row.current_condition_create);
+            this.$input_current_condition_create.val(row.current_condition_create ? moment(row.current_condition_create).format(format_datetime) : '');
             this.$input_current_condition_create_user.val(row.current_condition_create_user);
             this.$input_instructional_letters_num.val(row.instructional_letters_num);
-            this.$input_instructional_letters_datetime1.val(row.instructional_letters_datetime);
+            this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : '');
             this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
         } else {
             this.$input_last_date_outgoing.val('');
-            this.$input_instructional_letters_datetime.val('');
+            //this.$input_instructional_letters_datetime.val('');
             this.$input_wagon_rod_abbr.val('');
             this.$input_wagon_date_rem_uz.val('');
             this.$textarea_wir_note.val('');

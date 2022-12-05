@@ -867,6 +867,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string wagon_new_construction { get; set; }
         public long? wir_id { get; set; }
         public string wir_note { get; set; }
+        public string wir_highlight_color { get; set; }
         public int? arrival_id_condition { get; set; }
         public string arrival_condition_name_ru { get; set; }
         public string arrival_condition_name_en { get; set; }
