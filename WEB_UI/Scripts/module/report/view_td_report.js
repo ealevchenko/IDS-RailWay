@@ -3396,20 +3396,13 @@
                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                     switch (event.target.id) {
                         case 'arr-total-cargo-operator-amkr': {
-                            //test1++;
-                            //$('#test1').text(test1)
                             this.report_panel = 0;
                             this.view_setup_detali_report_3_1(this.report_panel);
                             this.view_chart_total_cargo_operation_amkr();
                             break;
                         };
                         case 'arr-total-operator-to-arr': {
-                            //test2++;
-                            //$('#test1').text(test2)
                             this.report_panel = 1;
-                            //setInterval(function () {
-                            //    this.view_setup_detali_report_3_1(this.report_panel);
-                            //}.bind(this), 0);
                             this.view_setup_detali_report_3_1(this.report_panel);
                             setTimeout(function () {
                                 this.view_chart_total_operation_to_arr();
@@ -3417,8 +3410,6 @@
                             break;
                         };
                         case 'arr-total-cargo-to-arr': {
-                            //test3++;
-                            //$('#test1').text(test3)
                             this.report_panel = 2;
                             this.view_setup_detali_report_3_1(this.report_panel);
                             this.view_chart_total_cargo();
@@ -3801,7 +3792,19 @@
         this.list_cargo_sap = [];
         this.list_station_from = [];
         this.list_division = [];
-
+        // Выбор по умолчанию
+        this.value_station_amkr = -1;
+        this.value_operation_amkr = -1;
+        this.value_operation_amkr_multiple = [];
+        this.value_limiting0 = -1;
+        this.value_limiting1 = -1;
+        this.value_cargo = -1;
+        this.value_certification_data = -1;
+        this.value_group_arrival = -1;
+        this.value_genus = -1;
+        this.value_cargo_sap = "-1";
+        this.value_station_from = [];
+        this.value_division = [];
         // выборка для списков Отчет-Груз по Оператору АМКР
         $.each(data, function (key, el_wag) {
             // выборка для списков отчета
@@ -4160,16 +4163,16 @@
         var out_process_data = function (process) {
             if (process === 0) {
                 // Обновим элементы выбора
-                this.select_detali_operation_amkr.update(this.list_operation_amkr, -1);
-                this.select_detali_operation_amkr_multiple.update(this.list_operation_amkr, -1);
-                this.select_detali_limiting.update(this.list_limiting, -1);
-                this.select_detali_cargo.update(this.list_cargo, -1);
-                this.select_detali_certification_data.update(this.list_certification_data, -1);
-                this.select_detali_group_arrival.update(this.list_group_arrival, -1);
-                this.select_detali_genus.update(this.list_genus, -1);
-                this.select_detali_cargo_sap.update(this.list_cargo_sap, -1);
-                this.select_detali_station_from_multiple.update(this.list_station_from, -1);
-                this.select_detali_division_multiple.update(this.list_division, -1);
+                this.select_detali_operation_amkr.update(this.list_operation_amkr, this.value_operation_amkr);
+                this.select_detali_operation_amkr_multiple.update(this.list_operation_amkr, this.value_operation_amkr_multiple);
+                this.select_detali_limiting.update(this.list_limiting, this.value_limiting0);
+                this.select_detali_cargo.update(this.list_cargo, this.value_cargo);
+                this.select_detali_certification_data.update(this.list_certification_data, this.value_certification_data);
+                this.select_detali_group_arrival.update(this.list_group_arrival, this.value_group_arrival);
+                this.select_detali_genus.update(this.list_genus, this.value_genus);
+                this.select_detali_cargo_sap.update(this.list_cargo_sap, this.value_cargo_sap);
+                this.select_detali_station_from_multiple.update(this.list_station_from, this.value_station_from);
+                this.select_detali_division_multiple.update(this.list_division, this.value_division);
                 // Обновим спсисок станции "Внешнее прибытие"
                 if (!where || !where.id_station_on || where.id_station_on.length === 0) {
                     this.select_station_amkr.update(this.list_station_amkr, -1);
@@ -4247,19 +4250,19 @@
     // Выполнить фильтрацию и вывести данные по отчету "Груз по Оператору АМКР"
     view_td_report.prototype.view_filter_report_total_cargo_operation_amkr = function () {
         if (this.total_cargo_operation_amkr) {
-            var id_operator = Number(this.select_detali_operation_amkr.val());
-            var id_limiting = Number(this.select_detali_limiting.val());
+            this.value_operation_amkr = Number(this.select_detali_operation_amkr.val());
+            this.value_limiting0 = Number(this.select_detali_limiting.val());
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_cargo_operation_amkr));
             // Применим фильтр
-            if (id_operator > -1) {
+            if (this.value_operation_amkr > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_operator === (id_operator > 0 ? id_operator : null);
+                    return i.id_operator === (this.value_operation_amkr > 0 ? this.value_operation_amkr : null);
                 }.bind(this));
             }
-            if (id_limiting > -1) {
+            if (this.value_limiting0 > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_limiting === (id_limiting > 0 ? id_limiting : null);
+                    return i.id_limiting === (this.value_limiting0 > 0 ? this.value_limiting0 : null);
                 }.bind(this));
             }
             // Отобразим
@@ -4330,23 +4333,22 @@
     // Выполнить фильтрацию и вывести данные по отчету "Оператор по ПРИБ"
     view_td_report.prototype.view_filter_report_total_operation_to_arr = function () {
         if (this.total_operation_amkr) {
-            var operators = this.select_detali_operation_amkr_multiple.val();
-            var id_limiting = Number(this.select_detali_limiting.val());
+            this.value_operation_amkr_multiple = this.select_detali_operation_amkr_multiple.val();
+            this.value_limiting1 = Number(this.select_detali_limiting.val());
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_operation_amkr));
             // Применим фильтр
-            if (operators && operators.length > 0) {
+            if (this.value_operation_amkr_multiple && this.value_operation_amkr_multiple.length > 0) {
                 list_view = list_view.filter(function (i) {
-
-                    var op = operators.find(function (o) {
+                    var op = this.value_operation_amkr_multiple.find(function (o) {
                         return Number(o) === i.id_operator;
                     }.bind(this));
                     return op ? true : false;
                 }.bind(this));
             };
-            if (id_limiting > -1) {
+            if (this.value_limiting1 > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_limiting === (id_limiting > 0 ? id_limiting : null);
+                    return i.id_limiting === (this.value_limiting1 > 0 ? this.value_limiting1 : null);
                 }.bind(this));
             };
 
@@ -4484,19 +4486,19 @@
     // Выполнить фильтрацию и вывести данные по отчету "Оператор по ПРИБ"
     view_td_report.prototype.view_filter_report_total_cargo = function () {
         if (this.total_cargo) {
-            var id_cargo = Number(this.select_detali_cargo.val());
-            var id_certification_data = Number(this.select_detali_certification_data.val());
+            this.value_cargo = Number(this.select_detali_cargo.val());
+            this.value_certification_data = Number(this.select_detali_certification_data.val());
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_cargo));
             // Применим фильтр
-            if (id_cargo > -1) {
+            if (this.value_cargo > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_cargo === (id_cargo > 0 ? id_cargo : null);
+                    return i.id_cargo === (this.value_cargo > 0 ? this.value_cargo : null);
                 }.bind(this));
             };
-            if (id_certification_data > -1) {
+            if (this.value_certification_data > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_certification_data === (id_certification_data > 0 ? id_certification_data : null);
+                    return i.id_certification_data === (this.value_certification_data > 0 ? this.value_certification_data : null);
                 }.bind(this));
             };
             var list = list_view.sort(function (a, b) { return a.id_group - b.id_group }.bind(this));
@@ -4561,13 +4563,13 @@
     // Выполнить фильтрацию и вывести данные по отчету "Группы ПРИБ"
     view_td_report.prototype.view_filter_report_total_group_cargo = function () {
         if (this.total_group_cargo) {
-            var id_group = Number(this.select_detali_group_arrival.val());
+            this.value_group_arrival = Number(this.select_detali_group_arrival.val());
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_group_cargo));
             // Применим фильтр
-            if (id_group > -1) {
+            if (this.value_group_arrival > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_group === (id_group > 0 ? id_group : null);
+                    return i.id_group === (this.value_group_arrival > 0 ? this.value_group_arrival : null);
                 }.bind(this));
             };
             // Отобразим
@@ -4617,13 +4619,13 @@
     // Выполнить фильтрацию и вывести данные по отчету "Род вагона ПРИБ"
     view_td_report.prototype.view_filter_report_total_genus = function () {
         if (this.total_group_cargo) {
-            var id_genus = Number(this.select_detali_genus.val());
+            this.value_genus = Number(this.select_detali_genus.val());
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_genus));
             // Применим фильтр
-            if (id_genus > -1) {
+            if (this.value_genus > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_genus === (id_genus > 0 ? id_genus : null);
+                    return i.id_genus === (this.value_genus > 0 ? this.value_genus : null);
                 }.bind(this));
             };
             // Отобразим
@@ -4673,13 +4675,13 @@
     // Выполнить фильтрацию и вывести данные по отчету "Груз ПРИБ SAP"
     view_td_report.prototype.view_filter_report_total_cargo_sap = function () {
         if (this.total_cargo_sap) {
-            var code = this.select_detali_cargo_sap.val();
+            this.value_cargo_sap = this.select_detali_cargo_sap.val();
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_cargo_sap));
             // Применим фильтр
-            if (code !== "-1") {
+            if (this.value_cargo_sap !== "-1") {
                 list_view = list_view.filter(function (i) {
-                    return i.sap_cargo_code === code;
+                    return i.sap_cargo_code === this.value_cargo_sap;
                 }.bind(this));
             };
             // Отобразим
@@ -4726,14 +4728,13 @@
     // Выполнить фильтрацию и вывести данные по отчету "Станция ПРИБ"
     view_td_report.prototype.view_filter_report_total_station_from = function () {
         if (this.total_station_from) {
-            var stations = this.select_detali_station_from_multiple.val();
+            this.value_station_from = this.select_detali_station_from_multiple.val();
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_station_from));
             // Применим фильтр
-            if (stations && stations.length > 0) {
+            if (this.value_station_from && this.value_station_from.length > 0) {
                 list_view = list_view.filter(function (i) {
-
-                    var op = stations.find(function (o) {
+                    var op = this.value_station_from.find(function (o) {
                         return Number(o) === i.code_stn_from;
                     }.bind(this));
                     return op ? true : false;
@@ -4789,13 +4790,13 @@
     // Выполнить фильтрацию и вывести данные по отчету "Цех-грузополучатель."
     view_td_report.prototype.view_filter_report_total_division = function () {
         if (this.total_division) {
-            var divisions = this.select_detali_division_multiple.val();
+            this.value_division = this.select_detali_division_multiple.val();
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_division));
             // Применим фильтр
-            if (divisions && divisions.length > 0) {
+            if (this.value_division && this.value_division.length > 0) {
                 list_view = list_view.filter(function (i) {
-                    var op = divisions.find(function (o) {
+                    var op = this.value_division.find(function (o) {
                         return Number(o) === i.id_division;
                     }.bind(this));
                     return op ? true : false;
@@ -5226,43 +5227,50 @@
             case 0: {
                 this.row_setup_detali_operation_amkr.show();
                 this.row_setup_detali_limiting.show();
-                test1++;
-                $('#test1').text(test1)
+                this.select_detali_operation_amkr.update(this.list_operation_amkr, this.value_operation_amkr);
+                this.select_detali_limiting.update(this.list_limiting, this.value_limiting0);
+
                 break;
             };
             case 1: {
                 this.row_setup_detali_operation_amkr_multiple.show();
                 this.row_setup_detali_limiting.show();
-                test2++;
-                $('#test2').text(test2)
+                this.select_detali_operation_amkr_multiple.update(this.list_operation_amkr, this.value_operation_amkr_multiple);
+                this.select_detali_limiting.update(this.list_limiting, this.value_limiting1);
+
                 break;
             };
             case 2: {
                 this.row_setup_detali_cargo.show();
                 this.row_setup_detali_certification_data.show();
-                test3++;
-                $('#test3').text(test3)
-                this.select_detali_certification_data.update(this.list_certification_data, -1);
+                this.select_detali_cargo.update(this.list_cargo, this.value_cargo);
+                this.select_detali_certification_data.update(this.list_certification_data, this.value_certification_data);
                 break;
             };
             case 3: {
                 this.row_setup_detali_group_arrival.show();
+                this.select_detali_group_arrival.update(this.list_group_arrival, this.value_group_arrival);
+
                 break;
             };
             case 4: {
                 this.row_setup_detali_genus.show();
+                this.select_detali_genus.update(this.list_genus, this.value_genus);
                 break;
             };
             case 5: {
                 this.row_setup_detali_cargo_sap.show();
+                this.select_detali_cargo_sap.update(this.list_cargo_sap, this.value_cargo_sap);
                 break;
             };
             case 6: {
                 this.row_setup_detali_station_from_multiple.show();
+                this.select_detali_station_from_multiple.update(this.list_station_from, this.value_station_from);
                 break;
             };
             case 7: {
                 this.row_setup_detali_division_multiple.show();
+                this.select_detali_division_multiple.update(this.list_division, this.value_division);
                 break;
             };
         }
