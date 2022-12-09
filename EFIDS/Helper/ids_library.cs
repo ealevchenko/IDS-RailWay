@@ -2260,6 +2260,8 @@ namespace EFIDS.Helper
                 create_user = o.create_user,
                 close = o.close,
                 close_user = o.close_user,
+                con_change = o.con_change,
+                con_change_user = o.con_change_user,
                 parent_id = o.parent_id,
                 WagonInternalMovement = o.WagonInternalMovement.ToList().Select(w => w.GetWagonInternalMovement()).ToList(),
                 Directory_ConditionArrival = o.Directory_ConditionArrival.GetDirectory_ConditionArrival(),

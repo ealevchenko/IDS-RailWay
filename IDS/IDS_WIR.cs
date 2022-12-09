@@ -8491,6 +8491,8 @@ namespace IDS
                 if (wio == null) return (int)errors_base.not_wio_db; // В базе данных нет записи по WagonInternalOperation (Внутренняя операция по вагону)
                 // Выполним операцию
                 wio.id_condition = id_condition_arrival;
+                wio.con_change = DateTime.Now;
+                wio.con_change_user = user;
                 ef_wio.Update(wio);
                 wir.note = note.Substring(0, note.Length > 250 ? 250 : note.Length).Trim();
                 if (distinguish == true)

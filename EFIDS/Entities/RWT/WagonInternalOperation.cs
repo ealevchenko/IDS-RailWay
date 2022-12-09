@@ -50,6 +50,10 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string close_user { get; set; }
+        public DateTime? con_change { get; set; }
+
+        [StringLength(50)]
+        public string con_change_user { get; set; }
 
         public long? parent_id { get; set; }
 

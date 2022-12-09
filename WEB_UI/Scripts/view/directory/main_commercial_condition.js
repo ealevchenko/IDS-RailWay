@@ -36,6 +36,10 @@
             'maincc_title_condition_arrival': 'Разметка по прибытию.',
             'maincc_label_condition_current': 'Разметка текущая.',
             'maincc_title_condition_current': 'Разметка текущая',
+            'maincc_label_con_change': 'Дата изменения разметки',
+            'maincc_title_con_change': 'Дата изменения разметки',
+            'maincc_label_con_change_user': 'Польз. изм. разм.',
+            'maincc_title_con_change_user': 'Польз. изм. разм.',
 
             'maincc_label_cargo': 'Груз по прибытию',
             'maincc_title_cargo': 'Груз по прибытию',
@@ -253,6 +257,10 @@
                 elements.input_text_date_rem_uz.val(doc_vag !== null && doc_vag.date_rem_uz !== null ? moment(doc_vag.date_rem_uz).format(format_date) : '');
                 elements.input_text_condition_arrival.val(condition_arrival !== null ? condition_arrival['condition_name_' + App.Lang] : '');
                 elements.input_text_condition_current.val(condition_current !== null ? condition_current['condition_name_' + App.Lang] : '');
+
+                elements.input_text_con_change.val(wio !== null && wio.con_change !== null ? moment(wio.con_change).format(format_datetime) : '');
+                elements.input_text_con_change_user.val(wio !== null ? wio.con_change_user : '');
+
                 elements.input_text_cargo.val(cargo !== null ? cargo['cargo_name_' + App.Lang] : '');
                 elements.input_text_station_ext.val(ext_station !== null ? ext_station['station_name_' + App.Lang] : '');
                 elements.input_text_divisions.val(division !== null ? division['name_division_' + App.Lang] : '');
@@ -280,6 +288,8 @@
         elements.input_text_date_rem_uz.val('');
         elements.input_text_condition_arrival.val('');
         elements.input_text_condition_current.val('');
+        elements.input_text_con_change.val('');
+        elements.input_text_con_change_user.val('');
         elements.input_text_cargo.val('');
         elements.input_text_station_ext.val('');
         elements.input_text_divisions.val('');
@@ -347,6 +357,7 @@
     };
     // После загрузки документа
     $(document).ready(function ($) {
+        LockScreen(langView('maincc_init_main', App.Langs));
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
         load_db(['condition_arrival'], true, function (result) {
@@ -354,7 +365,7 @@
             setInterval(function () {
                 $('label#curent_date').text(moment().format(format_datetime));
             }, 1000);
-            LockScreen(langView('maincc_init_main', App.Langs));
+
             list_condition_arrival = ids_dir.getListConditionArrival2('id', 'condition_abbr', 'condition_name', App.Lang, function (i) {
                 return i.delete === null;
             });
@@ -576,6 +587,53 @@
                 },
                 childs: []
             };
+            var form_row_5_1 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_input_con_change = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'con_change',
+                    validation_group: 'view',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('maincc_label_con_change', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('maincc_title_con_change', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_con_change_user = {
+                obj: 'bs_input_text',
+                options: {
+                    id: 'con_change_user',
+                    validation_group: 'view',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('maincc_label_con_change_user', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('maincc_title_con_change_user', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: true,
+                    input_group: false,
+                },
+                childs: []
+            };
             var form_row_6 = {
                 obj: 'bs_form_row',
                 options: {
@@ -708,6 +766,8 @@
             form_row_4.childs.push(form_input_date_rem_uz);
             form_row_5.childs.push(form_input_condition_arrival);
             form_row_5.childs.push(form_input_condition_current);
+            form_row_5_1.childs.push(form_input_con_change);
+            form_row_5_1.childs.push(form_input_con_change_user);
             form_row_6.childs.push(form_input_cargo);
             form_row_6.childs.push(form_input_station_ext);
             form_row_7.childs.push(form_input_divisions);
@@ -719,6 +779,7 @@
             objs.push(form_row_3);
             objs.push(form_row_4);
             objs.push(form_row_5);
+            objs.push(form_row_5_1);
             objs.push(form_row_6);
             objs.push(form_row_7);
             objs.push(form_row_8);
@@ -857,6 +918,16 @@
             objs_edit.push(form_edit_row_1);
             objs_edit.push(form_edit_row_2);
             objs_edit.push(row_edit1);
+
+            var process = 2;
+
+            // Выход из инициализации
+            var out_init = function (process) {
+                if (process === 0) {
+                    LockScreenOff();
+                }
+            }.bind(this);
+
             // Инициализируем форму отображающую информацию
             form_info.init({
                 alert: alert,
@@ -874,7 +945,9 @@
                     // отобразим форму
                     $wagon_detali.empty();
                     $wagon_detali.append(form_info.$form);
-                    LockScreenOff();
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
                 }.bind(this),
             });
             // Инициализируем форму редактирования
@@ -895,6 +968,9 @@
                     $wagon_edit.empty();
                     $wagon_edit.append(form_edit.$form);
                     close_edit_element();
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
                 }.bind(this),
             });
 
