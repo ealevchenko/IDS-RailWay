@@ -80,8 +80,9 @@ SELECT dir_wag.[num]
 	,curr_dir_cond.condition_abbr_ru as current_condition_abbr_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
 	,curr_dir_cond.condition_abbr_en as current_condition_abbr_en			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
 	,curr_dir_cond.repairs as current_condition_repairs						-- Готовность [IDS].[Directory_ConditionArrival] по прибытию призаак ремонт [IDS].[Arrival_UZ_Vagon]
-	,curr_wio.[create] as current_condition_create							-- создали строку годности (Дата изменения разметки)
-	,curr_wio.[create_user] as current_condition_create_user				-- создал строку годности (Пользователь изменения разметки)
+	--> Исправил 09.12 (в таблицу wio добавил поля фиксирующие изменения годности)
+	,curr_wio.[con_change] as current_condition_create							-- создали строку годности (Дата изменения разметки)
+	,curr_wio.[con_change_user] as current_condition_create_user				-- создал строку годности (Пользователь изменения разметки)
 	--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
 	--> Инструктивные письма
 	,il.num as instructional_letters_num
