@@ -244,6 +244,7 @@
     <Compile Include="Areas\IDSReport\IDSReportAreaRegistration.cs" />
     <Compile Include="Areas\IDSRWT\Controllers\HomeController.cs" />
     <Compile Include="Areas\IDSRWT\IDSRWTAreaRegistration.cs" />
+    <Compile Include="Controllers\api\Arhiv\UZ_DOC_PDF_Controller.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_BorderCheckpointController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_DetentionReturnController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_OperatorsWagonsGroupController.cs" />
@@ -2679,6 +2680,10 @@
     <ProjectReference Include="..\EFIDS\EFIDS.csproj">
       <Project>{07a94bbb-16a5-4817-87ea-bb7baea844a7}</Project>
       <Name>EFIDS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EFIDS_Arhiv\EFIDS_Arhiv.csproj">
+      <Project>{182770bf-7bf4-44c3-bfee-d855c496009e}</Project>
+      <Name>EFIDS_Arhiv</Name>
     </ProjectReference>
     <ProjectReference Include="..\EFMT\EFMT.csproj">
       <Project>{0ef55f70-8933-4553-a6d9-407d54b61b49}</Project>

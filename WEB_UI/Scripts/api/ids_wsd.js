@@ -1384,6 +1384,57 @@
             },
         });
     };
+    // Получить PDF документ принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getPDFOfNumDoc = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/pdf_file/num_doc/' + num,
+            async: true,
+            //dataType: 'text/plain',
+            //data: formData,
+            //contentType: false,
+            //processData: false,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getPDFOfNumDoc", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить строку PDF документа принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getUZ_DOC_PDFOfNumDoc = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/num_doc/' + num,
+            async: true,
+            //dataType: 'application/pdf',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUZ_DOC_PDFOfNumDoc", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
     // Получить список документов по номеру накладной
     ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback) {

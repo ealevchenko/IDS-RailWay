@@ -241,7 +241,7 @@ namespace Test
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();             // Тест поиска вагонов прошедших погран переход
 
             //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
-            tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
+            //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
             //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                         // Тестируем обновление документов в архиве
@@ -289,7 +289,7 @@ namespace Test
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
 
-            //tuz.UZ_SMS_GetDocument_of_id_doc();
+            tuz.UZ_SMS_GetDocument_of_id_doc();
             #endregion
 
             #region Администрирование

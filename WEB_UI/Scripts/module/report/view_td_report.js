@@ -1327,11 +1327,34 @@
         var div_row_detali = new this.fe_ui.bs_row({
             class: 'mt-2',
         });
+        var $bt = $('<button type="button" class="btn btn-primary">Primary</button>');
+        $bt.on('click', function (event) {
+            this.ids_wsd.getPDFOfNumDoc('86854766', function (data) {
+                //var blob = new Blob([data], { type: 'application/pdf' });
+                ////var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                ////link.href = URL.createObjectURL(blob);
+                ////link.download = 'teams.csv';
+                ////link.click();
+                //var objectUrl = URL.createObjectURL(blob);
+                //window.open(objectUrl);
+
+               //var blob = new Blob([data], { type: 'application/pdf' });
+
+                var blob = new Blob([JSON.stringify(data, null, 2)], {
+                    type: "application/pdf",
+                });
+
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                window.open(link);
+
+            }.bind(this));
+        }.bind(this));
         var $h3 = $('<h3>' + langView('vtdr_title_calculation_static_load', App.Langs) + '</h3>');
         var $tab_nagr = $('<table class="table table-bordered"><thead><tr><th>кол.</th><th>ГП, т</th><th>Вес, тн</th><th>АМКР, тн</th></tr></thead><tbody><tr><td class="dt-centr" id="count_wagon"></td><td class="dt-centr" id="avg_gruzp"></td><td class="dt-centr" id="avg_vesg"></td><td class="dt-centr" id="avg_vesg_reweighing">0</td></tr></tbody></table>');
         var $col_nagr = $('<div id="arr-common-report-detali-stat-nagr" class="col-xl-6"></div>');
         var $arr_common_detali = nav_tabs_arr_cammon.$content.find('div#arr-common-detali-tab'); // Панель поиска
-        $arr_common_detali.append(div_row_detali_stat.$row.append($col_nagr.append($h3).append($tab_nagr)));
+        $arr_common_detali.append(div_row_detali_stat.$row.append($col_nagr.append($h3).append($tab_nagr).append($bt)));
         $arr_common_detali.append(div_row_detali.$row.append($('<div id="arr-common-report-detali" class="col-xl-12"></div>')));
         // Дабавим закладку на форму
         this.$table_view.append(nav_tabs_arr_cammon.$ul).append(nav_tabs_arr_cammon.$content);
