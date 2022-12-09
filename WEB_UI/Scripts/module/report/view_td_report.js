@@ -9,12 +9,10 @@
     var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
 
+    var list_groups_cargo = [11, 16, 20];               // Список id групп груза с порожними вагонами
+
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
-
-    var test1 = 0;
-    var test2 = 0;
-    var test3 = 0;
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -47,6 +45,7 @@
 
             'vtdr_card_header_report_2_1_group': 'Общая информация',
             'vtdr_card_header_report_2_1_detali': 'Детально информация',
+            'vtdr_title_calculation_static_load': 'Расчет стататической нагрузки',
 
             'vtdr_card_header_chart': 'ДИАГРАММА',
             'vtdr_card_header_table': 'ДАННЫЕ',
@@ -1328,10 +1327,11 @@
         var div_row_detali = new this.fe_ui.bs_row({
             class: 'mt-2',
         });
-        var tab_nagr = $('<table class="table table-bordered"><thead><tr><th>кол.</th><th>ГП, т</th><th>Вес, тн</th><th>АМКР, тн</th></tr></thead><tbody><tr><td class="dt-centr" id="count_wagon"></td><td class="dt-centr" id="avg_gruzp"></td><td class="dt-centr" id="avg_vesg"></td><td class="dt-centr" id="avg_vesg_reweighing">0</td></tr></tbody></table>');
-        var col_nagr = $('<div id="arr-common-report-detali-stat-nagr" class="col-xl-6"></div>');
+        var $h3 = $('<h3>' + langView('vtdr_title_calculation_static_load', App.Langs) + '</h3>');
+        var $tab_nagr = $('<table class="table table-bordered"><thead><tr><th>кол.</th><th>ГП, т</th><th>Вес, тн</th><th>АМКР, тн</th></tr></thead><tbody><tr><td class="dt-centr" id="count_wagon"></td><td class="dt-centr" id="avg_gruzp"></td><td class="dt-centr" id="avg_vesg"></td><td class="dt-centr" id="avg_vesg_reweighing">0</td></tr></tbody></table>');
+        var $col_nagr = $('<div id="arr-common-report-detali-stat-nagr" class="col-xl-6"></div>');
         var $arr_common_detali = nav_tabs_arr_cammon.$content.find('div#arr-common-detali-tab'); // Панель поиска
-        $arr_common_detali.append(div_row_detali_stat.$row.append(col_nagr.append(tab_nagr)));
+        $arr_common_detali.append(div_row_detali_stat.$row.append($col_nagr.append($h3).append($tab_nagr)));
         $arr_common_detali.append(div_row_detali.$row.append($('<div id="arr-common-report-detali" class="col-xl-12"></div>')));
         // Дабавим закладку на форму
         this.$table_view.append(nav_tabs_arr_cammon.$ul).append(nav_tabs_arr_cammon.$content);
@@ -2025,6 +2025,7 @@
                         };
                         case 'arr-common-detali': {
                             this.table_arr_common_detali.obj_t_report.columns.adjust().draw();
+                            //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                             break;
                         };
                     };
@@ -2175,15 +2176,20 @@
         this.list_station_amkr = [];
         this.list_group_sostav = [];
         // выборка для списков отчета
+        var count_load = 0;
         var sum_gruzp = 0;
         var sum_vesg = 0;
         var sum_vesg_reweighing = 0;
 
 
         $.each(wagons_adoption, function (key, value) {
-            sum_gruzp += value.arrival_uz_vagon_gruzp;
-            sum_vesg += value.arrival_uz_vagon_vesg;
-            sum_vesg_reweighing += value.arrival_uz_vagon_vesg_reweighing;
+            var res = list_groups_cargo.indexOf(value.arrival_uz_vagon_id_group);
+            if (res === -1) {
+                count_load++;
+                sum_gruzp += value.arrival_uz_vagon_gruzp;
+                sum_vesg += value.arrival_uz_vagon_vesg;
+                sum_vesg_reweighing += value.arrival_uz_vagon_vesg_reweighing;
+            }
             //
             var group_sostav = this.list_group_sostav.find(function (o) { return o.id === value.arrival_sostav_id }.bind(this));
             if (!group_sostav) {
@@ -2280,10 +2286,10 @@
         var avg_gruzp = 0;
         var avg_vesg = 0;
         var avg_vesg_reweighing = 0;
-        if (wagons_adoption.length > 0) {
-            avg_gruzp = sum_gruzp > 0 ? sum_gruzp / wagons_adoption.length : 0;
-            avg_vesg = sum_vesg > 0 ? (sum_vesg / 1000) / wagons_adoption.length : 0;
-            avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / wagons_adoption.length : 0;
+        if (count_load > 0) {
+            avg_gruzp = sum_gruzp > 0 ? sum_gruzp / count_load : 0;
+            avg_vesg = sum_vesg > 0 ? (sum_vesg / 1000) / count_load : 0;
+            avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / count_load : 0;
         };
 
         $('td#count_wagon').text(wagons_adoption.length);

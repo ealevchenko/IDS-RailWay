@@ -2563,7 +2563,7 @@
                 this.fixedHeader = true;            // вкл. фикс. заголовка
                 this.leftColumns = 2;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = false;
