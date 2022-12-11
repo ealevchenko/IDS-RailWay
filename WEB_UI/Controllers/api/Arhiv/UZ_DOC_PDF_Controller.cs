@@ -24,7 +24,7 @@ namespace WEB_UI.Controllers.api.Arhiv
 
         // GET: api/ids_arhiv/rwt/uz_doc_pdf/pdf_file/num_doc/86854766
         [Route("pdf_file/num_doc/{num_doc}")]
-        //[ResponseType(typeof(byte[]))]
+        [ResponseType(typeof(byte[]))]
         public IHttpActionResult GetPDFOfNumDoc(string num_doc)
         {
             try
@@ -39,11 +39,11 @@ namespace WEB_UI.Controllers.api.Arhiv
                     pdf = doc.pdf_doc;
                 }
 
-                //HttpResponseMessage response = new HttpResponseMessage();
+                //HttpResponseMessage response = new HttpResponseMessage(); //;charset=windows-1251
 
                 //response.Content = new ByteArrayContent(pdf);
                 //response.Content.LoadIntoBufferAsync(pdf.Length).Wait();
-                ////response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
                 //return response;
                 return Ok(pdf);
 

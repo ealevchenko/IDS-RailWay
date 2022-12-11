@@ -1390,7 +1390,7 @@
             type: 'GET',
             url: '../../api/ids_arhiv/rwt/uz_doc_pdf/pdf_file/num_doc/' + num,
             async: true,
-            //dataType: 'text/plain',
+            //dataType: 'application/pdf',
             //data: formData,
             //contentType: false,
             //processData: false,

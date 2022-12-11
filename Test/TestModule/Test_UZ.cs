@@ -1,4 +1,6 @@
-﻿using IDSLogs.Enum;
+﻿using EFIDS_Arhiv.Concrete;
+using EFIDS_Arhiv.Entities;
+using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -75,7 +77,7 @@ namespace Test.TestModule
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-           // List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("74089598");
+            // List<UZ_DOC> list = sms.GetUZ_DOC_Of_NumDoc("74089598");
 
 
         }
@@ -87,6 +89,19 @@ namespace Test.TestModule
             byte[] doc = sms.GetUZ_Document_Of_doc_id(doc_id);
             File.WriteAllBytes(@"d:\" + doc_id + ".pdf", doc);
         }
+        public void UZ_SMS_GetDocument_of_db_id_doc()
+        {
+            Byte[] pdf = null;
+            EFUZ_DOC_PDF ef_ids_arhiv = new EFUZ_DOC_PDF(new EFDbContext());
+            UZ_DOC_PDF docs = ef_ids_arhiv.Context.Where(s => s.num_doc == "86854766").FirstOrDefault();
+            if (docs != null)
+            {
+                pdf = docs.pdf_doc;
+                File.WriteAllBytes(@"d:\" + "test" + ".pdf", pdf);
+            }
+
+        }
+
         // Поиск по номеру вагона
         public void UZ_SMS_GetUZ_DOC_Of_NumWagons()
         {

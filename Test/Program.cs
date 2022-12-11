@@ -289,7 +289,8 @@ namespace Test
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
 
-            tuz.UZ_SMS_GetDocument_of_id_doc();
+            //tuz.UZ_SMS_GetDocument_of_id_doc();
+            tuz.UZ_SMS_GetDocument_of_db_id_doc();
             #endregion
 
             #region Администрирование
