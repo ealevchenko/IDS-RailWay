@@ -36,6 +36,7 @@
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
             'vtdr_title_report_type_3': '«За месяц» c:{0} по {1}',
             'vtdr_title_report_type_4': '«За период» c:{0} по {1}',
+            'vtdr_title_report_type_5': '«За отчетный период» c:{0} по {1}',
 
             'vtdr_card_header_report_1_1_arr': 'ПРИБЫТИЕ',
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
@@ -112,6 +113,8 @@
             'vtdr_title_station_amkr': 'Станция примыкания',
 
             'vtdr_title_type_select': 'Выборка за:',
+            'vtdr_title_select_month': 'за месяц:',
+            'vtdr_title_select_year': 'за год:',
             'vtdr_title_label_interval_date': ' период:',
             'vtdr_title_label_date': ' с даты:',
             'vtdr_title_num_wag': ' ИНФОРМАЦИЯ ПО ВАГОНУ №',
@@ -467,6 +470,9 @@
     view_td_report.prototype.init_select_report = function () {
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        this.month = moment().month();
+        this.year = moment().year();
+
         // Создадим форму выбора для отчета
         this.form_panel = new FIL();
         var fl_interval_date = {
@@ -496,13 +502,70 @@
             id: 'type_select',
             prefix: 'sm',
             title: langView('vtdr_title_type_select', App.Langs),
-            list: [{ value: 1, text: 'ЖД сутки' }, { value: 2, text: 'Календарные сутки' }, { value: 3, text: 'От начала месяца' }, { value: 4, text: 'Произвольный выбор' }],
+            list: [
+                { value: 1, text: 'ЖД сутки' },
+                { value: 2, text: 'Календарные сутки' },
+                { value: 3, text: 'От начала месяца' },
+                { value: 4, text: 'Произвольный выбор' },
+                { value: 5, text: 'Отчетный период' },
+            ],
             default: this.type,
             select: function (event, ui) {
                 event.preventDefault();
                 // Обработать выбор
                 var id = Number($(event.currentTarget).val());
                 this.select_report(id);
+            }.bind(this),
+        };
+        var fl_select_month = {
+            type: 'select',
+            id: 'select_month',
+            prefix: 'sm',
+            title: langView('vtdr_title_select_month', App.Langs),
+            list: [
+                { value: 1, text: 'Январь' },
+                { value: 2, text: 'Февраль' },
+                { value: 3, text: 'Март' },
+                { value: 4, text: 'Апрель' },
+                { value: 5, text: 'Май' },
+                { value: 6, text: 'Июнь' },
+                { value: 7, text: 'Июль' },
+                { value: 8, text: 'Август' },
+                { value: 9, text: 'Сентябрь' },
+                { value: 10, text: 'Октябрь' },
+                { value: 11, text: 'Ноябрь' },
+                { value: 12, text: 'Декабрь' },
+            ],
+            default: this.month + 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                // Обработать выбор
+                var month = Number($(event.currentTarget).val());
+                if (month >= 0) {
+                    this.month = month - 1;
+                    this.select_report(this.type);
+                }
+            }.bind(this),
+        };
+        var fl_select_year = {
+            type: 'select',
+            id: 'select_year',
+            prefix: 'sm',
+            title: langView('vtdr_title_select_year', App.Langs),
+            list: [
+                { value: this.year, text: this.year },
+                { value: this.year - 1, text: this.year - 1 },
+                { value: this.year - 2, text: this.year - 2 },
+            ],
+            default: this.year,
+            select: function (event, ui) {
+                event.preventDefault();
+                // Обработать выбор
+                var year = Number($(event.currentTarget).val());
+                if (year >= 0) {
+                    this.year = year;
+                    this.select_report(this.type);
+                }
             }.bind(this),
         };
         var fl_button = {
@@ -520,6 +583,8 @@
         fields.push(fl_type_select);
         fields.push(fl_select_date);
         fields.push(fl_interval_date);
+        fields.push(fl_select_year);
+        fields.push(fl_select_month);
         fields.push(fl_button);
         // Инициализация формы
         this.form_panel.init({
@@ -530,8 +595,12 @@
         this.$main_report.append(this.form_panel.$form);
         this.div_interval_date = $('span#interval_date').closest("div").prev().closest("div");
         this.div_select_date = $('input#select_date').closest("div").prev().closest("div");
+        this.div_select_year = $('select#select_year').closest("div").prev().closest("div");
+        this.div_select_month = $('select#select_month').closest("div").prev().closest("div");
         this.div_select_date.hide();
         this.div_interval_date.hide();
+        this.div_select_year.hide();
+        this.div_select_month.hide();
         this.form_panel.enable('type_select');
         this.type = 1; // по умолчанию
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
@@ -548,25 +617,66 @@
     view_td_report.prototype.select_report = function (type) {
         this.type = type;
         this.form_panel.set('type_select', this.type);
-
-        if (type === 4) {
-            this.div_select_date.hide();
-            this.div_interval_date.show();
-            this.set_data_report(null);
-            this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
-            this.set_data_report(null, { start: this.start, stop: this.stop });
-        } else {
-            if (type > 0) {
-                this.div_select_date.show();
-                this.div_interval_date.hide();
-                this.form_panel.set('select_date', moment());
-                this.set_data_report(moment(), null);
-            } else {
+        switch (type) {
+            case 5: {
+                this.start = moment().set({ 'year': this.year, 'month': this.month, 'date': 1, 'hour': 20, 'minute': 0, 'second': 0 }).subtract(1, 'days')._d;
+                this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 19, 'minute': 59, 'second': 59 }).subtract(1, 'days')._d;;
                 this.div_select_date.hide();
                 this.div_interval_date.hide();
+                this.div_select_year.show();
+                this.div_select_month.show();
+                this.set_data_report(null, { start: this.start, stop: this.stop });
+                break;
+            };
+            case 4: {
+                this.div_select_date.hide();
+                this.div_interval_date.show();
+                this.div_select_year.hide();
+                this.div_select_month.hide();
+                this.set_data_report(null);
+                this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
+                this.set_data_report(null, { start: this.start, stop: this.stop });
+                break;
+            };
+            case 1:
+            case 2:
+            case 3:
+                {
+                this.div_select_date.show();
+                this.div_interval_date.hide();
+                this.div_select_year.hide();
+                this.div_select_month.hide();
+                this.form_panel.set('select_date', moment());
+                this.set_data_report(moment(), null);
+                break;
+            };
+            default: {
+                this.div_select_date.hide();
+                this.div_interval_date.hide();
+                this.div_select_year.hide();
+                this.div_select_month.hide();
                 this.set_data_report(null, null);
+                break;
             }
-        }
+        };
+        //if (type === 4) {
+        //    this.div_select_date.hide();
+        //    this.div_interval_date.show();
+        //    this.set_data_report(null);
+        //    this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
+        //    this.set_data_report(null, { start: this.start, stop: this.stop });
+        //} else {
+        //    if (type > 0) {
+        //        this.div_select_date.show();
+        //        this.div_interval_date.hide();
+        //        this.form_panel.set('select_date', moment());
+        //        this.set_data_report(moment(), null);
+        //    } else {
+        //        this.div_select_date.hide();
+        //        this.div_interval_date.hide();
+        //        this.set_data_report(null, null);
+        //    }
+        //};
     };
     // Получить дату отчета
     view_td_report.prototype.set_data_report = function (date, interval) {
@@ -610,6 +720,15 @@
                     this.start = moment(interval.start)._d;
                     this.stop = moment(interval.stop)._d;
                     message_report = langView('vtdr_title_report_type_4', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
+            case 5: {
+                // Отчетный период
+                if (interval && interval.start && interval.stop) {
+                    this.start = moment(interval.start)._d;
+                    this.stop = moment(interval.stop)._d;
+                    message_report = langView('vtdr_title_report_type_5', App.Langs).format(moment(this.start).format(format_datetime), moment(this.stop).format(format_datetime));
                 }
                 break;
             };
@@ -4975,7 +5094,7 @@
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_3_1 = function () {
-        if (this.switch_laden) {
+        if (this.switch_laden && this.select_detali_operation_amkr) {
             this.switch_laden.val(false);
             this.switch_accounting.val(false);
             this.switch_client.val(false);

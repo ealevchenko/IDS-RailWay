@@ -345,6 +345,7 @@
     };
     // Инициализация Радиальная гистограмма
     chart_amcharts.prototype.init_radial_histogram = function () {
+
         // Create chart
         // https://www.amcharts.com/docs/v5/charts/xy-chart/
         this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
@@ -375,16 +376,16 @@
 
         // Create axes
         // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-        this.xRenderer = am5radar.AxisRendererCircular.new(this.root, {
+        var xRenderer = am5radar.AxisRendererCircular.new(this.root, {
             minGridDistance: 30
         });
 
-        this.xRenderer.grid.template.set("forceHidden", true);
+        xRenderer.grid.template.set("forceHidden", true);
 
         this.xAxis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
             maxDeviation: 0,
-            categoryField: "category",//category
-            renderer: this.xRenderer
+            categoryField: "name",
+            renderer: xRenderer
         }));
 
         this.yRenderer = am5radar.AxisRendererRadial.new(this.root, {});
@@ -403,11 +404,8 @@
             sequencedInterpolation: true,
             xAxis: this.xAxis,
             yAxis: this.yAxis,
-            valueField: "value", //value
-            categoryField: "category",//category
-
-            //valueYField: "value",
-            //valueXField: "category"
+            valueYField: "value",
+            categoryXField: "name"
         }));
 
         // Rounded corners for columns
@@ -499,6 +497,7 @@
             //
             this.init_type_chart();
         }.bind(this));
+
 
         this.data = [];
 
@@ -745,21 +744,23 @@
     };
     // Радиальная гистограмма
     chart_amcharts.prototype.view_radial_histogram = function (data) {
+        // Set data
         if (this.chart) {
+            //var data = [];
 
-            var data = [];
-
-            for (var i = 1; i < 21; i++) {
-                data.push({ category: i, value: Math.round(Math.random() * 100) });
-            }
+            //for (var i = 1; i < 21; i++) {
+            //    data.push({ name: i, value: Math.round(Math.random() * 100) });
+            //}
 
             this.xAxis.data.setAll(data);
             this.series.data.setAll(data);
+
             // Make stuff animate on load
             // https://www.amcharts.com/docs/v5/concepts/animations/
             this.series.appear(1000);
             this.chart.appear(1000, 100);
-       }
+        }
+
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
