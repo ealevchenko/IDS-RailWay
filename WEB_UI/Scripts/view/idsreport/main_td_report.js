@@ -30,7 +30,6 @@
 
     var IDS_WSD = App.ids_wsd;
     var ids_wsd = new IDS_WSD();
-    // Модуль инициализаии компонентов формы
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
