@@ -6,16 +6,18 @@
 @section styles {
     @Styles.Render("~/DataTables/css")
     @Styles.Render("~/DateTime/css")
+    <link href="~/Content/module/wsd/table_manual_cars.css" rel="stylesheet" />
+    <link href="~/Content/module/wsd/view_incoming_report.css" rel="stylesheet" />
     <link href="~/Content/module/report/view_td_report.css" rel="stylesheet">
     <link href="~/Content/module/report/table_td_report.css" rel="stylesheet" />
     @* <link href="~/Content/view/idsreport/main_td_report.css" rel="stylesheet">*@
-    <!-- Resources -->
-    <style>
-        #chartdiv {
-            width: 100%;
-            height: 500px;
-        }
-    </style>
+
+    @*<style>
+            #chartdiv {
+                width: 100%;
+                height: 500px;
+            }
+        </style>*@
 
 }
 
@@ -25,9 +27,12 @@
     @Scripts.Render("~/bundles/DateTime")
     <script src="~/Scripts/view/shared/common.js"></script>                 <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>   <!-- Форма сообщений подтверждения -->
     <script src="~/Scripts/api/shared.js"></script>
     <script src="~/Scripts/api/ids_direct.js"></script>
     <script src="~/Scripts/api/ids_wsd.js"></script>
+    <script src="~/Scripts/module/wsd/table_manual_cars.js"></script>                <!-- Таблицы ручного ввода -->
+    <script src="~/Scripts/module/wsd/view_incoming_report.js"></script>            <!-- Отчеты по прибытию -->
     <script src="~/Scripts/module/shared/chart_amcharts.js"></script>
     <script src="~/Scripts/module/report/table_td_report.js"></script>
     <script src="~/Scripts/module/report/view_td_report.js"></script>
@@ -47,20 +52,6 @@
     <script src="~/Scripts/amcharts5/themes/Animated.js"></script>
 
 }
-
-@*<select class="selectpicker" multiple data-live-search="true">
-        <option>Mustard</option>
-        <option>Ketchup</option>
-        <option>Relish</option>
-    </select>
-    <select id="example-getting-started" multiple="multiple">
-        <option value="cheese">Cheese</option>
-        <option value="tomatoes">Tomatoes</option>
-        <option value="mozarella">Mozzarella</option>
-        <option value="mushrooms">Mushrooms</option>
-        <option value="pepperoni">Pepperoni</option>
-        <option value="onions">Onions</option>
-    </select>*@
 @*<div id="chartdiv"></div>*@
 <div id="report">
 

@@ -237,6 +237,8 @@
     // Модуль инициализаии компонентов формы
     var FE = App.form_element;
 
+    var VICR = App.view_incoming_report; // Модуль отчетов по прибытию
+
     // Перечень полей
     var list_collums = [
         // Поля составы принятые
@@ -350,6 +352,16 @@
             className: 'dt-body-center button-control',
             width: "20px"
         },
+        {
+            field: 'adoption_sostav_detali_button_print',
+            targets: 0,
+            data: null,
+            defaultContent: '<button class="btn arrival-button-prn"><i class="fa-solid fa-print"></i></button>',
+            orderable: false,
+            className: 'dt-body-center button-control',
+            width: "20px"
+        },
+
         {
             field: 'adoption_sostav_detali_num_doc',
             data: function (row, type, val, meta) {
@@ -1802,6 +1814,7 @@
         var collums = [];
         if (this.settings.detali_table) collums.push({ field: 'adoption_sostav_detali_details_control', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_button_view', title: null, class: null });
+        collums.push({ field: 'adoption_sostav_detali_button_print', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_num_doc', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_date_adoption', title: null, class: null });
         collums.push({ field: 'adoption_sostav_detali_count_wagon', title: null, class: null });
@@ -3057,6 +3070,12 @@
                 break;
             };
             case 'adoption_sostav_detali': {
+                // Инициализация модуля "Отчет принятых составов"
+                this.view_incoming_report = new VICR();
+                this.view_incoming_report.init({
+                    alert: null,
+                    ids_wsd: this.ids_wsd,
+                });
                 this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
                     this.select_rows(); // определим строку
                     this.enable_button();
@@ -3074,6 +3093,15 @@
                         var date = moment(data.date_arrival)
                         date = date.format('YYYY-MM-DD[T]HH:mm:ss');
                         window.open(url_incoming + '?id_arrival=' + data.id + '&arrival=' + date, '', '');
+                    }
+
+                }.bind(this));
+                this.$table_report.find('tbody').on('tbody click', 'button.arrival-button-prn', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var data = this.obj_t_report.row($(e.currentTarget).parents('tr')).data();
+                    if (data) {
+                        this.view_incoming_report.fst(data.id)
                     }
 
                 }.bind(this));
