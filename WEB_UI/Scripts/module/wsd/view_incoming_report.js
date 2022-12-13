@@ -23,6 +23,8 @@
             'vicr_title_report_podp_priem': 'Подпись приемосдатчика ______________________',
             'vicr_title_form_nums': 'Укажите вагоны',
             'vicr_title_form_move_nums': 'Выберите вагоны',
+            'vicr_title_edit': 'Ок',
+            'vicr_title_cancel': 'Отмена',
 
         },
         'en':  //default language: English
@@ -34,6 +36,8 @@
             'vicr_title_report_podp_priem': 'Signature of podp_priem ______________________',
             'vicr_title_form_nums': 'Specify wagons',
             'vicr_title_form_move_nums': 'Select wagons',
+            'vicr_title_edit': 'Ok',
+            'vicr_title_cancel': 'Cancel',
         }
     };
     // Определлим список текста для этого модуля
@@ -82,8 +86,8 @@
             prefix: 'sm',
             cl_modal: null,
             //form: this.form,
-            label_ok: langView('fmic_title_edit', App.Langs),
-            label_close: langView('fmic_title_cancel', App.Langs),
+            label_ok: langView('vicr_title_edit', App.Langs),
+            label_close: langView('vicr_title_cancel', App.Langs),
             ok_click: function (e) {
                 e.preventDefault();
                 this.mf_select_nums.close();
@@ -150,8 +154,8 @@
             prefix: 'lg',
             cl_modal: null,
             //form: this.form,
-            label_ok: langView('fmic_title_edit', App.Langs),
-            label_close: langView('fmic_title_cancel', App.Langs),
+            label_ok: langView('vicr_title_edit', App.Langs),
+            label_close: langView('vicr_title_cancel', App.Langs),
             ok_click: function (e) {
                 e.preventDefault();
                 var page_nums1 = [];
