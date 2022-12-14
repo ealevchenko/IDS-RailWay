@@ -46,7 +46,7 @@
 
             'vtdr_card_header_report_2_1_group': 'Общая информация',
             'vtdr_card_header_report_2_1_detali': 'Детально информация',
-            'vtdr_title_calculation_static_load': 'Расчет стататической нагрузки',
+            'vtdr_title_calculation_static_load': 'Расчет стат. нагрузки',
 
             'vtdr_card_header_chart': 'ДИАГРАММА',
             'vtdr_card_header_table': 'ДАННЫЕ',
@@ -642,14 +642,14 @@
             case 2:
             case 3:
                 {
-                this.div_select_date.show();
-                this.div_interval_date.hide();
-                this.div_select_year.hide();
-                this.div_select_month.hide();
-                this.form_panel.set('select_date', moment());
-                this.set_data_report(moment(), null);
-                break;
-            };
+                    this.div_select_date.show();
+                    this.div_interval_date.hide();
+                    this.div_select_year.hide();
+                    this.div_select_month.hide();
+                    this.form_panel.set('select_date', moment());
+                    this.set_data_report(moment(), null);
+                    break;
+                };
             default: {
                 this.div_select_date.hide();
                 this.div_interval_date.hide();
@@ -2463,7 +2463,7 @@
             avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / count_load : 0;
         };
 
-        $('td#count_wagon').text(wagons_adoption.length);
+        $('td#count_wagon').text(count_load);
         $('td#avg_gruzp').text(avg_gruzp.toFixed(2));
         $('td#avg_vesg').text(avg_vesg.toFixed(2));
         $('td#avg_vesg_reweighing').text(avg_vesg_reweighing.toFixed(2));
@@ -4518,17 +4518,20 @@
             if (this.value_operation_amkr_multiple && this.value_operation_amkr_multiple.length > 0) {
                 list_view = list_view.filter(function (i) {
                     var op = this.value_operation_amkr_multiple.find(function (o) {
-                        return Number(o) === i.id_operator;
+                        if (o !== "") {
+                            return Number(o) === i.id_operator;
+                        } else {
+                            return i.id_operator === null;
+                        }
                     }.bind(this));
-                    return op ? true : false;
+                    return op !== undefined ? true : false;
                 }.bind(this));
             };
             if (this.value_limiting1 > -1) {
                 list_view = list_view.filter(function (i) {
-                    return i.id_limiting === (this.value_limiting1 > 0 ? this.value_limiting1 : null);
+                    return i.id_limiting === (this.value_limiting1 > 0 ? this.value_limiting : null);
                 }.bind(this));
             };
-
             // Отобразим
             this.table_total_operation_to_arr.view(list_view);
 
@@ -5915,9 +5918,18 @@
             this.$input_current_condition_abbr.val(row['current_condition_abbr_' + App.Lang]);
             this.$input_current_condition_create.val(row.current_condition_create ? moment(row.current_condition_create).format(format_datetime) : '');
             this.$input_current_condition_create_user.val(row.current_condition_create_user);
-            this.$input_instructional_letters_num.val(row.instructional_letters_num);
-            this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : '');
-            this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
+            //var d = moment(row.instructional_letters_datetime).isAfter(moment(row.last_date_outgoing));
+            if (row.cur_date_outgoing === null && moment(row.instructional_letters_datetime).isAfter(moment(row.last_date_outgoing))) {
+                // Отображаем если несдан и инструкци я больше последней сдачи
+                this.$input_instructional_letters_num.val(row.instructional_letters_num);
+                this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : '');
+                this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
+            } else {
+            this.$input_instructional_letters_num.val('');
+            this.$input_instructional_letters_datetime.val('');
+            this.$input_instructional_letters_station_name.val('');
+            }
+
         } else {
             this.$input_last_date_outgoing.val('');
             //this.$input_instructional_letters_datetime.val('');
@@ -5933,7 +5945,7 @@
             this.$input_current_condition_create.val('');
             this.$input_current_condition_create_user.val('');
             this.$input_instructional_letters_num.val('');
-            this.$input_instructional_letters_datetime1.val('');
+            this.$input_instructional_letters_datetime.val('');
             this.$input_instructional_letters_station_name.val('');
         }
     };
@@ -6023,14 +6035,88 @@
     //------------------------------------------------------------------
     // Очистить объект
     view_td_report.prototype.destroy = function () {
+        // Таблицы
         if (this.table_adop_sostav_all) {
             this.table_adop_sostav_all.destroy();
             this.table_adop_sostav_all = null;
         }
-        // Очистить таблицы
         if (this.table_adop_sostav_detali) {
             this.table_adop_sostav_detali.destroy();
             this.table_adop_sostav_detali = null;
+        }
+        if (this.table_adop_searsh_docs) {
+            this.table_adop_searsh_docs.destroy();
+            this.table_adop_searsh_docs = null;
+        }
+        if (this.table_outg_sostav_all) {
+            this.table_outg_sostav_all.destroy();
+            this.table_outg_sostav_all = null;
+        }
+        if (this.table_outg_sostav_detali) {
+            this.table_outg_sostav_detali.destroy();
+            this.table_outg_sostav_detali = null;
+        }
+        if (this.table_outg_searsh_docs) {
+            this.table_outg_searsh_docs.destroy();
+            this.table_outg_searsh_docs = null;
+        }
+        if (this.table_adop_wagon_not_operation) {
+            this.table_adop_wagon_not_operation.destroy();
+            this.table_adop_wagon_not_operation = null;
+        }
+        if (this.table_incoming_outgoing_car) {
+            this.table_incoming_outgoing_car.destroy();
+            this.table_incoming_outgoing_car = null;
+        }
+        if (this.table_wagons_rent) {
+            this.table_wagons_rent.destroy();
+            this.table_wagons_rent = null;
+        }
+        // Графики
+        if (this.chart_total_cargo_operation_amkr) {
+            this.chart_total_cargo_operation_amkr.destroy();
+            this.chart_total_cargo_operation_amkr = null;
+        }
+        if (this.chart_total_operation_to_arr) {
+            this.chart_total_operation_to_arr.destroy();
+            this.chart_total_operation_to_arr = null;
+        }
+        if (this.chart_total_cargo_to_arr) {
+            this.chart_total_cargo_to_arr.destroy();
+            this.chart_total_cargo_to_arr = null;
+        }
+        if (this.table_total_group_cargo_to_arr) {
+            this.table_total_group_cargo_to_arr.destroy();
+            this.table_total_group_cargo_to_arr = null;
+        }
+        if (this.chart_total_group_cargo_to_arr) {
+            this.chart_total_group_cargo_to_arr.destroy();
+            this.chart_total_group_cargo_to_arr = null;
+        }
+        if (this.table_total_genus_to_arr) {
+            this.table_total_genus_to_arr.destroy();
+            this.table_total_genus_to_arr = null;
+        }
+        if (this.chart_total_station_to_arr) {
+            this.chart_total_station_to_arr.destroy();
+            this.chart_total_station_to_arr = null;
+        }
+        if (this.table_total_division_to_arr) {
+            this.table_total_division_to_arr.destroy();
+            this.table_total_division_to_arr = null;
+        }
+        if (this.chart_total_division_to_arr) {
+            this.chart_total_division_to_arr.destroy();
+            this.chart_total_division_to_arr = null;
+        }
+        if (this.table_total_adoption_to_gs) {
+            this.table_total_adoption_to_gs.destroy();
+            this.table_total_adoption_to_gs = null;
+        }
+        // Модуля
+        if (this.form_select_num) {
+            this.form_select_num.destroy();
+            this.form_select_num = null;
         }
     };
 

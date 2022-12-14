@@ -866,6 +866,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? wagon_closed_route { get; set; }
         public string wagon_new_construction { get; set; }
         public long? wir_id { get; set; }
+        public long? wir_id_arrival_car { get; set; }
+        public long? wir_id_outgoing_car { get; set; }
         public string wir_note { get; set; }
         public string wir_highlight_color { get; set; }
         public int? arrival_id_condition { get; set; }
@@ -887,6 +889,10 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? instructional_letters_station_code { get; set; }
         public string instructional_letters_station_name { get; set; }
         public string instructional_letters_note { get; set; }
+        public DateTime? cur_date_adoption { get; set; }
+        public DateTime? cur_date_adoption_act { get; set; }
+        public DateTime? cur_date_outgoing { get; set; }
+        public DateTime? cur_date_outgoing_act { get; set; }
         public DateTime? last_date_outgoing { get; set; }
         public DateTime? last_date_outgoing_act { get; set; }
     }

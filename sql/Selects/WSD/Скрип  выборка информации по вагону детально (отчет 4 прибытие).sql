@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num int = 63530935
+declare @num int = 64167240
 
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT dir_wag.[num]
@@ -65,6 +65,8 @@ SELECT dir_wag.[num]
      ,dir_wag.[closed_route] as wagon_closed_route
      ,dir_wag.[new_construction] as wagon_new_construction
 	 ,curr_wir.id as wir_id
+	 ,curr_wir.[id_arrival_car] as wir_id_arrival_car
+	 ,curr_wir.[id_outgoing_car] as wir_id_outgoing_car
 	 ,curr_wir.note as wir_note
 	 --> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
 	,arr_doc_vag.[id_condition] as arrival_id_condition
@@ -91,11 +93,16 @@ SELECT dir_wag.[num]
 	,let_station_uz.station as instructional_letters_station_name
 	,il.[note] as instructional_letters_note
 	
+	,arr_sost.[date_adoption] as cur_date_adoption
+    ,arr_sost.[date_adoption_act] as cur_date_adoption_act
+	,cur_out_sost.date_outgoing as cur_date_outgoing
+	,cur_out_sost.date_outgoing_act as  cur_date_outgoing_act
 	,out_sost.date_outgoing as last_date_outgoing
 	,out_sost.date_outgoing_act as  last_date_outgoing_act
 	 --,curr_wir.*
 
 	  --,dir_rent.*
+	  --into current_operation_wagon
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons] as dir_wag
 	Left JOIN IDS.Directory_WagonsRent as dir_rent ON dir_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = dir_wag.num order by [id] desc)	
   		--> Справочник Оператор вагона по прибытию
@@ -112,12 +119,19 @@ SELECT dir_wag.[num]
         Left JOIN IDS.[WagonInternalRoutes] as curr_wir ON curr_wir.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalRoutes] as wir where wir.[num]= dir_wag.[num] order by id desc)
 		--> Прибытие вагона
 		Left JOIN IDS.ArrivalCars as arr_car ON curr_wir.id_arrival_car = arr_car.id
+		--> Прибытие состава
+		Left JOIN IDS.ArrivalSostav as arr_sost ON arr_car.id_arrival = arr_sost.id
 		--> Документы на вагон по принятию вагона на АМКР
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON arr_car.id_arrival_uz_vagon = arr_doc_vag.id
 		--> Документы на группу вагонов (состав) по принятию ваг она на АМКР
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		--> Справочник Разметка по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition = arr_dir_cond.id
+
+		--> Отправка вагона текущая
+		Left JOIN IDS.OutgoingCars as cur_out_car ON curr_wir.id_outgoing_car = cur_out_car.id
+		--> Отправка состава
+		Left JOIN IDS.OutgoingSostav as cur_out_sost ON cur_out_car.[id_outgoing] = cur_out_sost.id
 
 		--> Текущая операция
         Left JOIN IDS.WagonInternalOperation as curr_wio ON curr_wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= curr_wir.id order by id desc)

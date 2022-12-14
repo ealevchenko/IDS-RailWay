@@ -2846,7 +2846,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [5, 'desc'];
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = true;
                 this.autoWidth = true;
@@ -3007,6 +3007,7 @@
             //"scrollY": "600px",
             //sScrollX: "100%",
             scrollX: true,
+/*            sScrollXInner: "100%",*/
             //"responsive": true,
             //"bAutoWidth": false,
             //order: this.order_column,
@@ -3216,13 +3217,11 @@
                             sum_count_account_balance += el.count_account_balance;
                             sum_count_not_operator += el.count_not_operator;
                             sum_count_return_wagon += el.count_return_wagon;
-                        } else {
-                            sum_count_wagon_all += el.count_wagon;
-                            sum_count_account_balance_all += el.count_account_balance;
-                            sum_count_not_operator_all += el.count_not_operator;
-                            sum_count_return_wagon += el.count_return_wagon;
-                        };
-
+                        }
+                        sum_count_wagon_all += el.count_wagon;
+                        sum_count_account_balance_all += el.count_account_balance;
+                        sum_count_not_operator_all += el.count_not_operator;
+                        sum_count_return_wagon += el.count_return_wagon;
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
@@ -3252,11 +3251,10 @@
                             sum_count_wagon += el.count_wagon;
                             sum_count_return_wagon += el.count_return_wagon;
                             sum_count_account_balance += el.count_account_balance;
-                        } else {
-                            sum_count_wagon_all += el.count_wagon;
-                            sum_count_return_wagon_all += el.count_return_wagon;
-                            sum_count_account_balance_all += el.count_account_balance;
                         }
+                        sum_count_wagon_all += el.count_wagon;
+                        sum_count_return_wagon_all += el.count_return_wagon;
+                        sum_count_account_balance_all += el.count_account_balance;
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
