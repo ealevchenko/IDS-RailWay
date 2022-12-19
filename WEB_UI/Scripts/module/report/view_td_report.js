@@ -619,8 +619,8 @@
         this.form_panel.set('type_select', this.type);
         switch (type) {
             case 5: {
-                this.start = moment().set({ 'year': this.year, 'month': this.month, 'date': 1, 'hour': 20, 'minute': 0, 'second': 0 }).subtract(1, 'days')._d;
-                this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 19, 'minute': 59, 'second': 59 }).subtract(1, 'days')._d;;
+                this.start = moment().set({ 'year': this.year, 'month': this.month, 'date': 1, 'hour': 20, 'minute': 1, 'second': 0 }).subtract(1, 'days')._d;
+                this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 20, 'minute': 00, 'second': 00 }).subtract(1, 'days')._d;;
                 this.div_select_date.hide();
                 this.div_interval_date.hide();
                 this.div_select_year.show();

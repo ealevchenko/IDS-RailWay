@@ -64,7 +64,7 @@
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
-            'togc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «отправлен»!',
+            'togc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «отправлен» или «предъявлен»!',
             'togc_mess_error_sostav_null': 'Состав по id:{0} не найден!',
             'togc_mess_ok_operation_return_present': 'Операция "Предъявить состав на УЗ" - выполнена',
             'togc_mess_update_operation_return_present': 'Информация об операция "Предъявить состав на УЗ" - обновлена',
@@ -952,7 +952,7 @@
         if (this.id_sostav !== null) {
             this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
                 if (sostav) {
-                    if (sostav.status === 3) {
+                    if (sostav.status > 1 ) {
                         // Подготовим операцию обновления документов ЭПД
                         var operation_update_epd = {
                             id_outgoing_sostav: this.id_sostav,
