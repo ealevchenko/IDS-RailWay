@@ -12,23 +12,21 @@
     <link href="~/Content/module/report/table_td_report.css" rel="stylesheet" />
     @* <link href="~/Content/view/idsreport/main_td_report.css" rel="stylesheet">*@
 
-    <style>
-        @*#chartdiv {
-            width: 100%;
-            height: 500px;
-        }*@
-/*    .dataTables_scroll
-    {
-    overflow:auto;
-    }*/
-    </style>
-
 }
 
 @section scripts {
     @Scripts.Render("~/bundles/Moment")
     @Scripts.Render("~/bundles/DataTables")
     @Scripts.Render("~/bundles/DateTime")
+    <script src="~/Scripts/base64js.min.js"></script>
+
+    <script src="~/Scripts/amcharts5/index.js"></script>
+    <script src="~/Scripts/amcharts5/percent.js"></script>
+    <script src="~/Scripts/amcharts5/xy.js"></script>
+    <script src="~/Scripts/amcharts5/radar.js"></script>
+    <script src="~/Scripts/amcharts5/hierarchy.js"></script>
+    <script src="~/Scripts/amcharts5/themes/Animated.js"></script>
+
     <script src="~/Scripts/view/shared/common.js"></script>                 <!-- Общая библиотека методов программы -->
     <script src="~/Scripts/module/shared/common.js"></script>
     <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>   <!-- Форма сообщений подтверждения -->
@@ -40,21 +38,13 @@
     <script src="~/Scripts/module/shared/chart_amcharts.js"></script>
     <script src="~/Scripts/module/report/table_td_report.js"></script>
     <script src="~/Scripts/module/report/view_td_report.js"></script>
-    <script src="~/Scripts/view/idsreport/main_td_report.js"></script>
-    <script src="~/Scripts/base64js.min.js"></script>
 
     <script>
         var url_incoming = '@Url.Action("Incoming", "Home", new { area = "IDSRWT" })';
         var url_outgoing = '@Url.Action("Outgoing", "Home", new { area = "IDSRWT" })';
     </script>
 
-    <script src="~/Scripts/amcharts5/index.js"></script>
-    <script src="~/Scripts/amcharts5/percent.js"></script>
-    <script src="~/Scripts/amcharts5/xy.js"></script>
-    <script src="~/Scripts/amcharts5/radar.js"></script>
-    <script src="~/Scripts/amcharts5/hierarchy.js"></script>
-    <script src="~/Scripts/amcharts5/themes/Animated.js"></script>
-
+    <script src="~/Scripts/view/idsreport/main_td_report.js"></script>
 }
 @*<div id="chartdiv"></div>*@
 <div id="report">

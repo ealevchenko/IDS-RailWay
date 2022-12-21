@@ -1,6 +1,6 @@
 ﻿/*Модуль Отображения информации по ЭПД*/
 (function (window) {
-    'use strict';
+    "use strict"; // Start of use strict
 
     var App = window.App || {};
     var $ = window.jQuery;
@@ -273,7 +273,7 @@
         }
         this.selector = this.$panel.attr('id');
         this.fe_ui = new FE();
-    }
+    };
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     view_td_report.prototype.load_db = function (list, update, callback) {
         if (list) {
@@ -620,7 +620,7 @@
         switch (type) {
             case 5: {
                 this.start = moment().set({ 'year': this.year, 'month': this.month, 'date': 1, 'hour': 20, 'minute': 1, 'second': 0 }).subtract(1, 'days')._d;
-                this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 20, 'minute': 00, 'second': 00 }).subtract(1, 'days')._d;;
+                this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 20, 'minute': 0, 'second': 0 }).subtract(1, 'days')._d;
                 this.div_select_date.hide();
                 this.div_interval_date.hide();
                 this.div_select_year.show();
@@ -1340,7 +1340,7 @@
         } else {
             this.$bt_search_car_arr.prop("disabled", false); // сделаем активной
         };
-    }
+    };
     // Поиск по номеру документа
     view_td_report.prototype.action_search_outgoing_docs = function () {
         this.out_clear();
@@ -1362,7 +1362,7 @@
         } else {
             this.$bt_search_car_out.prop("disabled", false); // сделаем активной
         };
-    }
+    };
     //----------------------------------------------------------
     // Инициализировать отчет "Отчет по прибытию (общий)"
     view_td_report.prototype.init_report_2_1 = function () {

@@ -1767,8 +1767,6 @@
 
     var pageTotal = 0;
 
-
-    /*    var ddd = function () { }.bind(this)*/
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function table_td_report(selector) {
