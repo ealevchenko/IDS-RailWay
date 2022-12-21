@@ -140,6 +140,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoETSNG>>().To<EFIDS.Concrete.EFDirectory_CargoETSNG>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoGNG>>().To<EFIDS.Concrete.EFDirectory_CargoGNG>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoGroup>>().To<EFIDS.Concrete.EFDirectory_CargoGroup>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CargoOutGroup>>().To<EFIDS.Concrete.EFDirectory_CargoOutGroup>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CertificationData>>().To<EFIDS.Concrete.EFDirectory_CertificationData>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_CommercialCondition>>().To<EFIDS.Concrete.EFDirectory_CommercialCondition>();
             kernel.Bind<EFIDS.Abstract.IStringRepository<EFIDS.Entities.Directory_HazardClass>>().To<EFIDS.Concrete.EFDirectory_HazardClass>();

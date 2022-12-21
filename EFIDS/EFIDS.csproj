@@ -58,6 +58,7 @@
     <Compile Include="Abstract\IWebView.cs" />
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_CargoOutGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OperatorsWagonsGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Reason_Discrepancy.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Entities\Directory\Directory_OperatorsWagonsGroup.cs" />
     <Compile Include="Entities\RWT\Out_Supply.cs" />
     <Compile Include="Entities\RWT\SAPOutgoingSupply.cs" />
+    <Compile Include="Entities\Directory\Directory_CargoOutGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -501,6 +501,20 @@ namespace EFIDS.Helper
                 change_user = g.change_user,
             };
         }
+        public static Directory_CargoOutGroup GetDirectory_CargoOutGroup(this Directory_CargoOutGroup g)
+        {
+            if (g == null) return null;
+            return new Directory_CargoOutGroup()
+            {
+                id = g.id,
+                cargo_group_name_ru = g.cargo_group_name_ru,
+                cargo_group_name_en = g.cargo_group_name_en,
+                create = g.create,
+                create_user = g.create_user,
+                change = g.change,
+                change_user = g.change_user,
+            };
+        }
         // Справочник грузов ЕТСНГ
         public static Directory_CargoETSNG GetDirectory_CargoETSNG(this Directory_CargoETSNG c)
         {
@@ -543,6 +557,7 @@ namespace EFIDS.Helper
             {
                 id = c.id,
                 id_group = c.id_group,
+                id_out_group = c.id_out_group,
                 id_cargo_etsng = c.id_cargo_etsng,
                 cargo_name_ru = c.cargo_name_ru,
                 cargo_name_en = c.cargo_name_en,
@@ -553,7 +568,7 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user,
+                change_user = c.change_user, 
             };
         }
         // Справочник сертификационные данные

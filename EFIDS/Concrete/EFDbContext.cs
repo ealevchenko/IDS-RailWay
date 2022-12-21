@@ -83,6 +83,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
         public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
         public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
+
+        public virtual DbSet<Directory_CargoOutGroup> Directory_CargoOutGroup { get; set; }
         public virtual DbSet<Directory_Consignee> Directory_Consignee { get; set; }
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
         public virtual DbSet<Directory_ExternalStation> Directory_ExternalStation { get; set; }
@@ -555,6 +557,13 @@ namespace EFIDS.Concrete
                 .WithRequired(e => e.Directory_CargoGroup)
                 .HasForeignKey(e => e.id_group)
                 .WillCascadeOnDelete(false);
+            #endregion
+
+            #region Directory_CargoOutGroup
+            modelBuilder.Entity<Directory_CargoOutGroup>()
+                .HasMany(e => e.Directory_Cargo)
+                .WithOptional(e => e.Directory_CargoOutGroup)
+                .HasForeignKey(e => e.id_out_group);
             #endregion
 
             #region Directory_CertificationData

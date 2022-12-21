@@ -21,6 +21,7 @@ namespace EFIDS.Entities
         public int id { get; set; }
 
         public int id_group { get; set; }
+        public int? id_out_group { get; set; }
 
         public int id_cargo_etsng { get; set; }
 
@@ -63,5 +64,6 @@ namespace EFIDS.Entities
         public virtual Directory_CargoETSNG Directory_CargoETSNG { get; set; }
 
         public virtual Directory_CargoGroup Directory_CargoGroup { get; set; }
+        public virtual Directory_CargoOutGroup Directory_CargoOutGroup { get; set; }
     }
 }
