@@ -26,11 +26,15 @@
             'vtdr_link_title_report_2_1': 'Отчет по прибытию (общий)',
             'vtdr_link_title_report_3_1': 'Прибытие ИТОГ',
             'vtdr_link_title_report_4_1': 'Информация по вагону и собственнику',
+            'vtdr_link_title_report_5_1': 'Отчет по отправлению (общий)',
+            'vtdr_link_title_report_6_1': 'Отправление ИТОГ',
 
             'vtdr_title_report_1_1': 'Статистика {0}',
             'vtdr_title_report_2_1': 'Отчет по прибытию (общий) {0}',
             'vtdr_title_report_3_1': 'Прибытие ИТОГ {0}',
             'vtdr_title_report_4_1': 'Информация по вагону и собственнику {0}',
+            'vtdr_title_report_5_1': 'Отчет по отправлению (общий) {0}',
+            'vtdr_title_report_6_1': 'Отправление ИТОГ {0}',
 
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
@@ -111,6 +115,12 @@
             'vtdr_title_payer_code': 'Код плат. ПРИБ',
             'vtdr_label_station_amkr': 'Станция примыкания:',
             'vtdr_title_station_amkr': 'Станция примыкания',
+            'vtdr_label_genus': 'Род вагона:',
+            'vtdr_title_genus': 'Род вагона',
+            'vtdr_label_out_division': 'Цех погрузки:',
+            'vtdr_title_out_division': 'Цех погрузки',
+            'vtdr_label_out_cargo_group': 'Группа грузов:',
+            'vtdr_title_out_cargo_group': 'Группа грузов',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_select_month': 'за месяц:',
@@ -325,8 +335,8 @@
 
         this.wagons_adoption = [];
         this.clone_wagons_adoption = [];
-        // Сылки на отчеты
-        this.report_links = [
+        // Сылки на общие отчеты 
+        this.report_links_cammon = [
             {
                 text: langView('vtdr_link_title_report_1_1', App.Langs),
                 icon: 'fa-solid fa-chart-column mr-1',
@@ -334,6 +344,17 @@
                     this.init_report_1_1();
                 }.bind(this),
             },
+            {
+                text: langView('vtdr_link_title_report_4_1', App.Langs),
+                icon: 'fa-solid fa-diagram-project mr-1',
+                click: function () {
+                    this.init_report_4_1();
+                }.bind(this),
+            },
+            //<i class="fa-sharp fa-solid fa-chart-simple"></i>
+        ];
+        // Сылки на отчеты прибытия
+        this.report_links_arrival = [
             {
                 text: langView('vtdr_link_title_report_2_1', App.Langs),
                 icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
@@ -348,15 +369,27 @@
                     this.init_report_3_1();
                 }.bind(this),
             },
+            //<i class="fa-sharp fa-solid fa-chart-simple"></i>
+        ];
+        // Сылки на отчеты отправки
+        this.report_links_outgoing = [
             {
-                text: langView('vtdr_link_title_report_4_1', App.Langs),
-                icon: 'fa-solid fa-diagram-project mr-1',
+                text: langView('vtdr_link_title_report_5_1', App.Langs),
+                icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
                 click: function () {
-                    this.init_report_4_1();
+                    this.init_report_5_1();
+                }.bind(this),
+            },
+            {
+                text: langView('vtdr_link_title_report_6_1', App.Langs),
+                icon: 'fa-sharp fa-solid fa-chart-simple mr-1',
+                click: function () {
+                    this.init_report_6_1();
                 }.bind(this),
             },
             //<i class="fa-sharp fa-solid fa-chart-simple"></i>
         ];
+
         // Очистим экран
         this.$panel.empty();
         // Построим основной экран
@@ -404,11 +437,17 @@
         $h1.append(a_home.$alink);
         //<h3 class="h6 mb-3">@IDSReportResource.report_sd_group_link_cargo</h3>
         //<ul class="list-unstyled components mb-5 text-left" id="list-sidebar">
-        var $ul1 = $('<ul class="list-unstyled components mb-5 text-left"></ul>');
-        //<li class="active">
-        // <a href="#"><i class="fa-solid fa-magnifying-glass-arrow-right mr-1" style="color:#44bef1"></i>@IDSReportResource.report_sd_link_border_crossing</a>
-        //</li>
-        $.each(this.report_links, function (index, element) {
+        //
+        div_p4.$div.append($h1);
+        //------------------------------------------
+        // Общие отчеты
+        var $h6_cammon = $('<h6></h6>', {
+            class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+        });
+        var $sp_cammon = $('<span>ОБЩИЕ:</span>');
+        div_p4.$div.append($h6_cammon.append($sp_cammon));
+        var $ul_cammon = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_cammon, function (index, element) {
             var $li = $('<li></li>');
             var a_link = new this.fe_ui.a({
                 id: null,
@@ -422,14 +461,67 @@
                 a_link.$alink.on("click", element.click);
             }
             $li.append(a_link.$alink);
-            $ul1.append($li);
+            $ul_cammon.append($li);
         }.bind(this));
+        div_p4.$div.append($ul_cammon);
+        //--------------------------------------------
+        // Отчеты по прибытию
+        var $h6_arrival = $('<h6></h6>', {
+            class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+        });
+        var $sp_arrival = $('<span>ПРИБЫТИЕ:</span>');
+        div_p4.$div.append($h6_arrival.append($sp_arrival));
+        var $ul_arrival = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_arrival, function (index, element) {
+            var $li = $('<li></li>');
+            var a_link = new this.fe_ui.a({
+                id: null,
+                class: null,
+                href: '#',
+                text: '<i class="' + element.icon + '" style="color:#ffff49"></i>' + element.text, //#44bef1
+                target: null,
+                title: null,
+            });
+            if (typeof element.click === 'function') {
+                a_link.$alink.on("click", element.click);
+            }
+            $li.append(a_link.$alink);
+            $ul_arrival.append($li);
+        }.bind(this));
+        div_p4.$div.append($ul_arrival);
+        //--------------------------------------------
+        // Отчеты по отправке
+        var $h6_outgoing = $('<h6></h6>', {
+            class:'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+        });
+        var $sp_outgoing = $('<span>ОТПРАВКА:</span>');
+        div_p4.$div.append($h6_outgoing.append($sp_outgoing));
+        var $ul_outgoing  = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_outgoing , function (index, element) {
+            var $li = $('<li></li>');
+            var a_link = new this.fe_ui.a({
+                id: null,
+                class: null,
+                href: '#',
+                text: '<i class="' + element.icon + '" style="color:#ffff49"></i>' + element.text, //#44bef1
+                target: null,
+                title: null,
+            });
+            if (typeof element.click === 'function') {
+                a_link.$alink.on("click", element.click);
+            }
+            $li.append(a_link.$alink);
+            $ul_outgoing.append($li);
+        }.bind(this));
+        div_p4.$div.append($ul_outgoing);
+        //--------------------------------------------
+        // Подвал
         //<div class="footer">
         var div_ft = new this.fe_ui.div({
             class: 'footer',
         });
-        //
-        div_p4.$div.append($h1).append($ul1).append(div_ft.$div)
+
+        div_p4.$div.append(div_ft.$div);
         //------------------------------------
         nav$.append(div_cm.$div).append(div_p4.$div)
         //------------------------------------
@@ -5925,9 +6017,9 @@
                 this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : '');
                 this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
             } else {
-            this.$input_instructional_letters_num.val('');
-            this.$input_instructional_letters_datetime.val('');
-            this.$input_instructional_letters_station_name.val('');
+                this.$input_instructional_letters_num.val('');
+                this.$input_instructional_letters_datetime.val('');
+                this.$input_instructional_letters_station_name.val('');
             }
 
         } else {
@@ -6009,6 +6101,918 @@
         LockScreenOff();
     };
     //--------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Отчет по отправке (общий)"
+    view_td_report.prototype.init_report_5_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 5; // номер отчета
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_5_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        //
+        var fieldset_setup = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$setup_select = fieldset_setup.$fieldset;
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+        //
+        var row_common = new this.fe_ui.bs_row();
+        var col_setup = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 2,
+        });
+        col_setup.$col.append(this.$setup_select);
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 10,
+        });
+        col_view.$col.append(this.$table_view);
+
+        // Создадим панель выбора
+        var nav_tabs_out_cammon = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-out-common',
+            class_nav: null,
+            id_content: 'tab-out-common-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'out-common-group',
+                    aria_controls: 'out-common-group-tab',
+                    label: 'По грузам',
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'out-common-detali',
+                    aria_controls: 'out-common-detali-tab',
+                    label: 'Детально',
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });
+        // Переключатели панелей таблиц отчета
+        // Закладка групповой отчет
+        var div_row_cg = $('<div></div>', {
+            class: 'row',
+            style: 'margin-top: 10px;'
+        });
+        this.$div_group_sostav = $('<div></div>', {
+            id: 'group-sostav',
+            class: 'col-xl-12'
+        });
+        var $out_common_group = nav_tabs_out_cammon.$content.find('div#out-common-group-tab'); // Панель отчета
+        $out_common_group.append(div_row_cg.append(this.$div_group_sostav)); // Добавим div для таблиц
+        // Закладка отчет детально 
+        var div_row_detali = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
+        //
+        var $out_common_detali = nav_tabs_out_cammon.$content.find('div#out-common-detali-tab'); // Панель поиска
+        $out_common_detali.append(div_row_detali.$row.append($('<div id="out-common-report-detali" class="col-xl-12"></div>')));
+        // Дабавим закладку на форму
+        this.$table_view.append(nav_tabs_out_cammon.$ul).append(nav_tabs_out_cammon.$content);
+        //
+        row_common.$row.append(col_setup.$col).append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+        // Формируем форму выбора
+        var form_out_setup_select = new this.fe_ui.form({
+            class: null,
+            id: null,
+            novalidate: null
+        });
+        this.$form_out_setup_select = form_out_setup_select.$form;
+        //-кнопка
+        var row_setup_bt = new this.fe_ui.bs_row();
+        var col_setup_bt = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        var bt_setup_clear = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: langView('vtdr_label_button_setup_clear', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_clear_select_report_2_1();
+            }.bind(this),
+        });
+        var bt_setup_select = new this.fe_ui.bs_button({
+            color: 'primary',
+            size: 'sm',
+            class: null,
+            id: null,
+            label: langView('vtdr_label_button_setup_select', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_select_report_2_1();
+            }.bind(this),
+        });
+        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
+        //
+        var row_setup_sw1 = new this.fe_ui.bs_row();
+        var sw_laden = new this.fe_ui.bs_switch({
+            id: 'laden',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_laden', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw1.$row.append(sw_laden.$element);
+        this.switch_laden = sw_laden.element;
+        // Только с грузом
+        var row_setup_sw2 = new this.fe_ui.bs_row();
+        var sw_accounting = new this.fe_ui.bs_switch({
+            id: 'accounting',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_accounting', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw2.$row.append(sw_accounting.$element);
+        this.switch_accounting = sw_accounting.element;
+        // Клиентура 
+        var row_setup_sw3 = new this.fe_ui.bs_row();
+        var sw_client = new this.fe_ui.bs_switch({
+            id: 'client',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_client', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw3.$row.append(sw_client.$element);
+        this.switch_client = sw_client.element;
+        // Без учета клиентуры
+        var row_setup_sw4 = new this.fe_ui.bs_row();
+        var sw_not_client = new this.fe_ui.bs_switch({
+            id: 'not_client',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_not_client', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw4.$row.append(sw_not_client.$element);
+        this.switch_not_client = sw_not_client.element;
+        // Платные
+        var row_setup_sw5 = new this.fe_ui.bs_row();
+        var sw_paid = new this.fe_ui.bs_switch({
+            id: 'paid',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_paid', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+                //event.preventDefault();
+                //if (this.wagon) {
+                //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                //    this.view_wagon_detali(this.wagon)
+                //}
+                //var res = $(e.currentTarget).prop('checked');
+            }.bind(this),
+        });
+        row_setup_sw5.$row.append(sw_paid.$element);
+        this.switch_paid = sw_paid.element;
+        // вагоны
+        var row_setup_1 = new this.fe_ui.bs_row();
+        var ta_wagon_nums = new this.fe_ui.bs_textarea({
+            id: 'wagon_nums',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_wagon_nums', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_wagon_nums', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_1.$row.append(ta_wagon_nums.$element);
+        this.textarea_wagon_nums = ta_wagon_nums.element;
+        // основн документы
+        var row_setup_2 = new this.fe_ui.bs_row();
+        var ta_main_epd_docs = new this.fe_ui.bs_textarea({
+            id: 'main_epd_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_main_epd_docs', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_main_epd_docs', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_2.$row.append(ta_main_epd_docs.$element);
+        this.textarea_main_epd_docs = ta_main_epd_docs.element;
+        // Операторы АМКР
+        var row_setup_3 = new this.fe_ui.bs_row();
+        var select_operation_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'operation_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_operation_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_operation_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+                //if (value && Number(value) >= 0) {
+                //    this.elements.input_number_consignee_code.val(value);
+                //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
+                //} else {
+                //    this.elements.input_number_consignee_code.val("");
+                //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
+                //}
+            }.bind(this),
+        });
+        row_setup_3.$row.append(select_operation_amkr.$element);
+        this.select_operation_amkr = select_operation_amkr.element;
+        // ограничение погрузки
+        var row_setup_4 = new this.fe_ui.bs_row();
+        var select_limiting = new this.fe_ui.bs_select_multiple({
+            id: 'limiting',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_limiting', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_limiting', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_4.$row.append(select_limiting.$element);
+        this.select_limiting = select_limiting.element;
+        // Собственник
+        var row_setup_5 = new this.fe_ui.bs_row();
+        var select_owners = new this.fe_ui.bs_select_multiple({
+            id: 'owners',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_owners', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_owners', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_5.$row.append(select_owners.$element);
+        this.select_owners = select_owners.element;
+        // Род вагона
+        var row_setup_6 = new this.fe_ui.bs_row();
+        var select_genus = new this.fe_ui.bs_select_multiple({
+            id: 'genus',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_genus', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_genus', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_6.$row.append(select_genus.$element);
+        this.select_genus = select_genus.element;
+        // Цех погрузки
+        var row_setup_7 = new this.fe_ui.bs_row();
+        var select_out_division = new this.fe_ui.bs_select_multiple({
+            id: 'out_division',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_division', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_division', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_7.$row.append(select_out_division.$element);
+        this.select_out_division = select_out_division.element;
+        // Группа грузов 
+        var row_setup_8 = new this.fe_ui.bs_row();
+        var select_out_cargo_group = new this.fe_ui.bs_select_multiple({
+            id: 'out_cargo_group',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_cargo_group', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_cargo_group', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_8.$row.append(select_out_cargo_group.$element);
+        this.select_out_cargo_group = select_out_cargo_group.element;
+        // Груз ОТПР
+
+        // Группа ОТПР
+
+        // Груз ОТПР SAP
+
+        // Станция назначения
+
+        // Дорога
+
+        // Погран.переход
+
+        // Груз ПРИБ
+        var row_setup_15 = new this.fe_ui.bs_row();
+        var select_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_15.$row.append(select_cargo.$element);
+        this.select_cargo = select_cargo.element;
+        // Сертификатные данные
+        var row_setup_16 = new this.fe_ui.bs_row();
+        var select_certification_data = new this.fe_ui.bs_select_multiple({
+            id: 'certification_data',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_certification_data', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_certification_data', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_16.$row.append(select_certification_data.$element);
+        this.select_certification_data = select_certification_data.element;
+        // Группа ПРИБ
+        var row_setup_17 = new this.fe_ui.bs_row();
+        var select_group_arrival = new this.fe_ui.bs_select_multiple({
+            id: 'group_arrival',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_group_arrival', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_group_arrival', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_17.$row.append(select_group_arrival.$element);
+        this.select_group_arrival = select_group_arrival.element;
+        // Разметка по прибытию
+        var row_setup_18 = new this.fe_ui.bs_row();
+        var select_condition = new this.fe_ui.bs_select_multiple({
+            id: 'condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_18.$row.append(select_condition.$element);
+        this.select_condition = select_condition.element;
+        // Цех-получатель
+        var row_setup_19 = new this.fe_ui.bs_row();
+        var select_division = new this.fe_ui.bs_select_multiple({
+            id: 'division',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_division', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_division', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_19.$row.append(select_division.$element);
+        this.select_division = select_division.element;
+        // Станция примыкания ОТПР
+        var row_setup_20 = new this.fe_ui.bs_row();
+        var select_station_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'station_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_station_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_station_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_20.$row.append(select_station_amkr.$element);
+        this.select_station_amkr = select_station_amkr.element;
+        // Плательщик ОТПР
+
+        // Код плат.ОТПР
+
+
+
+        //// Станция отправления
+        //var row_setup_7 = new this.fe_ui.bs_row();
+        //var select_station_from = new this.fe_ui.bs_select_multiple({
+        //    id: 'station_from',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_station_from', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_station_from', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_7.$row.append(select_station_from.$element);
+        //this.select_station_from = select_station_from.element;
+        //// Груз
+        //// Код груза ПРИБ SAP
+        //var row_setup_10 = new this.fe_ui.bs_row();
+        //var select_cargo_sap = new this.fe_ui.bs_select_multiple({
+        //    id: 'cargo_sap',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_cargo_sap', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_cargo_sap', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_10.$row.append(select_cargo_sap.$element);
+        //this.select_cargo_sap = select_cargo_sap.element;
+        //// Группа ПРИБ
+        //var row_setup_11 = new this.fe_ui.bs_row();
+        //var select_group_arrival = new this.fe_ui.bs_select_multiple({
+        //    id: 'group_arrival',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_group_arrival', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_group_arrival', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_11.$row.append(select_group_arrival.$element);
+        //this.select_group_arrival = select_group_arrival.element;
+        //// Грузополучатель
+        //var row_setup_12 = new this.fe_ui.bs_row();
+        //var select_consignee = new this.fe_ui.bs_select_multiple({
+        //    id: 'consignee',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_consignee', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_consignee', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_12.$row.append(select_consignee.$element);
+        //this.select_consignee = select_consignee.element;
+
+        //// Цех-получатель
+        //var row_setup_14 = new this.fe_ui.bs_row();
+        //var select_genus = new this.fe_ui.bs_select_multiple({
+        //    id: 'genus',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_genus', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_genus', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_14.$row.append(select_genus.$element);
+        //this.select_genus = select_genus.element;
+
+        //// Плательщик ПРИБ
+        //var row_setup_16 = new this.fe_ui.bs_row();
+        //var select_payer_name = new this.fe_ui.bs_select_multiple({
+        //    id: 'payer_name',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_payer_name', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_payer_name', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_16.$row.append(select_payer_name.$element);
+        //this.select_payer_name = select_payer_name.element;
+        //// Код плат. ПРИБ
+        //var row_setup_17 = new this.fe_ui.bs_row();
+        //var select_payer_code = new this.fe_ui.bs_select_multiple({
+        //    id: 'payer_code',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_payer_code', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_payer_code', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_17.$row.append(select_payer_code.$element);
+        //this.select_payer_code = select_payer_code.element;
+
+        //
+        this.$form_out_setup_select
+            .append(row_setup_bt.$row)
+            .append(row_setup_sw1.$row)
+            .append(row_setup_sw2.$row)
+            .append(row_setup_sw3.$row)
+            .append(row_setup_sw4.$row)
+            .append(row_setup_sw5.$row)
+            .append(row_setup_1.$row)
+            .append(row_setup_2.$row)
+            .append(row_setup_3.$row)
+            .append(row_setup_4.$row)
+            .append(row_setup_5.$row)
+            .append(row_setup_6.$row)
+            .append(row_setup_7.$row)
+            .append(row_setup_8.$row)
+            //.append(row_setup_9.$row)
+            //.append(row_setup_10.$row)
+            //.append(row_setup_11.$row)
+            //.append(row_setup_12.$row)
+            //.append(row_setup_13.$row)
+            //.append(row_setup_14.$row)
+            .append(row_setup_15.$row)
+            .append(row_setup_16.$row)
+            .append(row_setup_17.$row)
+            .append(row_setup_18.$row)
+            .append(row_setup_19.$row)
+            .append(row_setup_20.$row)
+            //.append(row_setup_21.$row)
+            //.append(row_setup_22.$row)
+            ;
+        this.$setup_select.append(this.$form_out_setup_select);
+
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    switch (event.target.id) {
+                        case 'out-common-group': {
+                            //if (this.table_group_sostav) {
+                            //    this.table_group_sostav[0]. .columns.adjust().draw();
+                            //}
+                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
+                            break;
+                        };
+                        case 'out-common-detali': {
+                            this.table_arr_common_detali.obj_t_report.columns.adjust().draw();
+                            //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                            break;
+                        };
+                    };
+                    //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
+                }.bind(this));
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        this.table_arr_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_arr_common_detali.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'adoption_common_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+
+        /*}.bind(this));*/
+    };
+
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()
