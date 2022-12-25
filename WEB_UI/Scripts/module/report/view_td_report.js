@@ -119,8 +119,18 @@
             'vtdr_title_genus': 'Род вагона',
             'vtdr_label_out_division': 'Цех погрузки:',
             'vtdr_title_out_division': 'Цех погрузки',
-            'vtdr_label_out_cargo_group': 'Группа грузов:',
-            'vtdr_title_out_cargo_group': 'Группа грузов',
+            'vtdr_label_out_cargo': 'Груз ОТПР:',
+            'vtdr_title_out_cargo': 'Груз ОТПР',
+            'vtdr_label_out_cargo_group': 'Группа ОТПР:',
+            'vtdr_title_out_cargo_group': 'Группа ОТПР',
+            'vtdr_label_out_sap_cargo': 'Груз ОТПР SAP:',
+            'vtdr_title_out_sap_cargo': 'Груз ОТПР SAP',
+            'vtdr_label_out_ext_station_to': 'Станция назначения:',
+            'vtdr_title_out_ext_station_to': 'Станция назначения',
+            'vtdr_label_out_inlandrailway_to': 'Дорога:',
+            'vtdr_title_out_inlandrailway_to': 'Дорога',
+            'vtdr_label_out_border_checkpoint_to': 'Погран.переход:',
+            'vtdr_title_out_border_checkpoint_to': 'Погран.переход',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_select_month': 'за месяц:',
@@ -6534,7 +6544,36 @@
         row_setup_7.$row.append(select_out_division.$element);
         this.select_out_division = select_out_division.element;
         // Группа грузов 
+
+        // Груз ОТПР
         var row_setup_8 = new this.fe_ui.bs_row();
+        var select_out_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'out_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_8.$row.append(select_out_cargo.$element);
+        this.select_out_cargo = select_out_cargo.element;
+        // Группа ОТПР
+        var row_setup_9 = new this.fe_ui.bs_row();
         var select_out_cargo_group = new this.fe_ui.bs_select_multiple({
             id: 'out_cargo_group',
             form_group_size: 'xl',
@@ -6558,20 +6597,116 @@
 
             }.bind(this),
         });
-        row_setup_8.$row.append(select_out_cargo_group.$element);
+        row_setup_9.$row.append(select_out_cargo_group.$element);
         this.select_out_cargo_group = select_out_cargo_group.element;
-        // Груз ОТПР
-
-        // Группа ОТПР
-
         // Груз ОТПР SAP
+        var row_setup_10 = new this.fe_ui.bs_row();
+        var select_out_sap_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'out_sap_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_sap_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_sap_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_10.$row.append(select_out_sap_cargo.$element);
+        this.select_out_sap_cargo = select_out_sap_cargo.element;
         // Станция назначения
+        var row_setup_11 = new this.fe_ui.bs_row();
+        var select_out_ext_station_to = new this.fe_ui.bs_select_multiple({
+            id: 'out_ext_station_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_ext_station_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_ext_station_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_11.$row.append(select_out_ext_station_to.$element);
+        this.select_out_ext_station_to = select_out_ext_station_to.element;
         // Дорога
+        var row_setup_12 = new this.fe_ui.bs_row();
+        var select_out_inlandrailway_to = new this.fe_ui.bs_select_multiple({
+            id: 'out_inlandrailway_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_inlandrailway_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_inlandrailway_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_12.$row.append(select_out_inlandrailway_to.$element);
+        this.select_out_inlandrailway_to = select_out_inlandrailway_to.element;
         // Погран.переход
+        var row_setup_13 = new this.fe_ui.bs_row();
+        var select_out_border_checkpoint_to = new this.fe_ui.bs_select_multiple({
+            id: 'out_border_checkpoint_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_border_checkpoint_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_border_checkpoint_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_13.$row.append(select_out_border_checkpoint_to.$element);
+        this.select_out_border_checkpoint_to = select_out_border_checkpoint_to.element;
         // Груз ПРИБ
         var row_setup_15 = new this.fe_ui.bs_row();
         var select_cargo = new this.fe_ui.bs_select_multiple({
@@ -6949,11 +7084,11 @@
             .append(row_setup_6.$row)
             .append(row_setup_7.$row)
             .append(row_setup_8.$row)
-            //.append(row_setup_9.$row)
-            //.append(row_setup_10.$row)
-            //.append(row_setup_11.$row)
-            //.append(row_setup_12.$row)
-            //.append(row_setup_13.$row)
+            .append(row_setup_9.$row)
+            .append(row_setup_10.$row)
+            .append(row_setup_11.$row)
+            .append(row_setup_12.$row)
+            .append(row_setup_13.$row)
             //.append(row_setup_14.$row)
             .append(row_setup_15.$row)
             .append(row_setup_16.$row)
