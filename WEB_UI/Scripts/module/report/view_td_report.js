@@ -131,6 +131,12 @@
             'vtdr_title_out_inlandrailway_to': 'Дорога',
             'vtdr_label_out_border_checkpoint_to': 'Погран.переход:',
             'vtdr_title_out_border_checkpoint_to': 'Погран.переход',
+            'vtdr_label_arr_cargo': 'Груз ПРИБ:',
+            'vtdr_title_arr_cargo': 'Груз ПРИБ',
+            'vtdr_label_arr_group_arriva': 'Группа ПРИБ.:',
+            'vtdr_title_arr_group_arriva': 'Группа ПРИБ.',
+            'vtdr_label_arr_condition': 'Разметка по прибытию:',
+            'vtdr_title_arr_condition': 'Разметка по прибытию',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_select_month': 'за месяц:',
@@ -6708,17 +6714,17 @@
         row_setup_13.$row.append(select_out_border_checkpoint_to.$element);
         this.select_out_border_checkpoint_to = select_out_border_checkpoint_to.element;
         // Груз ПРИБ
-        var row_setup_15 = new this.fe_ui.bs_row();
-        var select_cargo = new this.fe_ui.bs_select_multiple({
-            id: 'cargo',
+        var row_setup_14 = new this.fe_ui.bs_row();
+        var select_arr_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'arr_cargo',
             form_group_size: 'xl',
             form_group_col: 12,
             form_group_class: 'text-left mb-0',
-            label: langView('vtdr_label_cargo', App.Langs),
+            label: langView('vtdr_label_arr_cargo', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
             input_class: null,
-            input_title: langView('vtdr_title_cargo', App.Langs),
+            input_title: langView('vtdr_title_arr_cargo', App.Langs),
             input_placeholder: null,
             input_required: null,
             input_multiple: true,
@@ -6732,10 +6738,10 @@
 
             }.bind(this),
         });
-        row_setup_15.$row.append(select_cargo.$element);
-        this.select_cargo = select_cargo.element;
+        row_setup_14.$row.append(select_arr_cargo.$element);
+        this.select_arr_cargo = select_arr_cargo.element;
         // Сертификатные данные
-        var row_setup_16 = new this.fe_ui.bs_row();
+        var row_setup_15 = new this.fe_ui.bs_row();
         var select_certification_data = new this.fe_ui.bs_select_multiple({
             id: 'certification_data',
             form_group_size: 'xl',
@@ -6759,20 +6765,20 @@
 
             }.bind(this),
         });
-        row_setup_16.$row.append(select_certification_data.$element);
+        row_setup_15.$row.append(select_certification_data.$element);
         this.select_certification_data = select_certification_data.element;
         // Группа ПРИБ
-        var row_setup_17 = new this.fe_ui.bs_row();
-        var select_group_arrival = new this.fe_ui.bs_select_multiple({
-            id: 'group_arrival',
+        var row_setup_16 = new this.fe_ui.bs_row();
+        var select_arr_group_arrival = new this.fe_ui.bs_select_multiple({
+            id: 'arr_group_arrival',
             form_group_size: 'xl',
             form_group_col: 12,
             form_group_class: 'text-left mb-0',
-            label: langView('vtdr_label_group_arrival', App.Langs),
+            label: langView('vtdr_label_arr_group_arrival', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
             input_class: null,
-            input_title: langView('vtdr_title_group_arrival', App.Langs),
+            input_title: langView('vtdr_title_arr_group_arrival', App.Langs),
             input_placeholder: null,
             input_required: null,
             input_multiple: true,
@@ -6786,20 +6792,20 @@
 
             }.bind(this),
         });
-        row_setup_17.$row.append(select_group_arrival.$element);
-        this.select_group_arrival = select_group_arrival.element;
+        row_setup_16.$row.append(select_arr_group_arrival.$element);
+        this.select_arr_group_arrival = select_arr_group_arrival.element;
         // Разметка по прибытию
-        var row_setup_18 = new this.fe_ui.bs_row();
-        var select_condition = new this.fe_ui.bs_select_multiple({
-            id: 'condition',
+        var row_setup_17 = new this.fe_ui.bs_row();
+        var select_arr_condition = new this.fe_ui.bs_select_multiple({
+            id: 'arr_condition',
             form_group_size: 'xl',
             form_group_col: 12,
             form_group_class: 'text-left mb-0',
-            label: langView('vtdr_label_condition', App.Langs),
+            label: langView('vtdr_label_arr_condition', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
             input_class: null,
-            input_title: langView('vtdr_title_condition', App.Langs),
+            input_title: langView('vtdr_title_arr_condition', App.Langs),
             input_placeholder: null,
             input_required: null,
             input_multiple: true,
@@ -6813,10 +6819,10 @@
 
             }.bind(this),
         });
-        row_setup_18.$row.append(select_condition.$element);
-        this.select_condition = select_condition.element;
+        row_setup_17.$row.append(select_arr_condition.$element);
+        this.select_arr_condition = select_arr_condition.element;
         // Цех-получатель
-        var row_setup_19 = new this.fe_ui.bs_row();
+        var row_setup_18 = new this.fe_ui.bs_row();
         var select_division = new this.fe_ui.bs_select_multiple({
             id: 'division',
             form_group_size: 'xl',
@@ -6840,10 +6846,10 @@
 
             }.bind(this),
         });
-        row_setup_19.$row.append(select_division.$element);
+        row_setup_18.$row.append(select_division.$element);
         this.select_division = select_division.element;
         // Станция примыкания ОТПР
-        var row_setup_20 = new this.fe_ui.bs_row();
+        var row_setup_19 = new this.fe_ui.bs_row();
         var select_station_amkr = new this.fe_ui.bs_select_multiple({
             id: 'station_amkr',
             form_group_size: 'xl',
@@ -6867,7 +6873,7 @@
 
             }.bind(this),
         });
-        row_setup_20.$row.append(select_station_amkr.$element);
+        row_setup_19.$row.append(select_station_amkr.$element);
         this.select_station_amkr = select_station_amkr.element;
         // Плательщик ОТПР
 
@@ -7089,13 +7095,13 @@
             .append(row_setup_11.$row)
             .append(row_setup_12.$row)
             .append(row_setup_13.$row)
-            //.append(row_setup_14.$row)
+            .append(row_setup_14.$row)
             .append(row_setup_15.$row)
             .append(row_setup_16.$row)
             .append(row_setup_17.$row)
             .append(row_setup_18.$row)
             .append(row_setup_19.$row)
-            .append(row_setup_20.$row)
+            //.append(row_setup_20.$row)
             //.append(row_setup_21.$row)
             //.append(row_setup_22.$row)
             ;
