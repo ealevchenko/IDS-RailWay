@@ -58,6 +58,7 @@
             'vtdr_card_header_common': 'ВАГОН',
 
             'vtdr_load_adoption_cars': 'Выполняю операцию выборка принятых вагонов ...',
+            'vtdr_load_outgoing_cars': 'Выполняю операцию выборка отправленных вагонов ...',
 
             'vtdr_load_select_cars': 'Выполняю операцию выборка вагонов ...',
 
@@ -133,10 +134,16 @@
             'vtdr_title_out_border_checkpoint_to': 'Погран.переход',
             'vtdr_label_arr_cargo': 'Груз ПРИБ:',
             'vtdr_title_arr_cargo': 'Груз ПРИБ',
-            'vtdr_label_arr_group_arriva': 'Группа ПРИБ.:',
-            'vtdr_title_arr_group_arriva': 'Группа ПРИБ.',
+            'vtdr_label_arr_group_arrival': 'Группа ПРИБ.:',
+            'vtdr_title_arr_group_arrival': 'Группа ПРИБ.',
             'vtdr_label_arr_condition': 'Разметка по прибытию:',
             'vtdr_title_arr_condition': 'Разметка по прибытию',
+            'vtdr_label_payer_sender_name': 'Плательщик ОТПР:',
+            'vtdr_title_payer_sender_name': 'Плательщик ОТПР',
+            'vtdr_label_code_payer_sender': 'Код плат.ОТПР:',
+            'vtdr_title_code_payer_sender': 'Код плат.ОТПР',
+            'vtdr_label_arr_division': 'Цех-получатель:',
+            'vtdr_title_arr_division': 'Цех-получатель',
 
             'vtdr_title_type_select': 'Выборка за:',
             'vtdr_title_select_month': 'за месяц:',
@@ -864,10 +871,11 @@
                 break;
             }
             case 4: {
-                //this.select_report(4);
-                //this.start = moment().subtract(5,'years').set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
-                //this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
                 this.view_report_4_1(this.start, this.stop);
+                break;
+            }
+            case 5: {
+                this.view_report_5_1(this.start, this.stop);
                 break;
             }
         }
@@ -6549,8 +6557,6 @@
         });
         row_setup_7.$row.append(select_out_division.$element);
         this.select_out_division = select_out_division.element;
-        // Группа грузов 
-
         // Груз ОТПР
         var row_setup_8 = new this.fe_ui.bs_row();
         var select_out_cargo = new this.fe_ui.bs_select_multiple({
@@ -6823,16 +6829,16 @@
         this.select_arr_condition = select_arr_condition.element;
         // Цех-получатель
         var row_setup_18 = new this.fe_ui.bs_row();
-        var select_division = new this.fe_ui.bs_select_multiple({
-            id: 'division',
+        var select_arr_division = new this.fe_ui.bs_select_multiple({
+            id: 'arr_division',
             form_group_size: 'xl',
             form_group_col: 12,
             form_group_class: 'text-left mb-0',
-            label: langView('vtdr_label_division', App.Langs),
+            label: langView('vtdr_label_arr_division', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
             input_class: null,
-            input_title: langView('vtdr_title_division', App.Langs),
+            input_title: langView('vtdr_title_arr_division', App.Langs),
             input_placeholder: null,
             input_required: null,
             input_multiple: true,
@@ -6846,8 +6852,8 @@
 
             }.bind(this),
         });
-        row_setup_18.$row.append(select_division.$element);
-        this.select_division = select_division.element;
+        row_setup_18.$row.append(select_arr_division.$element);
+        this.select_arr_division = select_arr_division.element;
         // Станция примыкания ОТПР
         var row_setup_19 = new this.fe_ui.bs_row();
         var select_station_amkr = new this.fe_ui.bs_select_multiple({
@@ -6876,204 +6882,59 @@
         row_setup_19.$row.append(select_station_amkr.$element);
         this.select_station_amkr = select_station_amkr.element;
         // Плательщик ОТПР
+        var row_setup_20 = new this.fe_ui.bs_row();
+        var select_payer_sender_name = new this.fe_ui.bs_select_multiple({
+            id: 'payer_sender_name',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_payer_sender_name', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_payer_sender_name', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_20.$row.append(select_payer_sender_name.$element);
+        this.select_payer_sender_name = select_payer_sender_name.element;
         // Код плат.ОТПР
+        var row_setup_21 = new this.fe_ui.bs_row();
+        var select_code_payer_sender = new this.fe_ui.bs_select_multiple({
+            id: 'code_payer_sender',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_code_payer_sender', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_code_payer_sender', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
-
-
-        //// Станция отправления
-        //var row_setup_7 = new this.fe_ui.bs_row();
-        //var select_station_from = new this.fe_ui.bs_select_multiple({
-        //    id: 'station_from',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_station_from', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_station_from', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_7.$row.append(select_station_from.$element);
-        //this.select_station_from = select_station_from.element;
-        //// Груз
-        //// Код груза ПРИБ SAP
-        //var row_setup_10 = new this.fe_ui.bs_row();
-        //var select_cargo_sap = new this.fe_ui.bs_select_multiple({
-        //    id: 'cargo_sap',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_cargo_sap', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_cargo_sap', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_10.$row.append(select_cargo_sap.$element);
-        //this.select_cargo_sap = select_cargo_sap.element;
-        //// Группа ПРИБ
-        //var row_setup_11 = new this.fe_ui.bs_row();
-        //var select_group_arrival = new this.fe_ui.bs_select_multiple({
-        //    id: 'group_arrival',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_group_arrival', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_group_arrival', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_11.$row.append(select_group_arrival.$element);
-        //this.select_group_arrival = select_group_arrival.element;
-        //// Грузополучатель
-        //var row_setup_12 = new this.fe_ui.bs_row();
-        //var select_consignee = new this.fe_ui.bs_select_multiple({
-        //    id: 'consignee',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_consignee', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_consignee', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_12.$row.append(select_consignee.$element);
-        //this.select_consignee = select_consignee.element;
-
-        //// Цех-получатель
-        //var row_setup_14 = new this.fe_ui.bs_row();
-        //var select_genus = new this.fe_ui.bs_select_multiple({
-        //    id: 'genus',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_genus', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_genus', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_14.$row.append(select_genus.$element);
-        //this.select_genus = select_genus.element;
-
-        //// Плательщик ПРИБ
-        //var row_setup_16 = new this.fe_ui.bs_row();
-        //var select_payer_name = new this.fe_ui.bs_select_multiple({
-        //    id: 'payer_name',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_payer_name', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_payer_name', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_16.$row.append(select_payer_name.$element);
-        //this.select_payer_name = select_payer_name.element;
-        //// Код плат. ПРИБ
-        //var row_setup_17 = new this.fe_ui.bs_row();
-        //var select_payer_code = new this.fe_ui.bs_select_multiple({
-        //    id: 'payer_code',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_payer_code', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_payer_code', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_17.$row.append(select_payer_code.$element);
-        //this.select_payer_code = select_payer_code.element;
-
+            }.bind(this),
+        });
+        row_setup_21.$row.append(select_code_payer_sender.$element);
+        this.select_code_payer_sender = select_code_payer_sender.element;
         //
         this.$form_out_setup_select
             .append(row_setup_bt.$row)
@@ -7101,9 +6962,8 @@
             .append(row_setup_17.$row)
             .append(row_setup_18.$row)
             .append(row_setup_19.$row)
-            //.append(row_setup_20.$row)
-            //.append(row_setup_21.$row)
-            //.append(row_setup_22.$row)
+            .append(row_setup_20.$row)
+            .append(row_setup_21.$row)
             ;
         this.$setup_select.append(this.$form_out_setup_select);
 
@@ -7153,6 +7013,108 @@
 
         /*}.bind(this));*/
     };
+    // Показать отчет  "Отчет по отправке (общий)"
+    view_td_report.prototype.view_report_5_1 = function (start, stop) {
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                LockScreenOff();
+            }
+        }.bind(this);
+        LockScreen(langView('vtdr_load_outgoing_cars', App.Langs));
+        // пустые операторы
+        var where = {
+            start: moment(start).format(format_datetime),
+            stop: moment(stop).format(format_datetime),
+            laden: false,
+            accounting: false,
+            client: false,
+            not_client: false,
+            paid: false,
+            nums: null,
+            nom_main_docs: null,
+            id_operator: null,
+            id_limiting: null,
+            id_owner: null,
+            id_genus: null,
+            id_out_division: null,
+            id_out_cargo: null,
+            id_out_cargo_group: null,
+            out_sap_cargo_code: null,
+            out_code_ext_station_to: null,
+            out_code_inlandrailway_to: null,
+            out_code_border_checkpoint: null,
+            id_arr_cargo: null,
+            id_certification_data: null,
+            id_arr_cargo_group: null,
+            id_arr_condition: null,
+            id_arr_division: null,
+            id_station_from: null,
+            code_payer_sender: null,
+            code_payer_sender_name: null,
+        };
+        // Загрузим данные
+        this.load_select_report_5_1(where, function () {
+            process_load--;
+            out_load(process_load);
+        }.bind(this))
+    };
+    // Загрузить данные
+    view_td_report.prototype.load_select_report_5_1 = function (where, callback) {
+        if (!where) {
+            var cur_where = {
+                start: moment(this.start).format(format_datetime),
+                stop: moment(this.stop).format(format_datetime),
+                laden: this.switch_laden.val(),
+                accounting: this.switch_accounting.val(),
+                client: this.switch_client.val(),
+                not_client: this.switch_not_client.val(),
+                paid: this.switch_paid.val(),
+                nums: this.nums,
+                nom_main_docs: this.main_epd_docs,
+                id_operator: this.select_operation_amkr.val(),                          // Операторы АМКР
+                id_limiting: this.select_limiting.val(),                                // Ограничение погрузки
+                id_owner: this.this.select_owners.val(),                                // Собственник
+                id_genus: this.select_genus.val(),                                      // Род вагона
+                id_out_division: this.select_out_division.val(),                        // Цех погрузки
+                id_out_cargo: this.select_out_cargo.val(),                              // Груз ОТПР
+                id_out_cargo_group: this.select_out_cargo_group.val(),                  // Группа ОТПР
+                out_sap_cargo_code: this.select_out_sap_cargo.val(),                    // Груз ОТПР SAP
+                out_code_ext_station_to: this.select_out_ext_station_to.val(),          // Станция назначения
+                out_code_inlandrailway_to: this.select_out_inlandrailway_to.val(),      // Дорога
+                out_code_border_checkpoint: this.select_out_border_checkpoint_to.val(), // Погран.переход
+                id_arr_cargo: this.select_arr_cargo.val(),                              // Груз ПРИБ
+                id_certification_data: this.select_certification_data.val(),            // Сертификатные данные
+                id_arr_cargo_group: this.select_arr_group_arrival.val(),              // Группа ПРИБ
+                id_arr_condition: this.select_arr_condition.val(),                      // Разметка по прибытию
+                id_arr_division: this.select_arr_division.val(),                        // Цех-получатель
+                id_station_from: this.select_station_amkr.val(),                        // Станция примыкания ОТПР
+                code_payer_sender_name: this.select_payer_sender_name.val(),                 // Плательщик ОТПР
+                code_payer_sender: this.select_code_payer_sender.val(),            // Код плат.ОТПР
+            };
+        } else {
+            cur_where = where;
+        };
+        this.ids_wsd.postReportAdoptionWagonOfWhere(cur_where, function (result_wagons) {
+            this.wagons_adoption = result_wagons;
+            // Обновим спсисок вагонов распарсиным ЭПД
+            wagons_get_epd_async.call(this, this.wagons_adoption, function () {
+                // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
+                if (where) {
+                    this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_adoption));
+                }
+                // Обработать и показать данные
+                this.process_data_view_report_2_1(this.wagons_adoption, cur_where);
+                // Выход
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }.bind(this));
+        }.bind(this));
+    };
+
 
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
