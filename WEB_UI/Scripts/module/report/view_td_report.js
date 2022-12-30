@@ -294,6 +294,38 @@
         }
         GetEPDWagonsAsync.call(this, 0);
     };
+    // асинхронно добавим распарсеный ЭПД
+    var wagons_get_out_epd_async = function (row, callback) {
+        var base = this;
+        var len = row.length;
+        if (len === 0) {
+            if (typeof callback === 'function') {
+                callback();
+            }
+            return 0;
+        }
+        function GetEPDWagonsAsync(i) {
+            if (i < len) {
+                // Поместим следующий вызов функции в цикл событий.
+                setTimeout(function () {
+                    this.ids_wsd.getOTPR_UZ_DOC_OUTOfNum(row[i].outgoing_uz_document_id_doc_uz, function (doc_uz_sms) {
+                        row[i].otpr = null;
+                        if (doc_uz_sms !== null) {
+                            // Получим дату отправки
+                            row[i].otpr = doc_uz_sms;
+                        };
+                        GetEPDWagonsAsync.call(this, i + 1);
+                    }.bind(this));
+                }.bind(this), 0);
+            } else {
+                // Так как достигнут конец массива, мы вызываем коллбэк
+                if (typeof callback === 'function') {
+                    callback();
+                } else return 0;
+            }
+        }
+        GetEPDWagonsAsync.call(this, 0);
+    };
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function view_td_report(selector) {
@@ -358,6 +390,10 @@
 
         this.wagons_adoption = [];
         this.clone_wagons_adoption = [];
+
+        this.wagons_outgoing = [];
+        this.clone_wagons_outgoing = [];
+
         // Сылки на общие отчеты 
         this.report_links_cammon = [
             {
@@ -515,12 +551,12 @@
         //--------------------------------------------
         // Отчеты по отправке
         var $h6_outgoing = $('<h6></h6>', {
-            class:'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+            class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
         });
         var $sp_outgoing = $('<span>ОТПРАВКА:</span>');
         div_p4.$div.append($h6_outgoing.append($sp_outgoing));
-        var $ul_outgoing  = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
-        $.each(this.report_links_outgoing , function (index, element) {
+        var $ul_outgoing = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_outgoing, function (index, element) {
             var $li = $('<li></li>');
             var a_link = new this.fe_ui.a({
                 id: null,
@@ -4060,7 +4096,6 @@
             }
             // Обработать и показать данные
             this.process_data_view_report_3_1(this.wagons_adoption, cur_where);
-            //this.process_data_view_report_3_2(this.wagons_adoption, cur_where);
 
             // Выход
             if (typeof callback === 'function') {
@@ -6982,7 +7017,7 @@
                             break;
                         };
                         case 'out-common-detali': {
-                            this.table_arr_common_detali.obj_t_report.columns.adjust().draw();
+                            this.table_out_common_detali.obj_t_report.columns.adjust().draw();
                             //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                             break;
                         };
@@ -6993,12 +7028,12 @@
             }
         }.bind(this);
 
-        this.table_arr_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
+        this.table_out_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
         // Инициализация модуля "Таблица прибывающих составов"
-        this.table_arr_common_detali.init({
+        this.table_out_common_detali.init({
             alert: null,
             detali_table: true,
-            type_report: 'adoption_common_detali',     //
+            type_report: 'outgoing_common_detali',     //
             link_num: false,
             ids_wsd: null,
             fn_init: function () {
@@ -7097,16 +7132,16 @@
         } else {
             cur_where = where;
         };
-        this.ids_wsd.postReportAdoptionWagonOfWhere(cur_where, function (result_wagons) {
-            this.wagons_adoption = result_wagons;
+        this.ids_wsd.postReportOutgoingWagonOfWhere(cur_where, function (result_wagons) {
+            this.wagons_outgoing = result_wagons;
             // Обновим спсисок вагонов распарсиным ЭПД
-            wagons_get_epd_async.call(this, this.wagons_adoption, function () {
+            wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
                 // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
                 if (where) {
-                    this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_adoption));
+                    this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_outgoing));
                 }
                 // Обработать и показать данные
-                this.process_data_view_report_2_1(this.wagons_adoption, cur_where);
+                this.process_data_view_report_5_1(this.wagons_outgoing, cur_where);
                 // Выход
                 if (typeof callback === 'function') {
                     callback();
@@ -7114,7 +7149,214 @@
             }.bind(this));
         }.bind(this));
     };
+    // Обработать и показать данные
+    view_td_report.prototype.process_data_view_report_5_1 = function (wagons_outgoing, where) {
+        // Продолжим
+        this.list_operators_wagons = [];
+        this.list_limiting = [];
+        this.list_owners = [];
+        this.list_genus = [];
+        this.list_out_division = [];
+        this.list_out_cargo = [];
+        this.list_out_cargo_group = [];
+        this.list_out_sap_cargo = [];
+        this.list_out_ext_station_to = [];
+        this.list_out_inlandrailway_to = [];
+        this.list_out_border_checkpoint = [];
+        this.list_arr_cargo = [];
+        this.list_certification_data = [];
+        this.list_arr_cargo_group = [];
+        this.list_arr_condition = [];
+        this.list_arr_division = [];
+        this.list_station_from = [];
+        this.list_payer_sender_name = [];
+        this.list_code_payer_sender = [];
+        // выборка для списков отчета
+        var count_load = 0;
+        var sum_gruzp = 0;
+        var sum_vesg = 0;
+        var sum_vesg_reweighing = 0;
 
+        $.each(wagons_outgoing, function (key, value) {
+            var res = list_groups_cargo.indexOf(value.arrival_uz_vagon_id_group);
+            if (res === -1) {
+                count_load++;
+                sum_gruzp += value.arrival_uz_vagon_gruzp;
+                sum_vesg += value.arrival_uz_vagon_vesg;
+                sum_vesg_reweighing += value.arrival_uz_vagon_vesg_reweighing;
+            }
+            // выборка для списков отчета
+            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this));
+            if (!ow) {
+                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang] });
+            }
+            var lm = this.list_limiting.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting }.bind(this));
+            if (!lm) {
+                this.list_limiting.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting, text: value['outgoing_uz_vagon_outgoing_wagons_rent_limiting_name_' + App.Lang] });
+            }
+            var own = this.list_owners.find(function (o) { return o.value === value.outgoing_uz_vagon_id_owner }.bind(this));
+            if (!own) {
+                this.list_owners.push({ value: value.outgoing_uz_vagon_id_owner, text: value['outgoing_uz_vagon_owner_wagon_abbr_' + App.Lang] });
+            }
+            var genus = this.list_genus.find(function (o) { return o.value === value.outgoing_uz_vagon_id_genus }.bind(this));
+            if (!genus) {
+                this.list_genus.push({ value: value.outgoing_uz_vagon_id_genus, text: value['outgoing_uz_vagon_rod_abbr_' + App.Lang] });
+            }
+            // Цех погрузки
+            var out_dv = this.list_out_division.find(function (o) { return o.value === value.outgoing_uz_vagon_id_division }.bind(this));
+            if (!out_dv) {
+                this.list_out_division.push({ value: value.outgoing_uz_vagon_id_division, text: value['outgoing_uz_vagon_division_abbr_' + App.Lang] });
+            }
+            // Груз ОТПР
+            var out_cargo = this.list_out_cargo.find(function (o) { return o.value === value.outgoing_uz_vagon_id_cargo }.bind(this));
+            if (!out_cargo) {
+                this.list_out_cargo.push({ value: value.outgoing_uz_vagon_id_cargo, text: value['outgoing_uz_vagon_cargo_name_' + App.Lang] });
+            }
+            // Группа ОТПР
+            var out_cargo_group = this.list_out_cargo_group.find(function (o) { return o.value === value.outgoing_uz_vagon_id_group }.bind(this));
+            if (!out_cargo_group) {
+                this.list_out_cargo_group.push({ value: value.outgoing_uz_vagon_id_group, text: value['outgoing_uz_vagon_cargo_group_name_' + App.Lang] });
+            }
+            // Груз ОТПР SAP
+            var out_sap_cargo = this.list_out_sap_cargo.find(function (o) { return o.value === value.sap_outgoing_supply_cargo_code }.bind(this));
+            if (!out_sap_cargo) {
+                this.list_out_sap_cargo.push({ value: value.sap_outgoing_supply_cargo_code, text: value.sap_outgoing_supply_cargo_name });
+            }
+            // Станция назначения
+            var ext_station_to = this.list_out_ext_station_to.find(function (o) { return o.value === value.outgoing_uz_document_code_stn_to }.bind(this));
+            if (!ext_station_to) {
+                this.list_out_ext_station_to.push({ value: value.outgoing_uz_document_code_stn_to, text: value['outgoing_uz_document_station_to_name_' + App.Lang] });
+            }
+            // Дорога
+            var out_inlandrailway_to = this.list_out_inlandrailway_to.find(function (o) { return o.value === value.outgoing_uz_document_to_code_inlandrailway }.bind(this));
+            if (!out_inlandrailway_to) {
+                this.list_out_inlandrailway_to.push({ value: value.outgoing_uz_document_to_code_inlandrailway, text: value['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang] });
+            }
+            // Погран.переход
+            var out_border_checkpoint = this.list_out_border_checkpoint.find(function (o) { return o.value === value.outgoing_uz_document_code_border_checkpoint }.bind(this));
+            if (!out_border_checkpoint) {
+                this.list_out_border_checkpoint.push({ value: value.outgoing_uz_document_code_border_checkpoint, text: value['outgoing_uz_document_border_checkpoint_station_name_' + App.Lang] });
+            }
+            // Груз ПРИБ
+            var arr_cargo = this.list_arr_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_cargo }.bind(this));
+            if (!arr_cargo) {
+                this.list_arr_cargo.push({ value: value.arrival_uz_vagon_id_cargo, text: value['arrival_uz_vagon_cargo_name_' + App.Lang] });
+            }
+            // Сертификатные данные
+            var certification_data = this.list_certification_data.find(function (o) { return o.value === value.arrival_uz_vagon_id_certification_data }.bind(this));
+            if (!certification_data) {
+                this.list_certification_data.push({ value: value.arrival_uz_vagon_id_certification_data, text: value['arrival_uz_vagon_sertification_data_' + App.Lang] });
+            }
+            // Группа ПРИБ.
+            var cargo_group = this.list_arr_cargo_group.find(function (o) { return o.value === value.arrival_uz_vagon_id_group }.bind(this));
+            if (!cargo_group) {
+                this.list_arr_cargo_group.push({ value: value.arrival_uz_vagon_id_group, text: value['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
+            }
+            // Разметка по прибытию
+            var arr_condition = this.list_arr_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
+            if (!arr_condition) {
+                this.list_arr_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
+            }
+            // Цех-получатель
+            var arr_division = this.list_arr_division.find(function (o) { return o.value === value.arrival_uz_vagon_id_division_on_amkr }.bind(this));
+            if (!arr_division) {
+                this.list_arr_division.push({ value: value.arrival_uz_vagon_id_division_on_amkr, text: value['arrival_uz_vagon_division_abbr_' + App.Lang] });
+            }
+            // Станция примыкания ОТПР
+            var station_from = this.list_station_from.find(function (o) { return o.value === value.outgoing_sostav_id_station_from }.bind(this));
+            if (!station_from) {
+                this.list_station_from.push({ value: value.outgoing_sostav_id_station_from, text: value['outgoing_sostav_from_station_amkr_abbr_' + App.Lang] });
+            }
+            // Плательщик ОТПР
+            var payer_sender_name = this.list_payer_sender_name.find(function (o) { return o.value === value.outgoing_uz_document_code_payer }.bind(this));
+            if (!payer_sender_name) {
+                this.list_payer_sender_name.push({ value: value.outgoing_uz_document_code_payer, text: value['outgoing_uz_document_payer_name_' + App.Lang] });
+            }
+            // Код плат.ОТПР
+            var code_payer_sender = this.list_code_payer_sender.find(function (o) { return o.value === value.outgoing_uz_document_code_payer }.bind(this));
+            if (!code_payer_sender) {
+                this.list_code_payer_sender.push({ value: value.outgoing_uz_document_code_payer, text: value.outgoing_uz_document_code_payer });
+            }
+        }.bind(this));
+        //
+        //this.view_table_group_sostav(this.list_group_sostav);
+
+        this.table_out_common_detali.view(wagons_outgoing);
+
+        // обновим Стат. нагр
+        var avg_gruzp = 0;
+        var avg_vesg = 0;
+        var avg_vesg_reweighing = 0;
+        if (count_load > 0) {
+            avg_gruzp = sum_gruzp > 0 ? sum_gruzp / count_load : 0;
+            avg_vesg = sum_vesg > 0 ? (sum_vesg / 1000) / count_load : 0;
+            avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / count_load : 0;
+        };
+
+        $('td#count_wagon').text(count_load);
+        $('td#avg_gruzp').text(avg_gruzp.toFixed(2));
+        $('td#avg_vesg').text(avg_vesg.toFixed(2));
+        $('td#avg_vesg_reweighing').text(avg_vesg_reweighing.toFixed(2));
+
+        // обновление списков отчета
+        if (!where || !where.id_operator || where.id_operator.length === 0) {
+            this.select_operation_amkr.update(this.list_operators_wagons, -1);
+        }
+        if (!where || !where.id_limiting || where.id_limiting.length === 0) {
+            this.select_limiting.update(this.list_limiting, -1);
+        }
+        if (!where || !where.id_owner || where.id_owner.length === 0) {
+            this.select_owners.update(this.list_owners, -1);
+        }
+        if (!where || !where.id_genus || where.id_genus.length === 0) {
+            this.select_genus.update(this.list_genus, -1);
+        }
+        if (!where || !where.id_out_division || where.id_out_division.length === 0) {
+            this.select_out_division.update(this.list_out_division, -1);
+        }
+        if (!where || !where.id_out_cargo || where.id_out_cargo.length === 0) {
+            this.select_out_cargo.update(this.list_out_cargo, -1);
+        }
+        if (!where || !where.id_out_cargo_group || where.id_out_cargo_group.length === 0) {
+            this.select_out_cargo_group.update(this.list_out_cargo_group, -1);
+        }
+        if (!where || !where.out_sap_cargo_code || where.out_sap_cargo_code.length === 0) {
+            this.select_out_sap_cargo.update(this.list_out_sap_cargo, -1);
+        }
+        if (!where || !where.out_code_ext_station_to || where.out_code_ext_station_to.length === 0) {
+            this.select_out_ext_station_to.update(this.list_out_ext_station_to, -1);
+        }
+        if (!where || !where.out_code_inlandrailway_to || where.out_code_inlandrailway_to.length === 0) {
+            this.select_out_inlandrailway_to.update(this.list_out_inlandrailway_to, -1);
+        }
+        if (!where || !where.out_code_border_checkpoint || where.out_code_border_checkpoint.length === 0) {
+            this.select_out_border_checkpoint_to.update(this.list_out_border_checkpoint, -1);
+        }
+        if (!where || !where.id_arr_cargo || where.id_arr_cargo.length === 0) {
+            this.select_arr_cargo.update(this.list_arr_cargo, -1);
+        }
+        if (!where || !where.id_certification_data || where.id_certification_data.length === 0) {
+            this.select_certification_data.update(this.list_certification_data, -1);
+        }
+        if (!where || !where.id_arr_cargo_group || where.id_arr_cargo_group.length === 0) {
+            this.select_arr_group_arrival.update(this.list_arr_cargo, -1);
+        }
+        if (!where || !where.id_arr_condition || where.id_arr_condition.length === 0) {
+            this.select_arr_condition.update(this.list_arr_condition, -1);
+        }
+        if (!where || !where.id_arr_division || where.id_arr_division.length === 0) {
+            this.select_arr_division.update(this.list_arr_division, -1);
+        }
+        if (!where || !where.id_station_from || where.id_station_from.length === 0) {
+            this.select_station_amkr.update(this.list_station_from, -1);
+        }
+        if (!where || !where.code_payer_sender_name || where.code_payer_sender_name.length === 0) {
+            this.select_payer_sender_name.update(this.list_payer_sender_name, -1);
+        }
+        if (!where || !where.code_payer_sender || where.code_payer_sender.length === 0) {
+            this.select_code_payer_sender.update(this.list_code_payer_sender, -1);
+        }
+    };
 
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
