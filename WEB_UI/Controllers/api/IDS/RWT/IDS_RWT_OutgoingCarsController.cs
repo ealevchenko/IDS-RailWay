@@ -24,29 +24,6 @@ namespace WEB_UI.Controllers.api
         public int? num { get; set; }
         public int? outgoing_car_position { get; set; }
         public long? id_wir { get; set; }
-        //public int? wagon_id_countrys { get; set; }
-        //public int? wagon_wagon_adm { get; set; }
-        //public string wagon_adm_name_ru { get; set; }
-        //public string wagon_adm_name_en { get; set; }
-        //public string wagon_adm_abbr_ru { get; set; }
-        //public string wagon_adm_abbr_en { get; set; }
-        //public int? wagon_id_owner { get; set; }
-        //public string wagon_owner_wagon_ru { get; set; }
-        //public string wagon_owner_wagon_en { get; set; }
-        //public string wagon_owner_wagon_abbr_ru { get; set; }
-        //public string wagon_owner_wagon_abbr_en { get; set; }
-        //public DateTime? wagon_date_rem_uz { get; set; }
-        //public double? wagon_gruzp_uz { get; set; }
-        //public double? wagon_tara_uz { get; set; }
-        //public string wagon_ban_uz { get; set; }
-        //public bool? wagon_closed_route { get; set; }
-        //public int? last_operation_id_operation { get; set; }
-        //public int? last_operation_id_condition { get; set; }
-        //public string last_operation_condition_name_ru { get; set; }
-        //public string last_operationt_condition_name_en { get; set; }
-        //public string last_operation_condition_abbr_ru { get; set; }
-        //public string last_operation_condition_abbr_en { get; set; }
-        //public bool? last_operation_condition_red { get; set; }
         public long? arrival_car_id { get; set; }
         public int? arrival_car_position { get; set; }
         public int? arrival_car_position_arrival { get; set; }
@@ -1076,6 +1053,40 @@ namespace WEB_UI.Controllers.api
         public int? simple_car { get; set; }
         public decimal? pay_car { get; set; }
     }
+    /// <summary>
+    /// Класс набора данных для выбора вагонов по отправке
+    /// </summary>
+    public class ViewOutgoingCarsWhere
+    {
+        public DateTime start { get; set; }
+        public DateTime stop { get; set; }
+        public bool laden { get; set; }
+        public bool accounting { get; set; }
+        public bool client { get; set; }
+        public bool not_client { get; set; }
+        public bool paid { get; set; }
+        public int[] nums { get; set; }
+        public int[] nom_main_docs { get; set; }
+        public int[] id_operator { get; set; }
+        public int[] id_limiting { get; set; }
+        public int[] id_owner { get; set; }
+        public int[] id_genus { get; set; }
+        public int[] id_out_division { get; set; }
+        public int[] id_out_cargo { get; set; }
+        public int[] id_out_cargo_group { get; set; }
+        public int[] out_sap_cargo_code { get; set; }
+        public int[] out_code_ext_station_to { get; set; }
+        public int[] out_code_inlandrailway_to { get; set; }
+        public int[] out_code_border_checkpoint { get; set; }
+        public int[] id_arr_cargo { get; set; }
+        public int[] id_certification_data { get; set; }
+        public int[] id_arr_cargo_group { get; set; }
+        public int[] id_arr_condition { get; set; }
+        public int[] id_arr_division { get; set; }
+        public int[] id_station_from { get; set; }
+        public int[] code_payer_sender_name { get; set; }
+        public int[] code_payer_sender { get; set; }
+    }
 
     [RoutePrefix("api/ids/rwt/outgoing_cars")]
     public class IDS_RWT_OutgoingCarsController : ApiController
@@ -1269,6 +1280,68 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        public object get_string_of_int(int[] vals)
+        {
+            if (vals != null && vals.Count() > 0)
+            {
+                return (object)String.Join(",", vals);
+            }
+            return (object)DBNull.Value;
+        }
+
+        /// <summary>
+        /// Выборка принятых вагонов по условию
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        // POST: api/ids/rwt/outgoing_cars/view/car/where/
+        [HttpPost]
+        [Route("view/car/where/")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewOutgoingCarsOfWhere([FromBody] ViewOutgoingCarsWhere value)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", value.start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", value.stop);
+                System.Data.SqlClient.SqlParameter p_laden = new System.Data.SqlClient.SqlParameter("@laden", value.laden);
+                System.Data.SqlClient.SqlParameter p_accounting = new System.Data.SqlClient.SqlParameter("@accounting", value.accounting);
+                System.Data.SqlClient.SqlParameter p_client = new System.Data.SqlClient.SqlParameter("@client", value.client);
+                System.Data.SqlClient.SqlParameter p_not_client = new System.Data.SqlClient.SqlParameter("@not_client", value.not_client);
+                System.Data.SqlClient.SqlParameter p_paid = new System.Data.SqlClient.SqlParameter("@paid", value.paid);
+                System.Data.SqlClient.SqlParameter p_nums = new System.Data.SqlClient.SqlParameter("@nums", get_string_of_int(value.nums));
+                System.Data.SqlClient.SqlParameter p_nom_main_docs = new System.Data.SqlClient.SqlParameter("@nom_main_docs", get_string_of_int(value.nom_main_docs));
+                System.Data.SqlClient.SqlParameter p_id_operator = new System.Data.SqlClient.SqlParameter("@id_operator", get_string_of_int(value.id_operator));
+                System.Data.SqlClient.SqlParameter p_id_limiting = new System.Data.SqlClient.SqlParameter("@id_limiting", get_string_of_int(value.id_limiting));
+                System.Data.SqlClient.SqlParameter p_id_owner = new System.Data.SqlClient.SqlParameter("@id_owner", get_string_of_int(value.id_owner));
+                System.Data.SqlClient.SqlParameter p_id_genus = new System.Data.SqlClient.SqlParameter("@id_genus", get_string_of_int(value.id_genus));
+                System.Data.SqlClient.SqlParameter p_id_out_division = new System.Data.SqlClient.SqlParameter("@id_out_division", get_string_of_int(value.id_out_division));
+                System.Data.SqlClient.SqlParameter p_id_out_cargo = new System.Data.SqlClient.SqlParameter("@id_out_cargo", get_string_of_int(value.id_out_cargo));
+                System.Data.SqlClient.SqlParameter p_id_out_cargo_group = new System.Data.SqlClient.SqlParameter("@id_out_cargo_group", get_string_of_int(value.id_out_cargo_group));
+                System.Data.SqlClient.SqlParameter p_out_sap_cargo_code = new System.Data.SqlClient.SqlParameter("@out_sap_cargo_code", get_string_of_int(value.out_sap_cargo_code));
+                System.Data.SqlClient.SqlParameter p_out_code_ext_station_to = new System.Data.SqlClient.SqlParameter("@out_code_ext_station_to", get_string_of_int(value.out_code_ext_station_to));
+                System.Data.SqlClient.SqlParameter p_out_code_inlandrailway_to = new System.Data.SqlClient.SqlParameter("@out_code_inlandrailway_to", get_string_of_int(value.out_code_inlandrailway_to));
+                System.Data.SqlClient.SqlParameter p_out_code_border_checkpoint = new System.Data.SqlClient.SqlParameter("@out_code_border_checkpoint", get_string_of_int(value.out_code_border_checkpoint));
+                System.Data.SqlClient.SqlParameter p_id_arr_cargo = new System.Data.SqlClient.SqlParameter("@id_arr_cargo", get_string_of_int(value.id_arr_cargo));
+                System.Data.SqlClient.SqlParameter p_id_certification_data = new System.Data.SqlClient.SqlParameter("@id_certification_data", get_string_of_int(value.id_certification_data));
+                System.Data.SqlClient.SqlParameter p_id_arr_cargo_group = new System.Data.SqlClient.SqlParameter("@id_arr_cargo_group", get_string_of_int(value.id_arr_cargo_group));
+                System.Data.SqlClient.SqlParameter p_id_arr_condition = new System.Data.SqlClient.SqlParameter("@id_arr_condition", get_string_of_int(value.id_arr_condition));
+                System.Data.SqlClient.SqlParameter p_id_arr_division = new System.Data.SqlClient.SqlParameter("@id_arr_division", get_string_of_int(value.id_arr_division));
+                System.Data.SqlClient.SqlParameter p_id_station_from = new System.Data.SqlClient.SqlParameter("@id_station_from", get_string_of_int(value.id_station_from));
+                System.Data.SqlClient.SqlParameter p_code_payer_sender_name = new System.Data.SqlClient.SqlParameter("@code_payer_sender_name", get_string_of_int(value.code_payer_sender_name));
+                System.Data.SqlClient.SqlParameter p_code_payer_sender = new System.Data.SqlClient.SqlParameter("@code_payer_sender", get_string_of_int(value.code_payer_sender));
+
+                string sql = "EXEC [IDS].[get_view_outgoing_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @id_operator, @id_limiting, @id_owner,@id_genus, @id_out_division, @id_out_cargo, @id_out_cargo_group, @out_sap_cargo_code, @out_code_ext_station_to, @out_code_inlandrailway_to, @out_code_border_checkpoint, @id_arr_cargo, @id_certification_data, @id_arr_cargo_group, @id_arr_condition, @id_arr_division, @id_station_from, @code_payer_sender_name, @code_payer_sender";
+                List<ViewOutgoingCars> result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_id_operator, p_id_limiting, p_id_owner, p_id_genus, p_id_out_division, p_id_out_cargo, p_id_out_cargo_group, p_out_sap_cargo_code, p_out_code_ext_station_to, p_out_code_inlandrailway_to, p_out_code_border_checkpoint, p_id_arr_cargo, p_id_certification_data, p_id_arr_cargo_group, p_id_arr_condition, p_id_arr_division, p_id_station_from, p_code_payer_sender_name, p_code_payer_sender).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpPost]
         [Route("")]

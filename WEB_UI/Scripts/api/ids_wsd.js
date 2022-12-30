@@ -1361,81 +1361,6 @@
         });
     };
     //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
-    // Получить разпарсеный ЭПД принятого вагона по внутренему num_doc
-    ids_wsd.prototype.getOTPR_UZ_DOC_OUTOfNum = function (num, callback) {
-        $.ajax({
-            type: 'GET',
-            url: '../../api/ids/rwt/uz_doc_out/otpr/num/' + num,
-            async: true,
-            dataType: 'json',
-            beforeSend: function () {
-                AJAXBeforeSend();
-            },
-            success: function (data) {
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            },
-            error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getOTPR_UZ_DOC_OUTOfNum", x, y, z);
-            },
-            complete: function () {
-                AJAXComplete();
-            },
-        });
-    };
-    // Получить PDF документ принятого вагона по внутренему num_doc
-    ids_wsd.prototype.getPDFOfNumDoc = function (num, callback) {
-        $.ajax({
-            type: 'GET',
-            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/pdf_file/num_doc/' + num,
-            async: true,
-            //dataType: 'application/pdf',
-            //data: formData,
-            //contentType: false,
-            //processData: false,
-            beforeSend: function () {
-                AJAXBeforeSend();
-            },
-            success: function (data) {
-                
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            },
-            error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getPDFOfNumDoc", x, y, z);
-            },
-            complete: function () {
-                AJAXComplete();
-            },
-        });
-    };
-    // Получить строку PDF документа принятого вагона по внутренему num_doc
-    ids_wsd.prototype.getUZ_DOC_PDFOfNumDoc = function (num, callback) {
-        $.ajax({
-            type: 'GET',
-            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/num_doc/' + num,
-            async: true,
-            //dataType: 'application/pdf',
-            beforeSend: function () {
-                AJAXBeforeSend();
-            },
-            success: function (data) {
-                if (typeof callback === 'function') {
-                    callback(data);
-                }
-            },
-            error: function (x, y, z) {
-                OnAJAXError("ids_wsd.getUZ_DOC_PDFOfNumDoc", x, y, z);
-            },
-            complete: function () {
-                AJAXComplete();
-            },
-        });
-    };
-
-    //======= UZ_DOC (Таблица ЭПД принятых вагонов) ======================================
     // Получить список документов по номеру накладной
     ids_wsd.prototype.getUZ_DOC_Of_NumDoc = function (num_doc, callback) {
         $.ajax({
@@ -1500,6 +1425,56 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_wsd.getOTPR_UZ_DOCOfNum_UZ", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить PDF документ принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getPDFOfNumDoc = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/pdf_file/num_doc/' + num,
+            async: true,
+            //dataType: 'application/pdf',
+            //data: formData,
+            //contentType: false,
+            //processData: false,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getPDFOfNumDoc", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить строку PDF документа принятого вагона по внутренему num_doc
+    ids_wsd.prototype.getUZ_DOC_PDFOfNumDoc = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids_arhiv/rwt/uz_doc_pdf/num_doc/' + num,
+            async: true,
+            //dataType: 'application/pdf',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUZ_DOC_PDFOfNumDoc", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
@@ -1604,6 +1579,29 @@
         });
     };
     //======= UZ_DOC (Таблица ЭПД отправленных вагонов) ======================================
+    // Получить разпарсеный ЭПД отправленног вагона по внутренему num_doc
+    ids_wsd.prototype.getOTPR_UZ_DOC_OUTOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/uz_doc_out/otpr/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getOTPR_UZ_DOC_OUTOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Операция обновить документы на предяъвленный и сданный состав ОБНОВЛЕНИЕ ДОКУМЕНТОВ ЭПД 
     ids_wsd.prototype.postOperationUpdateEPDSendingSostav = function (operation_update_epd, callback) {
         $.ajax({
@@ -2407,6 +2405,31 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_wsd.getReportCurrentOperationWagonOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить отправленные вагоны по условию выбора
+    ids_wsd.prototype.postReportOutgoingWagonOfWhere = function (where, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/outgoing_cars/view/car/where/',
+            type: 'POST',
+            data: JSON.stringify(where),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postReportOutgoingWagonOfWhere", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
