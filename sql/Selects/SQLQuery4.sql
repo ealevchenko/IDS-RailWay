@@ -1,20 +1,18 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [id]
-      ,[id_arrival]
-      ,[num]
-      ,[position]
-      ,[position_arrival]
-      ,[consignee]
-      ,[num_doc]
-      ,[id_transfer]
-      ,[note]
+/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+SELECT [parent_id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_outgoing_car] = 586310
+
+  SELECT [id_arrival_car] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where id = (SELECT [parent_id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_outgoing_car] = 586310)
+
+  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+SELECT [id_arrival] FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
+  where id = (SELECT [id_arrival_car] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where id = (SELECT [parent_id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_outgoing_car] = 586310))
+
+  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+SELECT [date_adoption]
       ,[date_adoption_act]
-      ,[arrival]
-      ,[arrival_user]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-      ,[id_arrival_uz_vagon]
-  FROM [KRR-PA-Test-Railway].[IDS].[ArrivalCars]
-  where id=1283802
+  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav]
+  where [id] = (SELECT [id_arrival] FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
+  where id = (SELECT [id_arrival_car] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where id = (SELECT [parent_id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_outgoing_car] = 586310)))

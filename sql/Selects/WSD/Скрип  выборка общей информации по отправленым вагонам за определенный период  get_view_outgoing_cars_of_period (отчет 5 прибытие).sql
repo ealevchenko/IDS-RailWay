@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @start datetime = Convert(datetime, '2022-12-28 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-12-29 23:59:59', 120)
+declare @start datetime = Convert(datetime, '2022-08-20 00:00:00', 120)
+declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
 
 	select 
 		out_car.[id] as outgoing_car_id
@@ -26,6 +26,14 @@ declare @stop datetime = Convert(datetime, '2022-12-29 23:59:59', 120)
 		,arr_car.[change] as arrival_car_change
 		,arr_car.[change_user] as arrival_car_change_user
 		--,arr_car.[id_arrival_uz_vagon] as arrival_car_
+		-->======================================================================================================
+		----> ПРЕДЫДУЩЕЕ ПРИБЫТИЕ СОСТАВА [IDS].[ArrivalSostav]
+		--,arr_sost_old.[date_adoption] as arrival_sostav_date_adoption
+		--,arr_sost_old.[date_adoption_act] as arrival_sostav_date_adoption_act		
+		--, ddd = arr_doc_vag.[cargo_returns]
+		,idle_time = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, (SELECT [date_adoption]  FROM [IDS].[ArrivalSostav] where [id] = (SELECT [id_arrival] FROM [IDS].[ArrivalCars] where id = (SELECT [id_arrival_car] FROM [IDS].[WagonInternalRoutes] where id = wir.parent_id))), out_sost.[date_outgoing])) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption], out_sost.[date_outgoing])) END 
+		--,[date_adoption_act] = (SELECT [date_adoption]  FROM [IDS].[ArrivalSostav] where [id] = (SELECT [id_arrival] FROM [IDS].[ArrivalCars] where id = (SELECT [id_arrival_car] FROM [IDS].[WagonInternalRoutes] where id = wir.parent_id)))
+		--,deff_ = DATEDIFF(minute, arr_sost.[date_adoption], out_sost.[date_outgoing])
 		-->======================================================================================================
 		--> ПРИБЫТИЕ СОСТАВА [IDS].[ArrivalSostav]
 		,arr_sost.[id] as arrival_sostav_id
@@ -524,8 +532,14 @@ declare @stop datetime = Convert(datetime, '2022-12-29 23:59:59', 120)
 		--> Отправка состава
 		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_sost.id = out_car.id_outgoing
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
-		--> Текущее внетренее перемещение
+		--> Текущее внутренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
+		----> Предыдущее внутренее перемещение
+		--Left JOIN IDS.WagonInternalRoutes as wir_old ON out_car.id = wir.parent_id
+		----> Предыдущее Прибытие вагона
+		--Left JOIN IDS.ArrivalCars as arr_car_old ON wir_old.id_arrival_car = arr_car_old.id
+		----> Предыдущее Прибытие состава
+		--Left JOIN IDS.ArrivalSostav as arr_sost_old ON arr_car_old.id_arrival = arr_sost_old.id
 		--> Текущая операция
         --Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== СДАЧА ВАГОНА, ЗАДЕРЖАНИЯ, ВОЗВРАТ И ОТПРАВКА  ================================================================
