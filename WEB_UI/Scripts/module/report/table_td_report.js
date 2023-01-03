@@ -133,11 +133,62 @@
             'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
             'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
             'ttdr_field_outgoing_cars_outgoing_uz_vagon_vesg': 'Вес ЭПД, тн',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_code_inlandrailway': 'Код дороги ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_name': 'Дорога ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_abbr': 'Дорога ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_sostav_id_station_from': 'id Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_name': 'Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_abbr': 'Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_laden': 'Гр/пор',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_amkr': 'Время предъявления на УЗ',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery': 'Время  осмотра пр-сд',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_loader': 'Время осмотра грузчик',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik': 'Время осмотра вагонник',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
+
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_sertification_data': 'Код ЕТСНГ ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_group_name': 'Группа ПРИБ.',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_division_code': 'Шифр цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_name_division': 'Цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_division_abbr': 'Цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_document_nom_doc': '№ накладной ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_document_nom_main_doc': '№ Осн. накладной ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_document_code_stn_from': 'Код ст. отправления',
+            'ttdr_field_outgoing_cars_arrival_uz_document_station_from_name': 'Код ст. отправления',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_name': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_sostav_id_station_on': 'id Ст.примыкания ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_sostav_station_on_name': 'Ст.примыкания ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_sostav_station_on_abbr': 'Ст.примыкания ПРИБ',
+
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_num': 'Исх. пост. №',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_code': 'SAP Код ЕТСНГ',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_name': 'SAP Груза ОТПР',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_code': 'SAP Код станции назначения',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_name': 'SAP Станция назначения',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_code': 'код SAP склад',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_name': 'SAP склад',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_netto': 'SAP вес нетто',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_responsible_fio': 'SAP бригадир',
 
             'ttdr_field_outgoing_cars_epd_vagon_collect_v_name_etsng': 'Груз ОТПР (ЭПД)',
             'ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_etsng': 'Код ЕТСНГ (ЭПД)',
             'ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng': 'Код ГНГ (ЭПД)',
-
+            'ttdr_field_outgoing_cars_epd_route_stn_to': 'Код ст. назначения (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_route_name_to': 'Станция назначения (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_joint_stn': 'Код погранперехода (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_joint_stn_name': 'Погранпереход (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_collect_v_vesg': 'Вес нетто ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_u_tara': 'Тара (ут) ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_ves_tary_arc': 'Тара ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_gruzp': 'ГП, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_client_kod': 'Код грузополучателя (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_client_name': 'Грузополучатель (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_pl_kod_plat': 'Код плат ОТПР (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_pl_name_plat': 'Плательщик ОТПР (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_distance_way': 'Тар.расс. ОТПР (ЭПД)',
 
             //'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
             'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
@@ -222,6 +273,8 @@
             'ttdr_title_for_loading': 'Под погрузку',
             'ttdr_title_route': 'маршрут',
             'ttdr_title_not_route': 'не маршрут',
+            'ttdr_title_laden': 'груженный',
+            'ttdr_title_not_laden': 'порожний',
 
             'ttdr_title_button_export': 'Экспорт',
             'ttdr_title_button_buffer': 'Буфер',
@@ -1242,6 +1295,31 @@
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_sostav_outgoing_naturka_arrival_sostav_date_arrival', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Дорога
+        {
+            field: 'outgoing_cars_outgoing_uz_document_to_code_inlandrailway',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_document_to_code_inlandrailway;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_document_to_code_inlandrailway', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_document_to_inlandrailway_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_abbr', App.Langs), width: "150px", orderable: true, searchable: true
+        },
         //----------------------------------------------------
         // ВАГОНЫ БЕЗ ОПЕРАТОРОВ
         //{
@@ -1720,6 +1798,81 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_curr_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+
+        // САП отправка
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_num',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_num;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_num', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Исх. пост. №
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_cargo_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_cargo_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_code', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // SAP  Код ЕТСНГ
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_cargo_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_cargo_code;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // SAP  Груза ОТПР
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_destination_station_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_destination_station_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_code', App.Langs), width: "50px", orderable: true, searchable: true
+        }, //  SAP Код станции назначения
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_destination_station_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_destination_station_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // SAP Станция назначения
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_warehouse_code',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_warehouse_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_code', App.Langs), width: "50px", orderable: true, searchable: true
+        }, //   SAP склад код
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_warehouse_name',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_warehouse_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // SAP склад
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_netto',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_netto ? Number(row.sap_outgoing_supply_netto / 1000).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_netto', App.Langs), width: "50px", orderable: true, searchable: true
+        }, //  SAP  вес нетто
+        {
+            field: 'outgoing_cars_sap_outgoing_supply_responsible_fio',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_responsible_fio;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_sap_outgoing_supply_responsible_fio', App.Langs), width: "100px", orderable: true, searchable: true
+        }, //  SAP бригадир
+
         // ЭПД по отправке
         {
             field: 'outgoing_cars_epd_vagon_collect_v_name_etsng',
@@ -1729,9 +1882,9 @@
                 }
                 return null;
             },
-            className: 'dt-body-nowrap',
+            className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_name_etsng', App.Langs), width: "100px", orderable: true, searchable: true
-        },
+        }, // Груз ЕТСНГ
         {
             field: 'outgoing_cars_epd_vagon_collect_v_kod_etsng',
             data: function (row, type, val, meta) {
@@ -1740,9 +1893,9 @@
                 }
                 return null;
             },
-            className: 'dt-body-nowrap',
-            title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_etsng', App.Langs), width: "100px", orderable: true, searchable: true
-        },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_etsng', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код ЕТСНГ
         {
             field: 'outgoing_cars_epd_vagon_collect_v_kod_gng',
             data: function (row, type, val, meta) {
@@ -1751,9 +1904,369 @@
                 }
                 return null;
             },
-            className: 'dt-body-nowrap',
-            title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код ГНГ 
+        {
+            field: 'outgoing_cars_epd_route_stn_to',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
+                    return row.otpr.route[0].stn_to;
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_route_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код станции назначения  
+        {
+            field: 'outgoing_cars_epd_route_name_to',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
+                    return row.otpr.route[0].name_to;
+                }
+                return null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_epd_route_name_to', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // станция назначения 
+        {
+            field: 'outgoing_cars_epd_joint_stn',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.joint && row.otpr.joint.length > 0 && row.otpr.joint[0].name_to) {
+                    return row.otpr.joint[0].name_to;
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_joint_stn', App.Langs), width: "500px", orderable: true, searchable: true
+        }, // Код погранперехода
+        {
+            field: 'outgoing_cars_epd_joint_stn_name',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.joint && row.otpr.joint.length > 0 && row.otpr.joint[0].stn_name) {
+                    return row.otpr.joint[0].stn_name;
+                }
+                return null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_epd_joint_stn_name', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // погранперехода
+        {
+            field: 'outgoing_cars_epd_vagon_collect_v_vesg',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.vagon && row.otpr.vagon.length > 0 && row.otpr.vagon[0].collect_v && row.otpr.vagon[0].collect_v.length > 0 && row.otpr.vagon[0].collect_v[0].vesg) {
+                    return Number(row.otpr.vagon[0].collect_v[0].vesg / 1000).toFixed(2);
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Вес нетто ОТПР, тн
+        {
+            field: 'outgoing_cars_epd_vagon_u_tara',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.vagon && row.otpr.vagon.length > 0 && row.otpr.vagon[0].u_tara) {
+                    return Number(row.otpr.vagon[0].u_tara / 1000).toFixed(2);
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_u_tara', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Тара (ут) ОТПР, тн
+        {
+            field: 'outgoing_cars_epd_vagon_ves_tary_arc',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.vagon && row.otpr.vagon.length > 0 && row.otpr.vagon[0].ves_tary_arc) {
+                    return Number(row.otpr.vagon[0].ves_tary_arc / 1000).toFixed(2);
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_ves_tary_arc', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Тара ОТПР, тн
+        {
+            field: 'outgoing_cars_epd_vagon_gruzp',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.vagon && row.otpr.vagon.length > 0 && row.otpr.vagon[0].gruzp) {
+                    return Number(row.otpr.vagon[0].gruzp / 1000).toFixed(2);
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_vagon_gruzp', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // ГП, тн
+        {
+            field: 'outgoing_cars_epd_client_kod',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].kod) {
+                    return row.otpr.client[1].kod;
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_client_kod', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код грузополучателя
+        {
+            field: 'outgoing_cars_epd_client_name',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].name) {
+                    return row.otpr.client[1].name;
+                }
+                return null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_epd_client_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // Грузополучатель
+        {
+            field: 'outgoing_cars_epd_pl_kod_plat',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].kod_plat) {
+                    return row.otpr.pl[1].kod_plat;
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_pl_kod_plat', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код плат ОТПР
+        {
+            field: 'outgoing_cars_epd_pl_name_plat',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].name_plat) {
+                    return row.otpr.pl[1].name_plat;
+                }
+                return null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_epd_pl_name_plat', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // Плательщик ОТПР
+        {
+            field: 'outgoing_cars_epd_distance_way',
+            data: function (row, type, val, meta) {
+                if (row && row.otpr && row.otpr.distance_way) {
+                    return row.otpr.distance_way;
+                }
+                return null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_epd_distance_way', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Тар.расс. ОТПР
+
+        //
+        // Груз по прибытию вагона
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // Груз ПРИБ
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_cargo_etsng_code',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_cargo_etsng_code;
+            },
+            className: 'dt-body-center arrival',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code', App.Langs), width: "50px", orderable: true, searchable: true
+        }, // Код ЕТСНГ ПРИБ
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_cargo_group_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_cargo_group_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+        }, // Группа ПРИБ.
+        // Ком сертификационные данные
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_sertification_data',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_sertification_data_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Цех получатель
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_division_code',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_division_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_division_code', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_name_division',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_name_division_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_name_division', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_division_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_division_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Документы накладных УЗ
+        {
+            field: 'outgoing_cars_arrival_uz_document_nom_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_document_nom_doc', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_uz_document_nom_main_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_main_doc < 0 ? langView('ttdr_title_not_epd', App.Langs) : row.arrival_uz_document_nom_main_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_document_nom_main_doc', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // Станция отправления
+        {
+            field: 'outgoing_cars_arrival_uz_document_code_stn_from',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_code_stn_from;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_document_code_stn_from', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_uz_document_station_from_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_document_station_from_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_document_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Разметка по прибытию
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_condition_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_uz_vagon_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция примыкания по прибытию
+        {
+            field: 'outgoing_cars_arrival_sostav_id_station_on',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_id_station_from;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_arrival_sostav_id_station_on', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_sostav_station_on_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_on_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_outgoing_cars_arrival_sostav_station_on_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_sostav_station_on_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_arrival_sostav_station_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция примыкания по отправлению
+        {
+            field: 'outgoing_cars_outgoing_sostav_id_station_from',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_id_station_from;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_id_station_from', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_sostav_from_station_amkr_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_sostav_from_station_amkr_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_name', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_sostav_from_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_sostav_from_station_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        //
+        {
+            field: 'outgoing_cars_outgoing_uz_vagon_laden',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_laden ? langView('ttdr_title_laden', App.Langs) : langView('ttdr_title_not_laden', App.Langs);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_laden', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        // Время предъявления на УЗ
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_readiness_amkr ? moment(row.outgoing_sostav_date_readiness_amkr).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_amkr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Время  осмотра пр-сд
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_end_inspection_acceptance_delivery ? moment(row.outgoing_sostav_date_end_inspection_acceptance_delivery).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Время осмотра грузчик
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_end_inspection_loader',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_end_inspection_loader ? moment(row.outgoing_sostav_date_end_inspection_loader).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_loader', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Время осмотра вагонник
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_end_inspection_vagonnik ? moment(row.outgoing_sostav_date_end_inspection_vagonnik).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Время готовности к сдаче на УЗ
+        {
+            field: 'outgoing_cars_outgoing_sostav_date_readiness_uz',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_readiness_uz ? moment(row.outgoing_sostav_date_readiness_uz).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -2063,52 +2576,54 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_wagon_adm', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_name_etsng', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_name_etsng', title: 'epd', class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_group_name', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_kod_etsng', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_kod_etsng', title: 'epd', class: null });
+        collums.push({ field: 'outgoing_cars_epd_route_stn_to', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_route_name_to', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_name', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_epd_joint_stn', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_joint_stn_name', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_vesg', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_vagon_u_tara', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_vagon_ves_tary_arc', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_client_kod', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_client_name', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_pl_kod_plat', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_pl_name_plat', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_distance_way', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_num', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_code', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_destination_station_code', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_destination_station_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_warehouse_code', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_warehouse_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_netto', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_responsible_fio', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_cargo_name', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_cargo_etsng_code', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_sertification_data', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_cargo_group_name', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_division_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_document_nom_doc', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_document_nom_main_doc', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_document_code_stn_from', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_name', title: null, class: 'arrival' });
+        //Общий простой, час
+        //Общий простой Акт, час
+        //Плата, грн
+        //Плата по Акту, грн
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_name', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_loader', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_uz', title: null, class: null });
 
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_nom_main_doc', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР
-        //collums.push({ field: 'incoming_cars_arrival_sostav_date_arrival', title: null, class: null });
-
-        //collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_vid', title: null, class: null });     // дата раскредитования
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_name_consignee', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_wagon_adm', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_gruzp', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_u_tara', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_ves_tary_arc', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_vesg', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_vesg_reweighing', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_deff_vesg', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_code_stn_from', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_station_from_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_code_border_checkpoint', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_border_checkpoint_station_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_cross_time', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_code_stn_to', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_station_to_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_sap_incoming_supply_cargo_code', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_sap_incoming_supply_cargo_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_group_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_owner_wagon_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_wagon_date_rem_uz', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_code_shipper', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_shipper_name', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_commercial_condition', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_station_amkr_abbr', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_arrival', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_document_distance_way', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_pay_summa', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_station_on_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_cargo_operation_amkr
@@ -3150,7 +3665,7 @@
             //"scrollY": "600px",
             //sScrollX: "100%",
             scrollX: true,
-/*            sScrollXInner: "100%",*/
+            /*            sScrollXInner: "100%",*/
             //"responsive": true,
             //"bAutoWidth": false,
             //order: this.order_column,
