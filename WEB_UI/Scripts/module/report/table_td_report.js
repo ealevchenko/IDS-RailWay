@@ -2626,6 +2626,7 @@
     table_td_report.prototype.init_columns_outgoing_common_detali = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        //
         collums.push({ field: 'outgoing_cars_num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
@@ -2648,10 +2649,13 @@
         collums.push({ field: 'outgoing_cars_epd_route_name_to', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_name', title: null, class: null });
         collums.push({ field: 'outgoing_cars_epd_joint_stn', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_epd_joint_stn_name', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_joint_stn_name', title: null, class: 'epd' }); // 21 
+        //21
         collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_vesg', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_epd_vagon_u_tara', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_epd_vagon_ves_tary_arc', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_epd_vagon_gruzp', title: null, class: 'epd' });
+        //
         collums.push({ field: 'outgoing_cars_epd_client_kod', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_epd_client_name', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_epd_pl_kod_plat', title: null, class: 'epd' });
@@ -2676,18 +2680,20 @@
         collums.push({ field: 'outgoing_cars_arrival_uz_document_code_stn_from', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
-        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_name', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_name', title: null, class: 'arrival' }); //25
+        //
         collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
         collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
+        //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_name', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_loader', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_uz', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_uz', title: null, class: null }); // 7
 
         return init_columns_detali(collums, list_collums);
     };
@@ -3679,6 +3685,11 @@
                 //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="12" class="dt-right">СТАТ.НАГРУЗКА:</th><td id="avg_vesg" class="dt-centr"></td><th colspan="2" class="dt-right">:</th><td id="avg_gruzp" class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
                 '</tfoot > '));
         }
+        if (this.settings.type_report === 'outgoing_common_detali') {
+            this.$table_report = table_report.$table.append($('<tfoot>' +
+                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="20" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="7"></td></tr>' +
+                '</tfoot > '));
+        }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
@@ -4070,37 +4081,43 @@
                 break;
             };
             case 'outgoing_common_detali': {
-                //if (data) {
-                //    var sum_count_wagon = 0;
-                //    var sum_vesg = 0;
-                //    var sum_vesg_reweighing = 0;
-                //    var sum_vesg_deff = 0;
-                //    //var sum_gruzp = 0;
-
-                //    //var sum_count_account_balance = 0;
-                //    $.each(data, function (i, el) {
-                //        sum_count_wagon++;
-                //        sum_vesg += el.arrival_uz_vagon_vesg;
-                //        sum_vesg_reweighing += el.arrival_uz_vagon_vesg_reweighing;
-                //        sum_vesg_deff += el.arrival_uz_vagon_vesg && el.arrival_uz_vagon_vesg_reweighing ? Number(Number(Number(el.arrival_uz_vagon_vesg) - Number(el.arrival_uz_vagon_vesg_reweighing)) / 1000) : 0;
-                //        //sum_gruzp += el.arrival_uz_vagon_gruzp;
-                //    });
-                //    //var avg_vesg = sum_vesg / sum_count_wagon;
-                //    //var avg_gruzp = sum_gruzp / sum_count_wagon;
-                //}
-                //this.obj_t_report.columns('.fl-incoming_cars_num').every(function () {
-                //    $(this.footer()).html(sum_count_wagon);
-                //});
-                //this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_vesg').every(function () {
-                //    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
-                //});
-                //this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_vesg_reweighing').every(function () {
-                //    $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
-                //});
-                //this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_deff_vesg').every(function () {
-                //    $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
-                //});
-                //break;
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    var sum_idle_time = 0;
+                    var sum_idle_time_act = 0;
+                    var sum_pay = 0;
+                    var sum_pay_act = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon++;
+                        if (el && el.otpr && el.otpr.vagon && el.otpr.vagon.length > 0 && el.otpr.vagon[0].collect_v && el.otpr.vagon[0].collect_v.length > 0 && el.otpr.vagon[0].collect_v[0].vesg) {
+                            sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
+                        }
+                        sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
+                        sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
+                        sum_pay += el.pay !== null ? el.pay : 0;
+                        sum_pay_act += el.pay_act !== null ? el.pay_act : 0;
+                    });
+                }
+                this.obj_t_report.columns('.fl-outgoing_cars_num').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-outgoing_cars_epd_vagon_collect_v_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
+                    $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
+                });
+                this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
+                    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
+                });
+                this.obj_t_report.columns('.fl-outgoing_cars_pay').every(function () {
+                    $(this.footer()).html(sum_pay ? Number(sum_pay).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-outgoing_cars_pay_act').every(function () {
+                    $(this.footer()).html(sum_pay_act ? Number(sum_pay_act).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
             };
             case 'adoption_cargo_operation_amkr': {
                 if (data) {

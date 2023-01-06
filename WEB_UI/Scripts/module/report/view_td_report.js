@@ -553,7 +553,7 @@
         var $h6_outgoing = $('<h6></h6>', {
             class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
         });
-        var $sp_outgoing = $('<span>ОТПРАВКА:</span>');
+        var $sp_outgoing = $('<span>ОТПРАВЛЕНИЕ:</span>');
         div_p4.$div.append($h6_outgoing.append($sp_outgoing));
         var $ul_outgoing = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
         $.each(this.report_links_outgoing, function (index, element) {
