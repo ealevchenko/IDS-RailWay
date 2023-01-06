@@ -43,6 +43,8 @@ namespace WEB_UI.Controllers.api
         public int? arrival_sostav_train { get; set; }
         public string arrival_sostav_composition_index { get; set; }
         public DateTime? arrival_sostav_date_arrival { get; set; }
+        public DateTime? arrival_sostav_old_date_adoption { get; set; }
+        public DateTime? arrival_sostav_old_date_adoption_act { get; set; }
         public DateTime? arrival_sostav_date_adoption { get; set; }
         public DateTime? arrival_sostav_date_adoption_act { get; set; }
         public int? arrival_sostav_id_station_from { get; set; }
@@ -603,6 +605,11 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_station_name { get; set; }
 
         public string instructional_letters_note { get; set; }
+
+        public int? idle_time { get; set; }
+        public int? idle_time_act { get; set; }
+        public decimal? pay { get; set; }
+        public decimal? pay_act { get; set; }
     }
 
     public class ViewIncomingOutgoing

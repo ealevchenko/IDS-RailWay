@@ -145,6 +145,12 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_loader': 'Время осмотра грузчик',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik': 'Время осмотра вагонник',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
+            'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
+            'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
+            'ttdr_field_outgoing_cars_pay': 'Плата, грн',
+            'ttdr_field_outgoing_cars_pay_act': 'Плата по Акту, грн',
+            'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
+            'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
 
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
@@ -307,7 +313,7 @@
                 return ++meta.row;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_numeration', App.Langs), width: "30px", orderable: false, searchable: false
+            title: langView('ttdr_field_numeration', App.Langs), width: "30px", orderable: true, searchable: false
         },
         {
             field: 'details_control',
@@ -2266,6 +2272,56 @@
             className: 'dt-body-nowrap',
             title: langView('ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Общий простой
+        {
+            field: 'outgoing_cars_idle_time',
+            data: function (row, type, val, meta) {
+                return row.idle_time !== null ? getTimeFromMins(row.idle_time) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_idle_time_act',
+            data: function (row, type, val, meta) {
+                return row.idle_time_act !== null ? getTimeFromMins(row.idle_time_act) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_idle_time_act', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Оплата
+        {
+            field: 'outgoing_cars_pay',
+            data: function (row, type, val, meta) {
+                return row.pay !== null ? Number(row.pay).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_pay', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_pay_act',
+            data: function (row, type, val, meta) {
+                return row.pay_act !== null ? Number(row.pay_act).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_pay_act', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_sostav_old_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_old_date_adoption ? moment(row.arrival_sostav_old_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_arrival_sostav_old_date_adoption_act',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_old_date_adoption_act ? moment(row.arrival_sostav_old_date_adoption_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
 
     ];
     // Перечень кнопок
@@ -2325,6 +2381,13 @@
     ];
 
     var pageTotal = 0;
+
+    // Показать правильную дату
+    function getTimeFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        let minutes = mins % 60;
+        return hours + ':' + minutes;
+    };
 
     //-----------------------------------------------------------------------------------------
     // Конструктор
@@ -2565,8 +2628,10 @@
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_cars_num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
@@ -2612,10 +2677,10 @@
         collums.push({ field: 'outgoing_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_name', title: null, class: 'arrival' });
-        //Общий простой, час
-        //Общий простой Акт, час
-        //Плата, грн
-        //Плата по Акту, грн
+        collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_name', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr', title: null, class: null });
@@ -3693,6 +3758,12 @@
                     case 'incoming_outgoing_car': {
                         if (data.wir_highlight_color !== null) {
                             $(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
+                        }
+                        break;
+                    };
+                    case 'outgoing_common_detali': {
+                        if (data.arrival_uz_vagon_cargo_returns) {
+                            $(row).addClass('red');
                         }
                         break;
                     };

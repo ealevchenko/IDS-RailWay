@@ -810,24 +810,6 @@
                 break;
             }
         };
-        //if (type === 4) {
-        //    this.div_select_date.hide();
-        //    this.div_interval_date.show();
-        //    this.set_data_report(null);
-        //    this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
-        //    this.set_data_report(null, { start: this.start, stop: this.stop });
-        //} else {
-        //    if (type > 0) {
-        //        this.div_select_date.show();
-        //        this.div_interval_date.hide();
-        //        this.form_panel.set('select_date', moment());
-        //        this.set_data_report(moment(), null);
-        //    } else {
-        //        this.div_select_date.hide();
-        //        this.div_interval_date.hide();
-        //        this.set_data_report(null, null);
-        //    }
-        //};
     };
     // Получить дату отчета
     view_td_report.prototype.set_data_report = function (date, interval) {
@@ -837,6 +819,7 @@
             case 2: this.clear_report_2_1(); break;
             case 3: this.clear_report_3_1(); break;
             case 4: this.clear_report_4_1(); break;
+            case 5: this.clear_report_5_1(); break;
         }
         switch (this.type) {
             case 1: {
@@ -889,6 +872,7 @@
             case 2: this.$title_report.text(langView('vtdr_title_report_2_1', App.Langs).format(message_report)); break;
             case 3: this.$title_report.text(langView('vtdr_title_report_3_1', App.Langs).format(message_report)); break;
             case 4: this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(message_report)); break;
+            case 5: this.$title_report.text(langView('vtdr_title_report_5_1', App.Langs).format(message_report)); break;
         }
     };
     // Показать отчет
@@ -2695,7 +2679,7 @@
             LockScreenOff();
         }.bind(this))
     };
-    // Действие кнопки обновим
+    // Показать данные по группам
     view_td_report.prototype.view_table_group_sostav = function (list_group_sostav) {
         this.$div_group_sostav.empty();
         var table_group_sostav = new this.fe_ui.table({
@@ -2902,59 +2886,59 @@
     };
     // Очистить выбор
     view_td_report.prototype.action_clear_select_report_2_1 = function () {
-        this.switch_laden.val(false);
-        this.switch_accounting.val(false);
-        this.switch_client.val(false);
-        this.switch_not_client.val(false);
-        this.switch_paid.val(false);
-        this.textarea_wagon_nums.val('');
-        this.textarea_main_epd_docs.val('');
-        this.textarea_epd_docs.val('');
-        this.select_operation_amkr.val(-1);
-        this.select_limiting.val(-1);
-        this.select_owners.val(-1);
-        this.select_station_from.val(-1);
-        this.select_cargo.val(-1);
-        this.select_certification_data.val(-1);
-        this.select_cargo_sap.val(-1);
-        this.select_group_arrival.val(-1);
-        this.select_consignee.val(-1);
-        this.select_division.val(-1);
-        this.select_genus.val(-1);
-        this.select_condition.val(-1);
-        this.select_payer_name.val(-1);
-        this.select_payer_code.val(-1);
-        this.select_station_amkr.val(-1);
+        if (this.switch_laden) { this.switch_laden.val(false); }
+        if (this.switch_accounting) { this.switch_accounting.val(false); }
+        if (this.switch_client) { this.switch_client.val(false); }
+        if (this.switch_not_client) { this.switch_not_client.val(false); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.textarea_epd_docs) { this.textarea_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_limiting) { this.select_limiting.val(-1); }
+        if (this.select_owners) { this.select_owners.val(-1); }
+        if (this.select_station_from) { this.select_station_from.val(-1); }
+        if (this.select_cargo) { this.select_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_cargo_sap) { this.select_cargo_sap.val(-1); }
+        if (this.select_group_arrival) { this.select_group_arrival.val(-1); }
+        if (this.select_consignee) { this.select_consignee.val(-1); }
+        if (this.select_division) { this.select_division.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_condition) { this.select_condition.val(-1); }
+        if (this.select_payer_name) { this.select_payer_name.val(-1); }
+        if (this.select_payer_code) { this.select_payer_code.val(-1); }
+        if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
         // Обработать и показать данные
         this.process_data_view_report_2_1(this.clone_wagons_adoption, null);
         LockScreenOff();
     };
     // Очистить таблицы
     view_td_report.prototype.clear_report_2_1 = function () {
-        if (this.textarea_wagon_nums) {
-            this.switch_laden.val(false);
-            this.switch_accounting.val(false);
-            this.switch_client.val(false);
-            this.switch_not_client.val(false);
-            this.switch_paid.val(false);
-            this.textarea_wagon_nums.val('');
-            this.textarea_main_epd_docs.val('');
-            this.textarea_epd_docs.val('');
-            this.select_operation_amkr.val(-1);
-            this.select_limiting.val(-1);
-            this.select_owners.val(-1);
-            this.select_station_from.val(-1);
-            this.select_cargo.val(-1);
-            this.select_certification_data.val(-1);
-            this.select_cargo_sap.val(-1);
-            this.select_group_arrival.val(-1);
-            this.select_consignee.val(-1);
-            this.select_division.val(-1);
-            this.select_genus.val(-1);
-            this.select_condition.val(-1);
-            this.select_payer_name.val(-1);
-            this.select_payer_code.val(-1);
-            this.select_station_amkr.val(-1);
+        if (this.switch_laden) { this.switch_laden.val(false); }
+        if (this.switch_accounting) { this.switch_accounting.val(false); }
+        if (this.switch_client) { this.switch_client.val(false); }
+        if (this.switch_not_client) { this.switch_not_client.val(false); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.textarea_epd_docs) { this.textarea_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_limiting) { this.select_limiting.val(-1); }
+        if (this.select_owners) { this.select_owners.val(-1); }
+        if (this.select_station_from) { this.select_station_from.val(-1); }
+        if (this.select_cargo) { this.select_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_cargo_sap) { this.select_cargo_sap.val(-1); }
+        if (this.select_group_arrival) { this.select_group_arrival.val(-1); }
+        if (this.select_consignee) { this.select_consignee.val(-1); }
+        if (this.select_division) { this.select_division.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_condition) { this.select_condition.val(-1); }
+        if (this.select_payer_name) { this.select_payer_name.val(-1); }
+        if (this.select_payer_code) { this.select_payer_code.val(-1); }
+        if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
+        if (this.textarea_epd_docs) {
             this.wagons_adoption = [];
             this.clone_wagons_adoption = [];
             this.process_data_view_report_2_1(this.clone_wagons_adoption, null);
@@ -6266,7 +6250,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_clear_select_report_2_1();
+                this.action_clear_select_report_5_1();
             }.bind(this),
         });
         var bt_setup_select = new this.fe_ui.bs_button({
@@ -6280,7 +6264,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_select_report_2_1();
+                this.action_select_report_5_1();
             }.bind(this),
         });
         row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
@@ -7111,7 +7095,7 @@
                 nom_main_docs: this.main_epd_docs,
                 id_operator: this.select_operation_amkr.val(),                          // Операторы АМКР
                 id_limiting: this.select_limiting.val(),                                // Ограничение погрузки
-                id_owner: this.this.select_owners.val(),                                // Собственник
+                id_owner: this.select_owners.val(),                                // Собственник
                 id_genus: this.select_genus.val(),                                      // Род вагона
                 id_out_division: this.select_out_division.val(),                        // Цех погрузки
                 id_out_cargo: this.select_out_cargo.val(),                              // Груз ОТПР
@@ -7138,7 +7122,7 @@
             wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
                 // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
                 if (where) {
-                    this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_outgoing));
+                    this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
                 }
                 // Обработать и показать данные
                 this.process_data_view_report_5_1(this.wagons_outgoing, cur_where);
@@ -7357,7 +7341,97 @@
             this.select_code_payer_sender.update(this.list_code_payer_sender, -1);
         }
     };
+    // Действие кнопки обновим
+    view_td_report.prototype.action_select_report_5_1 = function () {
+        this.out_clear();
+        this.nums = null;
+        var list_nums = this.textarea_wagon_nums.val();
+        if (list_nums !== '') {
+            this.nums = is_valid_nums(list_nums, this.settings.alert, false, true);
+            if (!this.nums) return;
+        };
+        this.main_epd_docs = null;
+        var list_main_epd_docs = this.textarea_main_epd_docs.val();
+        if (list_main_epd_docs !== '') {
+            this.main_epd_docs = is_valid_docs(list_main_epd_docs, this.settings.alert, true);
+            if (!this.main_epd_docs) return;
+        };
 
+        LockScreen(langView('vtdr_load_outgoing_cars', App.Langs));
+        this.load_select_report_5_1(null, function () {
+            LockScreenOff();
+        }.bind(this))
+    };
+    //
+    //view_td_report.prototype.view_table_group_sostav = function (list_group_sostav) { }
+    // Очистить выбор
+    //
+    view_td_report.prototype.action_clear_select_report_5_1 = function () {
+        if (this.switch_laden) { this.switch_laden.val(false); }
+        if (this.switch_accounting) { this.switch_accounting.val(false); }
+        if (this.switch_client) { this.switch_client.val(false); }
+        if (this.switch_not_client) { this.switch_not_client.val(false); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_limiting) { this.select_limiting.val(-1); }
+        if (this.select_owners) { this.select_owners.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_out_division) { this.select_out_division.val(-1); }
+        if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        if (this.select_out_cargo_group) { this.select_out_cargo_group.val(-1); }
+        if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
+        if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        if (this.select_out_inlandrailway_to) { this.select_out_inlandrailway_to.val(-1); }
+        if (this.select_out_border_checkpoint_to) { this.select_out_border_checkpoint_to.val(-1); }
+        if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_arr_group_arrival) { this.select_arr_group_arrival.val(-1); }
+        if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        if (this.select_arr_division) { this.select_arr_division.val(-1); }
+        if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
+        if (this.select_payer_sender_name) { this.select_payer_sender_name.val(-1); }
+        if (this.select_code_payer_sender) { this.select_code_payer_sender.val(-1); }
+        // Обработать и показать данные
+        this.process_data_view_report_5_1(this.clone_wagons_outgoing, null);
+        LockScreenOff();
+    };
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_5_1 = function () {
+        if (this.switch_laden) { this.switch_laden.val(false); }
+        if (this.switch_accounting) { this.switch_accounting.val(false); }
+        if (this.switch_client) { this.switch_client.val(false); }
+        if (this.switch_not_client) { this.switch_not_client.val(false); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_limiting) { this.select_limiting.val(-1); }
+        if (this.select_owners) { this.select_owners.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_out_division) { this.select_out_division.val(-1); }
+        if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        if (this.select_out_cargo_group) { this.select_out_cargo_group.val(-1); }
+        if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
+        if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        if (this.select_out_inlandrailway_to) { this.select_out_inlandrailway_to.val(-1); }
+        if (this.select_out_border_checkpoint_to) { this.select_out_border_checkpoint_to.val(-1); }
+        if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_arr_group_arrival) { this.select_arr_group_arrival.val(-1); }
+        if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        if (this.select_arr_division) { this.select_arr_division.val(-1); }
+        if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
+        if (this.select_payer_sender_name) { this.select_payer_sender_name.val(-1); }
+        if (this.select_code_payer_sender) { this.select_code_payer_sender.val(-1); }
+        if (this.select_out_division) {
+            this.wagons_outgoing = [];
+            this.clone_wagons_outgoing = [];
+            this.process_data_view_report_5_1(this.clone_wagons_outgoing, null);
+            LockScreenOff();
+        }
+    };
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()

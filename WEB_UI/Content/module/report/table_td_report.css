@@ -126,6 +126,18 @@ table.dataTable.display tbody tr:not(.selected).even.blue > .sorting_1, table.da
     background-color: #cdddf9;
 }
 
+table.dataTable.display td.epd {
+    background-color: #FFF2CC;
+}
+
+table.dataTable.display td.sap {
+    background-color: #D9E1F2;
+}
+
+table.dataTable.display td.arrival {
+    background-color: #FCE4D6;
+}
+
 td.details-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
