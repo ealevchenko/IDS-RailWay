@@ -2488,7 +2488,6 @@
         var sum_vesg = 0;
         var sum_vesg_reweighing = 0;
 
-
         $.each(wagons_adoption, function (key, value) {
             var res = list_groups_cargo.indexOf(value.arrival_uz_vagon_id_group);
             if (res === -1) {
@@ -6213,12 +6212,20 @@
         });
         var $out_common_group = nav_tabs_out_cammon.$content.find('div#out-common-group-tab'); // Панель отчета
         $out_common_group.append(div_row_cg.append(this.$div_group_sostav)); // Добавим div для таблиц
-        // Закладка отчет детально 
+        // Закладка отчет детально
+        var div_row_detali_stat = new this.fe_ui.bs_row({
+            class: 'mt-2',
+        });
         var div_row_detali = new this.fe_ui.bs_row({
             class: 'mt-2',
         });
         //
+        var $h3 = $('<h3>' + langView('vtdr_title_calculation_static_load', App.Langs) + '</h3>');
+        var $tab_nagr = $('<table class="table table-bordered"><thead><tr><th>кол.</th><th>ГП, т</th><th>Вес, тн</th></tr></thead><tbody><tr><td class="dt-centr" id="count_wagon"></td><td class="dt-centr" id="avg_gruzp"></td><td class="dt-centr" id="avg_vesg"></td></tr></tbody></table>');
+        var $col_nagr = $('<div id="arr-common-report-detali-stat-nagr" class="col-xl-6"></div>');
+
         var $out_common_detali = nav_tabs_out_cammon.$content.find('div#out-common-detali-tab'); // Панель поиска
+        $out_common_detali.append(div_row_detali_stat.$row.append($col_nagr.append($h3).append($tab_nagr))); //.append($bt)
         $out_common_detali.append(div_row_detali.$row.append($('<div id="out-common-report-detali" class="col-xl-12"></div>')));
         // Дабавим закладку на форму
         this.$table_view.append(nav_tabs_out_cammon.$ul).append(nav_tabs_out_cammon.$content);
@@ -6994,15 +7001,11 @@
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                     switch (event.target.id) {
                         case 'out-common-group': {
-                            //if (this.table_group_sostav) {
-                            //    this.table_group_sostav[0]. .columns.adjust().draw();
-                            //}
                             $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
                             break;
                         };
                         case 'out-common-detali': {
                             this.table_out_common_detali.obj_t_report.columns.adjust().draw();
-                            //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                             break;
                         };
                     };
@@ -7011,7 +7014,7 @@
                 LockScreenOff();
             }
         }.bind(this);
-
+        //
         this.table_out_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
         // Инициализация модуля "Таблица прибывающих составов"
         this.table_out_common_detali.init({
@@ -7155,20 +7158,47 @@
         this.list_station_from = [];
         this.list_payer_sender_name = [];
         this.list_code_payer_sender = [];
+        this.list_group_sostav_outgoing = [];
         // выборка для списков отчета
         var count_load = 0;
         var sum_gruzp = 0;
         var sum_vesg = 0;
-        var sum_vesg_reweighing = 0;
 
         $.each(wagons_outgoing, function (key, value) {
-            var res = list_groups_cargo.indexOf(value.arrival_uz_vagon_id_group);
+            var res = list_groups_cargo.indexOf(value.outgoing_uz_vagon_id_cargo);
             if (res === -1) {
                 count_load++;
-                sum_gruzp += value.arrival_uz_vagon_gruzp;
-                sum_vesg += value.arrival_uz_vagon_vesg;
-                sum_vesg_reweighing += value.arrival_uz_vagon_vesg_reweighing;
+                if (value.otpr && value.otpr.vagon && value.otpr.vagon.length > 0 && value.otpr.vagon[0].collect_v && value.otpr.vagon[0].collect_v.length > 0 && value.otpr.vagon[0].collect_v[0].vesg) {
+                    sum_vesg += value.otpr.vagon[0].collect_v[0].vesg;
+                }
+                if (value.otpr && value.otpr.vagon && value.otpr.vagon.length > 0 && value.otpr.vagon[0].gruzp) {
+                    sum_gruzp += value.otpr.vagon[0].gruzp;
+                }
             }
+            // Список групп отправки
+            var group_sostav_outgoing = this.list_group_sostav_outgoing.find(function (o) { return o.id === value.outgoing_sostav_id }.bind(this));
+            if (!group_sostav_outgoing) {
+                var sostav_outgoing = wagons_outgoing.filter(function (i) { return i.outgoing_sostav_id === value.outgoing_sostav_id }.bind(this));
+                var sostav_cargo_outgoing = [];
+                $.each(sostav_outgoing, function (i, el) {
+                    var cargo_outgoing = sostav_cargo_outgoing.find(function (o) { return o.id_cargo === el.outgoing_uz_vagon_id_cargo }.bind(this))
+                    var sum_vesg = 0;
+                    if (!cargo_outgoing) {
+                        sum_vesg = 0;
+                        var cargo_list = sostav_outgoing.filter(function (i) { return i.outgoing_uz_vagon_id_cargo === el.outgoing_uz_vagon_id_cargo }.bind(this));
+                        // Просумируем 
+                        $.each(cargo_list, function (i1, el1) {
+                            if (el1 && el1.otpr && el1.otpr.vagon && el1.otpr.vagon.length > 0 && el1.otpr.vagon[0].collect_v && el1.otpr.vagon[0].collect_v.length > 0 && el1.otpr.vagon[0].collect_v[0].vesg) {
+                                sum_vesg += el1.otpr.vagon[0].collect_v[0].vesg;
+                            }
+                        }.bind(this));
+                        sostav_cargo_outgoing.push({ id_cargo: el.outgoing_uz_vagon_id_cargo, cargo_name: el['outgoing_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg });
+                    };
+                }.bind(this));
+                this.list_group_sostav_outgoing.push({ id: value.outgoing_sostav_id, date_outgoing: value.outgoing_sostav_date_outgoing, const_wagon: sostav_outgoing.length, count_account_balance_wagon: sostav_outgoing.filter(function (i) { return i.account_balance }.bind(this)).length, cargo_group: sostav_cargo_outgoing });
+
+            }
+
             // выборка для списков отчета
             var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this));
             if (!ow) {
@@ -7263,24 +7293,22 @@
             }
         }.bind(this));
         //
-        //this.view_table_group_sostav(this.list_group_sostav);
+        this.view_table_group_sostav_outgoing(this.list_group_sostav_outgoing);
 
         this.table_out_common_detali.view(wagons_outgoing);
 
         // обновим Стат. нагр
         var avg_gruzp = 0;
         var avg_vesg = 0;
-        var avg_vesg_reweighing = 0;
+
         if (count_load > 0) {
             avg_gruzp = sum_gruzp > 0 ? sum_gruzp / count_load : 0;
             avg_vesg = sum_vesg > 0 ? (sum_vesg / 1000) / count_load : 0;
-            avg_vesg_reweighing = sum_vesg_reweighing > 0 ? sum_vesg_reweighing / count_load : 0;
         };
 
         $('td#count_wagon').text(count_load);
         $('td#avg_gruzp').text(avg_gruzp.toFixed(2));
         $('td#avg_vesg').text(avg_vesg.toFixed(2));
-        $('td#avg_vesg_reweighing').text(avg_vesg_reweighing.toFixed(2));
 
         // обновление списков отчета
         if (!where || !where.id_operator || where.id_operator.length === 0) {
@@ -7362,10 +7390,177 @@
             LockScreenOff();
         }.bind(this))
     };
-    //
-    //view_td_report.prototype.view_table_group_sostav = function (list_group_sostav) { }
+    // Показать данные по группам отправки
+    view_td_report.prototype.view_table_group_sostav_outgoing = function (list_group_sostav_outgoing) {
+        this.$div_group_sostav.empty();
+        var table_group_sostav = new this.fe_ui.table({
+            id: 'table-group-sostav',
+            class: 'display compact cell-border row-border hover',
+            title: null,
+        });
+        this.table_group_sostav = table_group_sostav.$table;
+        var $thead = $('<thead></thead>');
+        var $tr_h = $('<tr></tr>');
+        var $th1 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Дата сдачи'
+        });
+        var $th2 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Общее кол.'
+        });
+        var $th3 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Кол. уч. ваг.'
+        });
+        var $th4 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Род груза'
+        });
+        var $th5 = $('<th></th>', {
+            class: 'dt-head-center',
+            text: 'Вес по ЭПД, тн.'
+        });
+        $thead.append($tr_h.append($th1).append($th2).append($th3).append($th4).append($th5));
+        var $tbody = $('<tbody></tbody>');
+        this.table_group_sostav.append($thead)
+        //
+        var const_wagon = 0;
+        var count_account_balance_wagon = 0;
+        var sum_vesg = 0;
+
+        if (list_group_sostav_outgoing && list_group_sostav_outgoing.length > 0) {
+            $.each(list_group_sostav_outgoing, function (i, el) {
+                var $tr_d = $('<tr></tr>', {
+                    id: el.id
+                });
+                $.each(el.cargo_group, function (i1, el1) {
+                    if (i1 === 0) {
+                        var $tr_d = $('<tr></tr>', {
+                            id: el.id
+                        });
+                        var $td_date_outgoing = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
+                            text: el.date_outgoing ? moment(el.date_outgoing).format(format_datetime) : ''
+                        });
+                        var $td_const_wagon = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
+                            text: el.const_wagon
+                        });
+                        var $td_count_account_balance_wagon = $('<td></td>', {
+                            rowspan: el.cargo_group.length,
+                            class: 'dt-body-center',
+                            text: el.count_account_balance_wagon
+                        });
+                        var $td_cargo = $('<td></td>', {
+                            class: 'dt-body-left',
+                            text: el1.count + '-' + el1.cargo_name
+                        });
+                        var $td_sum_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
+                            text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
+                        });
+                        $tr_d.append($td_date_outgoing).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg);
+                        $tbody.append($tr_d);
+                        const_wagon += el.const_wagon;
+                        count_account_balance_wagon += el.count_account_balance_wagon;
+                    } else {
+                        var $tr_d = $('<tr></tr>');
+                        var $td_date_outgoing = $('<td></td>', {
+                            class: 'dt-body-center',
+                            style: 'display: none;'
+                        });
+                        var $td_const_wagon = $('<td></td>', {
+                            class: 'dt-body-center',
+                            style: 'display: none;'
+                        });
+                        var $td_count_account_balance_wagon = $('<td></td>', {
+                            class: 'dt-body-center',
+                            style: 'display: none;'
+                        });
+                        var $td_cargo = $('<td></td>', {
+                            class: 'dt-body-left',
+                            text: el1.count + '-' + el1.cargo_name
+                        });
+                        var $td_sum_vesg = $('<td></td>', {
+                            class: 'dt-body-right',
+                            text: el1.sum_vesg ? Number(el1.sum_vesg / 1000).toFixed(3) : 0.000
+                        });
+                        $tr_d.append($td_date_outgoing).append($td_const_wagon).append($td_count_account_balance_wagon).append($td_cargo).append($td_sum_vesg);
+                        $tbody.append($tr_d);
+                    }
+                    sum_vesg += el1.sum_vesg;
+                }.bind(this));
+            }.bind(this));
+        }
+        this.table_group_sostav.append($tbody);
+        var $tfoot = $('<tfoot></tfoot>');
+        var $tr_f = $('<tr></tr>');
+        var $tdf1 = $('<td></td>', {
+            class: 'dt-right',
+            text: 'ИТОГО:'
+        });
+        var $tdf2 = $('<td></td>', {
+            class: 'dt-center',
+            text: Number(const_wagon)
+        });
+        var $tdf3 = $('<td></td>', {
+            class: 'dt-center',
+            text: Number(count_account_balance_wagon)
+        });
+        var $tdf4 = $('<td></td>');
+        var $tdf5 = $('<td></td>', {
+            class: 'dt-right',
+            text: sum_vesg > 0 ? Number(sum_vesg / 1000).toFixed(3) : 0
+        });
+        $tfoot.append($tr_f.append($tdf1).append($tdf2).append($tdf3).append($tdf4).append($tdf5));
+        this.table_group_sostav.append($tfoot);
+        this.$div_group_sostav.append(this.table_group_sostav);
+        this.table_group_sostav.DataTable({
+            "lengthMenu": null,
+            "pageLength": null,
+            "deferRender": false,
+            "paging": false,
+            "searching": false,
+            "ordering": false,
+            "info": true,
+            select: false,
+            "autoWidth": false,
+            //"filter": true,
+            //"scrollY": "600px",
+            //sScrollX: "100%",
+            scrollX: true,
+            //"responsive": true,
+            //"bAutoWidth": false,
+            language: language_table(App.Langs),
+            jQueryUI: false,
+            dom: 'Bfrtip',
+            stateSave: false,
+            buttons: {
+                extend: 'collection',
+                text: langView('ttdr_title_button_export', App.Langs),
+                buttons: [
+                    {
+                        text: langView('ttdr_title_button_buffer', App.Langs),
+                        extend: 'copyHtml5',
+                    },
+                    {
+                        text: langView('ttdr_title_button_excel', App.Langs),
+                        extend: 'excelHtml5',
+                        sheetName: langView('ttdr_title_excel_sheet_name', App.Langs),
+                        messageTop: function () {
+                            return '';
+                        }
+                    },
+                ],
+                autoClose: true
+            },
+        });
+
+    };
     // Очистить выбор
-    //
     view_td_report.prototype.action_clear_select_report_5_1 = function () {
         if (this.switch_laden) { this.switch_laden.val(false); }
         if (this.switch_accounting) { this.switch_accounting.val(false); }
@@ -7432,6 +7627,7 @@
             LockScreenOff();
         }
     };
+    //
     view_td_report.prototype.out_clear = function () {
         if (this.settings.alert) {
             this.settings.alert.clear_message()

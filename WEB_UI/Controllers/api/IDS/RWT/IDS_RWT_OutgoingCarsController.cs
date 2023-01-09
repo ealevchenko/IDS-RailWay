@@ -605,7 +605,7 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_station_name { get; set; }
 
         public string instructional_letters_note { get; set; }
-
+        public bool account_balance { get; set; }
         public int? idle_time { get; set; }
         public int? idle_time_act { get; set; }
         public decimal? pay { get; set; }
