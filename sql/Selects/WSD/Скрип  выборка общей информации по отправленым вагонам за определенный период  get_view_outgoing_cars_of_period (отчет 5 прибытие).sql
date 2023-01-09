@@ -536,6 +536,8 @@ declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
+		-- Признак учетный вагон
+		,account_balance = (CASE WHEN arr_doc_uz.[klient] = 1 THEN 0 ELSE [IDS].[get_count_account_balance_of_id_operator](out_wag_rent.[id_operator], out_dir_rod.rod_uz) END) -- or arr_doc_vag.[cargo_returns] = 1 
 		--=============== ВРЕМЯ И ОПЛАТА ===================================
 		-- Общий простой  , час
 		,idle_time = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, arr_sost_old.[date_adoption] , out_sost.[date_outgoing])) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption], out_sost.[date_outgoing])) END 
@@ -544,7 +546,7 @@ declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
 		-- Плата добаим позже
 		,[pay] = 0.00
 		,[pay_act] = 0.00
-		into view_outgoing_cars
+		--into view_outgoing_cars
 		FROM [IDS].[OutgoingCars] as out_car
 		--> Отправка состава
 		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_sost.id = out_car.id_outgoing
