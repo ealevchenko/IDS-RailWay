@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @start datetime = Convert(datetime, '2022-08-20 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
+declare @start datetime = Convert(datetime, '2023-01-01 00:00:00', 120)
+declare @stop datetime = Convert(datetime, '2023-01-09 23:59:59', 120)
 
 	select 
 		out_car.[id] as outgoing_car_id
@@ -409,6 +409,10 @@ declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
 		,out_dir_cargo.[id_group] as outgoing_uz_vagon_id_group							-- id группа груза [IDS].[Directory_CargoGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_group_cargo.cargo_group_name_ru as outgoing_uz_vagon_cargo_group_name_ru	-- Группа грузов [IDS].[Directory_CargoGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_group_cargo.cargo_group_name_en as outgoing_uz_vagon_cargo_group_name_en	-- Группа грузов [IDS].[Directory_CargoGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
+		--> СПРАВОЧНИК ГРУППА ГРУЗА [IDS].[Directory_CargoOutGroup]	
+		,out_dir_cargo.[id_out_group] as outgoing_uz_vagon_id_out_group								-- id группа груза [IDS].[Directory_CargoOutGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_dir_group_out_cargo.cargo_group_name_ru as outgoing_uz_vagon_cargo_out_group_name_ru	-- Группа грузов [IDS].[Directory_CargoOutGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_dir_group_out_cargo.cargo_group_name_en as outgoing_uz_vagon_cargo_out_group_name_en	-- Группа грузов [IDS].[Directory_CargoOutGroup] по отправке [IDS].[Outgoing_UZ_Vagon]
 		--> СПРАВОЧНИК ГРУЗА ЕТСНГ [IDS].[Directory_CargoETSNG]
 		,out_dir_cargo.[id_cargo_etsng] as outgoing_uz_vagon_id_cargo_etsng					-- id груза ЕТСНГ [IDS].[Directory_CargoETSNG] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_cargo_etsng.[code] as outgoing_uz_vagon_cargo_etsng_code						-- Код груза ЕТСНГ [IDS].[Directory_CargoETSNG] по отправке [IDS].[Outgoing_UZ_Vagon]
@@ -635,6 +639,8 @@ declare @stop datetime = Convert(datetime, '2022-08-20 23:59:59', 120)
 		Left JOIN IDS.Directory_CargoGroup as arr_dir_group_cargo ON arr_dir_cargo.id_group =  arr_dir_group_cargo.id
 		--> Справочник Группы Грузов по отправке
 		Left JOIN IDS.Directory_CargoGroup as out_dir_group_cargo ON out_dir_cargo.id_group =  out_dir_group_cargo.id
+		--> Справочник Группы по отправке Грузов по отправке
+		Left JOIN IDS.Directory_CargoOutGroup as out_dir_group_out_cargo ON out_dir_cargo.id_out_group =  out_dir_group_out_cargo.id
 		--> Справочник Грузов ЕТСНГ по прибытию
 		Left JOIN [IDS].[Directory_CargoETSNG] as arr_dir_cargo_etsng ON arr_dir_cargo.id_cargo_etsng = arr_dir_cargo_etsng.id
 		--> Справочник Грузов ЕТСНГ по отправке
