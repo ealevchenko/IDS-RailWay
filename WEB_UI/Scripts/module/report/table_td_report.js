@@ -232,22 +232,23 @@
             'ttdr_field_incoming_cars_outgoing_sostav_date_outgoing': 'Дата последней сдачи',
 
             'ttdr_field_total_period': 'Период',
-            'ttdr_field_total_arrival_operator_abbr': 'Опер. АМКР',
-            'ttdr_field_total_arrival_limiting_abbr': 'Огран.',
-            'ttdr_field_total_arrival_cargo_name': 'Груз ПРИБ',
-            'ttdr_field_total_arrival_group_name': 'Группа груз ПРИБ',
-            'ttdr_field_total_arrival_certification_data': 'Сертиф. данные',
-            'ttdr_field_total_arrival_count_wagon': 'Кол-во ваг.',
-            'ttdr_field_total_arrival_sum_vesg': 'Кол-во тн. по ЭПД',
-            'ttdr_field_total_arrival_sum_vesg_reweighing': 'Кол-во тн. по АМКР',
-            'ttdr_field_total_arrival_sum_vesg_deff': 'Откл., тн.',
-            'ttdr_field_total_arrival_rod_abbr': 'Род ПРИБ',
-            'ttdr_field_total_arrival_perent_wagon': '% от общего приб.',
-            'ttdr_field_total_arrival_sap_cargo_code': 'Код материала SAP',
-            'ttdr_field_total_arrival_sap_cargo_name': 'Груз ПРИБ SAP',
-            'ttdr_field_total_arrival_station_from_name': 'Станция отправления',
-            'ttdr_field_total_arrival_division_abbr': 'Цех-грузоп.',
-            'ttdr_field_total_arrival_station_on_name': 'Пункт погрузки',
+            'ttdr_field_total_operator_abbr': 'Опер. АМКР',
+            'ttdr_field_total_limiting_abbr': 'Огран.',
+            'ttdr_field_total_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_total_group_name': 'Группа груз ПРИБ',
+            'ttdr_field_total_certification_data': 'Сертиф. данные',
+            'ttdr_field_total_count_wagon': 'Кол-во ваг.',
+            'ttdr_field_total_sum_vesg': 'Кол-во тн. по ЭПД',
+            'ttdr_field_total_sum_vesg_reweighing': 'Кол-во тн. по АМКР',
+            'ttdr_field_total_sum_vesg_deff': 'Откл., тн.',
+            'ttdr_field_total_rod_abbr': 'Род ПРИБ',
+            'ttdr_field_total_perent_wagon': '% от общего приб.',
+            'ttdr_field_total_sap_cargo_code': 'Код материала SAP',
+            'ttdr_field_total_sap_cargo_name': 'Груз ПРИБ SAP',
+            'ttdr_field_total_station_from_name': 'Станция отправления',
+            'ttdr_field_total_division_abbr': 'Цех-грузоп.',
+            'ttdr_field_total_station_on_name': 'Пункт погрузки',
+            'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
 
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
@@ -1557,132 +1558,140 @@
             title: langView('ttdr_field_total_period', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_operator_abbr',
+            field: 'total_operator_abbr',
             data: function (row, type, val, meta) {
                 return row.operator_abbr;
             },
             className: 'dt-body-center shorten mw-100',
-            title: langView('ttdr_field_total_arrival_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_limiting_abbr',
+            field: 'total_limiting_abbr',
             data: function (row, type, val, meta) {
                 return row.limiting_abbr;
             },
             className: 'dt-body-center shorten mw-100',
-            title: langView('ttdr_field_total_arrival_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_cargo_name',
+            field: 'total_cargo_name',
             data: function (row, type, val, meta) {
                 return row.cargo_name;
             },
             className: 'dt-body-left shorten mw-150',
-            title: langView('ttdr_field_total_arrival_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_group_name',
+            field: 'total_group_name',
             data: function (row, type, val, meta) {
                 return row.group_name;
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_total_arrival_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_group_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_certification_data',
+            field: 'total_cargo_out_group_name',
+            data: function (row, type, val, meta) {
+                return row.cargo_out_group_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_total_cargo_out_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_certification_data',
             data: function (row, type, val, meta) {
                 return row.certification_data;
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_total_arrival_certification_data', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_certification_data', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_count_wagon',
+            field: 'total_count_wagon',
             data: function (row, type, val, meta) {
                 return row.count_wagon;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_total_arrival_count_wagon', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_count_wagon', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_sum_vesg',
+            field: 'total_sum_vesg',
             data: function (row, type, val, meta) {
                 return row.sum_vesg ? Number(row.sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2);
             },
             className: 'dt-body-right',
-            title: langView('ttdr_field_total_arrival_sum_vesg', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_sum_vesg', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_sum_vesg_reweighing',
+            field: 'total_sum_vesg_reweighing',
             data: function (row, type, val, meta) {
                 return row.sum_vesg_reweighing ? Number(row.sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2);
             },
             className: 'dt-body-right',
-            title: langView('ttdr_field_total_arrival_sum_vesg_reweighing', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_sum_vesg_reweighing', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_sum_vesg_deff',
+            field: 'total_sum_vesg_deff',
             data: function (row, type, val, meta) {
                 return row.sum_vesg_deff ? Number(row.sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2);
             },
             className: 'dt-body-right',
-            title: langView('ttdr_field_total_arrival_sum_vesg_deff', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_sum_vesg_deff', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_rod_abbr',
+            field: 'total_rod_abbr',
             data: function (row, type, val, meta) {
                 return row.rod_abbr;
             },
             className: 'dt-body-center shorten mw-50',
-            title: langView('ttdr_field_total_arrival_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_perent_wagon',
+            field: 'total_perent_wagon',
             data: function (row, type, val, meta) {
                 return row.perent_wagon;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_total_arrival_perent_wagon', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_perent_wagon', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_sap_cargo_code',
+            field: 'total_sap_cargo_code',
             data: function (row, type, val, meta) {
                 return row.sap_cargo_code;
             },
             className: 'dt-body-center shorten mw-100',
-            title: langView('ttdr_field_total_arrival_sap_cargo_code', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_sap_cargo_code', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_sap_cargo_name',
+            field: 'total_sap_cargo_name',
             data: function (row, type, val, meta) {
                 return row.sap_cargo_name;
             },
             className: 'dt-body-center mw-150',
-            title: langView('ttdr_field_total_arrival_sap_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_sap_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_station_from_name',
+            field: 'total_station_from_name',
             data: function (row, type, val, meta) {
                 return row.station_from_name;
             },
             className: 'dt-body-center mw-100',
-            title: langView('ttdr_field_total_arrival_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_division_abbr',
+            field: 'total_division_abbr',
             data: function (row, type, val, meta) {
                 return row.division_abbr;
             },
             className: 'dt-body-center mw-100',
-            title: langView('ttdr_field_total_arrival_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
-            field: 'total_arrival_station_on_name',
+            field: 'total_station_on_name',
             data: function (row, type, val, meta) {
                 return row.station_on_name;
             },
             className: 'dt-body-center mw-100',
-            title: langView('ttdr_field_total_arrival_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_total_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         //----------------------------------------------------
         // ОТПРАВКА ДЕТАЛЬНО
@@ -2701,13 +2710,13 @@
     table_td_report.prototype.init_columns_adoption_cargo_operation_amkr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_operator_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_limiting_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -2715,9 +2724,9 @@
     table_td_report.prototype.init_columns_adoption_operator_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_operator_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_limiting_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -2725,13 +2734,13 @@
     table_td_report.prototype.init_columns_adoption_cargo_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_group_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_certification_data', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_certification_data', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -2739,11 +2748,11 @@
     table_td_report.prototype.init_columns_adoption_group_cargo_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_group_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -2751,59 +2760,59 @@
     table_td_report.prototype.init_columns_adoption_genus_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_rod_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_perent_wagon', title: null, class: null });
+        collums.push({ field: 'total_rod_abbr', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_cargo_sap_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_sap_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_sap_cargo_code', title: null, class: null });
-        collums.push({ field: 'total_arrival_sap_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_sap_cargo_code', title: null, class: null });
+        collums.push({ field: 'total_sap_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_station_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_station_from_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_station_from_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_division_to_arr = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_division_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_certification_data', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_division_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_certification_data', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_to_gs = function () {
         var collums = [];
         collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_arrival_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_station_on_name', title: null, class: null });
-        collums.push({ field: 'total_arrival_division_abbr', title: null, class: null });
-        collums.push({ field: 'total_arrival_count_wagon', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_reweighing', title: null, class: null });
-        collums.push({ field: 'total_arrival_sum_vesg_deff', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_station_on_name', title: null, class: null });
+        collums.push({ field: 'total_division_abbr', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей incoming_outgoing_car
@@ -2838,6 +2847,19 @@
         collums.push({ field: 'curr_wagons_rent_limiting_abbr', title: null, class: null });
         collums.push({ field: 'curr_wagons_rent_start', title: null, class: null });
         collums.push({ field: 'curr_wagons_rent_end', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей outgoing_cargo_operator
+    table_td_report.prototype.init_columns_outgoing_cargo_operator = function () {
+        var collums = [];
+        collums.push({ field: 'total_period', title: null, class: null });
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
+        //collums.push({ field: 'total_cargo_name', title: null, class: null });
+        //collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -3118,6 +3140,20 @@
     };
     //
     table_td_report.prototype.init_button_list_wagons_rent = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_outgoing_cargo_operator = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -3602,6 +3638,67 @@
                 this.table_columns = this.init_columns_list_wagons_rent();
                 this.table_buttons = this.init_button_list_wagons_rent();
                 this.dom = 'Bfrtip';
+                break;
+            };
+            case 'outgoing_cargo_operator': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                //this.columnDefs = [{ visible: false, targets: 3 }];
+                this.order_column = [2, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_outgoing_cargo_operator();
+                this.table_buttons = this.init_button_outgoing_cargo_operator();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.cargo_out_group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="5">' + group.cargo_out_group_name + '</td></tr>');
+                                last = group.cargo_out_group_name;
+                                count = group.count_wagon;
+                                sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                    };
+                };
                 break;
             };
             // Таблица составы по умолчанию (если не выставят тип отчета)
@@ -4134,16 +4231,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4155,7 +4252,7 @@
                         sum_count_wagon += el.count_wagon;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 break;
@@ -4174,16 +4271,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4202,16 +4299,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4224,7 +4321,7 @@
                         sum_count_wagon += el.count_wagon;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 break;
@@ -4243,16 +4340,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4271,16 +4368,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4299,16 +4396,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
@@ -4327,16 +4424,16 @@
                         sum_vesg_deff += el.sum_vesg_deff;
                     });
                 }
-                this.obj_t_report.columns('.fl-total_arrival_count_wagon').every(function () {
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
                     $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_reweighing').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_reweighing').every(function () {
                     $(this.footer()).html(sum_vesg_reweighing ? Number(sum_vesg_reweighing / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-total_arrival_sum_vesg_deff').every(function () {
+                this.obj_t_report.columns('.fl-total_sum_vesg_deff').every(function () {
                     $(this.footer()).html(sum_vesg_deff ? Number(sum_vesg_deff / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;

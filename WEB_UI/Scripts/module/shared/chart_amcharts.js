@@ -423,6 +423,204 @@
             return this.chart.get("colors").getIndex(this.series.columns.indexOf(target));
         }.bind(this));
     };
+    // Инициализация круговая диаграмма
+    chart_amcharts.prototype.init_pie_exploding_pie_chart = function () {
+
+        this.container = this.root.container.children.push(
+            am5.Container.new(this.root, {
+                width: am5.p100,
+                height: am5.p100,
+                layout: this.root.horizontalLayout
+            })
+        );
+
+        // Create main chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        this.chart = this.container.children.push(
+            am5percent.PieChart.new(this.root, {
+                tooltip: am5.Tooltip.new(this.root, {})
+            })
+        );
+
+        // Create series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        this.series = this.chart.series.push(
+            am5percent.PieSeries.new(this.root, {
+                valueField: "value",
+                categoryField: "name",
+                alignLabels: false
+            })
+        );
+
+        this.series.labels.template.setAll({
+            textType: "circular",
+            radius: 4
+        });
+        this.series.ticks.template.set("visible", false);
+        this.series.slices.template.set("toggleKey", "none");
+
+        // add events
+        this.series.slices.template.events.on("click", function (e) {
+            this.selectSlice(e.target);
+        }.bind(this));
+
+        // Create sub chart
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+        var subChart = this.container.children.push(
+            am5percent.PieChart.new(this.root, {
+                radius: am5.percent(50),
+                tooltip: am5.Tooltip.new(this.root, {})
+            })
+        );
+
+        // Create sub series
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+        this.subSeries = subChart.series.push(
+            am5percent.PieSeries.new(this.root, {
+                valueField: "value",
+                categoryField: "name"
+            })
+        );
+
+        //this.subData = [];
+
+        //if (this.settings.list_name) {
+        //    $.each(this.settings.list_name, function (key, el) {
+        //        this.subData.push({ name: el['cargo_group_name_' + App.Lang], value: 0 });
+        //    }.bind(this));
+        //}
+        //this.subSeries.data.setAll(this.subData)
+
+        //this.subSeries.data.setAll([
+        //    { name: "АПП рр", value: 0 },
+        //    { name: "B", value: 0 },
+        //    { name: "C", value: 0 },
+        //    { name: "D", value: 0 },
+        //    { name: "E", value: 0 },
+        //    { name: "F", value: 0 },
+        //    { name: "G", value: 0 }
+        //]);
+
+        this.subSeries.data.setAll([
+            { name: "1", value: 0 },
+            { name: "2", value: 0 },
+            { name: "3", value: 0 },
+            { name: "4", value: 0 },
+            { name: "5", value: 0 },
+            { name: "6", value: 0 },
+            { name: "7", value: 0 },
+            { name: "8", value: 0 },
+            { name: "9", value: 0 },
+            { name: "10", value: 0 },
+        ]);
+
+        this.subSeries.slices.template.set("toggleKey", "none");
+
+        this.selectedSlice;
+
+        this.series.on("startAngle", function () {
+            updateLines.call(this);
+        }.bind(this));
+
+        this.container.events.on("boundschanged", function () {
+            this.root.events.on("frameended", function () {
+                updateLines.call(this);
+            }.bind(this))
+        }.bind(this))
+
+        function updateLines() {
+            if (this.selectedSlice) {
+                var startAngle = this.selectedSlice.get("startAngle");
+                var arc = this.selectedSlice.get("arc");
+                var radius = this.selectedSlice.get("radius");
+
+                var x00 = radius * am5.math.cos(startAngle);
+                var y00 = radius * am5.math.sin(startAngle);
+
+                var x10 = radius * am5.math.cos(startAngle + arc);
+                var y10 = radius * am5.math.sin(startAngle + arc);
+
+                var subRadius = this.subSeries.slices.getIndex(0).get("radius");
+                var x01 = 0;
+                var y01 = -subRadius;
+
+                var x11 = 0;
+                var y11 = subRadius;
+
+                var point00 = this.series.toGlobal({ x: x00, y: y00 });
+                var point10 = this.series.toGlobal({ x: x10, y: y10 });
+
+                var point01 = this.subSeries.toGlobal({ x: x01, y: y01 });
+                var point11 = this.subSeries.toGlobal({ x: x11, y: y11 });
+
+                this.line0.set("points", [point00, point01]);
+                this.line1.set("points", [point10, point11]);
+            }
+        }
+
+        // lines
+        this.line0 = this.container.children.push(
+            am5.Line.new(this.root, {
+                position: "absolute",
+                stroke: this.root.interfaceColors.get("text"),
+                strokeDasharray: [2, 2]
+            })
+        );
+        this.line1 = this.container.children.push(
+            am5.Line.new(this.root, {
+                position: "absolute",
+                stroke: this.root.interfaceColors.get("text"),
+                strokeDasharray: [2, 2]
+            })
+        );
+
+        //-----------------
+
+        this.selectSlice = function(slice) {
+            this.selectedSlice = slice;
+            var dataItem = slice.dataItem;
+            var dataContext = dataItem.dataContext;
+
+            if (dataContext) {
+                var i = 0;
+                this.subSeries.data.each(function (dataObject) {
+                    var dataObj = dataContext.subData[i];
+                    if (dataObj) {
+                        this.subSeries.data.setIndex(i, dataObj);
+                        if (!this.subSeries.dataItems[i].get("visible")) {
+                            this.subSeries.dataItems[i].show();
+                        }
+                    }
+                    else {
+                        this.subSeries.dataItems[i].hide();
+                    }
+
+                    i++;
+                }.bind(this));
+            }
+
+            var middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
+            var firstAngle = this.series.dataItems[0].get("slice").get("startAngle");
+
+            this.series.animate({
+                key: "startAngle",
+                to: firstAngle - middleAngle,
+                duration: 1000,
+                easing: am5.ease.out(am5.ease.cubic)
+            });
+            this.series.animate({
+                key: "endAngle",
+                to: firstAngle - middleAngle + 360,
+                duration: 1000,
+                easing: am5.ease.out(am5.ease.cubic)
+            });
+        }
+
+        this.series.events.on("datavalidated", function () {
+            this.selectSlice(this.series.slices.getIndex(0));
+        }.bind(this));
+    };
+
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -459,7 +657,11 @@
                 this.init_radial_histogram();
                 break;
             };
-            // 
+            // круговая диаграмма
+            case 'pie_exploding_pie_chart': {
+                this.init_pie_exploding_pie_chart();
+                break;
+            };
             default: {
                 break;
             };
@@ -475,12 +677,14 @@
             alert: null,
             type_chart: null,     // 
             fn_init: null,
+            list_name: null,
         }, options);
 
         this.root = null;
         this.xRenderer = null;
         this.container = null;
         this.series = null;
+        this.subSeries = null;
         this.chart = null;
         this.cursor = null;
         this.xAxis = null;
@@ -497,7 +701,6 @@
             //
             this.init_type_chart();
         }.bind(this));
-
 
         this.data = [];
 
@@ -538,6 +741,10 @@
             };
             case 'radial_histogram': {
                 this.view_radial_histogram(data);
+                break;
+            };
+            case 'pie_exploding_pie_chart': {
+                this.view_pie_exploding_pie_chart(data);
                 break;
             };
             // 
@@ -761,6 +968,18 @@
             this.chart.appear(1000, 100);
         }
 
+    };
+    // Круговая диаграмма
+    chart_amcharts.prototype.view_pie_exploding_pie_chart = function (data) {
+        //if (this.chart) {
+        // Set data
+        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+        this.series.data.setAll(data);
+
+        //this.series.appear(1000, 100);
+
+        //this.selectSlice(this.series.slices.getIndex(0))
+        //}
     };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения

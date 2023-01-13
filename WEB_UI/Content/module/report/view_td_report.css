@@ -11747,7 +11747,8 @@ fieldset {
 #adoption-sap-to-arr-chart,
 #adoption-station-to-arr-chart,
 #adoption-division-to-arr-chart,
-#adoption-to-gs-chart {
+#adoption-to-gs-chart,
+#outgoing-cargo-operator-chart {
     width: 100%;
     height: 500px;
 }

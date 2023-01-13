@@ -428,6 +428,12 @@ namespace WEB_UI.Controllers.api
 
         public string outgoing_uz_vagon_cargo_group_name_en { get; set; }
 
+        public int? outgoing_uz_vagon_id_out_group { get; set; }
+
+        public string outgoing_uz_vagon_cargo_out_group_name_ru { get; set; }
+
+        public string outgoing_uz_vagon_cargo_out_group_name_en { get; set; }
+
         public int? outgoing_uz_vagon_id_cargo_etsng { get; set; }
 
         public int? outgoing_uz_vagon_cargo_etsng_code { get; set; }
