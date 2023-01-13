@@ -39,6 +39,7 @@
         this.list_detention_return = null;
         this.list_cargo = null;
         this.list_cargo_group = null;
+        this.list_cargo_out_group = null;
         this.list_cargo_etsng = null;
         this.list_cargo_gng = null;
         this.list_external_station = null;
@@ -244,6 +245,18 @@
                             this.list_cargo_group = data;
                             process--;
                             result.push('cargo_group');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
+                if (table === 'cargo_out_group') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_cargo_out_group) {
+                        process++;
+                        this.getCargoOutGroup(function (data) {
+                            this.list_cargo_out_group = data;
+                            process--;
+                            result.push('cargo_out_group');
                             out_load(process);
                         }.bind(this));
                     };
@@ -1508,6 +1521,30 @@
             },
         });
     };
+    //======= Directory_CargoOutGroup (Справочник группа грузов) ======================================
+    //
+    ids_directory.prototype.getCargoOutGroup = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/cargo_out_group/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getCargoOutGroup", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= Directory_CargoETSNG (Справочник грузов ЕТСНГ) ======================================
     //
     ids_directory.prototype.getCargoETSNG = function (callback) {
@@ -2279,6 +2316,23 @@
     ids_directory.prototype.getCargoGroup_Of_CultureName = function (name, text) {
         if (this.list_cargo_group) {
             var obj = getObjects(this.list_cargo_group, name + '_' + App.Lang, text);
+            return obj;
+        }
+        return null;
+    };
+    //*======= ids_directory.list_cargo_out_group  (Справочник группы грузов по отправке) ======================================
+    //
+    ids_directory.prototype.getCargoOutGroup_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_cargo_out_group, id);
+    };
+    //
+    ids_directory.prototype.getListCargoOutGroup = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_cargo_out_group, fvalue, ftext, lang, filter);
+    };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getCargoOutGroup_Of_CultureName = function (name, text) {
+        if (this.list_cargo_out_group) {
+            var obj = getObjects(this.list_cargo_out_group, name + '_' + App.Lang, text);
             return obj;
         }
         return null;
