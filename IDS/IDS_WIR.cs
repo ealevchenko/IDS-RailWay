@@ -2968,7 +2968,7 @@ namespace IDS
                             TimeSpan deff = vag.create - dir_wag.create;
                             // создание двух строк состоит в диапазоне 3 часов (тоесть вагон зашел первый раз, создалась строка справочника затем отметка о прибытии)
                             // Определится с временем задержки
-                            if (deff.TotalHours <= 24*6)
+                            if (deff.TotalHours <= 24 * 6)
                             {
                                 // записи находятся в диапазоне
                                 // Получим основные обновления
@@ -7479,6 +7479,10 @@ namespace IDS
             {
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
                 EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+
+                EFDirectory_CargoETSNG ef_cargo_etsng = new EFDirectory_CargoETSNG(context);
+                EFDirectory_Cargo ef_cargo = new EFDirectory_Cargo(context);
+
                 IDSDirectory ids_dir = new IDSDirectory(this.servece_owner, context);
 
                 if (context == null)
@@ -7513,12 +7517,15 @@ namespace IDS
                                 int? code = null;
                                 string name = null;
                                 int? vesg = null;
+                                int? kod_etsng = null;
+                                int? id_cargo = null;
                                 // Проверим по агонам
                                 if (collect_v != null)
                                 {
                                     code = collect_v.kod_gng != null ? (int?)int.Parse(collect_v.kod_gng) : null;
                                     name = collect_v.name_gng;
                                     vesg = collect_v.vesg;
+                                    kod_etsng = collect_v.kod_etsng != null ? (int?)int.Parse(collect_v.kod_etsng) : null;
                                 }
                                 // Проверим на контейнер
                                 if (collect_k != null)
@@ -7526,6 +7533,15 @@ namespace IDS
                                     code = collect_k.kod_gng != null ? (int?)int.Parse(collect_k.kod_gng) : null;
                                     name = collect_k.name_gng;
                                     vesg = collect_k.vesg;
+                                    kod_etsng = collect_k.kod_etsng != null ? (int?)int.Parse(collect_k.kod_etsng) : null;
+                                }
+                                // Обновим груз 
+                                if (kod_etsng != null) {
+                                    Directory_CargoETSNG cargo_etsng = ef_cargo_etsng.Context.Where(e => e.code == kod_etsng).FirstOrDefault();
+                                    if (cargo_etsng != null) {
+                                        Directory_Cargo cargo = ef_cargo.Context.Where(c=>c.id_cargo_etsng == cargo_etsng.id).FirstOrDefault();
+                                        id_cargo = cargo != null ? (int?)cargo.id : out_uz_vag.id_cargo;
+                                    }
                                 }
 
                                 // Если неопределен код гнг, добавить
@@ -7536,6 +7552,7 @@ namespace IDS
                                 }
                                 // 
                                 out_uz_vag.id_document = document.id > 0 ? (long?)document.id : null;
+                                out_uz_vag.id_cargo = id_cargo;
                                 out_uz_vag.gruzp = vagon.gruzp;
                                 out_uz_vag.u_tara = vagon.u_tara;
                                 out_uz_vag.ves_tary_arc = vagon.ves_tary_arc;
