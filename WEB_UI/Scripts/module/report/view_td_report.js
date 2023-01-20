@@ -9,7 +9,7 @@
     var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
 
-    var list_groups_cargo = [11, 16, 20];               // Список id групп груза с порожними вагонами
+    var list_groups_cargo = [11, 16, 20, 24];               // Список id групп груза с порожними вагонами
 
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
@@ -319,9 +319,16 @@
                 setTimeout(function () {
                     this.ids_wsd.getOTPR_UZ_DOC_OUTOfNum(row[i].outgoing_uz_document_id_doc_uz, function (doc_uz_sms) {
                         row[i].otpr = null;
+                        row[i].vagon = null;
                         if (doc_uz_sms !== null) {
                             // Получим дату отправки
                             row[i].otpr = doc_uz_sms;
+                            if (doc_uz_sms && doc_uz_sms.vagon && doc_uz_sms.vagon.length > 0) {
+                                for (var iv = 0; iv < doc_uz_sms.vagon.length; iv++) {
+                                    if (Number(doc_uz_sms.vagon[iv].nomer) === row[i].num)
+                                        row[i].vagon = doc_uz_sms.vagon[iv];
+                                }
+                            }
                         };
                         GetEPDWagonsAsync.call(this, i + 1);
                     }.bind(this));
@@ -7148,18 +7155,18 @@
         this.ids_wsd.postReportOutgoingWagonOfWhere(cur_where, function (result_wagons) {
             this.wagons_outgoing = result_wagons;
             // Обновим спсисок вагонов распарсиным ЭПД
-            wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
-                // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
-                if (where) {
-                    this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
-                }
-                // Обработать и показать данные
-                this.process_data_view_report_5_1(this.wagons_outgoing, cur_where);
-                // Выход
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }.bind(this));
+            //wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
+            // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
+            if (where) {
+                this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
+            }
+            // Обработать и показать данные
+            this.process_data_view_report_5_1(this.wagons_outgoing, cur_where);
+            // Выход
+            if (typeof callback === 'function') {
+                callback();
+            }
+            //}.bind(this));
         }.bind(this));
     };
     // Обработать и показать данные
@@ -7194,12 +7201,8 @@
             var res = list_groups_cargo.indexOf(value.outgoing_uz_vagon_id_cargo);
             if (res === -1) {
                 count_load++;
-                if (value.otpr && value.otpr.vagon && value.otpr.vagon.length > 0 && value.otpr.vagon[0].collect_v && value.otpr.vagon[0].collect_v.length > 0 && value.otpr.vagon[0].collect_v[0].vesg) {
-                    sum_vesg += value.otpr.vagon[0].collect_v[0].vesg;
-                }
-                if (value.otpr && value.otpr.vagon && value.otpr.vagon.length > 0 && value.otpr.vagon[0].gruzp) {
-                    sum_gruzp += value.otpr.vagon[0].gruzp;
-                }
+                sum_vesg += value.outgoing_uz_vagon_vesg;
+                sum_gruzp += value.outgoing_uz_vagon_gruzp;
             }
             // Список групп отправки
             var group_sostav_outgoing = this.list_group_sostav_outgoing.find(function (o) { return o.id === value.outgoing_sostav_id }.bind(this));
@@ -7646,7 +7649,7 @@
         if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
         if (this.select_payer_sender_name) { this.select_payer_sender_name.val(-1); }
         if (this.select_code_payer_sender) { this.select_code_payer_sender.val(-1); }
-        if (this.select_out_division) {
+        if (this.table_out_common_detali) {
             this.wagons_outgoing = [];
             this.clone_wagons_outgoing = [];
             this.process_data_view_report_5_1(this.clone_wagons_outgoing, null);
@@ -7728,7 +7731,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_clear_select_report_3_1();
+                this.action_clear_select_report_6_1();
             }.bind(this),
         });
         var bt_setup_select = new this.fe_ui.bs_button({
@@ -7742,7 +7745,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_select_report_3_1();
+                this.action_select_report_6_1();
             }.bind(this),
         });
         row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
@@ -8170,36 +8173,36 @@
         }.bind(this);
         // Загрузим справочные данные, определим поля формы правки
         //this.load_db(['cargo_out_group'], false, function (result) {
-            //-----------------------------------------------
-            // Таблица-Груз по Оператору АМКР
-            this.table_total_outgoing_cargo_operator = new TTDR('div#outgoing-cargo-operator');         // Создадим экземпляр
-            this.table_total_outgoing_cargo_operator.init({
-                alert: null,
-                detali_table: true,
-                type_report: 'outgoing_cargo_operator',     //
-                link_num: false,
-                ids_wsd: null,
-                fn_init: function () {
-                    // На проверку окончания инициализации
-                    process--;
-                    out_init(process);
-                },
-                fn_action_view_detali: function (rows) {
+        //-----------------------------------------------
+        // Таблица-Груз по Оператору АМКР
+        this.table_total_outgoing_cargo_operator = new TTDR('div#outgoing-cargo-operator');         // Создадим экземпляр
+        this.table_total_outgoing_cargo_operator.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'outgoing_cargo_operator',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
 
-                },
-            });
-            // Инициализация модуля графиков тип: Гистограмма с накоплением
-            this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
-            this.chart_total_outgoing_cargo_operator.init({
-                alert: null,
-                type_chart: 'pie_exploding_pie_chart',     //stacked_column_chart_percent
-                list_name: this.ids_dir.list_cargo_out_group,
-                fn_init: function () {
-                    // На проверку окончания инициализации
-                    process--;
-                    out_init(process);
-                },
-            });
+            },
+        });
+        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
+        this.chart_total_outgoing_cargo_operator.init({
+            alert: null,
+            type_chart: 'pie_exploding_pie_chart',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
 
 
         //}.bind(this));
@@ -8263,18 +8266,18 @@
         this.ids_wsd.postReportOutgoingWagonOfWhere(cur_where, function (result_wagons) {
             this.wagons_outgoing = result_wagons;
             // Обновим спсисок вагонов распарсиным ЭПД
-            wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
-                // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
-                if (where) {
-                    this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
-                }
-                // Обработать и показать данные
-                this.process_data_view_report_6_1(this.wagons_outgoing, cur_where);
-                // Выход
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }.bind(this));
+            //wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
+            // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
+            if (where) {
+                this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
+            }
+            // Обработать и показать данные
+            this.process_data_view_report_6_1(this.wagons_outgoing, cur_where);
+            // Выход
+            if (typeof callback === 'function') {
+                callback();
+            }
+            //}.bind(this));
         }.bind(this));
     };
     // Обработка данных для отчетов
@@ -8340,11 +8343,11 @@
                     cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
                     cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
                     count_wagon: 1,
-                    sum_vesg: el_wag.otpr && el_wag.otpr.vagon && el_wag.otpr.vagon.length > 0 && el_wag.otpr.vagon[0].collect_v && el_wag.otpr.vagon[0].collect_v.length > 0 && el_wag.otpr.vagon[0].collect_v[0].vesg ? el_wag.otpr.vagon[0].collect_v[0].vesg : 0,
+                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
                 });
             } else {
                 op.count_wagon = op.count_wagon + 1;
-                op.sum_vesg = el_wag.otpr && el_wag.otpr.vagon && el_wag.otpr.vagon.length > 0 && el_wag.otpr.vagon[0].collect_v && el_wag.otpr.vagon[0].collect_v.length > 0 && el_wag.otpr.vagon[0].collect_v[0].vesg ? op.sum_vesg + el_wag.otpr.vagon[0].collect_v[0].vesg : op.sum_vesg;
+                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
         if (typeof callback === 'function') {
@@ -8427,59 +8430,82 @@
             this.table_total_outgoing_cargo_operator.view(list_view);
 
             var data = [
-                //{
-                //    name: "Lithuania",
-                //    value: 500,
-                //    subData: [
-                //        { name: "АПП рр", value: 200 },
-                //        { name: "B", value: 150 },
-                //        { name: "C", value: 100 },
-                //        { name: "D", value: 100 }
-                //    ]
-                //},
-                //{
-                //    name: "Czechia",
-                //    value: 300,
-                //    subData: [
-                //        { name: "B", value: 150 }
-                //    ]
-                //},
-                //{
-                //    name: "Ireland",
-                //    value: 200,
-                //    subData: [
-                //        { name: "АПП рр", value: 110 },
-                //        { name: "C", value: 30 }
-                //    ]
-                //},
-                //{
-                //    name: "Germany",
-                //    value: 150,
-                //    subData: [
-                //        { name: "АПП рр", value: 80 },
-                //        { name: "B", value: 40 },
-                //        { name: "C", value: 30 }
-                //    ]
-                //},
-                //{
-                //    name: "Australia",
-                //    value: 140,
-                //    subData: [
-                //        { name: "АПП рр", value: 90 },
-                //        { name: "B", value: 40 },
-                //        { name: "C", value: 10 }
-                //    ]
-                //},
-                //{
-                //    name: "Austria",
-                //    value: 120,
-                //    subData: [
-                //        { name: "АПП рр", value: 60 },
-                //        { name: "B", value: 30 },
-                //        { name: "C", value: 30 }
-                //    ]
-                //}
+
             ];
+
+            //[
+            //{
+            //    name: "Lithuania",
+            //    value: 500,
+            //    subData: [
+            //        { name: "АПП рр", value: 200 },
+            //        { name: "B", value: 150 },
+            //        { name: "C", value: 100 },
+            //        { name: "D", value: 100 }
+            //    ]
+            //},
+            //{
+            //    name: "Czechia",
+            //    value: 300,
+            //    subData: [
+            //        { name: "B", value: 150 }
+            //    ]
+            //},
+            //{
+            //    name: "Ireland",
+            //    value: 200,
+            //    subData: [
+            //        { name: "АПП рр", value: 110 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //},
+            //{
+            //    name: "Germany",
+            //    value: 150,
+            //    subData: [
+            //        { name: "АПП рр", value: 80 },
+            //        { name: "B", value: 40 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //},
+            //{
+            //    name: "Australia",
+            //    value: 140,
+            //    subData: [
+            //        { name: "АПП рр", value: 90 },
+            //        { name: "B", value: 40 },
+            //        { name: "C", value: 10 }
+            //    ]
+            //},
+            //{
+            //    name: "Austria",
+            //    value: 120,
+            //    subData: [
+            //        { name: "АПП рр", value: 60 },
+            //        { name: "B", value: 30 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //}
+            //];
+            if (list_view === null || list_view.length === 0) {
+                data.push({
+                    name: "not",
+                    value: 0,
+                    subData: [
+                        { name: "1", value: 0 },
+                        { name: "2", value: 0 },
+                        { name: "3", value: 0 },
+                        { name: "4", value: 0 },
+                        { name: "5", value: 0 },
+                        { name: "6", value: 0 },
+                        { name: "7", value: 0 },
+                        { name: "8", value: 0 },
+                        { name: "9", value: 0 },
+                        { name: "10", value: 0 },
+                    ]
+                });
+            };
+
             $.each(list_view, function (key, element) {
                 var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
                 if (gn === undefined) {
@@ -8514,37 +8540,46 @@
             this.chart_total_outgoing_cargo_operator.view(this.chart_data[0]);
         }
     };
+
+    // Действие кнопки обновим
+    view_td_report.prototype.action_select_report_6_1 = function () {
+        this.out_clear();
+        LockScreen(langView('vtdr_load_outgoing_cars', App.Langs));
+        this.load_select_report_6_1(null, function () {
+            LockScreenOff();
+        }.bind(this))
+    };
+    // Очистить выбор
+    view_td_report.prototype.action_clear_select_report_6_1 = function () {
+        this.switch_laden.val(false);
+        this.switch_accounting.val(false);
+        this.switch_client.val(false);
+        this.switch_not_client.val(false);
+        this.switch_paid.val(false);
+        this.select_station_amkr.val(-1);
+        // Обработать и показать данные
+        this.process_data_view_report_6_1(this.clone_wagons_outgoing, null);
+        LockScreenOff();
+    };
     // Очистить таблицы
     view_td_report.prototype.clear_report_6_1 = function () {
-        //if (this.switch_laden) { this.switch_laden.val(false); }
-        //if (this.switch_accounting) { this.switch_accounting.val(false); }
-        //if (this.switch_client) { this.switch_client.val(false); }
-        //if (this.switch_not_client) { this.switch_not_client.val(false); }
-        //if (this.switch_paid) { this.switch_paid.val(false); }
-        //if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
-        //if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
-        //if (this.textarea_epd_docs) { this.textarea_epd_docs.val(''); }
-        //if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
-        //if (this.select_limiting) { this.select_limiting.val(-1); }
-        //if (this.select_owners) { this.select_owners.val(-1); }
-        //if (this.select_station_from) { this.select_station_from.val(-1); }
-        //if (this.select_cargo) { this.select_cargo.val(-1); }
-        //if (this.select_certification_data) { this.select_certification_data.val(-1); }
-        //if (this.select_cargo_sap) { this.select_cargo_sap.val(-1); }
-        //if (this.select_group_arrival) { this.select_group_arrival.val(-1); }
-        //if (this.select_consignee) { this.select_consignee.val(-1); }
-        //if (this.select_division) { this.select_division.val(-1); }
-        //if (this.select_genus) { this.select_genus.val(-1); }
-        //if (this.select_condition) { this.select_condition.val(-1); }
-        //if (this.select_payer_name) { this.select_payer_name.val(-1); }
-        //if (this.select_payer_code) { this.select_payer_code.val(-1); }
-        //if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
-        //if (this.textarea_epd_docs) {
-        //    this.wagons_adoption = [];
-        //    this.clone_wagons_adoption = [];
-        //    this.process_data_view_report_2_1(this.clone_wagons_adoption, null);
-        //    LockScreenOff();
-        //}
+        if (this.switch_laden) { this.switch_laden.val(false); }
+        if (this.switch_accounting) { this.switch_accounting.val(false); }
+        if (this.switch_client) { this.switch_client.val(false); }
+        if (this.switch_not_client) { this.switch_not_client.val(false); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_limiting) { this.select_limiting.val(-1); }
+        if (this.select_out_division) { this.select_out_division.val(-1); }
+        if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
+        if (this.table_total_outgoing_cargo_operator) {
+            this.wagons_outgoing = [];
+            this.clone_wagons_outgoing = [];
+            this.process_data_view_report_6_1(this.clone_wagons_outgoing, null);
+            LockScreenOff();
+        }
     };
     //
     view_td_report.prototype.out_clear = function () {
