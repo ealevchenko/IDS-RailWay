@@ -974,6 +974,9 @@
         //if (this.chart) {
         // Set data
         // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+
+
+
         this.series.data.setAll(data);
 
         //this.series.appear(1000, 100);
