@@ -218,8 +218,8 @@ namespace IDS
                 ParkState_Station pss_last = ef_pss.Context.Where(p => p.id_station == id_station).OrderByDescending(s => s.state_on).FirstOrDefault();
                 if (pss_last != null)
                 {
-                    // Проверим на дату (дата новая не должна быть равна или меньше последней
-                    if (pss_last.state_on >= date_status_on) return (int)errors_base.error_date; // Ошибка
+                    //!!!Шуба Проверим на дату (дата новая не должна быть равна или меньше последней
+                    // if (pss_last.state_on >= date_status_on) return (int)errors_base.error_date; // Ошибка
                 }
                 // Создаем новую запись
                 ParkState_Station pss = new ParkState_Station()
