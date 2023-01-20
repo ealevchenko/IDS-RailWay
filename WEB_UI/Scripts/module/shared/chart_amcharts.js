@@ -512,6 +512,16 @@
             { name: "8", value: 0 },
             { name: "9", value: 0 },
             { name: "10", value: 0 },
+            { name: "11", value: 0 },
+            { name: "12", value: 0 },
+            { name: "13", value: 0 },
+            { name: "14", value: 0 },
+            { name: "15", value: 0 },
+            { name: "16", value: 0 },
+            { name: "17", value: 0 },
+            { name: "18", value: 0 },
+            { name: "19", value: 0 },
+            { name: "20", value: 0 },
         ]);
 
         this.subSeries.slices.template.set("toggleKey", "none");
