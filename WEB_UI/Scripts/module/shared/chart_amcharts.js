@@ -586,7 +586,7 @@
 
         //-----------------
 
-        this.selectSlice = function(slice) {
+        this.selectSlice = function (slice) {
             this.selectedSlice = slice;
             var dataItem = slice.dataItem;
             var dataContext = dataItem.dataContext;
@@ -630,7 +630,79 @@
             this.selectSlice(this.series.slices.getIndex(0));
         }.bind(this));
     };
+    // Инициализация Разделенная гистограмма
+    chart_amcharts.prototype.init_partitioned_bar_chart = function () {
+        // Create chart
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/
+        this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
+            panX: false,
+            panY: false,
+            wheelX: "none",
+            wheelY: "none",
+            layout: this.root.horizontalLayout
+        }));
+        // Add legend
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+        //this.legendData = [];
+        this.legend = this.chart.children.push(
+            am5.Legend.new(this.root, {
+                nameField: "name",
+                fillField: "color",
+                strokeField: "color",
+                //centerY: am5.p50,
+                marginLeft: 20,
+                y: 20,
+                layout: this.root.verticalLayout,
+                clickTarget: "none"
+            })
+        );
+        // Create axes
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+        this.yAxis = this.chart.yAxes.push(am5xy.CategoryAxis.new(this.root, {
+            categoryField: "name",
+            renderer: am5xy.AxisRendererY.new(this.root, {
+                minGridDistance: 10
+            }),
+            tooltip: am5.Tooltip.new(this.root, {})
+        }));
 
+        this.yAxis.get("renderer").labels.template.setAll({
+            fontSize: 12,
+            location: 0.5
+        })
+
+        //this.yAxis.data.setAll(data);
+
+        this.xAxis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
+            renderer: am5xy.AxisRendererX.new(this.root, {}),
+            tooltip: am5.Tooltip.new(this.root, {})
+        }));
+
+        // Add series
+        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+        this.series = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
+            xAxis: this.xAxis,
+            yAxis: this.yAxis,
+            valueXField: "value",
+            categoryYField: "name",
+            tooltip: am5.Tooltip.new(this.root, {
+                pointerOrientation: "horizontal"
+            })
+        }));
+
+        this.series.columns.template.setAll({
+            tooltipText: "{categoryY}: [bold]{valueX}[/]",
+            width: am5.percent(90),
+            strokeOpacity: 0
+        });
+
+        //// Add cursor
+        //// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+        //var cursor = this.chart.set("cursor", am5xy.XYCursor.new(this.root, {
+        //    xAxis: this.xAxis,
+        //    yAxis: this.yAxis
+        //}));
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -670,6 +742,11 @@
             // круговая диаграмма
             case 'pie_exploding_pie_chart': {
                 this.init_pie_exploding_pie_chart();
+                break;
+            };
+            // Разделенная гистограмма
+            case 'partitioned_bar_chart': {
+                this.init_partitioned_bar_chart();
                 break;
             };
             default: {
@@ -755,6 +832,11 @@
             };
             case 'pie_exploding_pie_chart': {
                 this.view_pie_exploding_pie_chart(data);
+                break;
+            };
+            // Разделенная гистограмма
+            case 'partitioned_bar_chart': {
+                this.view_partitioned_bar_chart(data);
                 break;
             };
             // 
@@ -984,16 +1066,129 @@
         //if (this.chart) {
         // Set data
         // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
-
-
-
         this.series.data.setAll(data);
-
         //this.series.appear(1000, 100);
 
         //this.selectSlice(this.series.slices.getIndex(0))
         //}
     };
+    // Разделенная гистограмма
+    chart_amcharts.prototype.view_partitioned_bar_chart = function (data) {
+        if (this.chart && this.series) {
+            //
+
+            // Очистим отчет
+            this.chart.series.clear();
+            this.yAxis.axisRanges.clear();
+
+            this.rng = [];
+            var index = 0;
+
+            // Подготовим данные
+            $.each(data, function (key, el) {
+                var res = this.rng.find(function (o) { return o.group === el.group }.bind(this));
+                if (res === undefined) {
+                    this.rng.push({ group: el.group, value: el.value, name: el.name, index: index });
+                    index++;
+                } else {
+                    if (el.value > res.value) {
+                        res.value = el.value;
+                        res.name = el.name;
+                    }
+                }
+            }.bind(this));
+
+            this.legendData = [];
+
+            this.yAxis.data.setAll(data);
+
+            this.series.columns.template.adapters.add("fill", function (fill, target) {
+                if (target.dataItem) {
+
+                    var group = this.rng.find(function (o) { return o.group === target.dataItem.dataContext.group }.bind(this));
+                    if (group) {
+                        return this.chart.get("colors").getIndex(group.index);
+                    }
+
+                    //switch (target.dataItem.dataContext.region) {
+                    //    case "Central":
+                    //        return this.chart.get("colors").getIndex(0);
+                    //        break;
+                    //    case "East":
+                    //        return this.chart.get("colors").getIndex(1);
+                    //        break;
+                    //    case "South":
+                    //        return this.chart.get("colors").getIndex(2);
+                    //        break;
+                    //    case "West":
+                    //        return this.chart.get("colors").getIndex(3);
+                    //        break;
+                    //}
+                }
+                return fill;
+            }.bind(this))
+
+            this.series.data.setAll(data);
+
+            function createRange(label, category, color) {
+                var rangeDataItem = this.yAxis.makeDataItem({
+                    category: category
+                });
+
+                var range = this.yAxis.createAxisRange(rangeDataItem);
+
+                rangeDataItem.get("label").setAll({
+                    fill: color,
+                    text: label,
+                    location: 1,
+                    fontWeight: "bold",
+                    dx: -130
+                });
+
+                rangeDataItem.get("grid").setAll({
+                    stroke: color,
+                    strokeOpacity: 1,
+                    location: 1
+                });
+
+                rangeDataItem.get("tick").setAll({
+                    stroke: color,
+                    strokeOpacity: 1,
+                    location: 1,
+                    visible: true,
+                    length: 130
+                });
+
+                this.legendData.push({ name: label, color: color });
+
+            }
+
+            $.each(this.rng, function (key, el) {
+                createRange.call(this, el.group, el.name, this.chart.get("colors").getIndex(el.index));
+            }.bind(this));
+
+            //createRange.call(this, "Central", "Texas", this.chart.get("colors").getIndex(0));
+            //createRange.call(this, "East", "New York", this.chart.get("colors").getIndex(1));
+            //createRange.call(this, "South", "Florida", this.chart.get("colors").getIndex(2));
+            //createRange.call(this, "West", "California", this.chart.get("colors").getIndex(3));
+
+            this.legend.data.setAll(this.legendData);
+
+            // Add cursor
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+            var cursor = this.chart.set("cursor", am5xy.XYCursor.new(this.root, {
+                xAxis: this.xAxis,
+                yAxis: this.yAxis
+            }));
+
+
+            // Make stuff animate on load
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            this.series.appear();
+            this.chart.appear(1000, 100);
+        }
+    };
+
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     chart_amcharts.prototype.out_clear = function () {

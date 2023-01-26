@@ -7663,13 +7663,17 @@
         this.$main_report.empty();
         this.report = 6;        // номер отчета
         this.report_panel = 0;  // номер под-отчета
-        this.chart_data = [];
-        this.chart_data[0] = [];   // Данные для графиков
-        this.chart_data[1] = [];   // Данные для графиков
-        this.chart_data[2] = [];   // Данные для графиков
-        this.chart_data[3] = [];   // Данные для графиков
-        this.chart_data[4] = [];   // Данные для графиков
-        this.chart_data[5] = [];   // Данные для графиков
+        this.chart_data_total_outgoing_cargo_operator = [];
+        //...
+        this.chart_data_total_operators = [];
+        this.chart_data_total_operators_cargo = [];
+
+        //this.chart_data[0] = [];   // Данные для графиков
+        //this.chart_data[1] = [];   // Данные для графиков
+        //this.chart_data[2] = [];   // Данные для графиков
+        //this.chart_data[3] = [];   // Данные для графиков
+        //this.chart_data[4] = [];   // Данные для графиков
+        //this.chart_data[5] = [];   // Данные для графиков
 
 
         $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
@@ -8085,10 +8089,10 @@
         // Закладка Металл ОТПР
         this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-cargo-metall');
         // Закладка ИТОГ оператор
-        this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators');
+        //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators');
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators', 6, 6);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators-cargo', 6, 6);
         //-------------------------------------------
-        // Закладка Отчет-Оператор по ПРИБ
-        //this.init_panel_horizontal_report('arr-total-operator-to-arr-tab', 'adoption-operator-to-arr', 5, 7);
         // Дабавим закладку на форму
         this.$table_view.append(this.nav_tabs_out_total.$ul).append(this.nav_tabs_out_total.$content);
         //-----------------------------------------------------------------
@@ -8098,76 +8102,31 @@
 
         // ------------------------------------------------
         // Запускаем 18 процесса инициализации (паралельно)
-        var process = 2;
+        var process = 6;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
                 this.report_panel = 0;
                 //this.view_setup_detali_report_6_1(this.report_panel);
-                //$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
-                //    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                //    switch (event.target.id) {
-                //        case 'arr-total-cargo-operator-amkr': {
-                //            this.report_panel = 0;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_cargo_operation_amkr();
-                //            break;
-                //        };
-                //        case 'arr-total-operator-to-arr': {
-                //            this.report_panel = 1;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            setTimeout(function () {
-                //                this.view_chart_total_operation_to_arr();
-                //            }.bind(this), 500);
-                //            break;
-                //        };
-                //        case 'arr-total-cargo-to-arr': {
-                //            this.report_panel = 2;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_cargo();
-                //            break;
-                //        };
-                //        case 'arr-total-group-cargo-to-arr': {
-                //            this.report_panel = 3;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_group_cargo();
-                //            break;
-                //        };
-                //        case 'arr-total-genus-to-arr': {
-                //            this.report_panel = 4;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_genus();
-                //            break;
-                //        };
-                //        case 'arr-total-sap-to-arr': {
-                //            this.report_panel = 5;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_cargo_sap();
-                //            break;
-                //        };
-                //        case 'arr-total-station-to-arr': {
-                //            this.report_panel = 6;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_station_from();
-                //            break;
-                //        };
-                //        case 'arr-total-division-to-arr': {
-                //            this.report_panel = 7;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            setTimeout(function () {
-                //                this.view_chart_total_division_from();
-                //            }.bind(this), 500);
-                //            //this.view_chart_total_division_from();
-                //            break;
-                //        };
-                //        case 'arr-total-to-gs': {
-                //            this.report_panel = 8;
-                //            this.view_setup_detali_report_3_1(this.report_panel);
-                //            this.view_chart_total_gs();
-                //            break;
-                //        };
-                //    };
-                //}.bind(this));
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    switch (event.target.id) {
+                        case 'out-total-cargo': {
+                            this.report_panel = 0;
+
+                            this.view_chart_total_outgoing_cargo_operator();
+                            break;
+                        };
+                        //...
+                        case 'out-total-operators': {
+                            this.report_panel = 5;
+
+                            this.view_chart_total_operators();
+                            this.view_chart_total_operators_cargo()
+                            break;
+                        };
+                    };
+                }.bind(this));
                 LockScreenOff();
             }
         }.bind(this);
@@ -8178,7 +8137,7 @@
         this.table_total_outgoing_cargo_operator = new TTDR('div#outgoing-cargo-operator');         // Создадим экземпляр
         this.table_total_outgoing_cargo_operator.init({
             alert: null,
-            detali_table: true,
+            detali_table: false,
             type_report: 'outgoing_cargo_operator',     //
             link_num: false,
             ids_wsd: null,
@@ -8203,10 +8162,66 @@
                 out_init(process);
             },
         });
+        //-----------------------------------------------
+        // Таблица-ИТОГ оператор
+        this.table_total_operators = new TTDR('div#outgoing-total-operators');         // Создадим экземпляр
+        this.table_total_operators.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_total_operators',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
 
+            },
+        });
+        // Инициализация модуля графиков тип: pie_chart
+        this.chart_total_operators = new CAM('div#outgoing-total-operators-chart');         // Создадим экземпляр
+        this.chart_total_operators.init({
+            alert: null,
+            type_chart: 'pie_chart',     //stacked_column_chart_percent
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        //-----------------------------------------------
+        // Таблица-ИТОГ оператор-груз
+        this.table_total_operators_cargo = new TTDR('div#outgoing-total-operators-cargo');         // Создадим экземпляр
+        this.table_total_operators_cargo.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_total_operators_cargo',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: pie_chart
+        this.chart_total_operators_cargo = new CAM('div#outgoing-total-operators-cargo-chart');         // Создадим экземпляр
+        this.chart_total_operators_cargo.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
 
         //}.bind(this));
-
     };
     // Показать отчет  "Отчет по отправлению (общий)"
     view_td_report.prototype.view_report_6_1 = function (start, stop) {
@@ -8354,6 +8369,123 @@
             callback(list_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
         }
     };
+    // ИТОГ оператор
+    view_td_report.prototype.process_data_report_6_6_1 = function (data, callback) {
+        var list_result = [];
+        var sum_count = data && data.length > 0 ? data.length : 0;
+        $.each(data, function (key, el_wag) {
+            var op = list_result.find(function (o) {
+                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator
+            }.bind(this));
+            if (!op) {
+                // Не данных 
+                list_result.push({
+                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
+                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
+                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                    count_wagon: 1,
+                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    perent_wagon: Number(100 / sum_count).toFixed(2),
+                });
+            } else {
+                op.count_wagon = op.count_wagon + 1;
+                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
+                op.perent_wagon = Number((op.count_wagon * 100) / sum_count).toFixed(2);
+            };
+        }.bind(this));
+        if (typeof callback === 'function') {
+            callback(list_result.sort(function (a, b) { return a.id_operator - b.id_operator }.bind(this)));
+        }
+    };
+    // ИТОГ оператор груз
+    view_td_report.prototype.process_data_report_6_6_2 = function (data, callback) {
+        var list_result = [];
+        var sum_count = 0;
+        $.each(data, function (key, el_wag) {
+            var op = list_result.find(function (o) {
+                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
+                    o.id_group === el_wag.outgoing_uz_vagon_id_group
+            }.bind(this));
+            sum_count = data.filter(function (i) {
+                return i.outgoing_uz_vagon_id_group === el_wag.outgoing_uz_vagon_id_group
+            }.bind(this)).length;
+            if (!op) {
+                // Не данных 
+                list_result.push({
+                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
+                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
+                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                    id_group: el_wag.outgoing_uz_vagon_id_group,
+                    group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
+                    //cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
+                    count_wagon: 1,
+                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    perent_wagon: Number(100 / sum_count).toFixed(2),
+                });
+            } else {
+                op.count_wagon = op.count_wagon + 1;
+                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
+                op.perent_wagon = Number((op.count_wagon * 100) / sum_count).toFixed(2);
+            };
+
+        }.bind(this));
+
+        var list_sort_result = [];
+
+        $.each(list_result, function (key, el) {
+            var op = list_sort_result.find(function (o) {
+                return o.id_group === el.id_group
+            }.bind(this));
+
+            if (!op) {
+                // Не данных 
+                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+                if (list && list.length > 0) {
+
+                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+
+                    //$.each(list.sort(function (a, b) { return b.count_wagon- a.count_wagon}.bind(this)), function (key, el) {
+
+                    //}.bind(this));
+                }
+            }
+        }.bind(this));
+
+        //$.each(data, function (key, el_wag) {
+        //    var op = list_result.find(function (o) {
+        //        return o.id_group === el_wag.outgoing_uz_vagon_id_group
+        //    }.bind(this));
+
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = data.filter(function (i) { return i.outgoing_uz_vagon_id_group === el_wag.outgoing_uz_vagon_id_group }.bind(this));
+        //        if (list && list.length > 0) {
+        //            $.each(list.sort(function (a, b) { return a.outgoing_uz_vagon_outgoing_wagons_rent_id_operator - b.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this)), function (key, el) {
+
+        //            }.bind(this));
+        //        }
+
+        //        list_result.push({
+        //            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
+        //            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
+        //            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+        //            id_group: el_wag.outgoing_uz_vagon_id_group,
+        //            group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
+        //            //cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
+        //            count_wagon: 1,
+        //            sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+        //            perent_wagon: Number(100 / sum_count).toFixed(2),
+        //        });
+        //    }
+
+
+        //}.bind(this));
+
+        if (typeof callback === 'function') {
+            //callback(list_result.sort(function (a, b) { return a.id_group - b.id_group }.bind(this)));
+            callback(list_sort_result);
+        }
+    };
     // Обработать и отображение данных на экране
     view_td_report.prototype.process_data_view_report_6_1 = function (wagons_outgoing, where) {
         // Продолжим
@@ -8363,9 +8495,10 @@
         this.total_ext_station = [];                // список Направление ОТПР
         this.total_cargo_metall = [];               // список Металл ОТПР
         this.total_operators = [];                  // список ИТОГ оператор
+        this.total_operators_cargo = [];            // список ИТОГ оператор груз
 
         // Запускаем 10 процесса инициализации (паралельно)
-        var process = 2;
+        var process = 4;
         // Выход из инициализации
         var out_process_data = function (process) {
             if (process === 0) {
@@ -8404,8 +8537,9 @@
                 //this.view_filter_report_total_station_from();
                 //// Отобразить данные в таблице Цех-грузополучатель
                 //this.view_filter_report_total_division();
-                //// Отобразить данные в таблице Отчет для ГС
-                //this.view_filter_report_total_gs();
+                // ИТОГ оператор
+                this.view_filter_report_total_operators();
+                this.view_filter_report_total_operators_cargo()
             }
         }.bind(this);
         this.process_data_select_report_6_1(wagons_outgoing, function (result) {
@@ -8414,6 +8548,17 @@
         }.bind(this));
         this.process_data_report_6_1(wagons_outgoing, function (result) {
             this.total_outgoing_cargo_operator = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        //....
+        this.process_data_report_6_6_1(wagons_outgoing, function (result) {
+            this.total_operators = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_6_6_2(wagons_outgoing, function (result) {
+            this.total_operators_cargo = result;
             process--;
             out_process_data(process);
         }.bind(this));
@@ -8539,15 +8684,271 @@
                 //}
             }.bind(this));
 
-            this.chart_data[0] = data;
+            this.chart_data_total_outgoing_cargo_operator = data;
             this.view_chart_total_outgoing_cargo_operator();
             LockScreenOff();
         }
     };
     // Вывести данные по диаграмме "Груз ОТПР"
     view_td_report.prototype.view_chart_total_outgoing_cargo_operator = function () {
-        if (this.report_panel === 0 && this.chart_data) {
-            this.chart_total_outgoing_cargo_operator.view(this.chart_data[0]);
+        if (this.report_panel === 0 && this.chart_data_total_outgoing_cargo_operator) {
+            this.chart_total_outgoing_cargo_operator.view(this.chart_data_total_outgoing_cargo_operator);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "ИТОГ оператор"
+    view_td_report.prototype.view_filter_report_total_operators = function () {
+        if (this.total_operators) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_operators));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_operators.view(list_view);
+
+            var data = [];
+
+            $.each(list_view, function (key, element) {
+                data.push({ "name": element.operator_abbr, "value": element.count_wagon });
+            }.bind(this));
+
+            this.chart_data_total_operators = data;
+            this.view_chart_total_operators();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "ИТОГ оператор"
+    view_td_report.prototype.view_chart_total_operators = function () {
+        if (this.report_panel === 5 && this.chart_data_total_operators) {
+            this.chart_total_operators.view(this.chart_data_total_operators);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "ИТОГ оператор-груз"
+    view_td_report.prototype.view_filter_report_total_operators_cargo = function () {
+        if (this.total_operators_cargo) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_operators_cargo));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_operators_cargo.view(list_view);
+
+            var data = [];
+
+            $.each(list_view, function (key, element) {
+                data.push({ "group": element.group_name, "name": element.operator_abbr + " (" + element.count_wagon + " )", "value": Number(element.count_wagon) });
+            }.bind(this));
+
+            //var data = [{
+            //    group: "Central",
+            //    name: "North Dakota",
+            //    value: 920
+            //}, {
+            //    group: "Central",
+            //    name: "South Dakota",
+            //    value: 1317
+            //}, {
+            //    group: "Central",
+            //    name: "Kansas",
+            //    value: 2916
+            //}, {
+            //    group: "Central",
+            //    name: "Iowa",
+            //    value: 4577
+            //}, {
+            //    group: "Central",
+            //    name: "Nebraska",
+            //    value: 7464
+            //}, {
+            //    group: "Central",
+            //    name: "Oklahoma",
+            //    value: 19686
+            //}, {
+            //    group: "Central",
+            //    name: "Missouri",
+            //    value: 22207
+            //}, {
+            //    group: "Central",
+            //    name: "Minnesota",
+            //    value: 29865
+            //}, {
+            //    group: "Central",
+            //    name: "Wisconsin",
+            //    value: 32125
+            //}, {
+            //    group: "Central",
+            //    name: "Indiana",
+            //    value: 53549
+            //}, {
+            //    group: "Central",
+            //    name: "Michigan",
+            //    value: 76281
+            //}, {
+            //    group: "Central",
+            //    name: "Illinois",
+            //    value: 80162
+            //}, {
+            //    group: "Central",
+            //    name: "Texas",
+            //    value: 170187
+            //}, {
+            //    group: "East",
+            //    name: "West Virginia",
+            //    value: 1209
+            //}, {
+            //    group: "East",
+            //    name: "Maine",
+            //    value: 1270
+            //}, {
+            //    group: "East",
+            //    name: "District of Columbia",
+            //    value: 2866
+            //}, {
+            //    group: "East",
+            //    name: "New Hampshire",
+            //    value: 7294
+            //}, {
+            //    group: "East",
+            //    name: "Vermont",
+            //    value: 8929
+            //}, {
+            //    group: "East",
+            //    name: "Connecticut",
+            //    value: 13386
+            //}, {
+            //    group: "East",
+            //    name: "Rhode Island",
+            //    value: 22629
+            //}, {
+            //    group: "East",
+            //    name: "Maryland",
+            //    value: 23707
+            //}, {
+            //    group: "East",
+            //    name: "Delaware",
+            //    value: 27453
+            //}, {
+            //    group: "East",
+            //    name: "Massachusetts",
+            //    value: 28639
+            //}, {
+            //    group: "East",
+            //    name: "New Jersey",
+            //    value: 35763
+            //}, {
+            //    group: "East",
+            //    name: "Ohio",
+            //    value: 78253
+            //}, {
+            //    group: "East",
+            //    name: "Pennsylvania",
+            //    value: 116522
+            //}, {
+            //    group: "East",
+            //    name: "New York",
+            //    value: 310914
+            //}, {
+            //    group: "South",
+            //    name: "South Carolina",
+            //    value: 8483
+            //}, {
+            //    group: "South",
+            //    name: "Louisiana",
+            //    value: 9219
+            //}, {
+            //    group: "South",
+            //    name: "Mississippi",
+            //    value: 10772
+            //}, {
+            //    group: "South",
+            //    name: "Arkansas",
+            //    value: 11678
+            //}, {
+            //    group: "South",
+            //    name: "Alabama",
+            //    value: 19511
+            //}, {
+            //    group: "South",
+            //    name: "Tennessee",
+            //    value: 30662
+            //}, {
+            //    group: "South",
+            //    name: "Kentucky",
+            //    value: 36598
+            //}, {
+            //    group: "South",
+            //    name: "Georgia",
+            //    value: 49103
+            //}, {
+            //    group: "South",
+            //    name: "North Carolina",
+            //    value: 55604
+            //}, {
+            //    group: "South",
+            //    name: "Virginia",
+            //    value: 70641
+            //}, {
+            //    group: "South",
+            //    name: "Florida",
+            //    value: 89479
+            //}, {
+            //    group: "West",
+            //    name: "Wyoming",
+            //    value: 1603
+            //}, {
+            //    group: "West",
+            //    name: "Idaho",
+            //    value: 4380
+            //}, {
+            //    group: "West",
+            //    name: "New Mexico",
+            //    value: 4779
+            //}, {
+            //    group: "West",
+            //    name: "Montana",
+            //    value: 5589
+            //}, {
+            //    group: "West",
+            //    name: "Utah",
+            //    value: 11223
+            //}, {
+            //    group: "West",
+            //    name: "Nevada",
+            //    value: 16729
+            //}, {
+            //    group: "West",
+            //    name: "Oregon",
+            //    value: 17431
+            //}, {
+            //    group: "West",
+            //    name: "Colorado",
+            //    value: 32110
+            //}, {
+            //    group: "West",
+            //    name: "Arizona",
+            //    value: 35283
+            //}, {
+            //    group: "West",
+            //    name: "Washington",
+            //    value: 138656
+            //}, {
+            //    group: "West",
+            //    name: "California",
+            //    value: 457731
+            //}];
+
+            //$.each(list_view, function (key, element) {
+            //    data.push({ "name": element.operator_abbr, "value": element.count_wagon });
+            //}.bind(this));
+
+            this.chart_data_total_operators_cargo = data;
+            this.view_chart_total_operators_cargo();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "ИТОГ оператор"
+    view_td_report.prototype.view_chart_total_operators_cargo = function () {
+        if (this.report_panel === 5 && this.chart_data_total_operators_cargo) {
+            this.chart_total_operators_cargo.view(this.chart_data_total_operators_cargo);
         }
     };
 

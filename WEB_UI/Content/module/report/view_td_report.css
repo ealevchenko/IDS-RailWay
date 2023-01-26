@@ -11748,7 +11748,13 @@ fieldset {
 #adoption-station-to-arr-chart,
 #adoption-division-to-arr-chart,
 #adoption-to-gs-chart,
-#outgoing-cargo-operator-chart {
+#outgoing-cargo-operator-chart,
+#outgoing-total-operators-chart {
     width: 100%;
     height: 500px;
+}
+
+#outgoing-total-operators-cargo-chart {
+    width: 100%;
+    height: 1000px;
 }
