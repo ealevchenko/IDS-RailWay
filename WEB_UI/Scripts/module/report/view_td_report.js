@@ -8534,6 +8534,20 @@
     view_td_report.prototype.view_filter_report_total_outgoing_cargo_operator = function () {
         if (this.total_outgoing_cargo_operator) {
 
+            var shorten_string = function (str) {
+                var result = '';
+                var arrayOfStrings = str.split(' ');
+                $.each(arrayOfStrings, function (key, el) {
+                    if (el.length > 1) {
+                        result += el.substr(0, 3) + '. ';
+                    } else {
+                        result += el + ' ';
+                    }
+
+                }.bind(this));
+                return result;
+            }
+
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_outgoing_cargo_operator));
             // Применим фильтр
@@ -8599,41 +8613,13 @@
             //    ]
             //}
             //];
-            if (list_view === null || list_view.length === 0) {
-                data.push({
-                    //name: "not",
-                    //value: 0,
-                    subData: [
-                        { name: "1", value: 0 },
-                        { name: "2", value: 0 },
-                        { name: "3", value: 0 },
-                        { name: "4", value: 0 },
-                        { name: "5", value: 0 },
-                        { name: "6", value: 0 },
-                        { name: "7", value: 0 },
-                        { name: "8", value: 0 },
-                        { name: "9", value: 0 },
-                        { name: "10", value: 0 },
-                        { name: "11", value: 0 },
-                        { name: "12", value: 0 },
-                        { name: "13", value: 0 },
-                        { name: "14", value: 0 },
-                        { name: "15", value: 0 },
-                        { name: "16", value: 0 },
-                        { name: "17", value: 0 },
-                        { name: "18", value: 0 },
-                        { name: "19", value: 0 },
-                        { name: "20", value: 0 },
-                    ]
-                });
-            };
 
             $.each(list_view, function (key, element) {
-                var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
+                var gn = data.find(function (o) { return o.name === shorten_string(element.cargo_out_group_name); });
                 if (gn === undefined) {
                     var subData = [];
                     subData.push({ name: element.operator_abbr, value: element.count_wagon })
-                    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon, subData: subData });
+                    data.push({ "name": shorten_string(element.cargo_out_group_name), "value": element.count_wagon, subData: subData });
 
                 } else {
                     gn.value += element.count_wagon;

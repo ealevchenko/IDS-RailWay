@@ -501,28 +501,28 @@
         //    { name: "G", value: 0 }
         //]);
 
-        this.subSeries.data.setAll([
-            { name: "1", value: 0 },
-            { name: "2", value: 0 },
-            { name: "3", value: 0 },
-            { name: "4", value: 0 },
-            { name: "5", value: 0 },
-            { name: "6", value: 0 },
-            { name: "7", value: 0 },
-            { name: "8", value: 0 },
-            { name: "9", value: 0 },
-            { name: "10", value: 0 },
-            { name: "11", value: 0 },
-            { name: "12", value: 0 },
-            { name: "13", value: 0 },
-            { name: "14", value: 0 },
-            { name: "15", value: 0 },
-            { name: "16", value: 0 },
-            { name: "17", value: 0 },
-            { name: "18", value: 0 },
-            { name: "19", value: 0 },
-            { name: "20", value: 0 },
-        ]);
+        //this.subSeries.data.setAll([
+        //    { name: "1", value: 0 },
+        //    { name: "2", value: 0 },
+        //    { name: "3", value: 0 },
+        //    { name: "4", value: 0 },
+        //    { name: "5", value: 0 },
+        //    { name: "6", value: 0 },
+        //    { name: "7", value: 0 },
+        //    { name: "8", value: 0 },
+        //    { name: "9", value: 0 },
+        //    { name: "10", value: 0 },
+        //    { name: "11", value: 0 },
+        //    { name: "12", value: 0 },
+        //    { name: "13", value: 0 },
+        //    { name: "14", value: 0 },
+        //    { name: "15", value: 0 },
+        //    { name: "16", value: 0 },
+        //    { name: "17", value: 0 },
+        //    { name: "18", value: 0 },
+        //    { name: "19", value: 0 },
+        //    { name: "20", value: 0 },
+        //]);
 
         this.subSeries.slices.template.set("toggleKey", "none");
 
@@ -539,7 +539,7 @@
         }.bind(this))
 
         function updateLines() {
-            if (this.selectedSlice) {
+            if (this.selectedSlice && this.subSeries.slices.length > 0) {
                 var startAngle = this.selectedSlice.get("startAngle");
                 var arc = this.selectedSlice.get("arc");
                 var radius = this.selectedSlice.get("radius");
@@ -565,6 +565,9 @@
 
                 this.line0.set("points", [point00, point01]);
                 this.line1.set("points", [point10, point11]);
+            } else {
+                this.line0.set("points", [{ x: 0, y: 0 }, { x: 0, y: 0 }]);
+                this.line1.set("points", [{ x: 0, y: 0 }, { x: 0, y: 0 }]);
             }
         }
 
@@ -587,43 +590,46 @@
         //-----------------
 
         this.selectSlice = function (slice) {
-            this.selectedSlice = slice;
-            var dataItem = slice.dataItem;
-            var dataContext = dataItem.dataContext;
+            if (slice) {
+                this.selectedSlice = slice;
+                var dataItem = slice.dataItem;
+                var dataContext = dataItem.dataContext;
 
-            if (dataContext) {
-                var i = 0;
-                this.subSeries.data.each(function (dataObject) {
-                    var dataObj = dataContext.subData[i];
-                    if (dataObj) {
-                        this.subSeries.data.setIndex(i, dataObj);
-                        if (!this.subSeries.dataItems[i].get("visible")) {
-                            this.subSeries.dataItems[i].show();
+                if (dataContext) {
+                    var i = 0;
+                    this.subSeries.data.each(function (dataObject) {
+                        var dataObj = dataContext.subData[i];
+                        if (dataObj) {
+                            this.subSeries.data.setIndex(i, dataObj);
+                            if (!this.subSeries.dataItems[i].get("visible")) {
+                                this.subSeries.dataItems[i].show();
+                            }
                         }
-                    }
-                    else {
-                        this.subSeries.dataItems[i].hide();
-                    }
+                        else {
+                            this.subSeries.dataItems[i].hide();
+                        }
 
-                    i++;
-                }.bind(this));
+                        i++;
+                    }.bind(this));
+                }
+
+                var middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
+                var firstAngle = this.series.dataItems[0].get("slice").get("startAngle");
+
+                this.series.animate({
+                    key: "startAngle",
+                    to: firstAngle - middleAngle,
+                    duration: 1000,
+                    easing: am5.ease.out(am5.ease.cubic)
+                });
+                this.series.animate({
+                    key: "endAngle",
+                    to: firstAngle - middleAngle + 360,
+                    duration: 1000,
+                    easing: am5.ease.out(am5.ease.cubic)
+                });
             }
 
-            var middleAngle = slice.get("startAngle") + slice.get("arc") / 2;
-            var firstAngle = this.series.dataItems[0].get("slice").get("startAngle");
-
-            this.series.animate({
-                key: "startAngle",
-                to: firstAngle - middleAngle,
-                duration: 1000,
-                easing: am5.ease.out(am5.ease.cubic)
-            });
-            this.series.animate({
-                key: "endAngle",
-                to: firstAngle - middleAngle + 360,
-                duration: 1000,
-                easing: am5.ease.out(am5.ease.cubic)
-            });
         }
 
         this.series.events.on("datavalidated", function () {
@@ -1065,14 +1071,32 @@
     };
     // Круговая диаграмма
     chart_amcharts.prototype.view_pie_exploding_pie_chart = function (data) {
-        //if (this.chart) {
-        // Set data
-        // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
-        this.series.data.setAll(data);
-        //this.series.appear(1000, 100);
+        if (this.chart && this.subSeries) {
+            // Set data
+            // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
 
-        //this.selectSlice(this.series.slices.getIndex(0))
-        //}
+            var maxSub = data.sort(function (a, b) { return b.subData.length - a.subData.length }.bind(this));
+
+            var data_subSeries = [];
+            if (maxSub && maxSub.length > 0) {
+                $.each(maxSub[0].subData, function (key, el) {
+                    data_subSeries.push({ name: el.name, value: 0 });
+                }.bind(this));
+            };
+            //else {
+            //    data_subSeries.push({ name: "1", value: 0 },);
+            //}
+
+            this.subSeries.data.clear();
+            this.subSeries.data.setAll(data_subSeries);
+            this.series.data.clear();
+            this.series.data.setAll(data);
+            //this.series.appear(1000, 100);
+            //if (this.series.slices.length > 0) {
+            //    this.selectSlice(this.series.slices.getIndex(0));
+            //}
+
+        }
     };
     // Разделенная гистограмма
     chart_amcharts.prototype.view_partitioned_bar_chart = function (data) {
