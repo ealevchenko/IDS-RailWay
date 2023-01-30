@@ -8442,45 +8442,12 @@
                 var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
                 if (list && list.length > 0) {
 
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-
-                    //$.each(list.sort(function (a, b) { return b.count_wagon- a.count_wagon}.bind(this)), function (key, el) {
-
-                    //}.bind(this));
+                    //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+                    //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.sum_vesg - b.sum_vesg }.bind(this)));
+                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.perent_wagon - b.perent_wagon }.bind(this)));
                 }
             }
         }.bind(this));
-
-        //$.each(data, function (key, el_wag) {
-        //    var op = list_result.find(function (o) {
-        //        return o.id_group === el_wag.outgoing_uz_vagon_id_group
-        //    }.bind(this));
-
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = data.filter(function (i) { return i.outgoing_uz_vagon_id_group === el_wag.outgoing_uz_vagon_id_group }.bind(this));
-        //        if (list && list.length > 0) {
-        //            $.each(list.sort(function (a, b) { return a.outgoing_uz_vagon_outgoing_wagons_rent_id_operator - b.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this)), function (key, el) {
-
-        //            }.bind(this));
-        //        }
-
-        //        list_result.push({
-        //            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
-        //            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
-        //            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
-        //            id_group: el_wag.outgoing_uz_vagon_id_group,
-        //            group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
-        //            //cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
-        //            count_wagon: 1,
-        //            sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
-        //            perent_wagon: Number(100 / sum_count).toFixed(2),
-        //        });
-        //    }
-
-
-        //}.bind(this));
-
         if (typeof callback === 'function') {
             //callback(list_result.sort(function (a, b) { return a.id_group - b.id_group }.bind(this)));
             callback(list_sort_result);
@@ -8735,7 +8702,7 @@
             var data = [];
 
             $.each(list_view, function (key, element) {
-                data.push({ "group": element.group_name, "name": element.operator_abbr + " (" + element.count_wagon + " )", "value": Number(element.count_wagon) });
+                data.push({ "group": element.group_name, "name": element.operator_abbr + "-" + element.count_wagon + "шт. (" + element.perent_wagon + "%)", "value": Number(element.perent_wagon) });
             }.bind(this));
 
             //var data = [{

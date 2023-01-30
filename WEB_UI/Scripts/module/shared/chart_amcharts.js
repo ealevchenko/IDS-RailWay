@@ -674,6 +674,8 @@
         //this.yAxis.data.setAll(data);
 
         this.xAxis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
+            min: 0,
+            max: 100,
             renderer: am5xy.AxisRendererX.new(this.root, {}),
             tooltip: am5.Tooltip.new(this.root, {})
         }));
@@ -1078,7 +1080,7 @@
             //
 
             // Очистим отчет
-            this.chart.series.clear();
+            //this.chart.series.clear();
             this.yAxis.axisRanges.clear();
 
             this.rng = [];
