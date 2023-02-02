@@ -356,8 +356,9 @@
                     pn_select.bt_create_park_status.prop('disabled', true);
                     pn_select.get_park_state_of_id(pn_select.id_park_status_select, function (patk_state) {
                         pn_select.park_state_info.text('Состояние парка на :' + getReplaceTOfDT(patk_state.state_on) + ', созданное : ' + patk_state.create_user + ' ')
-                            .append($('<label style="color:red;">' + (patk_state.applied ? '( п : ' + getReplaceTOfDT(patk_state.applied) + ' )' : '') + '</label>'))
-                            .append($('<label style="color:#0026ff;">' + (patk_state.change ? ' - ( о : ' + getReplaceTOfDT(patk_state.change) + ' )' : '') + '</label>'))
+                            //TODO:!!ВЕРНУТЬ
+                            //.append($('<label style="color:red;">' + (patk_state.applied ? '( п : ' + getReplaceTOfDT(patk_state.applied) + ' )' : '') + '</label>'))
+                            //.append($('<label style="color:#0026ff;">' + (patk_state.change ? ' - ( о : ' + getReplaceTOfDT(patk_state.change) + ' )' : '')  + '</label>'))
                             .append(pn_select.bt_apply.on('click', function (event) {
                                 event.preventDefault();
                                 pn_select.apply();

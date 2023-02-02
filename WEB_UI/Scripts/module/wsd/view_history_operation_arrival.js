@@ -102,6 +102,7 @@
         this.ids_dir = this.settings.ids_dir ? this.settings.ids_dir : new directory();
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
         // Диапазон времени
+        this.min_start = moment('2022-12-01 00:00:00')._d;
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
         this.id_station = -1; // По умолчанию не выбрана
@@ -230,6 +231,10 @@
     };
     // загрузить данные 
     view_history_operation_arrival.prototype.load_operation = function (start, stop) {
+        //TODO:!!ВЕРНУТЬ
+        if (moment(start).isBefore(this.min_start)) {
+            start = this.min_start;
+        }
         this.start = start;
         this.stop = stop;
         this.tab_sostav_arrival.load_operation_sostav_of_period(this.start, this.stop, function () {
@@ -242,6 +247,10 @@
         if (this.start && this.stop) {
             var td_wagons = this.tab_sostav_arrival.td_wagons;
             LockScreen(langView('vhoa_mess_update_operation', App.Langs));
+            //TODO:!!ВЕРНУТЬ
+            if (moment(this.start).isBefore(this.min_start)) {
+                this.start = this.min_start;
+            }
             this.tab_sostav_arrival.load_operation_sostav_of_period(this.start, this.stop, function () {
                 this.view();
                 $.each(td_wagons, function (i, el) {
