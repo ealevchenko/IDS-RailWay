@@ -7664,6 +7664,7 @@
         this.report = 6;        // номер отчета
         this.report_panel = 0;  // номер под-отчета
         this.chart_data_total_outgoing_cargo_operator = [];
+        this.chart_data_total_operator_amkr = [];
         //...
         this.chart_data_total_operators = [];
         this.chart_data_total_operators_cargo = [];
@@ -8081,7 +8082,8 @@
         // Закладка Груз ОТПР
         this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-tab', 'outgoing-cargo-operator');
         // Закладка Оператор по ОТПР
-        this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr');
+        //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr');
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr', 6, 6);
         // Закладка Цех-грузоотправитель
         this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-division-amkr');
         // Закладка Направление ОТПР
@@ -8102,7 +8104,7 @@
 
         // ------------------------------------------------
         // Запускаем 18 процесса инициализации (паралельно)
-        var process = 6;
+        var process = 8;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -8115,6 +8117,11 @@
                             this.report_panel = 0;
 
                             this.view_chart_total_outgoing_cargo_operator();
+                            break;
+                        };
+                        case 'out-total-operator-amkr': {
+                            this.report_panel = 1;
+                            this.view_chart_total_operator_amkr();
                             break;
                         };
                         //...
@@ -8150,7 +8157,7 @@
 
             },
         });
-        // Инициализация модуля графиков тип: Гистограмма с накоплением
+        // Инициализация модуля графиков тип: pie_exploding_pie_chart
         this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
         this.chart_total_outgoing_cargo_operator.init({
             alert: null,
@@ -8162,6 +8169,36 @@
                 out_init(process);
             },
         });
+        // Таблица-Груз по Оператор по ОТПР
+        this.table_total_operator_amkr = new TTDR('div#outgoing-operator-amkr');         // Создадим экземпляр
+        this.table_total_operator_amkr.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_cargo_ext_station',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: pie_exploding_pie_chart
+        this.chart_total_operator_amkr = new CAM('div#outgoing-operator-amkr-chart');         // Создадим экземпляр
+        this.chart_total_operator_amkr.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+
         //-----------------------------------------------
         // Таблица-ИТОГ оператор
         this.table_total_operators = new TTDR('div#outgoing-total-operators');         // Создадим экземпляр
@@ -8209,7 +8246,7 @@
 
             },
         });
-        // Инициализация модуля графиков тип: pie_chart
+        // Инициализация модуля графиков тип: partitioned_bar_chart
         this.chart_total_operators_cargo = new CAM('div#outgoing-total-operators-cargo-chart');         // Создадим экземпляр
         this.chart_total_operators_cargo.init({
             alert: null,
@@ -8369,6 +8406,51 @@
             callback(list_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
         }
     };
+    // Выборка для Оператор по ОТПР
+    view_td_report.prototype.process_data_report_6_2 = function (data, callback) {
+        var list_result = [];
+        $.each(data, function (key, el_wag) {
+            var op = list_result.find(function (o) {
+                return o.id_group === el_wag.outgoing_uz_vagon_id_group &&
+                    o.code_stn === el_wag.outgoing_uz_document_code_stn_to
+            }.bind(this));
+            if (!op) {
+                // Не данных 
+                list_result.push({
+                    id_group: el_wag.outgoing_uz_vagon_id_group,
+                    group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
+                    //id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+                    //cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+                    cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
+                    code_stn: el_wag.outgoing_uz_document_code_stn_to,
+                    out_station_name: el_wag['outgoing_uz_document_station_to_name_' + App.Lang],
+                    count_wagon: 1,
+                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                });
+            } else {
+                op.count_wagon = op.count_wagon + 1;
+                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
+            };
+        }.bind(this));
+        var list_sort_result = [];
+        $.each(list_result, function (key, el) {
+            var op = list_sort_result.find(function (o) {
+                return o.id_group === el.id_group
+            }.bind(this));
+            if (!op) {
+                // Не данных 
+                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+                if (list && list.length > 0) {
+                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+                }
+            }
+        }.bind(this));
+
+        if (typeof callback === 'function') {
+            callback(list_sort_result);
+        }
+    };
+
     // ИТОГ оператор
     view_td_report.prototype.process_data_report_6_6_1 = function (data, callback) {
         var list_result = [];
@@ -8465,7 +8547,7 @@
         this.total_operators_cargo = [];            // список ИТОГ оператор груз
 
         // Запускаем 10 процесса инициализации (паралельно)
-        var process = 4;
+        var process = 5;
         // Выход из инициализации
         var out_process_data = function (process) {
             if (process === 0) {
@@ -8490,8 +8572,8 @@
                 }
                 // Отобразить данные в таблице Груз ОТПР
                 this.view_filter_report_total_outgoing_cargo_operator();
-                //// Отобразить данные в таблице Оператор по ПРИБ
-                //this.view_filter_report_total_operation_to_arr();
+                // Отобразить данные в таблице Оператор по ОТПР
+                this.view_filter_report_total_operator_amkr();
                 //// Отобразить данные в таблице  Груз ПРИБ
                 //this.view_filter_report_total_cargo();
                 //// Отобразить данные в таблице группы ПРИБ
@@ -8515,6 +8597,11 @@
         }.bind(this));
         this.process_data_report_6_1(wagons_outgoing, function (result) {
             this.total_outgoing_cargo_operator = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_6_2(wagons_outgoing, function (result) {
+            this.total_operator_amkr = result;
             process--;
             out_process_data(process);
         }.bind(this));
@@ -8648,6 +8735,104 @@
             this.chart_total_outgoing_cargo_operator.view(this.chart_data_total_outgoing_cargo_operator);
         }
     };
+    // Выполнить фильтрацию и вывести данные по отчету "Оператор по ОТПР"
+    view_td_report.prototype.view_filter_report_total_operator_amkr = function () {
+        if (this.total_operator_amkr) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_operator_amkr));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_operator_amkr.view(list_view);
+
+            var data = [
+
+            ];
+
+            //[
+            //{
+            //    name: "Lithuania",
+            //    value: 500,
+            //    subData: [
+            //        { name: "АПП рр", value: 200 },
+            //        { name: "B", value: 150 },
+            //        { name: "C", value: 100 },
+            //        { name: "D", value: 100 }
+            //    ]
+            //},
+            //{
+            //    name: "Czechia",
+            //    value: 300,
+            //    subData: [
+            //        { name: "B", value: 150 }
+            //    ]
+            //},
+            //{
+            //    name: "Ireland",
+            //    value: 200,
+            //    subData: [
+            //        { name: "АПП рр", value: 110 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //},
+            //{
+            //    name: "Germany",
+            //    value: 150,
+            //    subData: [
+            //        { name: "АПП рр", value: 80 },
+            //        { name: "B", value: 40 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //},
+            //{
+            //    name: "Australia",
+            //    value: 140,
+            //    subData: [
+            //        { name: "АПП рр", value: 90 },
+            //        { name: "B", value: 40 },
+            //        { name: "C", value: 10 }
+            //    ]
+            //},
+            //{
+            //    name: "Austria",
+            //    value: 120,
+            //    subData: [
+            //        { name: "АПП рр", value: 60 },
+            //        { name: "B", value: 30 },
+            //        { name: "C", value: 30 }
+            //    ]
+            //}
+            //];
+
+            $.each(list_view, function (key, element) {
+                data.push({ "group": element.group_name, "name": element.out_station_name + "-" + element.count_wagon + "шт.", "value": Number(element.count_wagon) });
+            }.bind(this));
+
+            //$.each(list_view, function (key, element) {
+            //    var gn = data.find(function (o) { return o.name === element.group_name; });
+            //    if (gn === undefined) {
+            //        var subData = [];
+            //        subData.push({ name: (element.out_station_name !== null ? element.out_station_name : '?'), value: element.count_wagon })
+            //        data.push({ "name": element.group_name, "value": element.count_wagon, subData: subData });
+
+            //    } else {
+            //        gn.value += element.count_wagon;
+            //        gn.subData.push({ name: (element.out_station_name !== null ? element.out_station_name : '?'), value: element.count_wagon })
+            //    }
+            //}.bind(this));
+
+            this.chart_data_total_operator_amkr = data;
+            this.view_chart_total_operator_amkr();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "ИТОГ оператор"
+    view_td_report.prototype.view_chart_total_operator_amkr = function () {
+        if (this.report_panel === 1 && this.chart_data_total_operator_amkr) {
+            this.chart_total_operator_amkr.view(this.chart_data_total_operator_amkr);
+        }
+    };
+    //.....
     // Выполнить фильтрацию и вывести данные по отчету "ИТОГ оператор"
     view_td_report.prototype.view_filter_report_total_operators = function () {
         if (this.total_operators) {

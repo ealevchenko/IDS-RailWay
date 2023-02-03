@@ -11749,12 +11749,15 @@ fieldset {
 #adoption-division-to-arr-chart,
 #adoption-to-gs-chart,
 #outgoing-cargo-operator-chart,
-#outgoing-total-operators-chart {
+#outgoing-total-operators-chart
+{
     width: 100%;
     height: 500px;
 }
 
-#outgoing-total-operators-cargo-chart {
+#outgoing-total-operators-cargo-chart,
+#outgoing-operator-amkr-chart 
+{
     width: 100%;
     height: 1000px;
 }
