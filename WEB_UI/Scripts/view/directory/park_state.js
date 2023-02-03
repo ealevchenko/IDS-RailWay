@@ -2,46 +2,46 @@
 
     // Массив текстовых сообщений 
     $.Text_View =
+    {
+        'default':  //default language: ru
         {
-            'default':  //default language: ru
-            {
-                'field_way_park': 'Парк',
-                'field_way_name': 'Путь',
-                'field_way_count': 'Стоит',
-                'field_way_capacity': 'Вмещ.',
+            'field_way_park': 'Парк',
+            'field_way_name': 'Путь',
+            'field_way_count': 'Стоит',
+            'field_way_capacity': 'Вмещ.',
 
-                'field_position': '№ позиции',
-                'field_num': '№ вагона',
-                'field_num_valid': 'Тип нумерации',
-                'field_note': 'Дислокация на АМКР',
-                'field_create_wagon': 'Добавил',
-                'field_change_wagon': 'Правил',
+            'field_position': '№ позиции',
+            'field_num': '№ вагона',
+            'field_num_valid': 'Тип нумерации',
+            'field_note': 'Дислокация на АМКР',
+            'field_create_wagon': 'Добавил',
+            'field_change_wagon': 'Правил',
 
-                'title_button_export': 'Экспорт',
-                'title_button_buffer': 'Буфер',
-                'title_button_excel': 'Excel',
-                'title_button_clear_wagon': 'Убрать вагоны',
-            },
-            'en':  //default language: English
-            {
-                'field_way_park': 'Park',
-                'field_way_name': 'Path',
-                'field_way_count': 'Worth',
-                'field_way_capacity': 'Accommodates',
+            'title_button_export': 'Экспорт',
+            'title_button_buffer': 'Буфер',
+            'title_button_excel': 'Excel',
+            'title_button_clear_wagon': 'Убрать вагоны',
+        },
+        'en':  //default language: English
+        {
+            'field_way_park': 'Park',
+            'field_way_name': 'Path',
+            'field_way_count': 'Worth',
+            'field_way_capacity': 'Accommodates',
 
-                'field_position': 'Position No.',
-                'field_num': 'Wagon number',
-                'field_num_valid': 'Numbering type',
-                'field_note': 'Dislocation at AMKR',
-                'field_create_wagon': 'Added',
-                'field_change_wagon': 'Rules',
+            'field_position': 'Position No.',
+            'field_num': 'Wagon number',
+            'field_num_valid': 'Numbering type',
+            'field_note': 'Dislocation at AMKR',
+            'field_create_wagon': 'Added',
+            'field_change_wagon': 'Rules',
 
-                'title_button_export': 'Export',
-                'title_button_buffer': 'Buffer',
-                'title_button_excel': 'Excel',
-                'title_button_clear_wagon': 'Remove wagons',
-            }
-        };
+            'title_button_export': 'Export',
+            'title_button_buffer': 'Buffer',
+            'title_button_excel': 'Excel',
+            'title_button_clear_wagon': 'Remove wagons',
+        }
+    };
 
     //*************************************************************************************
     // ОБЪЯВЛЕНИЕ ОСНОВНЫХ ОБЪЕКТОВ ПРИЛОЖЕНИЯ
@@ -1128,6 +1128,7 @@
                             },
                             title: langView('field_num', langs), width: "50px", orderable: false, searchable: false
                         },
+
                         {
                             data: function (row, type, val, meta) {
                                 return !is_valid_num_wagon(Number(row.num)) ? 'Не системная' : 'Системная'
@@ -1186,20 +1187,21 @@
                             },
                             title: langView('field_note', langs), width: "400px", orderable: false, searchable: false
                         },
-                        {
-                            //data: "create_wagon",
-                            data: function (row, type, val, meta) {
-                                return row.create ? row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
-                            },
-                            title: langView('field_create_wagon', langs), width: "150px", orderable: false, searchable: false
-                        },
-                        {
-                            //data: "change_wagon",
-                            data: function (row, type, val, meta) {
-                                return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
-                            },
-                            title: langView('field_change_wagon', langs), width: "150px", orderable: false, searchable: false
-                        }
+                        //TODO:!!ВЕРНУТЬ
+                        //{
+                        //    //data: "create_wagon",
+                        //    data: function (row, type, val, meta) {
+                        //        return row.create ? row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
+                        //    },
+                        //    title: langView('field_create_wagon', langs), width: "150px", orderable: false, searchable: false
+                        //},
+                        //{
+                        //    //data: "change_wagon",
+                        //    data: function (row, type, val, meta) {
+                        //        return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
+                        //    },
+                        //    title: langView('field_change_wagon', langs), width: "150px", orderable: false, searchable: false
+                        //}
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,
