@@ -272,9 +272,11 @@
             'ttdr_field_total_sap_cargo_name': 'Груз ПРИБ SAP',
             'ttdr_field_total_station_from_name': 'Станция отправления',
             'ttdr_field_total_division_abbr': 'Цех-грузоп.',
+            'ttdr_field_total_out_division_abbr': 'Цех погрузки.',
             'ttdr_field_total_station_on_name': 'Пункт погрузки',
             'ttdr_field_total_out_station_name': 'Станция назначения',
             'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
+            'ttdr_field_total_note': 'Примечание',
 
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
@@ -1893,6 +1895,14 @@
             title: langView('ttdr_field_total_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
+            field: 'total_out_division_abbr',
+            data: function (row, type, val, meta) {
+                return row.division_abbr;
+            },
+            className: 'dt-body-center mw-100',
+            title: langView('ttdr_field_total_out_division_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
             field: 'total_station_on_name',
             data: function (row, type, val, meta) {
                 return row.station_on_name;
@@ -1907,6 +1917,14 @@
             },
             className: 'dt-body-center mw-100',
             title: langView('ttdr_field_total_out_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_note',
+            data: function (row, type, val, meta) {
+                return '';
+            },
+            className: 'dt-body-center mw-100',
+            title: langView('ttdr_field_total_note', App.Langs), width: "100px", orderable: true, searchable: true
         },
         //----------------------------------------------------
         // ОТПРАВКА ДЕТАЛЬНО
@@ -3136,6 +3154,28 @@
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей outgoing_total_operators_cargo
+    table_td_report.prototype.init_columns_outgoing_total_division_metall = function () {
+        var collums = [];
+        collums.push({ field: 'total_out_division_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_note', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей outgoing_total_operators_cargo
+    table_td_report.prototype.init_columns_outgoing_total_division_cargo = function () {
+        var collums = [];
+        collums.push({ field: 'total_out_division_abbr', title: null, class: null });
+/*        collums.push({ field: 'total_cargo_name', title: null, class: null });*/
+        collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+        collums.push({ field: 'total_note', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -3481,7 +3521,34 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-
+    //
+    table_td_report.prototype.init_button_outgoing_total_division_metall = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_outgoing_total_division_cargo = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_td_report.prototype.init_type_report = function () {
@@ -4158,6 +4225,124 @@
                         $(rows)
                             .last()
                             .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                    };
+                };
+                break;
+            };
+            case 'outgoing_total_division_metall': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 2 }];
+                this.order_column = [2, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_outgoing_total_division_metall();
+                this.table_buttons = this.init_button_outgoing_total_division_metall();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="5">' + group.group_name + '</td></tr>');
+                                last = group.group_name;
+                                count = group.count_wagon;
+                                sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
+                    };
+                };
+                break;
+            };
+            case 'outgoing_total_division_cargo': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                //this.columnDefs = [{ visible: false, targets: 2 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_outgoing_total_division_cargo();
+                this.table_buttons = this.init_button_outgoing_total_division_cargo();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.cargo_out_group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="5">' + group.cargo_out_group_name + '</td></tr>');
+                                last = group.cargo_out_group_name;
+                                count = group.count_wagon;
+                                sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
                     };
                 };
                 break;
