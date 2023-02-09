@@ -3176,6 +3176,17 @@
         collums.push({ field: 'total_note', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей init_columns_outgoing_total_cargo_metall
+    table_td_report.prototype.init_columns_outgoing_total_cargo_metall = function () {
+        var collums = [];
+        collums.push({ field: 'total_out_division_abbr', title: null, class: null });
+        //collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -3537,6 +3548,20 @@
     };
     //
     table_td_report.prototype.init_button_outgoing_total_division_cargo = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_outgoing_total_cargo_metall = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -4347,7 +4372,65 @@
                 };
                 break;
             };
-
+            case 'outgoing_total_cargo_metall': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 0 }];
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_outgoing_total_cargo_metall();
+                this.table_buttons = this.init_button_outgoing_total_cargo_metall();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.division_abbr) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="3">' + group.division_abbr + '</td></tr>');
+                                last = group.division_abbr;
+                                count = group.count_wagon;
+                                sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                    };
+                };
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -4466,8 +4549,26 @@
         if (this.settings.type_report === 'adoption_to_gs') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
+        if (this.settings.type_report === 'outgoing_cargo_operator') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_cargo_ext_station') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_total_division_metall') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_total_division_cargo') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_total_cargo_metall') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+        }
         if (this.settings.type_report === 'outgoing_total_operators') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'outgoing_total_operators_cargo') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
@@ -5098,7 +5199,120 @@
                 });
                 break;
             };
+            case 'outgoing_cargo_operator': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'outgoing_cargo_ext_station': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'outgoing_total_division_metall': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'outgoing_total_division_cargo': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'outgoing_total_cargo_metall': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
             case 'outgoing_total_operators': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    var sum_perent_wagon = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'outgoing_total_operators_cargo': {
                 if (data) {
                     var sum_count_wagon = 0;
                     var sum_vesg = 0;

@@ -7665,9 +7665,10 @@
         this.report_panel = 0;  // номер под-отчета
         this.chart_data_total_outgoing_cargo_operator = [];
         this.chart_data_total_operator_amkr = [];
-        this.chart_data_total_division_metals= [];
+        this.chart_data_total_division_metals = [];
         this.chart_data_total_division_cargo = [];
         //...
+        this.chart_data_total_cargo_metall = [];
         this.chart_data_total_operators = [];
         this.chart_data_total_operators_cargo = [];
 
@@ -8093,7 +8094,8 @@
         // Закладка Направление ОТПР
         this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-ext-station');
         // Закладка Металл ОТПР
-        this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-cargo-metall');
+        //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-cargo-metall');
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-total-cargo-metall', 5, 7);
         // Закладка ИТОГ оператор
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators');
         this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators', 6, 6);
@@ -8108,7 +8110,7 @@
 
         // ------------------------------------------------
         // Запускаем 18 процесса инициализации (паралельно)
-        var process = 12;
+        var process = 14;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -8135,6 +8137,11 @@
                             break;
                         };
                         //...
+                        case 'out-total-cargo-metall': {
+                            this.report_panel = 4;
+                            this.view_chart_total_cargo_metall()
+                            break;
+                        };
                         case 'out-total-operators': {
                             this.report_panel = 5;
 
@@ -8265,6 +8272,36 @@
             },
         });
         //-----------------------------------------------
+        //.......
+        // Таблица-Металл ОТПР
+        this.table_total_cargo_metall = new TTDR('div#outgoing-total-cargo-metall');         // Создадим экземпляр
+        this.table_total_cargo_metall.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_total_cargo_metall',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: pie_exploding_pie_chart
+        this.chart_total_cargo_metall = new CAM('div#outgoing-total-cargo-metall-chart');         // Создадим экземпляр
+        this.chart_total_cargo_metall.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
         // Таблица-ИТОГ оператор
         this.table_total_operators = new TTDR('div#outgoing-total-operators');         // Создадим экземпляр
         this.table_total_operators.init({
@@ -8322,7 +8359,6 @@
                 out_init(process);
             },
         });
-
         //}.bind(this));
     };
     // Показать отчет  "Отчет по отправлению (общий)"
@@ -8467,8 +8503,23 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
+        //
+        var list_sort_result = [];
+        $.each(list_result, function (key, el) {
+            var op = list_sort_result.find(function (o) {
+                return o.id_out_group === el.id_out_group
+            }.bind(this));
+            if (!op) {
+                // Не данных 
+                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+                if (list && list.length > 0) {
+                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+                }
+            }
+        }.bind(this));
+
         if (typeof callback === 'function') {
-            callback(list_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
+            callback(list_sort_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
         }
     };
     // Выборка для Оператор по ОТПР
@@ -8515,7 +8566,7 @@
             callback(list_sort_result);
         }
     };
-    // Выборка для Цех-грузоотправитель
+    // Выборка для Цех-грузоотправитель (+ отчет 6-5)
     view_td_report.prototype.process_data_report_6_3_1 = function (data, callback) {
         var list_result = [];
         $.each(data, function (key, el_wag) {
@@ -8544,22 +8595,22 @@
                 };
             };
         }.bind(this));
-        var list_sort_result = [];
-        $.each(list_result, function (key, el) {
-            var op = list_sort_result.find(function (o) {
-                return o.id_group === el.id_group
-            }.bind(this));
-            if (!op) {
-                // Не данных 
-                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-                if (list && list.length > 0) {
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                }
-            }
-        }.bind(this));
+        //var list_sort_result = [];
+        //$.each(list_result, function (key, el) {
+        //    var op = list_sort_result.find(function (o) {
+        //        return o.id_group === el.id_group
+        //    }.bind(this));
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+        //        if (list && list.length > 0) {
+        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+        //        }
+        //    }
+        //}.bind(this));
 
         if (typeof callback === 'function') {
-            callback(list_sort_result);
+            callback(list_result);
         }
     };
     // Выборка для Цех-грузоотправитель
@@ -8746,6 +8797,8 @@
                 //this.view_filter_report_total_station_from();
                 //// Отобразить данные в таблице Цех-грузополучатель
                 //this.view_filter_report_total_division();
+                // Металл ОТПР
+                this.view_filter_report_total_cargo_metall();
                 // ИТОГ оператор
                 this.view_filter_report_total_operators();
                 this.view_filter_report_total_operators_cargo()
@@ -8766,7 +8819,35 @@
             out_process_data(process);
         }.bind(this));
         this.process_data_report_6_3_1(wagons_outgoing, function (result) {
-            this.total_division_metals = result;
+            // Для отчета 6_3_1
+            this.total_division_metals = [];
+            $.each(result, function (key, el) {
+                var op = this.total_division_metals.find(function (o) {
+                    return o.id_group === el.id_group
+                }.bind(this));
+                if (!op) {
+                    // Не данных 
+                    var list = result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+                    if (list && list.length > 0) {
+                        this.total_division_metals = this.total_division_metals.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+                    }
+                }
+            }.bind(this));
+            // Для отчета 6_5
+            this.total_cargo_metall = [];
+            $.each(result, function (key, el) {
+                var op = this.total_cargo_metall.find(function (o) {
+                    return o.id_division === el.id_division
+                }.bind(this));
+                if (!op) {
+                    // Не данных 
+                    var list = result.filter(function (i) { return i.id_division === el.id_division }.bind(this));
+                    if (list && list.length > 0) {
+                        this.total_cargo_metall = this.total_cargo_metall.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+                    }
+                }
+            }.bind(this));
+
             process--;
             out_process_data(process);
         }.bind(this));
@@ -9026,8 +9107,36 @@
             this.chart_total_division_cargo.view(this.chart_data_total_division_cargo);
         }
     };
-
     //.....
+    // Выполнить фильтрацию и вывести данные по отчету "Металл ОТПР"
+    view_td_report.prototype.view_filter_report_total_cargo_metall = function () {
+        if (this.total_cargo_metall) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_cargo_metall));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_cargo_metall.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(list_view, function (key, element) {
+                data.push({ "group": element.division_abbr, "name": element.group_name + "-" + element.count_wagon + " шт.", "value": Number(element.count_wagon) });
+            }.bind(this));
+
+            this.chart_data_total_cargo_metall = data;
+            this.view_chart_total_cargo_metall();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "ИТОГ оператор"
+    view_td_report.prototype.view_chart_total_cargo_metall = function () {
+        if (this.report_panel === 4 && this.chart_data_total_cargo_metall) {
+            this.chart_total_cargo_metall.view(this.chart_data_total_cargo_metall);
+        }
+    };
     // Выполнить фильтрацию и вывести данные по отчету "ИТОГ оператор"
     view_td_report.prototype.view_filter_report_total_operators = function () {
         if (this.total_operators) {

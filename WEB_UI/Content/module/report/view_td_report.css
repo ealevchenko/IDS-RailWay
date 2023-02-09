@@ -11758,8 +11758,8 @@ fieldset {
 }
 
 #outgoing-total-operators-cargo-chart,
-#outgoing-operator-amkr-chart 
-{
+#outgoing-operator-amkr-chart,
+#outgoing-total-cargo-metall-chart {
     width: 100%;
     height: 1000px;
 }
