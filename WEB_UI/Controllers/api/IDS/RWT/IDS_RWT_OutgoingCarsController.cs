@@ -482,6 +482,8 @@ namespace WEB_UI.Controllers.api
 
         public string outgoing_uz_document_station_to_name_en { get; set; }
 
+        public bool? outgoing_uz_document_station_to_port { get; set; }
+
         public int? outgoing_uz_document_to_code_inlandrailway { get; set; }
 
         public string outgoing_uz_document_to_inlandrailway_name_ru { get; set; }
