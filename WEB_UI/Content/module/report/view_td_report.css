@@ -11751,8 +11751,9 @@ fieldset {
 #outgoing-cargo-operator-chart,
 #outgoing-total-operators-chart,
 #outgoing-total-division-metall-chart,
-#outgoing-total-division-cargo-chart 
-{
+#outgoing-total-division-cargo-chart,
+#outgoing-total-ext-station-ukr-chart,
+#outgoing-total-ext-station-exp-chart {
     width: 100%;
     height: 500px;
 }

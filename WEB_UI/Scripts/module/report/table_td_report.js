@@ -276,6 +276,7 @@
             'ttdr_field_total_station_on_name': 'Пункт погрузки',
             'ttdr_field_total_out_station_name': 'Станция назначения',
             'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
+            'ttdr_field_total_station_inlandrailway': 'Станция назначения/Дорога',
             'ttdr_field_total_note': 'Примечание',
 
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
@@ -1919,6 +1920,14 @@
             title: langView('ttdr_field_total_out_station_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
+            field: 'total_station_inlandrailway',
+            data: function (row, type, val, meta) {
+                return row.station_inlandrailway;
+            },
+            className: 'dt-body-center mw-100',
+            title: langView('ttdr_field_total_station_inlandrailway', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
             field: 'total_note',
             data: function (row, type, val, meta) {
                 return '';
@@ -3187,6 +3196,16 @@
 
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей init_columns_outgoing_total_ext_station
+    table_td_report.prototype.init_columns_outgoing_total_ext_station = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
+        collums.push({ field: 'total_station_inlandrailway', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_sum_vesg', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -3562,6 +3581,20 @@
     };
     //
     table_td_report.prototype.init_button_outgoing_total_cargo_metall = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_outgoing_total_ext_station = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -4431,6 +4464,68 @@
                 };
                 break;
             };
+            case 'outgoing_total_ext_station': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 0 }];
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_outgoing_total_ext_station();
+                this.table_buttons = this.init_button_outgoing_total_ext_station();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.cargo_out_group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="3">' + group.cargo_out_group_name + '</td></tr>');
+                                last = group.cargo_out_group_name;
+                                count = group.count_wagon;
+                                sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                    };
+                };
+                break;
+            };
+
+
+
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -4570,6 +4665,11 @@
         if (this.settings.type_report === 'outgoing_total_operators_cargo') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
         }
+
+        if (this.settings.type_report === 'outgoing_total_ext_station') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+        }
+
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
         // Инициализируем таблицу
@@ -5335,6 +5435,26 @@
                 });
                 break;
             };
+
+            case 'outgoing_total_ext_station': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_vesg = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_vesg += el.sum_vesg;
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_sum_vesg').every(function () {
+                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                });
+                break;
+            };
+
         };
     };
     // Инициализация таблицы детально

@@ -7667,6 +7667,8 @@
         this.chart_data_total_operator_amkr = [];
         this.chart_data_total_division_metals = [];
         this.chart_data_total_division_cargo = [];
+        this.chart_data_total_ext_station_ukr = [];
+        this.chart_data_total_ext_station_exp = [];
         //...
         this.chart_data_total_cargo_metall = [];
         this.chart_data_total_operators = [];
@@ -8091,8 +8093,9 @@
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-division-amkr');
         this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-metall', 5, 7);
         this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-cargo', 5, 7);
-        // Закладка Направление ОТПР
-        this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-ext-station');
+        // Закладка Отчет об отгруженной продукции предприятия.
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station-ukr', 5, 7);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station-exp', 5, 7);
         // Закладка Металл ОТПР
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-cargo-metall');
         this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-total-cargo-metall', 5, 7);
@@ -8110,7 +8113,7 @@
 
         // ------------------------------------------------
         // Запускаем 18 процесса инициализации (паралельно)
-        var process = 14;
+        var process = 18;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -8136,7 +8139,12 @@
                             this.view_chart_total_division_cargo();
                             break;
                         };
-                        //...
+                        case 'out-total-ext-station': {
+                            this.report_panel = 3;
+                            this.view_chart_total_ext_station_ukr();
+                            this.view_chart_total_ext_station_exp();
+                            break;
+                        };
                         case 'out-total-cargo-metall': {
                             this.report_panel = 4;
                             this.view_chart_total_cargo_metall()
@@ -8265,6 +8273,63 @@
         this.chart_total_division_cargo.init({
             alert: null,
             type_chart: 'donut_with_radial_gradient',     //pie_chart
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+
+        // Таблица-Отчета об отгруженной продукции предприятия по украине
+        this.table_total_ext_station_ukr = new TTDR('div#outgoing-total-ext-station-ukr');         // Создадим экземпляр
+        this.table_total_ext_station_ukr.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_total_ext_station',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: pie_chart
+        this.chart_total_ext_station_ukr = new CAM('div#outgoing-total-ext-station-ukr-chart');         // Создадим экземпляр
+        this.chart_total_ext_station_ukr.init({
+            alert: null,
+            type_chart: 'pie_chart',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        // Таблица-Отчета об отгруженной продукции предприятия по украине
+        this.table_total_ext_station_exp = new TTDR('div#outgoing-total-ext-station-exp');         // Создадим экземпляр
+        this.table_total_ext_station_exp.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'outgoing_total_ext_station',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: pie_chart
+        this.chart_total_ext_station_exp = new CAM('div#outgoing-total-ext-station-exp-chart');         // Создадим экземпляр
+        this.chart_total_ext_station_exp.init({
+            alert: null,
+            type_chart: 'pie_chart',     //
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -8504,22 +8569,22 @@
             };
         }.bind(this));
         //
-        var list_sort_result = [];
-        $.each(list_result, function (key, el) {
-            var op = list_sort_result.find(function (o) {
-                return o.id_out_group === el.id_out_group
-            }.bind(this));
-            if (!op) {
-                // Не данных 
-                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-                if (list && list.length > 0) {
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                }
-            }
-        }.bind(this));
-
+        //var list_sort_result = [];
+        //$.each(list_result, function (key, el) {
+        //    var op = list_sort_result.find(function (o) {
+        //        return o.id_out_group === el.id_out_group
+        //    }.bind(this));
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+        //        if (list && list.length > 0) {
+        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
+        //        }
+        //    }
+        //}.bind(this));
         if (typeof callback === 'function') {
-            callback(list_sort_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
+            //callback(list_sort_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
+            callback(this.sort_table(list_result, 'id_out_group', 'count_wagon', true));
         }
     };
     // Выборка для Оператор по ОТПР
@@ -8548,25 +8613,26 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        var list_sort_result = [];
-        $.each(list_result, function (key, el) {
-            var op = list_sort_result.find(function (o) {
-                return o.id_group === el.id_group
-            }.bind(this));
-            if (!op) {
-                // Не данных 
-                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-                if (list && list.length > 0) {
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                }
-            }
-        }.bind(this));
+        //var list_sort_result = [];
+        //$.each(list_result, function (key, el) {
+        //    var op = list_sort_result.find(function (o) {
+        //        return o.id_group === el.id_group
+        //    }.bind(this));
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+        //        if (list && list.length > 0) {
+        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
+        //        }
+        //    }
+        //}.bind(this));
 
         if (typeof callback === 'function') {
-            callback(list_sort_result);
+            //callback(list_sort_result);
+            callback(this.sort_table(list_result, 'id_group', 'count_wagon', true));
         }
     };
-    // Выборка для Цех-грузоотправитель (+ отчет 6-5)
+    // Выборка для Цех-грузоотправитель (+ report_6_5)
     view_td_report.prototype.process_data_report_6_3_1 = function (data, callback) {
         var list_result = [];
         $.each(data, function (key, el_wag) {
@@ -8640,22 +8706,120 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        var list_sort_result = [];
-        $.each(list_result, function (key, el) {
-            var op = list_sort_result.find(function (o) {
-                return o.id_group === el.id_group
-            }.bind(this));
-            if (!op) {
-                // Не данных 
-                var list = list_result.filter(function (i) { return i.id_out_group === el.id_out_group }.bind(this));
-                if (list && list.length > 0) {
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+        //var list_sort_result = [];
+        //$.each(list_result, function (key, el) {
+        //    var op = list_sort_result.find(function (o) {
+        //        return o.id_group === el.id_group
+        //    }.bind(this));
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = list_result.filter(function (i) { return i.id_out_group === el.id_out_group }.bind(this));
+        //        if (list && list.length > 0) {
+        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
+        //        }
+        //    }
+        //}.bind(this));
+        if (typeof callback === 'function') {
+            //callback(list_sort_result);
+            callback(this.sort_table(list_result, 'id_out_group', 'count_wagon', true));
+        }
+    };
+    // Выборка для Отчета об отгруженной продукции предприятия
+    view_td_report.prototype.process_data_report_6_4 = function (data, callback) {
+        var list_result = [];
+        var list_result_ukr = [];
+        var list_result_exp = [];
+        $.each(data, function (key, el_wag) {
+
+            // Выборка по украине
+            if (el_wag.outgoing_uz_document_to_code_railway === 22) {
+                var ukr = list_result_ukr.find(function (o) {
+                    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group && o.code_inlandrailway === el_wag.outgoing_uz_document_to_code_inlandrailway
+                }.bind(this));
+                if (!ukr) {
+                    // Не данных 
+                    list_result_ukr.push({
+                        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+                        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+                        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
+                        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
+                        code_railway: el_wag.outgoing_uz_document_to_code_railway,
+                        country_nazn: el_wag.outgoing_uz_document_country_nazn,
+                        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
+                        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
+
+                        station_inlandrailway: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        count_wagon: 1,
+                        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    });
+                } else {
+                    ukr.count_wagon = ukr.count_wagon + 1;
+                    ukr.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + ukr.sum_vesg : ukr.sum_vesg;
                 }
             }
+            // сортировка по экспорту
+            if (el_wag.outgoing_uz_document_station_to_port) {
+                var exp = list_result_exp.find(function (o) {
+                    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group &&
+                        el_wag.outgoing_uz_document_station_to_port &&
+                        o.code_stn === el_wag.outgoing_uz_document_code_stn_to
+                }.bind(this));
+                if (!exp) {
+                    // Не данных 
+                    list_result_exp.push({
+                        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+                        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+                        code_stn: el_wag.outgoing_uz_document_code_stn_to,
+                        out_station_name: el_wag['outgoing_uz_document_station_to_name_' + App.Lang],
+                        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
+                        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
+                        code_railway: el_wag.outgoing_uz_document_to_code_railway,
+                        country_nazn: el_wag.outgoing_uz_document_country_nazn,
+                        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
+                        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
+
+                        station_inlandrailway: el_wag['outgoing_uz_document_station_to_name_' + App.Lang],
+                        count_wagon: 1,
+                        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    });
+                } else {
+                    exp.count_wagon = exp.count_wagon + 1;
+                    exp.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + exp.sum_vesg : exp.sum_vesg;
+                };
+            }
+
+            // сортировка по станциям
+            //var op = list_result.find(function (o) {
+            //    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group &&
+            //        o.code_stn === el_wag.outgoing_uz_document_code_stn_to
+            //}.bind(this));
+            //if (!op) {
+            //    // Не данных 
+            //    list_result.push({
+            //        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+            //        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+            //        code_stn: el_wag.outgoing_uz_document_code_stn_to,
+            //        out_station_name: el_wag['outgoing_uz_document_station_to_name_' + App.Lang],
+            //        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
+            //        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+            //        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
+            //        code_railway: el_wag.outgoing_uz_document_to_code_railway,
+            //        country_nazn: el_wag.outgoing_uz_document_country_nazn,
+            //        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
+            //        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
+            //        count_wagon: 1,
+            //        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+            //    });
+            //} else {
+            //    op.count_wagon = op.count_wagon + 1;
+            //    op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
+            //};
         }.bind(this));
 
         if (typeof callback === 'function') {
-            callback(list_sort_result);
+            callback(this.sort_table(list_result_ukr, 'id_out_group','count_wagon',true), this.sort_table(list_result_exp, 'id_out_group','count_wagon',true));
         }
     };
     // ИТОГ оператор
@@ -8683,7 +8847,7 @@
             };
         }.bind(this));
         if (typeof callback === 'function') {
-            callback(list_result.sort(function (a, b) { return a.id_operator - b.id_operator }.bind(this)));
+            callback(list_result.sort(function (a, b) { return b.id_operator - a.id_operator }.bind(this)));
         }
     };
     // ИТОГ оператор груз
@@ -8719,27 +8883,26 @@
 
         }.bind(this));
 
-        var list_sort_result = [];
+        //var list_sort_result = [];
+        //$.each(list_result, function (key, el) {
+        //    var op = list_sort_result.find(function (o) {
+        //        return o.id_group === el.id_group
+        //    }.bind(this));
 
-        $.each(list_result, function (key, el) {
-            var op = list_sort_result.find(function (o) {
-                return o.id_group === el.id_group
-            }.bind(this));
+        //    if (!op) {
+        //        // Не данных 
+        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+        //        if (list && list.length > 0) {
 
-            if (!op) {
-                // Не данных 
-                var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-                if (list && list.length > 0) {
-
-                    //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                    //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.sum_vesg - b.sum_vesg }.bind(this)));
-                    list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.perent_wagon - b.perent_wagon }.bind(this)));
-                }
-            }
-        }.bind(this));
+        //            //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
+        //            //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.sum_vesg - b.sum_vesg }.bind(this)));
+        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.perent_wagon - a.perent_wagon }.bind(this)));
+        //        }
+        //    }
+        //}.bind(this));
         if (typeof callback === 'function') {
-            //callback(list_result.sort(function (a, b) { return a.id_group - b.id_group }.bind(this)));
-            callback(list_sort_result);
+            //callback(list_sort_result);
+            callback(this.sort_table(list_result, 'id_group', 'perent_wagon', true));
         }
     };
     // Обработать и отображение данных на экране
@@ -8749,13 +8912,15 @@
         this.total_operator_amkr = [];              // список Оператор по ОТПР
         this.total_division_metals = [];            // список Цех-грузоотправитель по черным металлам
         this.total_division_cargo = [];             // список Цех-грузоотправитель по грузу отправителю
-        this.total_ext_station = [];                // список Направление ОТПР
+        this.total_ext_station_ukr = [];            // список об отгруженной продукции предприятия по украине
+        this.total_ext_station_exp = [];            // список об отгруженной продукции предприятия по портам на экспорт
+
         this.total_cargo_metall = [];               // список Металл ОТПР
         this.total_operators = [];                  // список ИТОГ оператор
         this.total_operators_cargo = [];            // список ИТОГ оператор груз
 
         // Запускаем 10 процесса инициализации (паралельно)
-        var process = 7;
+        var process = 8;
         // Выход из инициализации
         var out_process_data = function (process) {
             if (process === 0) {
@@ -8786,6 +8951,10 @@
                 this.view_filter_report_total_division_metals();
                 // Отобразить данные в таблице  Цех-грузоотправитель груза по отправке
                 this.view_filter_report_total_division_cargo();
+                // Отобразить данные в таблице Отчета об отгруженной продукции предприятия по украине
+                this.view_filter_report_total_ext_station_ukr();
+                // Отобразить данные в таблице Отчета об отгруженной продукции предприятия экспорт
+                this.view_filter_report_total_ext_station_exp();
                 //.....
                 //// Отобразить данные в таблице группы ПРИБ
                 //this.view_filter_report_total_group_cargo();
@@ -8820,39 +8989,46 @@
         }.bind(this));
         this.process_data_report_6_3_1(wagons_outgoing, function (result) {
             // Для отчета 6_3_1
-            this.total_division_metals = [];
-            $.each(result, function (key, el) {
-                var op = this.total_division_metals.find(function (o) {
-                    return o.id_group === el.id_group
-                }.bind(this));
-                if (!op) {
-                    // Не данных 
-                    var list = result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-                    if (list && list.length > 0) {
-                        this.total_division_metals = this.total_division_metals.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                    }
-                }
-            }.bind(this));
+            this.total_division_metals = this.sort_table(result, 'id_group', 'count_wagon', true);
+            //this.total_division_metals = [];
+            //$.each(result, function (key, el) {
+            //    var op = this.total_division_metals.find(function (o) {
+            //        return o.id_group === el.id_group
+            //    }.bind(this));
+            //    if (!op) {
+            //        // Не данных 
+            //        var list = result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
+            //        if (list && list.length > 0) {
+            //            this.total_division_metals = this.total_division_metals.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
+            //        }
+            //    }
+            //}.bind(this));
             // Для отчета 6_5
-            this.total_cargo_metall = [];
-            $.each(result, function (key, el) {
-                var op = this.total_cargo_metall.find(function (o) {
-                    return o.id_division === el.id_division
-                }.bind(this));
-                if (!op) {
-                    // Не данных 
-                    var list = result.filter(function (i) { return i.id_division === el.id_division }.bind(this));
-                    if (list && list.length > 0) {
-                        this.total_cargo_metall = this.total_cargo_metall.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-                    }
-                }
-            }.bind(this));
-
+            this.total_cargo_metall = this.sort_table(result, 'id_division', 'count_wagon', true);
+            //this.total_cargo_metall = [];
+            //$.each(result, function (key, el) {
+            //    var op = this.total_cargo_metall.find(function (o) {
+            //        return o.id_division === el.id_division
+            //    }.bind(this));
+            //    if (!op) {
+            //        // Не данных 
+            //        var list = result.filter(function (i) { return i.id_division === el.id_division }.bind(this));
+            //        if (list && list.length > 0) {
+            //            this.total_cargo_metall = this.total_cargo_metall.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
+            //        }
+            //    }
+            //}.bind(this));
             process--;
             out_process_data(process);
         }.bind(this));
         this.process_data_report_6_3_2(wagons_outgoing, function (result) {
             this.total_division_cargo = result;
+            process--;
+            out_process_data(process);
+        }.bind(this));
+        this.process_data_report_6_4(wagons_outgoing, function (result_ukr, result_exp) {
+            this.total_ext_station_ukr = result_ukr;
+            this.total_ext_station_exp = result_exp;
             process--;
             out_process_data(process);
         }.bind(this));
@@ -9001,7 +9177,7 @@
 
             ];
 
-            $.each(list_view, function (key, element) {
+            $.each(this.sort_table(list_view, 'id_group', 'count_wagon', false), function (key, element) {
                 data.push({ "group": element.group_name, "name": element.out_station_name + "-" + element.count_wagon + "шт.", "value": Number(element.count_wagon) });
             }.bind(this));
 
@@ -9043,10 +9219,6 @@
             var data = [
 
             ];
-
-            //$.each(list_view, function (key, element) {
-            //    data.push({ "name": element.group_name, "value": element.count_wagon });
-            //}.bind(this));
 
             $.each(list_view, function (key, element) {
                 var gn = data.find(function (o) { return o.name === element.group_name; });
@@ -9107,6 +9279,78 @@
             this.chart_total_division_cargo.view(this.chart_data_total_division_cargo);
         }
     };
+    // Выполнить фильтрацию и вывести данные по Отчета об отгруженной продукции предприятия по украине
+    view_td_report.prototype.view_filter_report_total_ext_station_ukr = function () {
+        if (this.total_ext_station_ukr) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_ext_station_ukr));
+
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_ext_station_ukr.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(list_view, function (key, element) {
+                var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
+                if (gn === undefined) {
+                    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+            }.bind(this));
+
+            this.chart_data_total_ext_station_ukr = data;
+            this.view_chart_total_ext_station_ukr();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "отгруженной продукции предприятия по украине"
+    view_td_report.prototype.view_chart_total_ext_station_ukr = function () {
+        if (this.report_panel === 3 && this.chart_data_total_ext_station_ukr) {
+            this.chart_total_ext_station_ukr.view(this.chart_data_total_ext_station_ukr);
+        }
+    };
+
+    // Выполнить фильтрацию и вывести данные по Отчета об отгруженной продукции предприятия по экспорт
+    view_td_report.prototype.view_filter_report_total_ext_station_exp = function () {
+        if (this.total_ext_station_exp) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.total_ext_station_exp));
+
+            // Применим фильтр
+
+            // Отобразим
+            this.table_total_ext_station_exp.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(list_view, function (key, element) {
+                var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
+                if (gn === undefined) {
+                    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+            }.bind(this));
+
+            this.chart_data_total_ext_station_exp = data;
+            this.view_chart_total_ext_station_exp();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "отгруженной продукции предприятия по экспорт"
+    view_td_report.prototype.view_chart_total_ext_station_exp = function () {
+        if (this.report_panel === 3 && this.chart_data_total_ext_station_exp) {
+            this.chart_total_ext_station_exp.view(this.chart_data_total_ext_station_exp);
+        }
+    };
+
     //.....
     // Выполнить фильтрацию и вывести данные по отчету "Металл ОТПР"
     view_td_report.prototype.view_filter_report_total_cargo_metall = function () {
@@ -9121,8 +9365,7 @@
             var data = [
 
             ];
-
-            $.each(list_view, function (key, element) {
+            $.each(this.sort_table(list_view, 'id_division', 'count_wagon', false), function (key, element) {
                 data.push({ "group": element.division_abbr, "name": element.group_name + "-" + element.count_wagon + " шт.", "value": Number(element.count_wagon) });
             }.bind(this));
 
@@ -9176,7 +9419,7 @@
 
             var data = [];
 
-            $.each(list_view, function (key, element) {
+            $.each(this.sort_table(list_view, 'id_group', 'perent_wagon', false), function (key, element) {
                 data.push({ "group": element.group_name, "name": element.operator_abbr + "-" + element.count_wagon + "шт. (" + element.perent_wagon + "%)", "value": Number(element.perent_wagon) });
             }.bind(this));
 
@@ -9433,6 +9676,30 @@
             this.process_data_view_report_6_1(this.clone_wagons_outgoing, null);
             LockScreenOff();
         }
+    };
+    // группировка и сортировка таблицы
+    view_td_report.prototype.sort_table = function (list, field_group, field_sort, desc) {
+        var result = [];
+        if (list && list.length > 0 && field_group && field_sort) {
+            $.each(list.sort(function (a, b) { return a[field_sort] - b[field_sort] }.bind(this)), function (key, el) {
+                var op = result.find(function (o) {
+                    return o[field_sort] === el[field_sort]
+                }.bind(this));
+                if (!op) {
+                    // Не данных 
+                    var list_gr = list.filter(function (i) { return i[field_group] === el[field_group] }.bind(this));
+                    if (list_gr && list_gr.length > 0) {
+
+                        if (desc) {
+                            result = result.concat(list_gr.sort(function (a, b) { return b[field_sort] - a[field_sort] }.bind(this)));
+                        } else {
+                            result = result.concat(list_gr.sort(function (a, b) { return a[field_sort] - b[field_sort] }.bind(this)));
+                        }
+                    }
+                }
+            }.bind(this));
+        }
+        return result;
     };
     //
     view_td_report.prototype.out_clear = function () {
