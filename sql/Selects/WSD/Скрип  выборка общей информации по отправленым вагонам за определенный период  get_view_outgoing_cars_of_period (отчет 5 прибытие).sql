@@ -455,6 +455,7 @@ declare @stop datetime = Convert(datetime, '2023-01-09 23:59:59', 120)
 		,out_doc_sostav.[code_stn_to] as outgoing_uz_document_code_stn_to
 		,out_ext_station.[station_name_ru] as outgoing_uz_document_station_to_name_ru
 		,out_ext_station.[station_name_en] as outgoing_uz_document_station_to_name_en
+		,out_ext_station.[port] as outgoing_uz_document_station_to_port
 		--> [IDS].[Directory_InlandRailway]
 		,out_ext_station.[code_inlandrailway] as outgoing_uz_document_to_code_inlandrailway
 		,out_ir_to.[inlandrailway_name_ru] as outgoing_uz_document_to_inlandrailway_name_ru
