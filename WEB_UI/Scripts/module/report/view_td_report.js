@@ -10,6 +10,7 @@
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
 
     var list_groups_cargo = [11, 16, 20, 24];               // Список id групп груза с порожними вагонами
+    var list_railway_sng = [20, 21, 23, 24, 25, 26, 27, 28, 29, 57, 58, 59, 66, 67];               // Список кодов жд СНГ - 22 украина
 
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
@@ -8729,6 +8730,9 @@
         var list_result = [];
         var list_result_ukr = [];
         var list_result_exp = [];
+        var list_result_sng = [];
+        var list_result_europe = [];
+
         $.each(data, function (key, el_wag) {
 
             // Выборка по украине
@@ -8789,37 +8793,68 @@
                     exp.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + exp.sum_vesg : exp.sum_vesg;
                 };
             }
+            // Выборка по СНГ
+            if (list_railway_sng.indexOf(el_wag.outgoing_uz_document_to_code_railway) >= 0) {
+                var sng = list_result_sng.find(function (o) {
+                    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group && o.code_inlandrailway === el_wag.outgoing_uz_document_to_code_inlandrailway
+                }.bind(this));
+                if (!sng) {
+                    // Не данных 
+                    list_result_sng.push({
+                        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+                        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+                        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
+                        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
+                        code_railway: el_wag.outgoing_uz_document_to_code_railway,
+                        country_nazn: el_wag.outgoing_uz_document_country_nazn,
+                        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
+                        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
 
-            // сортировка по станциям
-            //var op = list_result.find(function (o) {
-            //    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group &&
-            //        o.code_stn === el_wag.outgoing_uz_document_code_stn_to
-            //}.bind(this));
-            //if (!op) {
-            //    // Не данных 
-            //    list_result.push({
-            //        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
-            //        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
-            //        code_stn: el_wag.outgoing_uz_document_code_stn_to,
-            //        out_station_name: el_wag['outgoing_uz_document_station_to_name_' + App.Lang],
-            //        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
-            //        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
-            //        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
-            //        code_railway: el_wag.outgoing_uz_document_to_code_railway,
-            //        country_nazn: el_wag.outgoing_uz_document_country_nazn,
-            //        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
-            //        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
-            //        count_wagon: 1,
-            //        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
-            //    });
-            //} else {
-            //    op.count_wagon = op.count_wagon + 1;
-            //    op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
-            //};
+                        station_inlandrailway: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        count_wagon: 1,
+                        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    });
+                } else {
+                    sng.count_wagon = sng.count_wagon + 1;
+                    sng.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + sng.sum_vesg : sng.sum_vesg;
+                }
+            }
+            // Выборка по европе
+            if (list_railway_sng.indexOf(el_wag.outgoing_uz_document_to_code_railway) < 0 && el_wag.outgoing_uz_document_to_code_railway !== 22) {
+                var europe = list_result_europe.find(function (o) {
+                    return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group && o.code_inlandrailway === el_wag.outgoing_uz_document_to_code_inlandrailway
+                }.bind(this));
+                if (!europe) {
+                    // Не данных 
+                    list_result_europe.push({
+                        id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+                        cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+                        code_inlandrailway: el_wag.outgoing_uz_document_to_code_inlandrailway,
+                        inlandrailway_name: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        inlandrailway_abbr: el_wag['outgoing_uz_document_to_inlandrailway_abbr_' + App.Lang],
+                        code_railway: el_wag.outgoing_uz_document_to_code_railway,
+                        country_nazn: el_wag.outgoing_uz_document_country_nazn,
+                        countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
+                        country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
+
+                        station_inlandrailway: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
+                        count_wagon: 1,
+                        sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+                    });
+                } else {
+                    europe.count_wagon = europe.count_wagon + 1;
+                    europe.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + europe.sum_vesg : europe.sum_vesg;
+                }
+            }
         }.bind(this));
 
         if (typeof callback === 'function') {
-            callback(this.sort_table(list_result_ukr, 'id_out_group','count_wagon',true), this.sort_table(list_result_exp, 'id_out_group','count_wagon',true));
+            callback(this.sort_table(list_result_ukr, 'id_out_group', 'count_wagon', true),
+                this.sort_table(list_result_exp, 'id_out_group', 'count_wagon', true),
+                this.sort_table(list_result_sng, 'id_out_group', 'count_wagon', true),
+                this.sort_table(list_result_europe, 'id_out_group', 'count_wagon', true)
+            );
         }
     };
     // ИТОГ оператор
@@ -8914,6 +8949,8 @@
         this.total_division_cargo = [];             // список Цех-грузоотправитель по грузу отправителю
         this.total_ext_station_ukr = [];            // список об отгруженной продукции предприятия по украине
         this.total_ext_station_exp = [];            // список об отгруженной продукции предприятия по портам на экспорт
+        this.total_ext_station_sng = [];            // список об отгруженной продукции предприятия по странам СНГ
+        this.total_ext_station_europe = [];         // список об отгруженной продукции предприятия по странам зарубежье
 
         this.total_cargo_metall = [];               // список Металл ОТПР
         this.total_operators = [];                  // список ИТОГ оператор
@@ -9026,9 +9063,11 @@
             process--;
             out_process_data(process);
         }.bind(this));
-        this.process_data_report_6_4(wagons_outgoing, function (result_ukr, result_exp) {
+        this.process_data_report_6_4(wagons_outgoing, function (result_ukr, result_exp, result_sng, result_europe) {
             this.total_ext_station_ukr = result_ukr;
             this.total_ext_station_exp = result_exp;
+            this.total_ext_station_sng = result_sng;
+            this.total_ext_station_europe = result_europe;
             process--;
             out_process_data(process);
         }.bind(this));
