@@ -256,6 +256,8 @@
             'ttdr_field_incoming_cars_outgoing_uz_vagon_cargo_name': 'Груз по отправлению',
             'ttdr_field_incoming_cars_outgoing_sostav_date_outgoing': 'Дата последней сдачи',
 
+            'ttdr_field_total_id': 'id',
+            'ttdr_field_total_id_type': 'id_type',
             'ttdr_field_total_period': 'Период',
             'ttdr_field_total_operator_abbr': 'Опер. АМКР',
             'ttdr_field_total_limiting_abbr': 'Огран.',
@@ -1760,6 +1762,22 @@
         },
         // Отчет-Груз по Оператору АМКР
         {
+            field: 'total_id',
+            data: function (row, type, val, meta) {
+                return row.id;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_total_id', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_id_type',
+            data: function (row, type, val, meta) {
+                return row.id_type;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_total_id_type', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
             field: 'total_period',
             data: function (row, type, val, meta) {
                 return row.period;
@@ -1804,8 +1822,8 @@
             data: function (row, type, val, meta) {
                 return row.cargo_out_group_name;
             },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_total_cargo_out_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_total_cargo_out_group_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'total_certification_data',
@@ -1924,8 +1942,8 @@
             data: function (row, type, val, meta) {
                 return row.station_inlandrailway;
             },
-            className: 'dt-body-center mw-100',
-            title: langView('ttdr_field_total_station_inlandrailway', App.Langs), width: "100px", orderable: true, searchable: true
+            className: 'dt-body-center mw-150',
+            title: langView('ttdr_field_total_station_inlandrailway', App.Langs), width: "150px", orderable: true, searchable: true
         },
         {
             field: 'total_note',
@@ -3178,7 +3196,7 @@
     table_td_report.prototype.init_columns_outgoing_total_division_cargo = function () {
         var collums = [];
         collums.push({ field: 'total_out_division_abbr', title: null, class: null });
-/*        collums.push({ field: 'total_cargo_name', title: null, class: null });*/
+        /*        collums.push({ field: 'total_cargo_name', title: null, class: null });*/
         collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3199,6 +3217,8 @@
     // инициализация полей init_columns_outgoing_total_ext_station
     table_td_report.prototype.init_columns_outgoing_total_ext_station = function () {
         var collums = [];
+        collums.push({ field: 'total_id', title: null, class: null });
+        collums.push({ field: 'total_id_type', title: null, class: null });
         collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
         collums.push({ field: 'total_station_inlandrailway', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -4083,7 +4103,7 @@
             };
             case 'outgoing_cargo_operator': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4144,7 +4164,7 @@
             };
             case 'outgoing_cargo_ext_station': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4225,7 +4245,7 @@
             };
             case 'outgoing_total_operators_cargo': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4289,7 +4309,7 @@
             };
             case 'outgoing_total_division_metall': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4348,7 +4368,7 @@
             };
             case 'outgoing_total_division_cargo': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4407,7 +4427,7 @@
             };
             case 'outgoing_total_cargo_metall': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4466,7 +4486,7 @@
             };
             case 'outgoing_total_ext_station': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                this.pageLength = -1;
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
@@ -4474,7 +4494,7 @@
                 this.info = true;
                 this.fixedHeader = false;   // вкл. фикс. заголовка
                 this.leftColumns = 0;
-                this.columnDefs = [{ visible: false, targets: 0 }];
+                this.columnDefs = [{ visible: false, targets: [0, 1] }];
                 this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
@@ -4486,39 +4506,70 @@
                     var api = this.api();
                     var rows = api.rows({ page: 'current' }).nodes();
                     var last = null;
+                    var last_id = null;
+                    var last_id_type = null;
                     var count = 0;
                     var sum_vesg = 0;
+                    var count_group = 0;
+                    var sum_vesg_group = 0;
                     var intVal = function (i) {
                         return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
                     };
+                    var getIDType = function (id_type) {
+                        switch (id_type) {
+                            case 0: { return 'по Украине'; }
+                            case 1: { return 'экспорт порты'; }
+                            case 2: { return 'страны СНГ и Балтии'; }
+                            case 3: { return 'дальние зарубежье'; }
+                            default: { return ''; }
+                        }
+                    }
                     api
                         //.column(1, { page: 'current' })
                         .data()
                         .each(function (group, i) {
-                            if (last !== group.cargo_out_group_name) {
+                            if (last_id !== group.id) {
                                 // Подведем итог
-                                if (last !== null) {
+                                if (last_id !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total-' + last_id_type + '"><td class="total-text-type" colspan="2">Итого ' + last + ' ' + getIDType(last_id_type) + ':</td><td class="total-count-type">' + count + '</td><td class="total-value-type">' + sum_vesg.toFixed(2) + '</td></tr>');
                                 }
-                                // Заглавие новой группы
-                                $(rows)
-                                    .eq(i)
-                                    .before('<tr class="group"><td colspan="3">' + group.cargo_out_group_name + '</td></tr>');
+                                if (last !== group.cargo_out_group_name) {
+                                    if (last_id !== null) {
+                                        $(rows)
+                                            .eq(i)
+                                            .before('<tr class="group-total"><td class="total-text-type" colspan="2">ИТОГО ' + last + ':</td><td class="total-count-type">' + count_group + '</td><td class="total-value-type">' + sum_vesg_group.toFixed(2) + '</td></tr>');
+                                        count_group = 0;
+                                        sum_vesg_group = 0;
+                                        //count_group = group.count_wagon;
+                                        //sum_vesg_group = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                                    }
+                                    // Заглавие новой группы
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group"><td colspan="4">' + group.cargo_out_group_name + '</td></tr>');
+                                }
+
+                                last_id = group.id;
+                                last_id_type = group.id_type;
                                 last = group.cargo_out_group_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
                             } else {
                                 count += group.count_wagon;
                                 sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+
                             }
+                            count_group += group.count_wagon;
+                            sum_vesg_group += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
                         });
                     // Последнее итого
-                    if (last !== null) {
+                    if (last_id !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text-type" colspan="2">ИТОГО ' + last + ':</td><td class="total-count-type">' + count_group + '</td><td class="total-value-type">' + sum_vesg_group.toFixed(2) + '</td></tr>')
+                            .after('<tr class="group-total' + last_id_type + '"><td class="total-text-type" colspan="2">Итого ' + last + ' ' + getIDType(last_id_type) + ':</td><td class="total-count-type">' + count + '</td><td class="total-value-type">' + sum_vesg.toFixed(2) + '</td></tr>');
                     };
                 };
                 break;

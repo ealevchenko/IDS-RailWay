@@ -176,10 +176,32 @@ tr.group-total,
 tr.group-total:hover {
     background-color: #808080 !important;
 }
+tr.group-total-0,
+tr.group-total-0:hover {
+    background-color: #ffffaf !important;
+}
+tr.group-total-1,
+tr.group-total-1:hover {
+    background-color: #c3ffff !important;
+}
+tr.group-total-2,
+tr.group-total-2:hover {
+    background-color: #ffe1c3 !important;
+}
+tr.group-total-3,
+tr.group-total-3:hover {
+    background-color: #c3ffe1 !important;
+}
 td.total-text {
     color: #fff !important;
     text-align: right;
     text-transform: uppercase;
+}
+td.total-text-type {
+    color: #000000 !important;
+    text-align: right;
+    text-transform: lowercase;
+    font-weight: 600;
 }
 
 td.total-count {
@@ -187,8 +209,22 @@ td.total-count {
     text-align: center;
     text-transform: uppercase;
 }
+
+td.total-count-type {
+    color: #000000 !important;
+    text-align: center;
+    text-transform: lowercase;
+    font-weight: 600;
+}
+
 td.total-value {
     color: #fff !important;
     text-align: right;
     text-transform: uppercase;
+}
+td.total-value-type {
+    color: #000000 !important;
+    text-align: right;
+    text-transform:lowercase;
+    font-weight:600;
 }
