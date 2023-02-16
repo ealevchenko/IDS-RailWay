@@ -242,7 +242,7 @@
             'ttdr_field_incoming_cars_sap_incoming_supply_cargo_name': 'Груз ПРИБ SAP',
             'ttdr_field_incoming_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ',
 
-            'ttdr_field_incoming_cars_arrival_uz_document_code_payer_arrival': 'Код платильщика ПРИБ',
+            'ttdr_field_incoming_cars_arrival_uz_document_code_payer_arrival': 'Код плательщика ПРИБ',
             'ttdr_field_incoming_cars_arrival_uz_document_payer_arrival_name': 'Платильщик ПРИБ',
             'ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa': 'Тариф ПРИБ',
             'ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr': 'Дата отправления на АМКР',
