@@ -8601,20 +8601,6 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        //
-        //var list_sort_result = [];
-        //$.each(list_result, function (key, el) {
-        //    var op = list_sort_result.find(function (o) {
-        //        return o.id_out_group === el.id_out_group
-        //    }.bind(this));
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-        //        if (list && list.length > 0) {
-        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
-        //        }
-        //    }
-        //}.bind(this));
         if (typeof callback === 'function') {
             //callback(list_sort_result.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)));
             callback(this.sort_table(list_result, 'id_out_group', 'count_wagon', true));
@@ -8646,20 +8632,6 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        //var list_sort_result = [];
-        //$.each(list_result, function (key, el) {
-        //    var op = list_sort_result.find(function (o) {
-        //        return o.id_group === el.id_group
-        //    }.bind(this));
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-        //        if (list && list.length > 0) {
-        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
-        //        }
-        //    }
-        //}.bind(this));
-
         if (typeof callback === 'function') {
             //callback(list_sort_result);
             callback(this.sort_table(list_result, 'id_group', 'count_wagon', true));
@@ -8694,20 +8666,6 @@
                 };
             };
         }.bind(this));
-        //var list_sort_result = [];
-        //$.each(list_result, function (key, el) {
-        //    var op = list_sort_result.find(function (o) {
-        //        return o.id_group === el.id_group
-        //    }.bind(this));
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-        //        if (list && list.length > 0) {
-        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-        //        }
-        //    }
-        //}.bind(this));
-
         if (typeof callback === 'function') {
             callback(list_result);
         }
@@ -8739,19 +8697,6 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        //var list_sort_result = [];
-        //$.each(list_result, function (key, el) {
-        //    var op = list_sort_result.find(function (o) {
-        //        return o.id_group === el.id_group
-        //    }.bind(this));
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = list_result.filter(function (i) { return i.id_out_group === el.id_out_group }.bind(this));
-        //        if (list && list.length > 0) {
-        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
-        //        }
-        //    }
-        //}.bind(this));
         if (typeof callback === 'function') {
             //callback(list_sort_result);
             callback(this.sort_table(list_result, 'id_out_group', 'count_wagon', true));
@@ -9017,24 +8962,6 @@
             };
 
         }.bind(this));
-
-        //var list_sort_result = [];
-        //$.each(list_result, function (key, el) {
-        //    var op = list_sort_result.find(function (o) {
-        //        return o.id_group === el.id_group
-        //    }.bind(this));
-
-        //    if (!op) {
-        //        // Не данных 
-        //        var list = list_result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-        //        if (list && list.length > 0) {
-
-        //            //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.count_wagon - b.count_wagon }.bind(this)));
-        //            //list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return a.sum_vesg - b.sum_vesg }.bind(this)));
-        //            list_sort_result = list_sort_result.concat(list.sort(function (a, b) { return b.perent_wagon - a.perent_wagon }.bind(this)));
-        //        }
-        //    }
-        //}.bind(this));
         if (typeof callback === 'function') {
             //callback(list_sort_result);
             callback(this.sort_table(list_result, 'id_group', 'perent_wagon', true));
@@ -9861,9 +9788,9 @@
     view_td_report.prototype.sort_table = function (list, field_group, field_sort, desc) {
         var result = [];
         if (list && list.length > 0 && field_group && field_sort) {
-            $.each(list.sort(function (a, b) { return a[field_sort] - b[field_sort] }.bind(this)), function (key, el) {
+            $.each(list.sort(function (a, b) { return a[field_group] - b[field_group] }.bind(this)), function (key, el) {
                 var op = result.find(function (o) {
-                    return o[field_sort] === el[field_sort]
+                    return o[field_group] === el[field_group]
                 }.bind(this));
                 if (!op) {
                     // Не данных 
