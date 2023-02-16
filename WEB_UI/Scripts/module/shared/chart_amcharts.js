@@ -711,6 +711,69 @@
         //    yAxis: this.yAxis
         //}));
     };
+    // Инициализация Круговая диаграмма с разбитыми срезами
+    chart_amcharts.prototype.init_pie_chart_with_broken_down_slices = function () {
+
+        this.chart = this.root.container.children.push(
+            am5percent.PieChart.new(this.root, {
+                layout: this.root.verticalLayout
+            })
+        );
+
+        // Create series
+        this.series = this.chart.series.push(
+            am5percent.PieSeries.new(this.root, {
+                valueField: "percent",
+                categoryField: "type",
+                fillField: "color",
+                alignLabels: false
+            })
+        );
+
+        this.series.slices.template.set("templateField", "sliceSettings");
+        this.series.labels.template.set("radius", 30);
+
+        // Set up click events
+        this.series.slices.template.events.on("click", function (event) {
+            console.log(event.target.dataItem.dataContext)
+            if (event.target.dataItem.dataContext.id != undefined) {
+                selected = event.target.dataItem.dataContext.id;
+            } else {
+                selected = undefined;
+            }
+            this.series.data.setAll(this.generateChartData());
+        }.bind(this));
+
+        // Define data
+        var selected;
+
+        this.generateChartData = function () {
+            var chartData = [];
+            for (var i = 0; i < this.types.length; i++) {
+                if (i == selected) {
+                    for (var x = 0; x < this.types[i].subs.length; x++) {
+                        chartData.push({
+                            type: this.types[i].subs[x].type,
+                            percent: this.types[i].subs[x].percent,
+                            color: this.types[i].color,
+                            pulled: true,
+                            sliceSettings: {
+                                active: true
+                            }
+                        });
+                    }
+                } else {
+                    chartData.push({
+                        type: this.types[i].type,
+                        percent: this.types[i].percent,
+                        color: this.types[i].color,
+                        id: i
+                    });
+                }
+            }
+            return chartData;
+        }
+    };
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     chart_amcharts.prototype.init_type_chart = function () {
@@ -757,6 +820,12 @@
                 this.init_partitioned_bar_chart();
                 break;
             };
+            // Круговая диаграмма с разбитыми срезами
+            case 'pie_chart_with_broken_down_slices': {
+                this.init_pie_chart_with_broken_down_slices();
+                break;
+            };
+
             default: {
                 break;
             };
@@ -845,6 +914,11 @@
             // Разделенная гистограмма
             case 'partitioned_bar_chart': {
                 this.view_partitioned_bar_chart(data);
+                break;
+            };
+            // Круговая диаграмма с разбитыми срезами
+            case 'pie_chart_with_broken_down_slices': {
+                this.view_pie_chart_with_broken_down_slices(data);
                 break;
             };
             // 
@@ -1214,7 +1288,60 @@
             this.chart.appear(1000, 100);
         }
     };
+    chart_amcharts.prototype.view_pie_chart_with_broken_down_slices = function (data) {
+        if (this.chart && this.series) {
 
+            this.types = [];
+            var index = 0;
+            $.each(data, function (key, element) {
+                var gn = this.types.find(function (o) { return o.type === element.group; });
+                if (gn === undefined) {
+                    var subs = [];
+                    subs.push({ "type": element.name, "percent": element.value })
+                    this.types.push({ "type": element.group, "percent": element.value, color: this.series.get("colors").getIndex(index), subs: subs });
+                    index++;
+                } else {
+                    gn.percent += element.value;
+                    gn.subs.push({ "type": element.name, "percent": element.value })
+                }
+            }.bind(this));
+
+
+
+            //this.types = [{
+            //    type: "Fossil Energy",
+            //    percent: 70,
+            //    color: this.series.get("colors").getIndex(0),
+            //    subs: [{
+            //        type: "Oil",
+            //        percent: 15
+            //    }, {
+            //        type: "Coal",
+            //        percent: 35
+            //    }, {
+            //        type: "Nuclear",
+            //        percent: 20
+            //    }]
+            //}, {
+            //    type: "Green Energy",
+            //    percent: 30,
+            //    color: this.series.get("colors").getIndex(1),
+            //    subs: [{
+            //        type: "Hydro",
+            //        percent: 15
+            //    }, {
+            //        type: "Wind",
+            //        percent: 10
+            //    }, {
+            //        type: "Other",
+            //        percent: 5
+            //    }]
+            //    }];
+
+            this.series.data.setAll(this.generateChartData());
+
+        }
+    };
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
     chart_amcharts.prototype.out_clear = function () {

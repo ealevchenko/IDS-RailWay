@@ -8361,7 +8361,7 @@
         this.chart_total_ext_station = new CAM('div#outgoing-total-ext-station-chart');         // Создадим экземпляр
         this.chart_total_ext_station.init({
             alert: null,
-            type_chart: 'pie_chart',     //
+            type_chart: 'pie_chart_with_broken_down_slices',     //pie_chart
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -8738,7 +8738,6 @@
                         country_nazn: el_wag.outgoing_uz_document_country_nazn,
                         countrys_name: el_wag['outgoing_uz_document_to_countrys_name_' + App.Lang],
                         country_abbr: el_wag['outgoing_uz_document_to_country_abbr_' + App.Lang],
-
                         station_inlandrailway: el_wag['outgoing_uz_document_to_inlandrailway_name_' + App.Lang],
                         count_wagon: 1,
                         sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
@@ -8840,6 +8839,8 @@
         $.each(list_group.sort(function (a, b) { return a.id_out_group - b.id_out_group }.bind(this)), function (key, el_gp) {
             // Перенесем по украине
             var list = list_result_ukr.filter(function (i) { return i.id_out_group === el_gp.id_out_group }.bind(this));
+            //var sum_ukr = 0;
+            //$.each(list_result_ukr, function (i, el) { sum_ukr += el.count_wagon });
             $.each(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)), function (key, el) {
                 list_result.push({
                     id: el.id_out_group * 10,
@@ -8849,10 +8850,13 @@
                     station_inlandrailway: el.station_inlandrailway,
                     count_wagon: el.count_wagon,
                     sum_vesg: el.sum_vesg,
+                    //persent: Number(Number(el.count_wagon * 100) / sum_ukr),
                 });
             }.bind(this));
             // Перенесем по портам
             var list = list_result_exp.filter(function (i) { return i.id_out_group === el_gp.id_out_group }.bind(this));
+            //var sum_exp = 0;
+            //$.each(list_result_exp, function (i, el) { sum_exp += el.count_wagon });
             $.each(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)), function (key, el) {
                 list_result.push({
                     id: (el.id_out_group * 10) + 1,
@@ -8862,10 +8866,13 @@
                     station_inlandrailway: el.station_inlandrailway,
                     count_wagon: el.count_wagon,
                     sum_vesg: el.sum_vesg,
+                    //persent: Number(Number(el.count_wagon * 100) / sum_exp),
                 });
             }.bind(this));
             // Перенесем по СНГ
             var list = list_result_sng.filter(function (i) { return i.id_out_group === el_gp.id_out_group }.bind(this));
+            //var sum_sng = 0;
+            //$.each(list_result_sng, function (i, el) { sum_sng += el.count_wagon });
             $.each(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)), function (key, el) {
                 list_result.push({
                     id: (el.id_out_group * 10) + 2,
@@ -8875,10 +8882,13 @@
                     station_inlandrailway: el.station_inlandrailway,
                     count_wagon: el.count_wagon,
                     sum_vesg: el.sum_vesg,
+                    //persent: Number(Number(el.count_wagon * 100) / sum_sng),
                 });
             }.bind(this));
             // Перенесем по европе
             var list = list_result_europe.filter(function (i) { return i.id_out_group === el_gp.id_out_group }.bind(this));
+            //var sum_europe = 0;
+            //$.each(list_result_europe, function (i, el) { sum_europe += el.count_wagon });
             $.each(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)), function (key, el) {
                 list_result.push({
                     id: (el.id_out_group * 10) + 3,
@@ -8888,10 +8898,13 @@
                     station_inlandrailway: el.station_inlandrailway,
                     count_wagon: el.count_wagon,
                     sum_vesg: el.sum_vesg,
+                    //persent: Number(Number(el.count_wagon * 100) / sum_europe),
                 });
             }.bind(this));
-
         }.bind(this));
+
+        //var sum = 0;
+        //$.each(list_result, function (i, el) { sum += el.persent });
 
         if (typeof callback === 'function') {
             callback(list_result,
@@ -9428,6 +9441,30 @@
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.total_ext_station));
 
+            var shorten_string = function (str) {
+                if (str === null) return '';
+                var result = '';
+                var arrayOfStrings = str.split(' ');
+                $.each(arrayOfStrings, function (key, el) {
+                    if (el.length > 1) {
+                        result += el.substr(0, 3) + '. ';
+                    } else {
+                        result += el + ' ';
+                    }
+
+                }.bind(this));
+                return result;
+            }
+
+            var getIDType = function (id_type) {
+                switch (id_type) {
+                    case 0: { return 'Украина'; }
+                    case 1: { return 'Порты'; }
+                    case 2: { return 'СНГ и Балтия'; }
+                    case 3: { return 'Зарубежье'; }
+                    default: { return ''; }
+                }
+            }
             // Применим фильтр
 
             // Отобразим
@@ -9437,14 +9474,38 @@
 
             ];
 
+            var sum = 0;
+            $.each(list_view, function (i, el) { sum += el.count_wagon });
+
+
             $.each(list_view, function (key, element) {
-                var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
+                var gn = data.find(function (o) { return o.id === element.id; });
                 if (gn === undefined) {
-                    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
-                } else {
-                    gn.value += element.count_wagon;
+                    var sum_type = 0;
+                    $.each(list_view, function (i, el) { if (el.id===element.id) sum_type += el.count_wagon });
+                    data.push({ "id": element.id, "group": shorten_string(element.cargo_out_group_name), "name": getIDType(element.id_type), "value": Number(Number(sum_type * 100) / sum)});
+
                 }
             }.bind(this));
+
+            //$.each(list_view, function (key, element) {
+            //    var gn = data.find(function (o) { return o.id === element.id; });
+            //    if (gn === undefined) {
+            //        var subs = [];
+            //        subs.push({ name: getIDType(element.id_type), value: Number(Number(element.count_wagon * 100) / sum) })
+            //        data.push({ "id": element.id, "name": element.cargo_out_group_name, "value": Number(Number(element.count_wagon * 100) / sum), subs: subs });
+
+            //    } else {
+            //        gn.subs.push({ name: getIDType(element.id_type), value: Number(Number(element.count_wagon * 100) / sum) })
+            //    }
+            //}.bind(this));
+
+            //$.each(list_view, function (key, element) {
+            //    var list = data.filter(function (i) { return i.name === element.cargo_out_group_name; });
+            //    if (gn === undefined) {
+            //        data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
+            //    }
+            //}.bind(this));
 
             this.chart_data_total_ext_station = data;
             this.view_chart_total_ext_station();
