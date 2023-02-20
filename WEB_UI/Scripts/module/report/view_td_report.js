@@ -7218,9 +7218,10 @@
                         var cargo_list = sostav_outgoing.filter(function (i) { return i.outgoing_uz_vagon_id_cargo === el.outgoing_uz_vagon_id_cargo }.bind(this));
                         // Просумируем 
                         $.each(cargo_list, function (i1, el1) {
-                            if (el1 && el1.otpr && el1.otpr.vagon && el1.otpr.vagon.length > 0 && el1.otpr.vagon[0].collect_v && el1.otpr.vagon[0].collect_v.length > 0 && el1.otpr.vagon[0].collect_v[0].vesg) {
-                                sum_vesg += el1.otpr.vagon[0].collect_v[0].vesg;
-                            }
+                            sum_vesg += el1.outgoing_uz_vagon_vesg;
+                            //if (el1 && el1.otpr && el1.otpr.vagon && el1.otpr.vagon.length > 0 && el1.otpr.vagon[0].collect_v && el1.otpr.vagon[0].collect_v.length > 0 && el1.otpr.vagon[0].collect_v[0].vesg) {
+                            //    sum_vesg += el1.otpr.vagon[0].collect_v[0].vesg;
+                            //}
                         }.bind(this));
                         sostav_cargo_outgoing.push({ id_cargo: el.outgoing_uz_vagon_id_cargo, cargo_name: el['outgoing_uz_vagon_cargo_name_' + App.Lang], count: cargo_list.length, sum_vesg: sum_vesg });
                     };
@@ -9262,7 +9263,7 @@
             ];
 
             $.each(this.sort_table(list_view, 'id_group', 'count_wagon', false), function (key, element) {
-                data.push({ "group": element.group_name, "name": element.out_station_name + "-" + element.count_wagon + "шт.", "value": Number(element.count_wagon) });
+                data.push({ "group": element.group_name, "name": element.out_station_name + "-" + element.count_wagon + "ваг.", "value": Number(element.count_wagon) });
             }.bind(this));
 
             //$.each(list_view, function (key, element) {
@@ -9534,7 +9535,7 @@
 
             ];
             $.each(this.sort_table(list_view, 'id_division', 'count_wagon', false), function (key, element) {
-                data.push({ "group": element.division_abbr, "name": element.group_name + "-" + element.count_wagon + " шт.", "value": Number(element.count_wagon) });
+                data.push({ "group": element.division_abbr, "name": element.group_name + "-" + element.count_wagon + " ваг.", "value": Number(element.count_wagon) });
             }.bind(this));
 
             this.chart_data_total_cargo_metall = data;
@@ -9588,7 +9589,7 @@
             var data = [];
 
             $.each(this.sort_table(list_view, 'id_group', 'perent_wagon', false), function (key, element) {
-                data.push({ "group": element.group_name, "name": element.operator_abbr + "-" + element.count_wagon + "шт. (" + element.perent_wagon + "%)", "value": Number(element.perent_wagon) });
+                data.push({ "group": element.group_name, "name": element.operator_abbr + "-" + element.count_wagon + "ваг. (" + element.perent_wagon + "%)", "value": Number(element.perent_wagon) });
             }.bind(this));
 
             //var data = [{

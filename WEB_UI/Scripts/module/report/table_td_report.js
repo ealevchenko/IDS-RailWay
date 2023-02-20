@@ -3526,7 +3526,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3540,7 +3540,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3568,7 +3568,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3582,7 +3582,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3596,7 +3596,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3610,7 +3610,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -3624,7 +3624,7 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -4102,10 +4102,10 @@
                 break;
             };
             case 'outgoing_cargo_operator': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4163,10 +4163,10 @@
                 break;
             };
             case 'outgoing_cargo_ext_station': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4244,10 +4244,10 @@
                 break;
             };
             case 'outgoing_total_operators_cargo': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4308,10 +4308,10 @@
                 break;
             };
             case 'outgoing_total_division_metall': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4367,10 +4367,10 @@
                 break;
             };
             case 'outgoing_total_division_cargo': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4426,10 +4426,10 @@
                 break;
             };
             case 'outgoing_total_cargo_metall': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
@@ -4485,10 +4485,10 @@
                 break;
             };
             case 'outgoing_total_ext_station': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = -1;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
