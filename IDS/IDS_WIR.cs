@@ -7536,10 +7536,12 @@ namespace IDS
                                     kod_etsng = collect_k.kod_etsng != null ? (int?)int.Parse(collect_k.kod_etsng) : null;
                                 }
                                 // Обновим груз 
-                                if (kod_etsng != null) {
+                                if (kod_etsng != null)
+                                {
                                     Directory_CargoETSNG cargo_etsng = ef_cargo_etsng.Context.Where(e => e.code == kod_etsng).FirstOrDefault();
-                                    if (cargo_etsng != null) {
-                                        Directory_Cargo cargo = ef_cargo.Context.Where(c=>c.id_cargo_etsng == cargo_etsng.id).FirstOrDefault();
+                                    if (cargo_etsng != null)
+                                    {
+                                        Directory_Cargo cargo = ef_cargo.Context.Where(c => c.id_cargo_etsng == cargo_etsng.id).FirstOrDefault();
                                         id_cargo = cargo != null ? (int?)cargo.id : out_uz_vag.id_cargo;
                                     }
                                 }
@@ -8205,6 +8207,126 @@ namespace IDS
             {
                 e.ExceptionMethodLog(String.Format("UpdateSendingEPD(user = {0})", user), servece_owner, eventID);
                 return (int)errors_base.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Метод обновления документов по отправке зашедших первый раз по которым обновили информацию (Род.. Адм.. ) после отправки
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateID UpdateOutgoing_UZ_Document(string user)
+        {
+            ResultUpdateID result = new ResultUpdateID(0);
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                //IDS_Directory ids_dir = new IDS_Directory(this.servece_owner);
+
+                EFDbContext context = new EFDbContext();
+                EFOutgoing_UZ_Vagon ef_out_uz_doc_vag = new EFOutgoing_UZ_Vagon(context);
+                EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
+                List<Outgoing_UZ_Vagon> list_arr_uz_doc_vag = ef_out_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 50000000).ToList();
+                result.count = list_arr_uz_doc_vag.Count();
+                int sum = 0;
+                foreach (Outgoing_UZ_Vagon vag in list_arr_uz_doc_vag)
+                {
+                    sum++;
+                    if (vag.num.IsCorrectNumCar())
+                    {
+                        Directory_Wagons dir_wag = ef_vag.Context.Where(d => d.num == vag.num).FirstOrDefault();
+                        if (dir_wag != null)
+                        {
+
+
+                            TimeSpan deff = vag.create - dir_wag.create;
+
+                            //Console.Write("Вагон :{0}, отправлен {1}, создан в справочнике {2}, разница {3} час - ", vag.num, vag.create, dir_wag.create, deff.TotalHours);
+                            // создание двух строк состоит в диапазоне 3 часов (тоесть вагон зашел первый раз, создалась строка справочника затем отметка о прибытии)
+                            // Определится с временем задержки
+                            if (deff.TotalHours <= 24 * 6)
+                            {
+                                // записи находятся в диапазоне
+                                // Получим основные обновления
+                                int id_countrys = dir_wag.id_countrys;
+                                int id_genus = dir_wag.id_genus;
+                                int id_owner = dir_wag.id_owner;
+                                double gruzp = dir_wag.gruzp;
+                                double? tara = dir_wag.tara;
+                                // проверим изменения и обновим
+                                bool update = false;
+                                if ((vag.id_countrys == 0 || vag.id_countrys == null) && id_countrys != 0)
+                                {
+                                    vag.id_countrys = id_countrys;
+                                    update = true;
+                                }
+                                if ((vag.id_genus == 0 || vag.id_genus == null) && id_genus != 0)
+                                {
+                                    vag.id_genus = id_genus;
+                                    update = true;
+                                }
+                                if ((vag.id_owner == 0 || vag.id_owner == null) && id_owner != 0)
+                                {
+                                    vag.id_owner = id_owner;
+                                    update = true;
+                                }
+                                if (vag.gruzp_uz == null && gruzp != 0)
+                                {
+                                    vag.gruzp_uz = gruzp;
+                                    update = true;
+                                }
+                                if (update)
+                                {
+                                    vag.change_user = user;
+                                    vag.change = DateTime.Now;
+                                    ef_out_uz_doc_vag.Update(vag);
+                                    result.SetUpdateResult(1, vag.id);
+                                    //int context.SaveChanges();
+                                }
+                                else
+                                {
+                                    // Пропустить
+                                    result.SetUpdateResult(0, vag.id);
+                                }
+                                //Console.Write("Зашел, осталось {0} \n", result.count - sum);
+
+                            }
+                            else
+                            {
+                                //Console.Write("Пропущенно!, осталось {0}\n", result.count - sum);
+                                // Пропустить
+                                result.SetUpdateResult(0, vag.id);
+                            }
+                        }
+                        else
+                        {
+                            // Пропустить
+                            result.SetUpdateResult(0, vag.id);
+                        }
+                    }
+                    else
+                    {
+                        // Пропустить
+                        result.SetCloseResult(1, vag.id);
+                    }
+
+                }
+                // Обновим в базе
+                if (result.count > 0 && result.update > 0)
+                {
+                    // Если без ошибок, тогда записываем результат применения 
+                    result.SetResult(context.SaveChanges());
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOutgoing_UZ_Document(user={1})", user), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;// Ошибка
             }
         }
 
