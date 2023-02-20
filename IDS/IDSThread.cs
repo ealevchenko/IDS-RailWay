@@ -309,11 +309,13 @@ namespace IDS
                     ex.ExceptionLog(String.Format("Ошибка выполнения считывания настроек потока {0}, сервиса {1}", service.ToString(), servece_owner), servece_owner, eventID);
                 }
                 int res_update = 0;
+                ResultUpdateID result = null;
                 lock (locker_epd_sending)
                 {
                     IDS_WIR ids_epd = new IDS_WIR(service);
                     ids_epd.Day_arhive_epd_sending = day_arhive_epd;
                     res_update = ids_epd.UpdateSendingEPD(null);
+                    result = ids_epd.UpdateOutgoing_UZ_Document(null); // обновим Род и администрацию
                 }
                 TimeSpan ts = DateTime.Now - dt_start;
                 string mes_service_exec = String.Format("Поток {0} сервиса {1} - время выполнения: {2}:{3}:{4}({5}), код выполнения: res_update:{6}.", service.ToString(), servece_owner, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds, res_update);
