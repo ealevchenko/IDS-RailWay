@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @start datetime = Convert(datetime, '2023-01-01 00:00:00', 120)
-declare @stop datetime = Convert(datetime, '2023-01-09 23:59:59', 120)
+declare @start datetime = Convert(datetime, '2023-01-31 22:00:00', 120)
+declare @stop datetime = Convert(datetime, '2023-02-28 23:59:59', 120)
 
 	select 
 		out_car.[id] as outgoing_car_id
