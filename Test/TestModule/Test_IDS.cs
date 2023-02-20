@@ -544,6 +544,15 @@ namespace Test.TestModule
             if (upd_doc_uz == null) return;
             ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
         }
+        /// <summary>
+        /// Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
+        /// </summary>
+        public void IDS_WIR_UpdateOutgoing_UZ_Document()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ResultUpdateID result = ids.UpdateOutgoing_UZ_Document(@"EUROPE\ealevchenko");
+        }
+
         #endregion
 
         #region IDS_Arhiv
