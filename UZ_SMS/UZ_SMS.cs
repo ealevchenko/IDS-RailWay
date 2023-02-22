@@ -300,55 +300,6 @@ namespace UZ
                 return null;
             }
         }
-
-        /// <summary>
-        /// Получитм документ УЗ по номеру документа
-        /// </summary>
-        /// <param name="DocumentNumber"></param>
-        /// <returns></returns>
-        //TODO: !!! Убрать использую Get_UZ_DOC_SMS_Of_NumDoc(string DocumentNumber)
-        //public List<UZ_DOC> GetUZ_DOC_Of_NumDoc(string DocumentNumber)
-        //{
-        //    try
-        //    {
-        //        List<UZ_DOC> list = new List<UZ_DOC>();
-        //        List<GohubDocument> docs = GetEPD_UZ_Of_NumDoc(DocumentNumber);
-        //        if (docs == null) return null;
-        //        foreach (GohubDocument doc in docs)
-        //        {
-
-        //            UZ_Convert convert = new UZ_Convert(this.servece_owner);
-        //            string xml_final = convert.XMLToFinalXML(doc.GetXmlText());
-        //            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-        //            string sender_code = null;
-        //            string recipient_code = null;
-        //            if (otpr != null && otpr.client.Count() == 2)
-        //            {
-        //                sender_code = otpr.client[0].kod;
-        //                recipient_code = otpr.client[1].kod;
-        //            }
-        //            UZ_DOC uz_doc = new UZ_DOC()
-        //            {
-        //                id_doc = doc.Id,
-        //                revision = doc.Revision,
-        //                status = GetStatus(doc.Status.ToString()),
-        //                sender_code = sender_code,
-        //                recipient_code = recipient_code,
-        //                //dt = doc.TimeStamp,
-        //                xml = doc.GetXmlText(),
-        //                xml_final = xml_final,
-        //                otpr = otpr
-        //            };
-        //            list.Add(uz_doc);
-        //        }
-        //        return list;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        e.ExceptionMethodLog(String.Format("GetUZ_DOC_Of_NumDoc(DocumentNumber={0})", DocumentNumber), servece_owner, eventID);
-        //        return null;
-        //    }
-        //}
         /// <summary>
         /// Получитм документ УЗ по номеру документа 
         /// </summary>
@@ -413,7 +364,11 @@ namespace UZ
                 return null;
             }
         }
-
+        /// <summary>
+        /// Получитм документ УЗ по номеру вагона 
+        /// </summary>
+        /// <param name="WagonNumber"></param>
+        /// <returns></returns>
         public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumWagon(string WagonNumber)
         {
             try
@@ -466,6 +421,48 @@ namespace UZ
                 return null;
             }
         }
+        /// <summary>
+        /// Получить XML перевозочного документа из Базы данных УЗ по номеру вагона, коду отправки даты отправки
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="sender_code"></param>
+        /// <param name="start_date"></param>
+        /// <returns></returns>
+        public UZ_DOC GetDocumentOfSMS_NumShipper(int num, string sender_code, DateTime? start_date)
+        {
+            try
+            {
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                UZ_DOC doc = null;
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                //DateTime new_dt = ((DateTime)start_date).AddHours(0);
+
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString());
+
+                list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
+                // Проверим наличие документов
+                if (list == null || list.Count() == 0) return doc;
+                doc = new UZ_DOC()
+                {
+                    id_doc = list[0].id_doc,
+                    revision = list[0].revision,
+                    status = list[0].status,
+                    sender_code = list[0].sender_code,
+                    recipient_code = list[0].recipient_code,
+                    dt = list[0].dt,
+                    xml = list[0].xml,
+                    xml_final = list[0].xml_final,
+                    otpr = list[0].otpr,
+                };
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfSMS_NumShipper(num={0}, shipper={1}, start_date={2})", num, sender_code, start_date), this.servece_owner, eventID);
+                return null;
+            }
+        }
+
         #region Работа с промежуточной базой KRR-PA-VIZ-Other_DATA
         /// <summary>
         /// Получить статус по названию в базе
@@ -629,10 +626,10 @@ namespace UZ
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
                     "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and [depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
                     "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)))) order by [dt]";
-                    //"" +
-                    //""and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)" +
-                    //" and CONVERT(nvarchar(max), raw_xml) like(N'%" + num.ToString() + "%') " + 
-                    //" order by [dt]";
+                //"" +
+                //""and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)" +
+                //" and CONVERT(nvarchar(max), raw_xml) like(N'%" + num.ToString() + "%') " + 
+                //" order by [dt]";
                 //UZ_Data uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).FirstOrDefault();
                 List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 foreach (UZ_Data uzd in list_uzd)

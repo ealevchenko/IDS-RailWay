@@ -6906,6 +6906,9 @@ namespace IDS
                 {
                     // документ не определен
                     UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, start_date);
+                    if (uz_doc == null) {
+                        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", start_date);
+                    }
                     return uz_doc;
                 }
                 else
