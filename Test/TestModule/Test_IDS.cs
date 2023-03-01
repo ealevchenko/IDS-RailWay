@@ -553,6 +553,22 @@ namespace Test.TestModule
             ResultUpdateID result = ids.UpdateOutgoing_UZ_Document(@"EUROPE\ealevchenko");
         }
 
+        //public void IDS_WIR_UpdateOutgoing_Async()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    ids.UpdateOutgoing_ASYNC(new int[] {63447106, 62649314, 62975651 }, @"EUROPE\ealevchenko");
+        //}
+        //public void IDS_WIR_UpdateOutgoing_Parallel()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    ids.UpdateOutgoing_Parallel(new int[] {63447106, 62649314, 62975651 }, @"EUROPE\ealevchenko");
+        //}
+        //public void IDS_WIR_UpdateOutgoing_Thread()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    ids.UpdateOutgoing_Thread(new int[] {63447106, 62649314, 62975651 }, @"EUROPE\ealevchenko");
+        //}
+
         #endregion
 
         #region IDS_Arhiv

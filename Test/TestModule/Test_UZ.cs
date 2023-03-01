@@ -107,7 +107,7 @@ namespace Test.TestModule
         {
             UZ_SMS sms = new UZ_SMS();
             sms.Connection();
-            List<UZ_DOC_FULL> docs = sms.Get_UZ_DOC_SMS_Of_NumWagon("62976527,60300357"); //num_doc;60300357;63260020
+            //List<UZ_DOC_FULL> docs = sms.Get_UZ_DOC_SMS_Of_NumWagon("62976527,60300357"); //num_doc;60300357;63260020
         }
         public void UZ_SMS_GetOTPROfXML()
         {
