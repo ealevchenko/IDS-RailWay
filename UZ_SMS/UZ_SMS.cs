@@ -209,9 +209,10 @@ namespace UZ
         public List<GohubDocument> GetEPD_UZ_Of_Filter(string WagonNumber, string DocumentNumber, GohubDocumentStatus DocumentStatus, string DepartureClientCode,
             string DeparturePayerCode, string DepartureStationCode, string ArrivalClientCode, string ArrivalPayerCode, string ArrivalStationCode, int count)
         {
+            List<GohubDocument> list = new List<GohubDocument>();
             try
             {
-                List<GohubDocument> list = new List<GohubDocument>();
+
 
                 if (this.connection == null)
                 {
@@ -230,19 +231,37 @@ namespace UZ
                     connection.DocumentFilter.ArrivalStationCode = ArrivalStationCode;
 
                     int index = 0;
-                    foreach (GohubDocument document in connection.QueryDocuments(0))
+                    var list1 = connection.QueryDocuments(0);
+                    if (list1 != null && list1.Count() > 0)
                     {
-                        index++;
-                        list.Add(document);
-                        if (index == count) { return list; }
+                        //list = list1.ToList();
+                        foreach (var document in list1)
+                        {
+                            index++;
+                            if (document is GohubDocument)
+                            {
+                                //Console.WriteLine("num:{0}, index{1}", connection.DocumentFilter.WagonNumber, index);
+                                list.Add(document);
+                                if (index == count) { return list; }
+                            }
+
+
+                        }
+
                     }
+                    //foreach (GohubDocument document in connection.QueryDocuments(0))
+                    //{
+                    //    index++;
+                    //    list.Add(document);
+                    //    if (index == count) { return list; }
+                    //}
                 }
                 return list;
             }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetEPD_UZ_Of_Filter(WagonNumber={0}, DocumentNumber={1})", WagonNumber, DocumentNumber), servece_owner, eventID);
-                return null;
+                return list;
             }
         }
         /// <summary>
@@ -369,12 +388,14 @@ namespace UZ
         /// </summary>
         /// <param name="WagonNumber"></param>
         /// <returns></returns>
-        public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumWagon(string WagonNumber)
+        public List<UZ_DOC_FULL> Get_UZ_DOC_SMS_Of_NumWagon(string WagonNumber, string code_sender)
         {
             try
             {
                 List<UZ_DOC_FULL> list = new List<UZ_DOC_FULL>();
-                List<GohubDocument> docs = GetEPD_UZ_Of_NumWagon(WagonNumber);
+                List<GohubDocument> docs = GetEPD_UZ_Of_Filter(WagonNumber, null, GohubDocumentStatus.Unknown, code_sender, null, null, null, null, null, 0);
+                //List<GohubDocument> docs = GetEPD_UZ_Of_Filter(WagonNumber, null, GohubDocumentStatus.Unknown, null, null, null, null, null, null, 0);
+                //List<GohubDocument> docs = GetEPD_UZ_Of_NumWagon(WagonNumber);
                 if (docs == null) return null;
                 foreach (GohubDocument doc in docs)
                 {
@@ -421,6 +442,8 @@ namespace UZ
                 return null;
             }
         }
+
+
         /// <summary>
         /// Получить XML перевозочного документа из Базы данных УЗ по номеру вагона, коду отправки даты отправки
         /// </summary>
@@ -437,7 +460,7 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 //DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
-                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString());
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
 
                 list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
