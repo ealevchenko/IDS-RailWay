@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Globalization;
 using EFIDS.Helper;
 using IDS;
+using System.Threading;
 
 namespace IDS
 {
@@ -6646,7 +6647,7 @@ namespace IDS
                 if (doc == null && search_sms)
                 {
                     // Документа нет в промежуточной базе, продолжим поиск в СМС
-                    List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumWagon(num.ToString()); //num_doc
+                    List<UZ_DOC_FULL> docs = uz_sms.Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), null); //num_doc
 
                     if (docs != null && docs.Count() > 0)
                     {
@@ -6894,8 +6895,9 @@ namespace IDS
         /// </summary>
         /// <param name="car"></param>
         /// <param name="start_date"></param>
+        /// <param name="update_sms"></param>
         /// <returns></returns>
-        public UZ.UZ_DOC GetSendingEPD(OutgoingCars car, DateTime? start_date)
+        public UZ.UZ_DOC GetSendingEPD(OutgoingCars car, DateTime? start_date, bool update_sms)
         {
             try
             {
@@ -6906,7 +6908,8 @@ namespace IDS
                 {
                     // документ не определен
                     UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, start_date);
-                    if (uz_doc == null) {
+                    if (uz_doc == null && update_sms)
+                    {
                         uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", start_date);
                     }
                     return uz_doc;
@@ -6929,9 +6932,11 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetSendingEPD(car={0}, start_date={1})",
+                e.ExceptionMethodLog(String.Format("GetSendingEPD(car={0}, start_date={1}, update_sms={2})",
                     car, start_date), servece_owner, eventID);
                 return null;
+
+
             }
         }
 
@@ -8051,7 +8056,7 @@ namespace IDS
                             // Обновим документы 
                             foreach (OutgoingCars car in list_out_car)
                             {
-                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, sostav.date_readiness_amkr);
+                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, sostav.date_readiness_amkr, false);
                                 if (new_uz_doc != null)
                                 {
                                     EPDOutgoingCar new_update_epd = new EPDOutgoingCar()
@@ -8115,8 +8120,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingSostav(id_outgoing_sostav={0}, user={1})",
-                    id_outgoing_sostav, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingSostav(context={0}, id_outgoing_sostav={1}, user={2})",
+                    context, id_outgoing_sostav, user), servece_owner, eventID);
                 rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
             }
@@ -8148,6 +8153,102 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+
+        public OperationResultID OperationUpdateEPDSendingCar(ref EFDbContext context, long id_car, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                //EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                EFUZ_DOC_OUT ef_uz_doc = new EFUZ_DOC_OUT(context);
+                OutgoingCars car = ef_out_car.Context.Where(s => s.id == id_car).FirstOrDefault();
+
+                if (car != null)
+                {
+                    // Найдем все вагоны состава
+                    long id_sostav = car.OutgoingSostav.id;
+                    List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == id_sostav).ToList();
+                    UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, car.OutgoingSostav.date_readiness_amkr, true);
+                    if (new_uz_doc != null)
+                    {
+                        List<EPDOutgoingCar> list_cars = new List<EPDOutgoingCar>();
+                        List<String> vagons = new List<string>();
+                        if (new_uz_doc.otpr != null && new_uz_doc.otpr.vagon != null && new_uz_doc.otpr.vagon.Count() > 0)
+                        {
+                            vagons = new_uz_doc.otpr.vagon.ToList().Select(w => w.nomer).ToList();
+                        }
+                        foreach (string vag in vagons) {
+                            OutgoingCars wag = cars.Where(c => c.num == int.Parse(vag)).FirstOrDefault();
+                            if (wag!=null) list_cars.Add(new EPDOutgoingCar() { id_outgoing_car = wag.id, epd = new_uz_doc });
+                        }
+                        // Выполним обновление всего пула документов
+                        int result = UpdateOutgoing_UZ_Document(ref context, new_uz_doc.id_doc, list_cars, user);
+                        rt.SetResultOperation(result, car.id);
+                        // Проверка на ошибку
+                        if (rt.error == 0)
+                        {
+                            if (rt.listResult.Count() > 0)
+                            {
+                                rt.SetResult(context.SaveChanges());
+                            }
+                        }
+                        else
+                        {
+                            rt.SetResult((int)errors_base.error_save_changes); // Были ошибки по ходу выполнения всей операций
+                        }
+
+                    }
+                    else
+                    {
+                        rt.SetResult((int)errors_base.not_out_uz_vag_db); //В базе данных нет документов для обновления
+                    }
+                }
+                else
+                {
+                    rt.SetResult((int)errors_base.not_outgoing_cars_db); //В базе данных нет записи состава для оправки
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingCar(context={0}, id_car={1}, user={2})",
+                    context, id_car, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        public OperationResultID OperationUpdateEPDSendingCar(long id_car, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                return OperationUpdateEPDSendingCar(ref context, id_car, user);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingCar(id_car={0}, user={1})",
+                    id_car, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
         /// <summary>
         /// Обновить документы по отправленным составам
         /// </summary>
@@ -8332,6 +8433,108 @@ namespace IDS
                 return result;// Ошибка
             }
         }
+
+        //public async void UpdateOutgoing_ASYNC(int[] nums, string user)
+        //{
+        //    ResultUpdateID result = new ResultUpdateID(0);
+        //    try
+        //    {
+        //        // Проверим и скорректируем пользователя
+        //        if (String.IsNullOrWhiteSpace(user))
+        //        {
+        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        }
+
+        //        List<Task<int>> res_tasks = new List<Task<int>>();
+
+        //        foreach (int num in nums)
+        //        {
+        //            res_tasks.Add(SquareAsync(num));
+        //        }
+        //        //var task1 = SquareAsync(4);
+        //        //var task2 = SquareAsync(5);
+        //        //var task3 = SquareAsync(6);
+
+        //        // ожидаем завершения всех задач
+        //        int[] results = await Task.WhenAll(res_tasks.ToArray());
+        //        // получаем результаты:
+        //        foreach (int res in results)
+        //            Console.WriteLine(res);
+        //        //return result;
+
+
+        //        async Task<int> SquareAsync(int num)
+        //        {
+        //            //await Task.Delay(1000);
+        //            //return n * n;
+        //            UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+
+        //            List<UZ_DOC_FULL> list = uz_sms.Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), "7932");
+        //            return list.Count();
+        //        }
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("UpdateOutgoing_ASYNC(user={1})", user), servece_owner, eventID);
+        //        result.SetResult((int)errors_base.global);
+        //        //return result;// Ошибка
+        //    }
+        //}
+        //public async void UpdateOutgoing_Parallel(int[] nums, string user)
+        //{
+        //    //ResultUpdateID result = new ResultUpdateID(0);
+        //    try
+        //    {
+        //        // Проверим и скорректируем пользователя
+        //        if (String.IsNullOrWhiteSpace(user))
+        //        {
+        //            user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+        //        }
+
+        //        //UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+
+        //        ParallelLoopResult result = Parallel.ForEach<int>(nums.ToList(), SquareAsync);
+
+
+        //        //List<Task<int>> res_tasks = new List<Task<int>>();
+
+        //        //foreach (int num in nums)
+        //        //{
+        //        //    res_tasks.Add(SquareAsync(num));
+        //        //}
+        //        ////var task1 = SquareAsync(4);
+        //        ////var task2 = SquareAsync(5);
+        //        ////var task3 = SquareAsync(6);
+
+        //        //// ожидаем завершения всех задач
+        //        //int[] results = await Task.WhenAll(res_tasks.ToArray());
+        //        //// получаем результаты:
+        //        //foreach (int res in results)
+        //        //    Console.WriteLine(res);
+        //        ////return result;
+
+
+        //        void SquareAsync(int num)
+        //        {
+        //            //await Task.Delay(1000);
+        //            //return n * n;
+        //            UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+
+        //            List<UZ_DOC_FULL> list = uz_sms.Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), null);
+        //            //return list.Count();
+        //        }
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("UpdateOutgoing_ASYNC(user={1})", user), servece_owner, eventID);
+        //        //result.SetResult((int)errors_base.global);
+        //        //return result;// Ошибка
+        //    }
+        //}
 
         #endregion
 

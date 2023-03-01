@@ -1627,6 +1627,31 @@
             },
         });
     };
+    // Операция обновить документы на предяъвленный и сданный вагон ОБНОВЛЕНИЕ ДОКУМЕНТОВ ЭПД через модуль согласования
+    ids_wsd.prototype.postOperationUpdateEPDSendingCar = function (operation_update_epd, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/operation/update/epd/sending/car/',
+            type: 'POST',
+            data: JSON.stringify(operation_update_epd),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postOperationUpdateEPDSendingCar", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //======= IDS_DOC (Таблица ЭПД принятых вагонов в базе данных АМКР ИДС) ======================================
     //======= Arrival_UZ_Document_Docs (Доки по ЭПД УЗ по прибытию (не досылочные)) ======================================
     // Получить все доки

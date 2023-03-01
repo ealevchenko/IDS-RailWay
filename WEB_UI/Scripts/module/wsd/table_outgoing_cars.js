@@ -56,12 +56,14 @@
             'togc_title_button_hand_over_sostav': 'Сдать состав',
             'togc_title_button_dislocation_over_sostav': 'Перем. состав',
             'togc_title_button_update_doc_uz': 'Обн.ЭПД',
+            'togc_title_button_find_doc_uz': 'Найти ЭПД',
             'togc_mess_init_module': 'Инициализация модуля (table_outgoing_cars)...',
             'togc_mess_load_sostav': 'Загружаю вагоны...',
             'togc_mess_update_sostav': 'Обновляю вагоны...',
             'togc_mess_view_sostav': 'Показываю составы...',
             'togc_mess_run_operation': 'Выполняю операцию...',
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
+            'togc_mess_warning_id_car_null': 'Операция недопустима вагон не выбран!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
             'togc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «отправлен» или «предъявлен»!',
@@ -115,12 +117,14 @@
             'togc_title_button_hand_over_sostav': 'Hand Over Composition',
             'togc_title_button_dislocation_over_sostav': 'Wagon Disloc.',
             'togc_title_button_update_doc_uz': 'Upd.ESD',
+            'togc_title_button_find_doc_uz': 'Find EPD',
             'togc_mess_init_module': 'Initiating module...',
             'togc_mess_load_sostav': 'Loading wagons...',
             'togc_mess_update_sostav': 'Updating wagons...',
             'togc_mess_view_sostav': 'Showing lineups...',
             'togc_mess_run_operation': 'Running operation...',
             'togc_mess_warning_id_sostav_null': 'Operation invalid no composition selected!',
+            'togc_mess_warning_id_car_null': 'Operation invalid no car selected!',
             'togc_mess_warning_sostav_status_4': 'Operation invalid composition rejected!',
             'togc_mess_warning_sostav_status_5': 'Operation is invalid, composition does not have status "in progress" or "submitted"!',
             'togc_mess_warning_sostav_status_6': 'Operation is invalid, the composition does not have status "sent"!',
@@ -449,6 +453,11 @@
             enabled: true
         },
         {
+            button: 'find_doc_uz',
+            text: langView('togc_title_button_find_doc_uz', App.Langs),
+            enabled: true
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -528,6 +537,12 @@
             name: 'update_doc_uz',
             action: function (e, dt, node, config) {
                 this.update_doc_uz(); // выполнить операцию
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'find_doc_uz',
+            action: function (e, dt, node, config) {
+                this.find_doc_uz(); // выполнить операцию
             }.bind(this)
         });
         //buttons.push({
@@ -952,7 +967,7 @@
         if (this.id_sostav !== null) {
             this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
                 if (sostav) {
-                    if (sostav.status > 1 ) {
+                    if (sostav.status > 1) {
                         // Подготовим операцию обновления документов ЭПД
                         var operation_update_epd = {
                             id_outgoing_sostav: this.id_sostav,
@@ -961,7 +976,7 @@
                         // Обновим документы ЭПД
                         this.ids_wsd.postOperationUpdateEPDSendingSostav(operation_update_epd, function (result_update_epd) {
                             if (result_update_epd !== null && result_update_epd.result >= 0) {
-                                this.update(function(wagons) {
+                                this.update(function (wagons) {
                                     this.view(wagons, this.id_station, this.id_sostav);
                                     this.out_info(langView('togc_mess_ok_update_epd', App.Langs).format(result_update_epd.listResult.length))
                                     LockScreenOff();
@@ -989,6 +1004,37 @@
             LockScreenOff();
         }
     };
+    // Найти документ
+    table_outgoing_cars.prototype.find_doc_uz = function () {
+        this.out_clear();
+        LockScreen(langView('togc_mess_run_operation', App.Langs));
+        if (this.select_rows_wagons !== null && this.select_rows_wagons.length > 0) {
+            // Подготовим операцию обновления документов ЭПД
+            var operation_update_epd = {
+                id_outgoing_car: this.select_rows_wagons[0].outgoing_car_id,
+                user: App.User_Name,
+            };
+            // Обновим документы ЭПД
+            this.ids_wsd.postOperationUpdateEPDSendingCar(operation_update_epd, function (result_update_epd) {
+                if (result_update_epd !== null && result_update_epd.result >= 0) {
+                    this.update(function (wagons) {
+                        this.view(wagons, this.id_station, this.id_sostav);
+                        this.out_info(langView('togc_mess_ok_update_epd', App.Langs).format(result_update_epd.listResult.length))
+                        LockScreenOff();
+                    }.bind(this));
+                } else {
+                    // Ошибка, выполнения операции
+                    this.out_error(langView('togc_mess_error_update_epd', App.Langs).format(result_update_epd !== null ? result_update_epd.error : null));
+                    LockScreenOff();
+                }
+            }.bind(this));
+        } else {
+            // Ошибка id не определено
+            this.out_warning(langView('togc_mess_warning_id_car_null', App.Langs));
+            LockScreenOff();
+        }
+    }
+
     // Загрузить составы прибывающие на станцию 
     //-------------------------------------------------------------------------------------------
     // Очистить сообщения
