@@ -743,6 +743,60 @@
         var $panel = tabs.$content.find('div#' + name_panel); // Панель
         $panel.append(row.$row);
     };
+
+    view_td_report.prototype.init_panel_horizontal_char2_report = function (tabs, name_panel, name_div, tab_col, char_col) {
+        // Груз по Оператору АМКР
+        var card_chart1 = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-info',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_chart', App.Langs),
+        });
+        card_chart1.$body.append($('<div>', {
+            id: name_div + '1-chart',
+        }))
+        var card_chart2 = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-secondary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-info',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_chart', App.Langs),
+        });
+        card_chart2.$body.append($('<div>', {
+            id: name_div + '2-chart',
+        }))
+
+        var card_table = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-primary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-primary',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_table', App.Langs),
+        });
+        card_table.$body.append($('<div>', {
+            id: name_div,
+        }))
+        var row = new this.fe_ui.bs_row();
+        var col_chart = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: char_col ? char_col : 6,
+        });
+        var col_table = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: tab_col ? tab_col : 6,
+        });
+        row.$row.append(col_table.$col.append(card_table.$card)).append(col_chart.$col.append(card_chart1.$card).append(card_chart2.$card));
+        //
+        // Добавим в панель
+        //var $panel = this.nav_tabs_arr_total.$content.find('div#' + name_panel); // Панель
+        var $panel = tabs.$content.find('div#' + name_panel); // Панель
+        $panel.append(row.$row);
+    };
+
     //----------------------------------------------------------------------
     // ФОРМА ВЫБОРА ВРЕМЕНИ ОТЧЕТА
     // Настройка выбора диапазона отчета
@@ -4023,7 +4077,7 @@
         this.chart_total_division_to_arr = new CAM('div#adoption-division-to-arr-chart');         // Создадим экземпляр
         this.chart_total_division_to_arr.init({
             alert: null,
-            type_chart: 'radial_histogram',     //pie_chart
+            type_chart: 'column_with_rotated_labels',     //radial_histogram
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -7199,7 +7253,7 @@
         var sum_vesg = 0;
 
         $.each(wagons_outgoing, function (key, value) {
-            var res = list_groups_cargo.indexOf(value.outgoing_uz_vagon_id_cargo);
+            var res = list_groups_cargo.indexOf(value.outgoing_uz_vagon_id_group);
             if (res === -1) {
                 count_load++;
                 sum_vesg += value.outgoing_uz_vagon_vesg;
@@ -7668,21 +7722,14 @@
         this.chart_data_total_outgoing_cargo_operator = [];
         this.chart_data_total_operator_amkr = [];
         this.chart_data_total_division_metals = [];
-        this.chart_data_total_division_cargo = [];
+        this.chart_data_total_division_cargo1 = [];
+        this.chart_data_total_division_cargo2 = [];
         this.chart_data_total_ext_station_ukr = [];
         this.chart_data_total_ext_station_exp = [];
         //...
         this.chart_data_total_cargo_metall = [];
         this.chart_data_total_operators = [];
         this.chart_data_total_operators_cargo = [];
-
-        //this.chart_data[0] = [];   // Данные для графиков
-        //this.chart_data[1] = [];   // Данные для графиков
-        //this.chart_data[2] = [];   // Данные для графиков
-        //this.chart_data[3] = [];   // Данные для графиков
-        //this.chart_data[4] = [];   // Данные для графиков
-        //this.chart_data[5] = [];   // Данные для графиков
-
 
         $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_6_1', App.Langs).format(''));   // выведем название отчета
@@ -8090,13 +8137,14 @@
         this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-cargo-tab', 'outgoing-cargo-operator');
         // Закладка Оператор по ОТПР
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr');
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr', 6, 6);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operator-amkr-tab', 'outgoing-operator-amkr', 5, 7);
         // Закладка Цех-грузоотправитель
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-division-amkr');
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-metall', 5, 7);
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-cargo', 5, 7);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-metall', 6, 6);
+        this.init_panel_horizontal_char2_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-cargo', 6, 6);
+        //this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-division-amkr-tab', 'outgoing-total-division-cargo', 5, 7);
         // Закладка Отчет об отгруженной продукции предприятия.
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station', 5, 7);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station', 6, 6);
         //this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station-ukr', 5, 7);
         //this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-ext-station-tab', 'outgoing-total-ext-station-exp', 5, 7);
         // Закладка Металл ОТПР
@@ -8116,7 +8164,7 @@
 
         // ------------------------------------------------
         // Запускаем 18 процесса инициализации (паралельно)
-        var process = 16;
+        var process = 17;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -8274,8 +8322,18 @@
             },
         });
         // Инициализация модуля графиков тип: pie_chart
-        this.chart_total_division_cargo = new CAM('div#outgoing-total-division-cargo-chart');         // Создадим экземпляр
-        this.chart_total_division_cargo.init({
+        this.chart_total_division_cargo1 = new CAM('div#outgoing-total-division-cargo1-chart');         // Создадим экземпляр
+        this.chart_total_division_cargo1.init({
+            alert: null,
+            type_chart: 'donut_with_radial_gradient',     //pie_chart
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        this.chart_total_division_cargo2 = new CAM('div#outgoing-total-division-cargo2-chart');         // Создадим экземпляр
+        this.chart_total_division_cargo2.init({
             alert: null,
             type_chart: 'donut_with_radial_gradient',     //pie_chart
             fn_init: function () {
@@ -9336,32 +9394,42 @@
             // Отобразим
             this.table_total_division_cargo.view(list_view);
 
-            var data = [
-
-            ];
+            var data1 = [];
+            var data2 = [];
 
             //$.each(list_view, function (key, element) {
             //    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
             //}.bind(this));
 
             $.each(list_view, function (key, element) {
-                var gn = data.find(function (o) { return o.name === element.cargo_out_group_name; });
+                var gn = data1.find(function (o) { return o.name === element.cargo_out_group_name; });
                 if (gn === undefined) {
-                    data.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
+                    data1.push({ "name": element.cargo_out_group_name, "value": element.count_wagon });
                 } else {
                     gn.value += element.count_wagon;
                 }
             }.bind(this));
 
-            this.chart_data_total_division_cargo = data;
+            $.each(list_view, function (key, element) {
+                var gn = data2.find(function (o) { return o.name === element.division_abbr; });
+                if (gn === undefined) {
+                    data2.push({ "name": element.division_abbr, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+            }.bind(this));
+
+            this.chart_data_total_division_cargo1 = data1;
+            this.chart_data_total_division_cargo2 = data2;
             this.view_chart_total_division_cargo();
             LockScreenOff();
         }
     };
     // Вывести данные по диаграмме "Цех погрузки черных металлов"
     view_td_report.prototype.view_chart_total_division_cargo = function () {
-        if (this.report_panel === 2 && this.chart_data_total_division_cargo) {
-            this.chart_total_division_cargo.view(this.chart_data_total_division_cargo);
+        if (this.report_panel === 2 && this.chart_data_total_division_cargo1 && this.chart_data_total_division_cargo2) {
+            this.chart_total_division_cargo1.view(this.chart_data_total_division_cargo1);
+            this.chart_total_division_cargo2.view(this.chart_data_total_division_cargo2);
         }
     };
 
@@ -9483,8 +9551,8 @@
                 var gn = data.find(function (o) { return o.id === element.id; });
                 if (gn === undefined) {
                     var sum_type = 0;
-                    $.each(list_view, function (i, el) { if (el.id===element.id) sum_type += el.count_wagon });
-                    data.push({ "id": element.id, "group": shorten_string(element.cargo_out_group_name), "name": getIDType(element.id_type), "value": Number(Number(sum_type * 100) / sum)});
+                    $.each(list_view, function (i, el) { if (el.id === element.id) sum_type += el.count_wagon });
+                    data.push({ "id": element.id, "group": shorten_string(element.cargo_out_group_name), "name": getIDType(element.id_type), "value": Number(Number(sum_type * 100) / sum) });
 
                 }
             }.bind(this));

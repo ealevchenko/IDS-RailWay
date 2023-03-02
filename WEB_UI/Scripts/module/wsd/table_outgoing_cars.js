@@ -43,6 +43,9 @@
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'togc_field_outgoing_uz_vagon_vesg': 'вес ЭПД',
+            'togc_field_sap_outgoing_supply_netto': 'вес САП',
+
             'togc_title_yes': 'Да',
             'togc_title_all': 'Все',
             'togc_title_button_export': 'Экспорт',
@@ -390,6 +393,23 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Вес по отправке
+        {
+            field: 'outgoing_uz_vagon_vesg',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_vesg ? Number(Number(row.outgoing_uz_vagon_vesg) / 1000).toFixed(3) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('togc_field_outgoing_uz_vagon_vesg', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'sap_outgoing_supply_netto',
+            data: function (row, type, val, meta) {
+                return row.sap_outgoing_supply_netto ? Number(Number(row.sap_outgoing_supply_netto) / 1000).toFixed(3) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('togc_field_sap_outgoing_supply_netto', App.Langs), width: "30px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -505,6 +525,9 @@
         collums.push({ field: 'outgoing_uz_vagon_owner_wagon_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', title: null, class: null });
+        collums.push({ field: 'outgoing_uz_vagon_vesg', title: null, class: null });
+        collums.push({ field: 'sap_outgoing_supply_netto', title: null, class: null });
+
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
