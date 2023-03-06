@@ -8696,24 +8696,25 @@
             callback(this.sort_table(list_result, 'id_group', 'count_wagon', true));
         }
     };
-    // Выборка для Цех-грузоотправитель (+ report_6_5)
+    // Выборка для Цех-грузоотправитель (6_5)
     view_td_report.prototype.process_data_report_6_3_1 = function (data, callback) {
         var list_result = [];
         $.each(data, function (key, el_wag) {
             // отберем группу черных металлов
             if (el_wag.outgoing_uz_vagon_id_out_group === 1) {
                 var op = list_result.find(function (o) {
-                    return o.id_group === el_wag.outgoing_uz_vagon_id_group &&
+                    return o.id_cargo === el_wag.outgoing_uz_vagon_id_cargo &&
                         o.id_division === el_wag.outgoing_uz_vagon_id_division
                 }.bind(this));
                 if (!op) {
                     // Не данных 
                     list_result.push({
+                        id_cargo: el_wag.outgoing_uz_vagon_id_cargo,
+                        cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
                         id_group: el_wag.outgoing_uz_vagon_id_group,
                         group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
                         id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
                         cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
-                        cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
                         id_division: el_wag.outgoing_uz_vagon_id_division,
                         division_abbr: el_wag['outgoing_uz_vagon_division_abbr_' + App.Lang],
                         count_wagon: 1,
@@ -8974,6 +8975,39 @@
             );
         }
     };
+    // Выборка для Цех-грузоотправитель
+    //view_td_report.prototype.process_data_report_6_5 = function (data, callback) {
+    //    var list_result = [];
+    //    $.each(data, function (key, el_wag) {
+    //        // отберем группу черных металлов
+    //        if (el_wag.outgoing_uz_vagon_id_out_group === 1) {
+    //            var op = list_result.find(function (o) {
+    //                return o.id_group === el_wag.outgoing_uz_vagon_id_group &&
+    //                    o.id_division === el_wag.outgoing_uz_vagon_id_division
+    //            }.bind(this));
+    //            if (!op) {
+    //                // Не данных 
+    //                list_result.push({
+    //                    id_group: el_wag.outgoing_uz_vagon_id_group,
+    //                    group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
+    //                    id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
+    //                    cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
+    //                    cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
+    //                    id_division: el_wag.outgoing_uz_vagon_id_division,
+    //                    division_abbr: el_wag['outgoing_uz_vagon_division_abbr_' + App.Lang],
+    //                    count_wagon: 1,
+    //                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
+    //                });
+    //            } else {
+    //                op.count_wagon = op.count_wagon + 1;
+    //                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
+    //            };
+    //        };
+    //    }.bind(this));
+    //    if (typeof callback === 'function') {
+    //        callback(list_result);
+    //    }
+    //};
     // ИТОГ оператор
     view_td_report.prototype.process_data_report_6_6_1 = function (data, callback) {
         var list_result = [];
@@ -9090,22 +9124,6 @@
                 this.view_filter_report_total_division_cargo();
                 // Отобразить данные в таблице Отчета об отгруженной продукции предприятия
                 this.view_filter_report_total_ext_station();
-
-                ////// Отобразить данные в таблице Отчета об отгруженной продукции предприятия по украине
-                ////this.view_filter_report_total_ext_station_ukr();
-                ////// Отобразить данные в таблице Отчета об отгруженной продукции предприятия экспорт
-                ////this.view_filter_report_total_ext_station_exp();
-                //.....
-                //// Отобразить данные в таблице группы ПРИБ
-                //this.view_filter_report_total_group_cargo();
-                //// Отобразить данные в таблице Род вагона ПРИБ
-                //this.view_filter_report_total_genus();
-                //// Отобразить данные в таблице Груз ПРИБ SAP
-                //this.view_filter_report_total_cargo_sap();
-                //// Отобразить данные в таблице Станция ПРИБ
-                //this.view_filter_report_total_station_from();
-                //// Отобразить данные в таблице Цех-грузополучатель
-                //this.view_filter_report_total_division();
                 // Металл ОТПР
                 this.view_filter_report_total_cargo_metall();
                 // ИТОГ оператор
@@ -9128,36 +9146,8 @@
             out_process_data(process);
         }.bind(this));
         this.process_data_report_6_3_1(wagons_outgoing, function (result) {
-            // Для отчета 6_3_1
             this.total_division_metals = this.sort_table(result, 'id_group', 'count_wagon', true);
-            //this.total_division_metals = [];
-            //$.each(result, function (key, el) {
-            //    var op = this.total_division_metals.find(function (o) {
-            //        return o.id_group === el.id_group
-            //    }.bind(this));
-            //    if (!op) {
-            //        // Не данных 
-            //        var list = result.filter(function (i) { return i.id_group === el.id_group }.bind(this));
-            //        if (list && list.length > 0) {
-            //            this.total_division_metals = this.total_division_metals.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
-            //        }
-            //    }
-            //}.bind(this));
-            // Для отчета 6_5
             this.total_cargo_metall = this.sort_table(result, 'id_division', 'count_wagon', true);
-            //this.total_cargo_metall = [];
-            //$.each(result, function (key, el) {
-            //    var op = this.total_cargo_metall.find(function (o) {
-            //        return o.id_division === el.id_division
-            //    }.bind(this));
-            //    if (!op) {
-            //        // Не данных 
-            //        var list = result.filter(function (i) { return i.id_division === el.id_division }.bind(this));
-            //        if (list && list.length > 0) {
-            //            this.total_cargo_metall = this.total_cargo_metall.concat(list.sort(function (a, b) { return b.count_wagon - a.count_wagon }.bind(this)));
-            //        }
-            //    }
-            //}.bind(this));
             process--;
             out_process_data(process);
         }.bind(this));
@@ -9175,7 +9165,11 @@
             process--;
             out_process_data(process);
         }.bind(this));
-        //....
+        //this.process_data_report_6_5(wagons_outgoing, function (result) {
+        //    this.total_cargo_metall = this.sort_table(result, 'id_division', 'count_wagon', true);
+        //    process--;
+        //    out_process_data(process);
+        //}.bind(this));
         this.process_data_report_6_6_1(wagons_outgoing, function (result) {
             this.total_operators = result;
             process--;
@@ -9603,7 +9597,7 @@
 
             ];
             $.each(this.sort_table(list_view, 'id_division', 'count_wagon', false), function (key, element) {
-                data.push({ "group": element.division_abbr, "name": element.group_name + "-" + element.count_wagon + " ваг.", "value": Number(element.count_wagon) });
+                data.push({ "group": element.division_abbr, "name": element.cargo_name + "-" + element.count_wagon + " ваг.", "value": Number(element.count_wagon) });
             }.bind(this));
 
             this.chart_data_total_cargo_metall = data;

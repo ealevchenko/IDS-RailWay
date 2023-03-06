@@ -172,6 +172,10 @@ tr.group,
 tr.group:hover {
     background-color: #ddd !important;
 }
+tr.type-total,
+tr.type-total:hover {
+    background-color: #6262ff !important;
+}
 tr.group-total,
 tr.group-total:hover {
     background-color: #808080 !important;

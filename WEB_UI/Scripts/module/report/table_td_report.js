@@ -3163,7 +3163,6 @@
 
         return init_columns_detali(collums, list_collums);
     };
-
     // инициализация полей outgoing_total_operators
     table_td_report.prototype.init_columns_outgoing_total_operators = function () {
         var collums = [];
@@ -3173,7 +3172,7 @@
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
         return init_columns_detali(collums, list_collums);
     };
-    // инициализация полей outgoing_total_operators_cargo
+    // инициализация полей _outgoing_total_operators_cargo
     table_td_report.prototype.init_columns_outgoing_total_operators_cargo = function () {
         var collums = [];
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
@@ -3183,12 +3182,13 @@
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
         return init_columns_detali(collums, list_collums);
     };
-    // инициализация полей outgoing_total_operators_cargo
+    // инициализация полей outgoing_total_division_metall
     table_td_report.prototype.init_columns_outgoing_total_division_metall = function () {
         var collums = [];
         collums.push({ field: 'total_out_division_abbr', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name_out', App.Langs), class: null });
         collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_out', App.Langs), class: null });
+        //collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_note', title: null, class: null });
@@ -3208,8 +3208,8 @@
     table_td_report.prototype.init_columns_outgoing_total_cargo_metall = function () {
         var collums = [];
         collums.push({ field: 'total_out_division_abbr', title: null, class: null });
-        //collums.push({ field: 'total_cargo_name', title: null, class: null });
-        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_out', App.Langs), class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        //collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_out', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
 
@@ -3946,12 +3946,12 @@
                 this.deferRender = true;
                 this.paging = true;
                 this.searching = false;
-                this.ordering = true;
+                this.ordering = false;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [3, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4329,9 +4329,12 @@
                 this.drawCallback = function (settings) {
                     var api = this.api();
                     var rows = api.rows({ page: 'current' }).nodes();
+                    var last_group = null;
                     var last = null;
                     var count = 0;
                     var sum_vesg = 0;
+                    var count_group = 0;
+                    var sum_vesg_group = 0;
                     var intVal = function (i) {
                         return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
                     };
@@ -4339,30 +4342,47 @@
                         //.column(1, { page: 'current' })
                         .data()
                         .each(function (group, i) {
-                            if (last !== group.group_name) {
+                            if (last !== group.cargo_name) {
                                 // Подведем итог
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
+                                        .before('<tr class="type-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
                                 }
-                                // Заглавие новой группы
-                                $(rows)
-                                    .eq(i)
-                                    .before('<tr class="group"><td colspan="5">' + group.group_name + '</td></tr>');
-                                last = group.group_name;
+                                last = group.cargo_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
                             } else {
                                 count += group.count_wagon;
                                 sum_vesg += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
                             }
+                            //
+                            if (last_group !== group.group_name) {
+                                // Подведем итог
+                                if (last_group !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last_group + ' ИТОГО:</td><td class="total-count">' + count_group + '</td><td class="total-value">' + sum_vesg_group.toFixed(2) + '</td><td></td></tr>')
+
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="5">' + group.group_name + '</td></tr>');
+                                last_group = group.group_name;
+                                count_group = group.count_wagon;
+                                sum_vesg_group = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            } else {
+                                count_group += group.count_wagon;
+                                sum_vesg_group += group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
+                            }
                         });
                     // Последнее итого
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>');
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last_group + ' ИТОГО:</td><td class="total-count">' + count_group + '</td><td class="total-value">' + sum_vesg_group.toFixed(2) + '</td><td></td></tr>')
+                            .after('<tr class="type-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td></td></tr>')
                     };
                 };
                 break;
@@ -4703,13 +4723,13 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_division_metall') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО ЧЕРНЫЕ МЕТАЛЛЫ:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_division_cargo') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_cargo_metall') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th class="dt-right">ЧЕРНЫЕ МЕТАЛЛЫ:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_operators') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
