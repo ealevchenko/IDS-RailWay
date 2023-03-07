@@ -244,13 +244,16 @@ namespace Test
             //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
-            //tids.IDS_WIR_UpdateOutgoing_UZ_Document();                  //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
+            //tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
 
             //tids.IDS_WIR_UpdateOutgoing_Async();
             //tids.IDS_WIR_UpdateOutgoing_Parallel();            
             //tids.IDS_WIR_UpdateOutgoing_Thread();
 
-            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                         // Тестируем обновление документов в архиве
+            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                       // Тестируем обновление документов в архиве
+
+            //tids.IDS_WIR_UpdateOperationOutgoingSostav();               // 
+            tids.IDS_WIR_UpdateOperationOutgoingSostav_date();               // 
 
             #endregion
 

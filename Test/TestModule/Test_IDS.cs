@@ -552,6 +552,21 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             ResultUpdateID result = ids.UpdateOutgoing_UZ_Document(@"EUROPE\ealevchenko");
         }
+        /// <summary>
+        /// Обновить по сданному или отправленному составу оператора АМКР
+        /// </summary>
+        public void IDS_WIR_UpdateOperationOutgoingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            OperationResultID result = ids.UpdateOperationOutgoingSostav(200536, @"EUROPE\ealevchenko");
+        }
+
+        public void IDS_WIR_UpdateOperationOutgoingSostav_date()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime dt = new DateTime(2023, 2, 1, 0, 0, 0);
+            OperationResultID result = ids.UpdateOperationOutgoingSostav(dt, @"EUROPE\ealevchenko");
+        }
 
         //public void IDS_WIR_UpdateOutgoing_Async()
         //{
