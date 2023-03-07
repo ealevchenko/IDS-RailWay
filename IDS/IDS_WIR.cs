@@ -672,6 +672,22 @@ namespace IDS
         public DateTime? epd_date_pr { get; set; }
 
     }
+    /// <summary>
+    /// Класс набора данных информации по новым рентам на отправленные вагоны
+    /// </summary>
+    public class New_Rent_Outgoing
+    {
+        public long id { get; set; }
+        public int num { get; set; }
+        public int? id_operator { get; set; }
+        public int? id_limiting { get; set; }
+        public DateTime? rent_start { get; set; }
+        public DateTime? rent_end { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public int? parent_id { get; set; }
+        public long? id_outgoing_uz_vagon { get; set; }
+        public int? new_id { get; set; }
+    }
 
     #endregion
 
@@ -7801,7 +7817,7 @@ namespace IDS
         }
         #endregion
 
-        #region ДОКУМЕНТ Outgoing_UZ_Document
+        #region ДОКУМЕНТ _UZ_Document
         /// <summary>
         /// Обновить документ на группу вагонов + обновить вагоны...
         /// </summary>
@@ -8187,9 +8203,10 @@ namespace IDS
                         {
                             vagons = new_uz_doc.otpr.vagon.ToList().Select(w => w.nomer).ToList();
                         }
-                        foreach (string vag in vagons) {
+                        foreach (string vag in vagons)
+                        {
                             OutgoingCars wag = cars.Where(c => c.num == int.Parse(vag)).FirstOrDefault();
-                            if (wag!=null) list_cars.Add(new EPDOutgoingCar() { id_outgoing_car = wag.id, epd = new_uz_doc });
+                            if (wag != null) list_cars.Add(new EPDOutgoingCar() { id_outgoing_car = wag.id, epd = new_uz_doc });
                         }
                         // Выполним обновление всего пула документов
                         int result = UpdateOutgoing_UZ_Document(ref context, new_uz_doc.id_doc, list_cars, user);
@@ -8535,6 +8552,130 @@ namespace IDS
         //        //return result;// Ошибка
         //    }
         //}
+
+        /// <summary>
+        /// Обновить по сданному или отправленному составу оператора АМКР
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_outgoing_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID UpdateOperationOutgoingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                //EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoing_UZ_Vagon ef_out_vag = new EFOutgoing_UZ_Vagon(context);
+                OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
+                if (sostav != null)
+                {
+                    // Состав определен (сдан или отправлен)
+                    if (sostav.status >= 2 && sostav.status <= 3)
+                    {
+                        System.Data.SqlClient.SqlParameter id_sostav = new System.Data.SqlClient.SqlParameter("@id_sostav", id_outgoing_sostav);
+                        string sql = "select * from [IDS].[get_new_rent_outgoing_of_id_sostav](@id_sostav)";
+                        List<New_Rent_Outgoing> list = context.Database.SqlQuery<New_Rent_Outgoing>(sql, id_sostav).ToList();
+                        if (list.Count() > 0)
+                        {
+                            foreach (New_Rent_Outgoing new_rent in list)
+                            {
+                                Outgoing_UZ_Vagon out_vag = ef_out_vag.Context.Where(v => v.id == new_rent.id_outgoing_uz_vagon).FirstOrDefault();
+                                if (out_vag != null && new_rent.new_id != null) {
+                                    out_vag.id_wagons_rent_outgoing = new_rent.new_id;
+                                    rt.SetResultOperation(1, (long)new_rent.id_outgoing_uz_vagon);
+                                }
+                            }
+                            if (rt.listResult.Count() > 0)
+                            {
+                                rt.SetResult(context.SaveChanges());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        rt.SetResult((int)errors_base.error_status_outgoing_sostav); // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                    }
+                }
+                else
+                {
+                    rt.SetResult((int)errors_base.not_outgoing_sostav_db); //В базе данных нет записи состава
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOperationOutgoingSostav(context={0}, id_outgoing_sostav={1}, user={2})",
+                    context, id_outgoing_sostav, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Обновить по сданному или отправленному составу оператора АМКР
+        /// </summary>
+        /// <param name="id_outgoing_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID UpdateOperationOutgoingSostav(long id_outgoing_sostav, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                return UpdateOperationOutgoingSostav(ref context, id_outgoing_sostav, user);
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOperationOutgoingSostav(id_outgoing_sostav={0}, user={1})",
+                    id_outgoing_sostav, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        public OperationResultID UpdateOperationOutgoingSostav(DateTime date_outgoing, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                List<OutgoingSostav> list_sostav = ef_out_sostav.Context.Where(s => s.date_outgoing >= date_outgoing).ToList();
+                foreach (OutgoingSostav sost in list_sostav) {
+                    OperationResultID rt_st = UpdateOperationOutgoingSostav(sost.id, user);
+                    rt.SetResultOperation(rt_st.result, sost.id);
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateOperationOutgoingSostav(date_outgoing={0}, user={1})",
+                    date_outgoing, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
 
         #endregion
 
