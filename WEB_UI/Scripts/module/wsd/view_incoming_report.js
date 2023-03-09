@@ -872,7 +872,7 @@
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">За результатами перевірки  прошу видати комерційний акт відповідно до Правил.</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Прийомоздавальник вантажу та багажу</span></p>');
-            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">ПП « Стіл Сервіс»&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">ТОВ «Сталь Україна»&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Прийомоздавальник вантажу та багажу</span></p>');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Ст. ' + station_name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
@@ -938,7 +938,7 @@
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">За результатами перевірки  прошу видати комерційний акт відповідно до Правил.</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Прийомоздавальник вантажу та багажу</span></p>');
-            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">ПП « Стіл Сервіс»&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">ТОВ «Сталь Україна»&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Прийомоздавальник вантажу та багажу</span></p>');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;margin-bottom:.0001pt"><span lang=UK style="font-size:14.0pt;line-height:107%;">Ст. ' + station_name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________( П.І.Б)</span></p>');
@@ -971,9 +971,9 @@
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal><span lang=UK>Цей акт  складений  у присутності таких осіб:</span></p>');
             mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK> </span><span lang=UK> </span><span lang=UK>прийомоздавальник ПП « Стіл-Сервис» ________________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal><span lang=UK> </span><span lang=UK> </span><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ________________________________________</span></p>');
             mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник ПП « Стіл-Сервис»   _______________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник ТОВ «Сталь Україна»   _______________________________________</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник АТ «Укрзалізниця»  _______________________________________</span></p>');
             mywindow.document.write('<br />');
@@ -1004,13 +1004,13 @@
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><b><span lang=UK>Підписи</span></b></p>');
             mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ПП « Стіл-Сервис» ___________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ___________________________________</span></p>');
             mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ПП « Стіл-Сервис»   ___________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна»   ___________________________________</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник АТ «Укрзалізниця»  ___________________________________</span></p>');
             mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>оглядач</span> вагонів  <span lang=UK>П</span>П «Стіл<span lang=UK>-</span>Сервис»        <span lang=UK>  ____________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal><span lang=UK>оглядач</span> вагонів  <span lang=UK>П</span>ТОВ «Сталь Україна»        <span lang=UK>  ____________________________________</span></p>');
             mywindow.document.write('</div>');
             mywindow.document.write('</body>');
             mywindow.document.write('</html>');
