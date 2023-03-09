@@ -1351,7 +1351,7 @@
             },
             error: function (x, y, z) {
                 LockScreenOff();
-                OnAJAXError("ids_directory.postOperationUpdateWagons", x, y, z);
+                OnAJAXError("ids_directory.postOperationCreateUpdateWagons", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

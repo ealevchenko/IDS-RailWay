@@ -96,7 +96,8 @@
         },
         'en':  //default language: English
         {
-            'tos_field_id_composition': 'composition id',
+            'tos_field_id_sostav': 'id состав',
+            //'tos_field_id_composition': 'composition id',
             'tos_field_num_doc': 'Ved. No.',
             'tos_field_id_station_from': 'id of Station of departure',
             'tos_field_station_from_name': 'Sent from station',
