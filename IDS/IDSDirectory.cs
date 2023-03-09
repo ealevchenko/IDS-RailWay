@@ -783,19 +783,25 @@ namespace IDS
                     // Правим оператора
                     if (edit_operator)
                     {
-                        // Правим старую аренду
+                        // Правим первую аренду
                         if (rent_last.id_operator == null)
                         {
                             rent_last.id_operator = id_operator;
                         }
-
                         if (rent_last.rent_end != null)
                         {
                             // Если аренда закрыта
                             if (start_rent > rent_last.rent_end) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
                         }
                         // Оператор старый обновим дату аренды
-                        rent_last.rent_start = start_rent;
+                        if (rent_last.rent_start >= start_rent)
+                        {
+                            rent_last.rent_start = start_rent;
+                            if (rent_last.Directory_WagonsRent2 != null)
+                            {
+                                rent_last.Directory_WagonsRent2.rent_end = start_rent;
+                            }
+                        }
                     }
                     // Правим лимит
                     if (edit_limiting)
@@ -2291,7 +2297,7 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
- 
+
                 Directory_BorderCheckpoint bc = ef_bord_chek.Context.Where(s => s.code == code).FirstOrDefault();
                 if (bc == null && add)
                 {
