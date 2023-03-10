@@ -151,6 +151,12 @@ namespace IDS
 
 
     }
+
+    public class ChangeID
+    {
+        public long id_old { get; set; }
+        public long id_new { get; set; }
+    }
     public class ResultObject
     {
         public Object obj { get; set; }

@@ -207,6 +207,20 @@ namespace Test.TestModule
             int result = ids.ChangeNumWagon(27015, 22012, @"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result);
         }
+
+        public void IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int result = ids.CorrectDateTime_Of_Directory_WagonsRenf(67615401, @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
+        }
+        public void IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            ResultUpdateWagon result = ids.CorrectDateTime_Of_Directory_WagonsRenf(@"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result.result);
+        }
+
         #endregion
 
         #region IDSMORS
@@ -558,7 +572,7 @@ namespace Test.TestModule
         public void IDS_WIR_UpdateOperationOutgoingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID result = ids.UpdateOperationOutgoingSostav(200536, @"EUROPE\ealevchenko");
+            ResultUpdateWagon result = ids.UpdateOperationOutgoingSostav(210545, @"EUROPE\ealevchenko");
         }
 
         public void IDS_WIR_UpdateOperationOutgoingSostav_date()

@@ -1345,7 +1345,7 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("UpdateOwnersWagonsOfDB_UZ(user={1})", user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("UpdateOwnersWagonsOfDB_UZ(user={0})", user), servece_owner, eventID);
                 result.SetResult((int)errors_base.global);
                 return result;// Ошибка
             }
@@ -1493,6 +1493,86 @@ namespace IDS
             {
 
                 return (int)errors_base.global;// Ошибка
+            }
+        }
+        /// <summary>
+        /// Метод коррекции времени конца аренды и начало следующей аренды по выбранному вагону
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int CorrectDateTime_Of_Directory_WagonsRenf(int num, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                // КАРТОЧКА ВАГОНА
+                EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(context);
+                bool update = false;
+                List<Directory_WagonsRent> list = ef_wag_rent.Context.Where(w => w.num == num).OrderByDescending(c => c.id).ToList();
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    if ((i + 1) < list.Count() && list[i].parent_id == list[i + 1].id && list[i].rent_start != list[i + 1].rent_end)
+                    {
+                        Console.WriteLine("Карточка вагона № {0}, строка id {1} несоответсвует дата конца аренды {2} дате начала следующей аренды {3}", num, list[i + 1].id, list[i + 1].rent_end, list[i].rent_start);
+                        Directory_WagonsRent wag_rent = list[i + 1];
+                        wag_rent.rent_end = list[i].rent_start;
+                        wag_rent.change = DateTime.Now;
+                        wag_rent.change_user = user;
+                        ef_wag_rent.Update(wag_rent);
+
+                        update = true;
+                    }
+                }
+                if (update)
+                {
+                    return context.SaveChanges();
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CorrectDateTime_Of_Directory_WagonsRenf(num={0}, user={1})", num, user), servece_owner, eventID);
+                return (int)errors_base.global;// Ошибка
+            }
+        }
+        public ResultUpdateWagon CorrectDateTime_Of_Directory_WagonsRenf(string user)
+        {
+            ResultUpdateWagon result = new ResultUpdateWagon(0);
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                // КАРТОЧКА ВАГОНА
+                EFDirectory_Wagons ef_wag = new EFDirectory_Wagons(context);
+                List<Directory_Wagons> list = ef_wag.Context.ToList();
+                result.count = list.Count();
+                int count = 0;
+                Console.WriteLine("В справочнике вагонов определенно {0} вагонов", result.count);
+                foreach (Directory_Wagons wag in list)
+                {
+                    count++;
+                    int res = CorrectDateTime_Of_Directory_WagonsRenf(wag.num, user);
+                    result.SetUpdateResult(res, wag.num);
+                    Console.WriteLine("Вагон {0}, исправлено строк :{1} - осталось вагонов {2}",wag.num, result.result, result.count-count);
+                }
+                return result;
+
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CorrectDateTime_Of_Directory_WagonsRenf(user={1})", user), servece_owner, eventID);
+                result.SetResult((int)errors_base.global);
+                return result;
             }
         }
 

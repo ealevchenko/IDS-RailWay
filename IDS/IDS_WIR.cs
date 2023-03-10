@@ -8560,9 +8560,9 @@ namespace IDS
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultID UpdateOperationOutgoingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
+         public ResultUpdateWagon UpdateOperationOutgoingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
         {
-            OperationResultID rt = new OperationResultID();
+            ResultUpdateWagon result = new ResultUpdateWagon(0);
             try
             {
                 if (context == null)
@@ -8575,50 +8575,96 @@ namespace IDS
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
-                //EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
                 EFOutgoing_UZ_Vagon ef_out_vag = new EFOutgoing_UZ_Vagon(context);
+                EFDirectory_WagonsRent ef_wag_rent = new EFDirectory_WagonsRent(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
+                List<ChangeID> del_id_wr = new List<ChangeID>(); // Список id rent для удаления
+
                 if (sostav != null)
                 {
                     // Состав определен (сдан или отправлен)
                     if (sostav.status >= 2 && sostav.status <= 3)
                     {
-                        System.Data.SqlClient.SqlParameter id_sostav = new System.Data.SqlClient.SqlParameter("@id_sostav", id_outgoing_sostav);
-                        string sql = "select * from [IDS].[get_new_rent_outgoing_of_id_sostav](@id_sostav)";
-                        List<New_Rent_Outgoing> list = context.Database.SqlQuery<New_Rent_Outgoing>(sql, id_sostav).ToList();
-                        if (list.Count() > 0)
+                        List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == sostav.id && c.position_outgoing != null).ToList();
+                        result.count = cars.Count();
+                        Console.WriteLine("По сотаву {0} Определено {1} вагонов", id_outgoing_sostav, result.count);
+                        foreach (OutgoingCars car in cars)
                         {
-                            foreach (New_Rent_Outgoing new_rent in list)
+                            Outgoing_UZ_Vagon vag = ef_out_vag.Context.Where(v => v.id == car.id_outgoing_uz_vagon).FirstOrDefault();
+                            if (vag != null)
                             {
-                                Outgoing_UZ_Vagon out_vag = ef_out_vag.Context.Where(v => v.id == new_rent.id_outgoing_uz_vagon).FirstOrDefault();
-                                if (out_vag != null && new_rent.new_id != null) {
-                                    out_vag.id_wagons_rent_outgoing = new_rent.new_id;
-                                    rt.SetResultOperation(1, (long)new_rent.id_outgoing_uz_vagon);
+                                //List<Directory_WagonsRent> list_rent = ef_wag_rent.Context.Where(r => r.num == vag.num).ToList();
+
+                                // сформируем список id для исправления
+                                List<IGrouping<int?, Directory_WagonsRent>> list_double = ef_wag_rent.Context.Where(r => r.num == vag.num).GroupBy(g => g.parent_id).ToList().Where(g => g.Count() > 1).ToList();
+                                if (list_double.Count > 0)
+                                {
+                                    foreach (IGrouping<int?, Directory_WagonsRent> gr_wr in list_double)
+                                    {
+                                        ChangeID ch_id = new ChangeID();
+                                        foreach (Directory_WagonsRent wr in gr_wr.ToList())
+                                        {
+                                            Directory_WagonsRent del_rent = ef_wag_rent.Context.Where(r => r.parent_id == wr.id).FirstOrDefault();
+                                            if (del_rent == null)
+                                            {
+                                                ch_id.id_old = wr.id;
+                                            }
+                                            else
+                                            {
+                                                ch_id.id_new = wr.id;
+                                            }
+                                        }
+                                        if (ch_id != null)
+                                        {
+                                            del_id_wr.Add(ch_id);
+                                            Console.WriteLine("В справочнике аренд по вагону {0}, определено задвоение аренды, убрать :{1} оставить: {2}", vag.num, ch_id.id_old, ch_id.id_new);
+                                        }
+                                    }
+                                }
+                                // Получим аренды по данному вагону
+                                Directory_WagonsRent rent = ef_wag_rent.Context.Where(r => r.num == vag.num && r.rent_start <= sostav.date_outgoing && r.rent_end > sostav.date_outgoing).FirstOrDefault();
+                                Directory_WagonsRent rent_null = ef_wag_rent.Context.Where(r => r.num == vag.num && r.rent_start <= sostav.date_outgoing && r.rent_end == null).OrderByDescending(c => c.id).FirstOrDefault();
+                                int? id_wagons_rent_outgoing = null;
+                                id_wagons_rent_outgoing = rent != null ? (int?)rent.id : rent_null != null ? (int?)rent_null.id : null;
+                                // если аренда новая и записаная - разные, изменим аренду
+                                if (id_wagons_rent_outgoing != null && vag.id_wagons_rent_outgoing != id_wagons_rent_outgoing)
+                                {
+                                    vag.id_wagons_rent_outgoing = id_wagons_rent_outgoing;
+                                    vag.change = DateTime.Now;
+                                    vag.change_user = user;
+                                    result.SetUpdateResult(1, vag.num);
+                                    Console.WriteLine("По вагону {0} определена замена аренды на отправку {1}", vag.num, id_wagons_rent_outgoing);
+                                }
+                                else
+                                {
+                                    result.SetSkipResult(0, vag.num);
                                 }
                             }
-                            if (rt.listResult.Count() > 0)
-                            {
-                                rt.SetResult(context.SaveChanges());
-                            }
+                        }
+                        if (result.update > 0)
+                        {
+                            result.SetResult(context.SaveChanges());
                         }
                     }
                     else
                     {
-                        rt.SetResult((int)errors_base.error_status_outgoing_sostav); // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                        result.SetResult((int)errors_base.error_status_outgoing_sostav); // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                     }
                 }
                 else
                 {
-                    rt.SetResult((int)errors_base.not_outgoing_sostav_db); //В базе данных нет записи состава
+                    result.SetResult((int)errors_base.not_outgoing_sostav_db); //В базе данных нет записи состава
                 }
-                return rt;
+                Console.WriteLine("По составу {0} определено {1} вагонов (обновновить: {2}, пропустить :{3}), результат обновления :{4}", id_outgoing_sostav, result.count, result.update, result.skip, result.result);
+                return result;
             }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("UpdateOperationOutgoingSostav(context={0}, id_outgoing_sostav={1}, user={2})",
                     context, id_outgoing_sostav, user), servece_owner, eventID);
-                rt.SetResult((int)errors_base.global);
-                return rt;// Возвращаем id=-1 , Ошибка
+                result.SetResult((int)errors_base.global);
+                return result;// Возвращаем id=-1 , Ошибка
             }
         }
         /// <summary>
@@ -8627,9 +8673,9 @@ namespace IDS
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public OperationResultID UpdateOperationOutgoingSostav(long id_outgoing_sostav, string user)
+        public ResultUpdateWagon UpdateOperationOutgoingSostav(long id_outgoing_sostav, string user)
         {
-            OperationResultID rt = new OperationResultID();
+            ResultUpdateWagon rt = new ResultUpdateWagon(0);
             try
             {
                 EFDbContext context = new EFDbContext();
@@ -8648,7 +8694,12 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
-
+        /// <summary>
+        /// Обновить оператора АМКР по сданным или отправленным составам с указаной даты
+        /// </summary>
+        /// <param name="date_outgoing"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public OperationResultID UpdateOperationOutgoingSostav(DateTime date_outgoing, string user)
         {
             OperationResultID rt = new OperationResultID();
@@ -8662,8 +8713,9 @@ namespace IDS
                 }
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 List<OutgoingSostav> list_sostav = ef_out_sostav.Context.Where(s => s.date_outgoing >= date_outgoing).ToList();
-                foreach (OutgoingSostav sost in list_sostav) {
-                    OperationResultID rt_st = UpdateOperationOutgoingSostav(sost.id, user);
+                foreach (OutgoingSostav sost in list_sostav)
+                {
+                    ResultUpdateWagon rt_st = UpdateOperationOutgoingSostav(sost.id, user);
                     rt.SetResultOperation(rt_st.result, sost.id);
                 }
                 return rt;
