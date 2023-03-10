@@ -1,4 +1,4 @@
-declare @id_sostav int = 200536
+declare @id_sostav int = 210545
 SELECT TOP (1000) [id]
       ,[num_doc]
       ,[id_station_from]
@@ -101,7 +101,8 @@ SELECT wr.[id]
 	  ,[id_outgoing_uz_vagon] = (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars]  where [id_outgoing] =@id_sostav and [num] = wr.[num])
 	  ,[new_id] = (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent]
    where num = wr.[num] and [rent_start]<(select [date_outgoing] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav] where id =@id_sostav) 
-   and ([rent_end] is null or  [rent_end] > (select [date_outgoing] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav] where id =@id_sostav)))
+   and ([rent_end] is null or  [rent_end] > (select [date_outgoing] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav] where id =@id_sostav))
+   )
   --into change_rent_outgoing
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent] as wr
   where [id] in (SELECT [id_wagons_rent_outgoing] FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon] where [id] in (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars]  where [id_outgoing] =@id_sostav and  [position_outgoing] is not null))
