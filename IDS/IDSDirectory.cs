@@ -794,7 +794,7 @@ namespace IDS
                             if (start_rent > rent_last.rent_end) return (int)errors_ids_dir.error_set_date;// Ошибка дата конца аренды меньше или равна началу аренды
                         }
                         // Оператор старый обновим дату аренды
-                        if (rent_last.rent_start >= start_rent)
+                        if (rent_last.rent_start == null || rent_last.rent_start >= start_rent)
                         {
                             rent_last.rent_start = start_rent;
                             if (rent_last.Directory_WagonsRent2 != null)
