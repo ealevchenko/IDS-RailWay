@@ -89,7 +89,7 @@
             'ttdr_field_incoming_cars_uz_document_shipper_name': 'Гр. отпр.',
             'ttdr_field_incoming_cars_uz_document_code_consignee': 'Код. гр. пол.',
             'ttdr_field_incoming_cars_uz_document_name_consignee': 'Гр. пол.',
-            'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код. пл. отпр.',
+            'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код плат. ПРИБ.(по отправке).',
             'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
             'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес ЭПД, тн.',
@@ -2897,6 +2897,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_commercial_condition', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_sender', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_arrival', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_distance_way', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_pay_summa', title: null, class: null });
@@ -3784,7 +3785,7 @@
                 this.leftColumns = 2;
                 this.columnDefs = null;
                 this.order_column = [0, 'asc'];
-                this.type_select_rows = 0; // Выбирать одну
+                this.type_select_rows = 0;          // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = false;
                 this.table_columns = this.init_columns_adoption_common_detali();

@@ -8342,63 +8342,6 @@
                 out_init(process);
             },
         });
-
-        //// Таблица-Отчета об отгруженной продукции предприятия по украине
-        //this.table_total_ext_station_ukr = new TTDR('div#outgoing-total-ext-station-ukr');         // Создадим экземпляр
-        //this.table_total_ext_station_ukr.init({
-        //    alert: null,
-        //    detali_table: false,
-        //    type_report: 'outgoing_total_ext_station',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
-
-        //    },
-        //});
-        //// Инициализация модуля графиков тип: pie_chart
-        //this.chart_total_ext_station_ukr = new CAM('div#outgoing-total-ext-station-ukr-chart');         // Создадим экземпляр
-        //this.chart_total_ext_station_ukr.init({
-        //    alert: null,
-        //    type_chart: 'pie_chart',     //
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //});
-        //// Таблица-Отчета об отгруженной продукции предприятия по украине
-        //this.table_total_ext_station_exp = new TTDR('div#outgoing-total-ext-station-exp');         // Создадим экземпляр
-        //this.table_total_ext_station_exp.init({
-        //    alert: null,
-        //    detali_table: false,
-        //    type_report: 'outgoing_total_ext_station',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
-
-        //    },
-        //});
-        //// Инициализация модуля графиков тип: pie_chart
-        //this.chart_total_ext_station_exp = new CAM('div#outgoing-total-ext-station-exp-chart');         // Создадим экземпляр
-        //this.chart_total_ext_station_exp.init({
-        //    alert: null,
-        //    type_chart: 'pie_chart',     //
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //});
         // Таблица-Отчета об отгруженной продукции предприятия по украине
         this.table_total_ext_station = new TTDR('div#outgoing-total-ext-station');         // Создадим экземпляр
         this.table_total_ext_station.init({
@@ -8420,7 +8363,7 @@
         this.chart_total_ext_station = new CAM('div#outgoing-total-ext-station-chart');         // Создадим экземпляр
         this.chart_total_ext_station.init({
             alert: null,
-            type_chart: 'pie_chart_with_broken_down_slices',     //pie_chart
+            type_chart: 'donut_with_radial_gradient',     //pie_chart
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -9537,18 +9480,28 @@
 
             ];
 
-            var sum = 0;
-            $.each(list_view, function (i, el) { sum += el.count_wagon });
+            //var sum = 0;
+            //$.each(list_view, function (i, el) { sum += el.count_wagon });
 
 
             $.each(list_view, function (key, element) {
-                var gn = data.find(function (o) { return o.id === element.id; });
-                if (gn === undefined) {
-                    var sum_type = 0;
-                    $.each(list_view, function (i, el) { if (el.id === element.id) sum_type += el.count_wagon });
-                    data.push({ "id": element.id, "group": shorten_string(element.cargo_out_group_name), "name": getIDType(element.id_type), "value": Number(Number(sum_type * 100) / sum) });
 
+                if (element.id_out_group == 1) {
+                    var gn = data.find(function (o) { return o.id === element.id_type; });
+                    if (gn === undefined) {
+                        data.push({ "id": element.id_type, "name": getIDType(element.id_type), "value": element.count_wagon });
+                    } else {
+                        gn.value += element.count_wagon;
+                    }
                 }
+
+                //var gn = data.find(function (o) { return o.id_out_group === element.id; });
+                //if (gn === undefined) {
+                //    var sum_type = 0;
+                //    $.each(list_view, function (i, el) { if (el.id === element.id) sum_type += el.count_wagon });
+                //    data.push({ "id": element.id, "group": shorten_string(element.cargo_out_group_name), "name": getIDType(element.id_type), "value": Number(Number(sum_type * 100) / sum) });
+
+                //}
             }.bind(this));
 
             //$.each(list_view, function (key, element) {
