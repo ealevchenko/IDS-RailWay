@@ -543,7 +543,7 @@ namespace Test.TestModule
         /// </summary>
         public void IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC()
         {
-            string id_doc = "85960095";
+            string id_doc = "87549383";
 
             IDS_WIR ids = new IDS_WIR(service.Test);
             EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
@@ -557,6 +557,7 @@ namespace Test.TestModule
             }
             if (upd_doc_uz == null) return;
             ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
+            int res_  = context.SaveChanges();
         }
         /// <summary>
         /// Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
