@@ -6,6 +6,7 @@ System.Environment.CurrentDirectory = System.AppDomain.CurrentDomain.BaseDirecto
 try
 {
     IHost host = Host.CreateDefaultBuilder(args)
+        .UseWindowsService()
         .ConfigureServices(services =>
         {
             services.AddHostedService<UpdateRent>();
