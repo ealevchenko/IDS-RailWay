@@ -1,6 +1,3 @@
-using BatcherService;
-using BatcherService.Interfaces;
-using BatcherService.Services;
 using System.Reflection;
 using WS_IDS;
 
