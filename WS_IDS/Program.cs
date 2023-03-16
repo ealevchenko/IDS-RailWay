@@ -1,5 +1,7 @@
 using WS_IDS;
 
+System.Environment.CurrentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
