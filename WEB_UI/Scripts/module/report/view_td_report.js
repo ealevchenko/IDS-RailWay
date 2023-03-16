@@ -8152,8 +8152,8 @@
         this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-cargo-metall-tab', 'outgoing-total-cargo-metall', 5, 7);
         // Закладка ИТОГ оператор
         //this.init_panel_vertical_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators');
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators', 6, 6);
-        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators-cargo', 6, 6);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators', 5, 7);
+        this.init_panel_horizontal_report(this.nav_tabs_out_total, 'out-total-operators-tab', 'outgoing-total-operators-cargo', 5, 7);
         //-------------------------------------------
         // Дабавим закладку на форму
         this.$table_view.append(this.nav_tabs_out_total.$ul).append(this.nav_tabs_out_total.$content);
