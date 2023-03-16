@@ -18,7 +18,7 @@ try
         })
         .Build();
 
-    await host.RunAsync();
+    host.RunAsync();
 }
 catch (Exception e)
 {
