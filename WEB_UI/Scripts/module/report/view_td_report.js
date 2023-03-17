@@ -409,6 +409,7 @@
         this.clone_wagons_adoption = [];
 
         this.wagons_outgoing = [];
+        this.mine_cargo = [];
         this.clone_wagons_outgoing = [];
 
         // Сылки на общие отчеты 
@@ -8496,6 +8497,27 @@
     };
     // Загрузить данные с учетом параметров выбора
     view_td_report.prototype.load_select_report_6_1 = function (where, callback) {
+        // Запускаем 1 процесса инициализации (паралельно)
+        var process_load = 2;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                // Обновим спсисок вагонов распарсиным ЭПД
+                //wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
+                // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
+                if (where) {
+                    this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
+                }
+                // Обработать и показать данные
+                this.process_data_view_report_6_1(this.wagons_outgoing, cur_where);
+                // Выход
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            //}.bind(this));
+            }
+        }.bind(this);
+
         if (!where) {
             var cur_where = {
                 start: moment(this.start).format(format_datetime),
@@ -8518,19 +8540,14 @@
         // Выборка
         this.ids_wsd.postReportOutgoingWagonOfWhere(cur_where, function (result_wagons) {
             this.wagons_outgoing = result_wagons;
-            // Обновим спсисок вагонов распарсиным ЭПД
-            //wagons_get_out_epd_async.call(this, this.wagons_outgoing, function () {
-            // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
-            if (where) {
-                this.clone_wagons_outgoing = JSON.parse(JSON.stringify(this.wagons_outgoing));
-            }
-            // Обработать и показать данные
-            this.process_data_view_report_6_1(this.wagons_outgoing, cur_where);
-            // Выход
-            if (typeof callback === 'function') {
-                callback();
-            }
-            //}.bind(this));
+            process_load--;
+            out_load(process_load);
+        }.bind(this));
+        // Запрос по данным ШУ (ШМАКОВО)
+        this.ids_wsd.getMineCargoIncomingCarsOfPeriod(cur_where.start, cur_where.stop, function (result_mine_cargo) {
+            this.mine_cargo = result_mine_cargo;
+            process_load--;
+            out_load(process_load);
         }.bind(this));
     };
     // Обработка данных для отчетов
@@ -8700,6 +8717,33 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
+        $.each(this.mine_cargo, function (key, el_mc) {
+            var res = list_groups_cargo.indexOf(el_mc.id_group_cargo);
+            if (res === -1) {
+                var op = list_result.find(function (o) {
+                    return o.id_group === el_mc.id_group_cargo &&
+                        o.id_division === el_mc.id_division
+                }.bind(this));
+                if (!op) {
+                    // Не данных 
+                    list_result.push({
+                        id_group: el_mc.id_group_cargo,
+                        group_name: el_mc['cargo_group_name_' + App.Lang],
+                        id_out_group: el_mc.id_out_group_cargo,
+                        cargo_out_group_name: el_mc['cargo_out_group_name_' + App.Lang],
+                        cargo_name: el_mc['cargo_name_' + App.Lang],
+                        id_division: el_mc.id_division,
+                        division_abbr: el_mc['division_abbr_' + App.Lang],
+                        count_wagon: el_mc.count_wagon,
+                        sum_vesg: el_mc.vesg,
+                    });
+                } else {
+                    op.count_wagon = op.count_wagon ? op.count_wagon + el_mc.count_wagon : op.count_wagon;
+                    op.sum_vesg = el_mc.vesg ? el_mc.vesg + op.sum_vesg : op.sum_vesg;
+                };
+            }
+        }.bind(this));
+
         if (typeof callback === 'function') {
             //callback(list_sort_result);
             callback(this.sort_table(list_result, 'id_out_group', 'count_wagon', true));
@@ -9369,7 +9413,6 @@
             this.chart_total_division_cargo2.view(this.chart_data_total_division_cargo2);
         }
     };
-
     // Выполнить фильтрацию и вывести данные по Отчета об отгруженной продукции предприятия по украине
     view_td_report.prototype.view_filter_report_total_ext_station_ukr = function () {
         if (this.total_ext_station_ukr) {
@@ -9440,7 +9483,6 @@
             this.chart_total_ext_station_exp.view(this.chart_data_total_ext_station_exp);
         }
     };
-
     // Выполнить фильтрацию и вывести данные по Отчета об отгруженной продукции предприятия
     view_td_report.prototype.view_filter_report_total_ext_station = function () {
         if (this.total_ext_station) {
@@ -9534,8 +9576,6 @@
             this.chart_total_ext_station.view(this.chart_data_total_ext_station);
         }
     };
-
-
     // Выполнить фильтрацию и вывести данные по отчету "Металл ОТПР"
     view_td_report.prototype.view_filter_report_total_cargo_metall = function () {
         if (this.total_cargo_metall) {
@@ -9820,7 +9860,6 @@
             this.chart_total_operators_cargo.view(this.chart_data_total_operators_cargo);
         }
     };
-
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_6_1 = function () {
         this.out_clear();
@@ -9856,6 +9895,7 @@
         if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
         if (this.table_total_outgoing_cargo_operator) {
             this.wagons_outgoing = [];
+            this.mine_cargo = [];
             this.clone_wagons_outgoing = [];
             this.process_data_view_report_6_1(this.clone_wagons_outgoing, null);
             LockScreenOff();
