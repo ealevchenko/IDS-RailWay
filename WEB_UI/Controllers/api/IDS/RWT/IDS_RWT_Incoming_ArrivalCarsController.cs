@@ -278,7 +278,6 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_note { get; set; }
         public bool? account_balance { get; set; }
     }
-
     public class MineCargoIncomingCars
     {
         public int? id_cargo { get; set; } 
@@ -287,17 +286,22 @@ namespace WEB_UI.Controllers.api
         public int? id_group_cargo { get; set; } 
         public string cargo_group_name_ru { get; set; } 
         public string cargo_group_name_en { get; set; } 
+        public int? id_out_group_cargo { get; set; } 
+        public string cargo_out_group_name_ru { get; set; } 
+        public string cargo_out_group_name_en { get; set; } 
         public int? id_cargo_etsng { get; set; } 
         public int? code_cargo_etsng { get; set; } 
         public string cargo_etsng_name_ru { get; set; } 
         public string cargo_etsng_name_en { get; set; } 
+        public int? id_division { get; set; } 
+        public string division_abbr_ru { get; set; } 
+        public string division_abbr_en { get; set; } 
         public int? code_stn_from { get; set; } 
         public string station_name_ru { get; set; } 
         public string station_name_en { get; set; } 
         public int? count_wagon { get; set; } 
         public int? vesg { get; set; } 
     }
-
     public class ViewReportAdoptionWagonNotOperation
     {
         public long id_sostav { get; set; }
