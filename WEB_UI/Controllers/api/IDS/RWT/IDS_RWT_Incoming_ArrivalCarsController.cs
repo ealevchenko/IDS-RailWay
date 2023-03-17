@@ -279,6 +279,25 @@ namespace WEB_UI.Controllers.api
         public bool? account_balance { get; set; }
     }
 
+    public class MineCargoIncomingCars
+    {
+        public int? id_cargo { get; set; } 
+        public string cargo_name_ru { get; set; } 
+        public string cargo_name_en { get; set; } 
+        public int? id_group_cargo { get; set; } 
+        public string cargo_group_name_ru { get; set; } 
+        public string cargo_group_name_en { get; set; } 
+        public int? id_cargo_etsng { get; set; } 
+        public int? code_cargo_etsng { get; set; } 
+        public string cargo_etsng_name_ru { get; set; } 
+        public string cargo_etsng_name_en { get; set; } 
+        public int? code_stn_from { get; set; } 
+        public string station_name_ru { get; set; } 
+        public string station_name_en { get; set; } 
+        public int? count_wagon { get; set; } 
+        public int? vesg { get; set; } 
+    }
+
     public class ViewReportAdoptionWagonNotOperation
     {
         public long id_sostav { get; set; }
@@ -463,6 +482,26 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 string sql = "select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)";
                 List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        // GET: api/ids/rwt/arrival_cars/mine_cargo/car/start/2023-03-01T00:00:00/stop/2023-03-31T23:59:59
+        [Route("mine_cargo/car/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(MineCargoIncomingCars))]
+        public IHttpActionResult GetMineCargoIncomingCarsOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_mine_cargo_incoming_cars_of_period](@start, @stop)";
+                List<MineCargoIncomingCars> result = this.ef_ids.Database.SqlQuery<MineCargoIncomingCars>(sql, p_start, p_stop).ToList();
                 return Ok(result);
             }
             catch (Exception e)
