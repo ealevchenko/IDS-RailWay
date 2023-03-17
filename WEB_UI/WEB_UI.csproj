@@ -25,7 +25,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>3fb7e3f0</NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.2</TypeScriptToolsVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -39,7 +39,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
-    <TypeScriptModuleKind />
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
