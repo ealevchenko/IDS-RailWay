@@ -42,9 +42,11 @@
     var fe_ui = new FE();
 
     // Создадим форму правки информации по вагону
-    var FDL = App.form_dialog;
+    //var FDL = App.form_dialog;
     //var form_info = new FDL();
     //var form_edit = new FDL();
+
+    var TDIR = App.table_directory;
 
 
     var alert = App.alert_form;
@@ -52,6 +54,7 @@
 
     var SRV = App.ids_server;
     var ids_srv = new SRV(); // Создадим класс ids_server
+
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
@@ -76,22 +79,48 @@
         LockScreen(langView('mainuf_init_main', App.Langs));
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
-        load_db(['condition_arrival'], true, function (result) {
+        load_db(['operators_wagons'], true, function (result) {
             // Обновить
             setInterval(function () {
                 $('label#curent_date').text(moment().format(format_datetime));
             }, 1000);
 
-            var process = 0;
+            var process = 1;
 
             // Выход из инициализации
             var out_init = function (process) {
                 if (process === 0) {
+                    this.table_operators_wagons.view(ids_dir.list_operators_wagons);
                     LockScreenOff();
                 }
             }.bind(this);
 
-            out_init(process);
+            this.table_operators_wagons = new TDIR('div#operators-wagons');               // Создадим экземпляр
+            // Инициализация модуля "Таблица прибывающих составов"
+            this.table_operators_wagons.init({
+                alert: null,
+                detali_table: false,
+                type_report: 'operators_wagons_select',     //
+                link_num: false,
+                ids_dir: ids_dir,
+                fn_init: function () {
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
+                },
+                fn_action_view_detali: function (rows) {
+
+                },
+                fn_select_rows: function (rows) {
+                    //if (rows && rows.length > 0 && rows[0].adoption_sostav && rows[0].adoption_sostav.length > 0) {
+                    //    this.table_adop_sostav_detali.view(rows[0].adoption_sostav);
+                    //    LockScreenOff();
+                    //} else {
+                    //    this.table_adop_sostav_detali.view([]);
+                    //    LockScreenOff();
+                    //}
+                }.bind(this),
+            });
 
             // Запрос информации от сервера (1 раз в минуту)
             setInterval(function () {

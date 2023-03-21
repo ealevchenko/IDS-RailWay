@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" type="text/css" href="~/Content/view/directory/usage_fee.css">
     <!-- модули -->
-    @*<link href="~/Content/module/shared/form_detali.css" rel="stylesheet" />*@
+    <link href="~/Content/module/directory/table_directory.css" rel="stylesheet" type="text/css" />
 
 }
 
@@ -27,6 +27,8 @@
     <script src="~/Scripts/api/ids_direct.js"></script>
     <script src="~/Scripts/api/ids_wsd.js"></script>
 
+
+    <script src="~/Scripts/module/directory/table_directory.js"></script>
     <script src="~/Scripts/view/directory/main_usage_fee.js"></script> <!--  -->
 }
 
@@ -38,12 +40,12 @@
         </button>
         <div class="collapse navbar-collapse text-light" id="nb-incoming">
             @*<form class="form-inline d-flex w-100">
-                <div class="form-group mb-2">
-                    <label for="num_vagon" class="col-form-label-sm mr-2">Номер вагона:</label>
-                    <input type="number" class="form-control-sm" id="num_vagon" name="num_vagon">
-                </div>
-                <button id="searsh" class="btn btn-primary btn-sm ml-1 mb-2">Найти</button>
-            </form>*@
+                    <div class="form-group mb-2">
+                        <label for="num_vagon" class="col-form-label-sm mr-2">Номер вагона:</label>
+                        <input type="number" class="form-control-sm" id="num_vagon" name="num_vagon">
+                    </div>
+                    <button id="searsh" class="btn btn-primary btn-sm ml-1 mb-2">Найти</button>
+                </form>*@
         </div>
         <div>
             <label class="text-warning">@User.Identity.Name</label><br />
@@ -65,8 +67,12 @@
                         <div class="col-sm-6">
                             <div class="card border-secondary mb-3">
                                 <div class="card-header">Справочник операторов</div>
-                                <div class="card-body text-secondary" id="wagon-detali">
+                                <div class="card-body text-secondary">
+                                    <div class="row">
+                                        <div class="col-sm-12" id="operators-wagons" >
 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

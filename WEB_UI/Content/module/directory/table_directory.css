@@ -1,0 +1,124 @@
+﻿body {
+}
+
+table.dataTable {
+/*    width: 100%;*/
+    margin: 0;
+/*    clear: both;
+    border-collapse: separate;
+    border-spacing: 0*/
+}
+
+/*Уменьшить размер таблицы*/
+.table-report {
+    font-size: 0.8rem;
+}
+
+.table-report-detali {
+    font-size: 0.7rem;
+}
+
+
+table.dataTable tbody td.mw-50 {
+    max-width: 50px;
+}
+
+table.dataTable tbody td.mw-100 {
+    max-width: 100px;
+}
+
+table.dataTable tbody td.mw-150 {
+    max-width: 150px;
+}
+
+table.dataTable tbody td.mw-200 {
+    max-width: 200px;
+}
+
+table.dataTable tbody td.mw-250 {
+    max-width: 250px;
+}
+
+table.dataTable tbody td.mw-300 {
+    max-width: 300px;
+}
+
+table.dataTable tbody td.shorten {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*Отобразить типы полей*/
+/*Зафиксированные поля - не просвечиваемые*/
+table.dataTable.display thead tr th.fixed-column {
+    background-color: #ffffff;
+}
+table.dataTable.display tfoot tr th.fixed-column {
+    background-color: #ffffff;
+}
+
+td.details-control {
+    background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
+    width: 20px;
+    cursor: pointer;
+}
+
+tr.shown td.details-control {
+    background: url('../../../Content/DataTables/media/images/details_close.png') no-repeat center center;
+    width: 20px;
+}
+
+.detali-operation {
+    border-left: 6px solid #8ae;
+    border-top: 1px solid #8ae;
+    padding: 10px;
+    /*font-size: 14px;*/
+    line-height: 1.4;
+    background-color: #eee;
+    border-radius: 4px;
+    text-align: left;
+}
+
+th.details-control, td.details-control {
+    width: 20px !important;
+}
+
+th.button-control, td.button-control {
+    width: 20px !important;
+}
+
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
+tr.type-total,
+tr.type-total:hover {
+    background-color: #6262ff !important;
+}
+tr.group-total,
+tr.group-total:hover {
+    background-color: #808080 !important;
+}
+td.total-text {
+    color: #fff !important;
+    text-align: right;
+    text-transform: uppercase;
+}
+td.total-text-type {
+    color: #000000 !important;
+    text-align: right;
+    text-transform: lowercase;
+    font-weight: 600;
+}
+td.total-value {
+    color: #fff !important;
+    text-align: right;
+    text-transform: uppercase;
+}
+td.total-value-type {
+    color: #000000 !important;
+    text-align: right;
+    text-transform:lowercase;
+    font-weight:600;
+}
