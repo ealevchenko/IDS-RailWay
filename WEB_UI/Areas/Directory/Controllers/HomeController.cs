@@ -123,6 +123,11 @@ namespace WEB_UI.Areas.Directory.Controllers
         {
             return View();
         }
-
+        // Плата за пользование
+        [AccessOfDB(LogVisit = true)]
+        public ActionResult UsageFee()
+        {
+            return View();
+        }
     }
 }

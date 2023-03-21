@@ -1740,6 +1740,7 @@
     <Content Include="Content\module\wsd\view_arrival_cars.css" />
     <Content Include="Content\module\wsd\view_send_cars.css" />
     <Content Include="Content\view\admin\_layout.css" />
+    <Content Include="Content\view\directory\usage_fee.css" />
     <Content Include="Content\view\directory\commercial_condition.css" />
     <Content Include="Content\view\directory\ways.css" />
     <Content Include="Content\view\directory\search_wagon.css" />
@@ -2077,6 +2078,7 @@
     <Content Include="Scripts\amcharts5\themes\Moonrise.js.map" />
     <Content Include="Scripts\amcharts5\themes\Responsive.js.map" />
     <Content Include="Scripts\amcharts5\themes\Spirited.js.map" />
+    <Content Include="Areas\Directory\Views\Home\UsageFee.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2603,6 +2605,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\countrys.js" />
+    <Content Include="Scripts\view\directory\main_usage_fee.js" />
     <Content Include="Scripts\view\directory\main_park.js" />
     <Content Include="Scripts\view\directory\main_operators_wagons.js" />
     <Content Include="Scripts\view\directory\main_commercial_condition.js" />
