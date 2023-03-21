@@ -11,21 +11,37 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-zf')(root, $).$;
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-zf')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
 				require('datatables.net-buttons')(root, $);
 			}
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -34,6 +50,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 // F6 has different requirements for the dropdown button set. We can use the
@@ -47,6 +64,7 @@ var collection = DataTable.ext.foundationVersion === 6 ?
 	{
 		tag: 'ul',
 		className: 'f-dropdown open dropdown-pane is-open',
+		closeButton: false,
 		button: {
 			tag: 'li',
 			className: 'small',
@@ -70,13 +88,29 @@ $.extend( true, DataTable.Buttons.defaults, {
 		},
 		button: {
 			tag: 'a',
-			className: 'button small',
+			className: 'dt-button button small',
 			active: 'secondary'
 		},
 		buttonLiner: {
 			tag: null
 		},
-		collection: collection
+		collection: collection,
+		splitWrapper: {
+			tag: 'div',
+			className: 'dt-btn-split-wrapper button-group',
+			closeButton: false,
+		},
+		splitDropdown: {
+			tag: 'button',
+			text: '',
+			className: 'button dt-btn-split-drop dropdown arrow-only',
+			closeButton: false,
+		},
+		splitDropdownButton: {
+			tag: 'button',
+			className: 'dt-btn-split-drop-button button small',
+			closeButton: false
+		}
 	}
 } );
 
@@ -95,5 +129,6 @@ $(document).on('buttons-popover.dt', function () {
 	}
 });
 
-return DataTable.Buttons;
+
+return DataTable;
 }));
