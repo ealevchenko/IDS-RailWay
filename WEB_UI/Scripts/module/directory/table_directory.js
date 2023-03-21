@@ -241,10 +241,11 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [0, 'asc'];
+                this.order_column = [1, 'asc'];
                 this.type_select_rows = 2; // Выбирать одну
                 this.table_select = {
                     style: 'multi ',
+                    selector: 'td:first-child'
                 };
                 this.autoWidth = false;
                 //this.scrollY = 300,
@@ -314,7 +315,7 @@
         // Создать макет таблицы
         var table_report = new this.fe_ui.table({
             id: 'tab-tdr-' + this.selector,
-            class: 'display compact cell-border row-border hover',
+            class: 'display cell-border row-border hover', // compact
             title: null,
         });
         //if (this.settings.type_report === 'adoption_sostav') {
