@@ -515,6 +515,29 @@
             },
         });
     };
+    // Получим роды вагонов по операторам (используется привязка связка оператор-род в карточках вагонов)
+    ids_directory.prototype.getOperatorsWagonsOfGenus = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/operators_wagons/genus/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getOperatorsWagonsOfGenus", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //Добавить
     ids_directory.prototype.postOperatorsWagons = function (obj, callback) {
         $.ajax({
