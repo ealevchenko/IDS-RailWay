@@ -28,6 +28,10 @@
 
             'tldir_field_operators_wagons_abbr': 'Оператор аббр.',
             'tldir_field_operators_wagons_operators': 'Оператор полное название',
+            'tldir_field_operators_and_genus_operators': 'Оператор(аббр)',
+            'tldir_field_operators_and_genus_operators_abbr': 'Оператор',
+            'tldir_field_operators_and_genus_genus': 'Род(аббр)',
+            'tldir_field_operators_and_genus_genus_abbr': 'Род',
 
             'tldir_title_all': 'Все',
             'tldir_title_not_epd': 'Без ЭПД',
@@ -46,6 +50,8 @@
             'tldir_title_button_field_view_all': 'Показать все',
             'tldir_title_button_field_clear': 'Сбросить',
             'tldir_title_button_show_selection': 'Только выбранные',
+            'tldir_title_button_select_all': 'Выбрть все',
+            'tldir_title_button_select_none': 'Убрать все',
         },
         'en':  //default language: English
         {
@@ -110,6 +116,39 @@
             className: 'dt-body-left shorten mw-500',
             title: langView('tldir_field_operators_wagons_operators', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        // get_operators_and_genus
+        {
+            field: 'operators_and_genus_operators',
+            data: function (row, type, val, meta) {
+                return row['operators_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_operators_and_genus_operators', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'operators_and_genus_operators_abbr',
+            data: function (row, type, val, meta) {
+                return row['operators_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_operators_and_genus_operators_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'operators_and_genus_genus',
+            data: function (row, type, val, meta) {
+                return row['genus_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_operators_and_genus_genus', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'operators_and_genus_genus_abbr',
+            data: function (row, type, val, meta) {
+                return row['genus_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_operators_and_genus_genus_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -170,6 +209,16 @@
             extend: 'showSelected',
             text: langView('tldir_title_button_show_selection', App.Langs),
         },
+        {
+            button: 'select_all',
+            extend: 'selectAll',
+            text: langView('tldir_title_button_select_all', App.Langs),
+        },
+        {
+            button: 'select_none',
+            extend: 'selectNone',
+            text: langView('tldir_title_button_select_none', App.Langs),
+        },
     ];
 
     var pageTotal = 0;
@@ -194,12 +243,22 @@
         var collums = [];
         return init_columns(collums, list_collums);
     };
-    // инициализация полей adoption_sostav
+    // инициализация полей operators_wagons_select
     table_directory.prototype.init_columns_operators_wagons_select = function () {
         var collums = [];
         collums.push({ field: 'checkbox_selection', title: null, class: null });
         collums.push({ field: 'operators_wagons_abbr', title: null, class: null });
         collums.push({ field: 'operators_wagons_operators', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей operators_wagons_genus_select
+    table_directory.prototype.init_columns_operators_wagons_genus_select = function () {
+        var collums = [];
+        collums.push({ field: 'checkbox_selection', title: null, class: null });
+        collums.push({ field: 'operators_and_genus_operators', title: null, class: null });
+        collums.push({ field: 'operators_and_genus_operators_abbr', title: null, class: null });
+        collums.push({ field: 'operators_and_genus_genus', title: null, class: null });
+        collums.push({ field: 'operators_and_genus_genus_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
@@ -211,7 +270,7 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    // инициализация кнопок adoption_sostav
+    // инициализация кнопок operators_wagons_select
     table_directory.prototype.init_button_operators_wagons_select = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
@@ -224,6 +283,25 @@
         });
         buttons.push({ name: 'page_length', action: null });
         buttons.push({ name: 'show_selection', action: null });
+        buttons.push({ name: 'select_all', action: null });
+        buttons.push({ name: 'select_none', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // инициализация кнопок operators_wagons_genus_select
+    table_directory.prototype.init_button_operators_wagons_genus_select = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        buttons.push({ name: 'show_selection', action: null });
+        buttons.push({ name: 'select_all', action: null });
+        buttons.push({ name: 'select_none', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -247,7 +325,7 @@
                     style: 'multi ',
                     selector: 'td:first-child'
                 };
-                this.autoWidth = false;
+                this.autoWidth = true;
                 //this.scrollY = 300,
                 //this.scrollCollapse = true,
                 this.table_columns = this.init_columns_operators_wagons_select();
@@ -255,6 +333,32 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            case 'operators_wagons_genus_select': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('tldir_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 2; // Выбирать одну
+                this.table_select = {
+                    style: 'multi ',
+                    selector: 'td:first-child'
+                };
+                this.autoWidth = true;
+                //this.scrollY = 300,
+                //this.scrollCollapse = true,
+                this.table_columns = this.init_columns_operators_wagons_genus_select();
+                this.table_buttons = this.init_button_operators_wagons_genus_select();
+                this.dom = 'Bfrtip';
+                break;
+            };
+
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -373,17 +477,17 @@
         });
         // Обработка события выбора
         switch (this.settings.type_report) {
-            //case 'adoption_sostav': {
-            //    this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
-            //        this.select_rows(); // определим строку
-            //        this.enable_button();
-            //        // Обработать событие выбрана строка
-            //        if (typeof this.settings.fn_select_rows === 'function') {
-            //            this.settings.fn_select_rows(this.selected_rows);
-            //        }
-            //    }.bind(this));
-            //    break;
-            //};
+            case 'operators_wagons_select': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
         };
         // На проверку окончания инициализации
         //----------------------------------
