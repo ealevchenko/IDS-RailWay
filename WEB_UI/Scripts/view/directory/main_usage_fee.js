@@ -21,12 +21,20 @@
             'mainuf_title_date_period_stop': 'Окончание',
             'mainuf_label_rate_currency': 'Валюта :',
             'mainuf_title_rate_currency': 'Валюта',
-            'mainuf_label_derailment_rate_currency': 'Валюта :',
-            'mainuf_title_derailment_rate_currency': 'Валюта',
+            'mainuf_label_derailment_rate_currency': 'Валюта (сход):',
+            'mainuf_title_derailment_rate_currency': 'Валюта (сход)',
             'mainuf_label_rate_value': 'Ставка :',
             'mainuf_title_rate_value': 'Ставка',
-            'mainuf_label_derailment_rate_value': 'Ставка :',
-            'mainuf_title_derailment_rate_value': 'Ставка',
+            'mainuf_label_derailment_rate_value': 'Ставка (сход):',
+            'mainuf_title_derailment_rate_value': 'Ставка (сход)',
+            'mainuf_label_coefficient_route_value': 'Коэф. маршрут :',
+            'mainuf_title_coefficient_route_value': 'Коэф. маршрут',
+            'mainuf_label_coefficient_not_route_value': 'Коэф. не маршрут: ',
+            'mainuf_title_coefficient_not_route_value': 'Коэф. не маршрут',
+            'mainuf_label_grace_time_value1': 'Льгот время 1-е: ',
+            'mainuf_title_grace_time_value1': 'Льгот время 1-е',
+            'mainuf_label_grace_time_value2': 'Льгот время 2-е: ',
+            'mainuf_title_grace_time_value2': 'Льгот время 2-е',
         },
         'en':  //default language: English
         {
@@ -91,6 +99,7 @@
     }
 
     var list_operators_genus = [];  // Перечень операторов и родов вагонов
+    var list_currency = [];         // Перечень валют
     var edit_elements = {};
 
     var $form_edit = $('div#form-edit');
@@ -100,12 +109,13 @@
         LockScreen(langView('mainuf_init_main', App.Langs));
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
-        load_db(['operators_wagons'], true, function (result) {
+        load_db(['operators_wagons','currency'], true, function (result) {
             // Обновить
             setInterval(function () {
                 $('label#curent_date').text(moment().format(format_datetime));
             }, 1000);
 
+            list_currency = ids_dir.getListCurrency('id', 'currency', App.Lang, null);
             var process = 3;
 
             // Выход из инициализации
@@ -201,6 +211,27 @@
                 },
                 childs: []
             };
+            var form_edit_row_3 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_edit_row_4 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_edit_row_5 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
 
             var form_input_date_period_start = {
                 obj: 'bs_input_datetime',
@@ -208,7 +239,7 @@
                     id: 'date_period_start',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col: 2,
+                    form_group_col: 6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_date_period_start', App.Langs),
                     label_class: 'mb-1',
@@ -218,7 +249,7 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_time: true,
+                    element_time: false,
                     element_default: null,
                     element_fn_close: function (datetime) {
 
@@ -232,7 +263,7 @@
                     id: 'date_period_stop',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col: 2,
+                    form_group_col: 6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_date_period_stop', App.Langs),
                     label_class: 'mb-1',
@@ -242,7 +273,7 @@
                     input_placeholder: null,
                     input_required: null,
                     input_group: false,
-                    element_time: true,
+                    element_time: false,
                     element_default: null,
                     element_fn_close: function (datetime) {
 
@@ -256,7 +287,7 @@
                     id: 'rate_currency',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col: 2,
+                    form_group_col: 6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_rate_currency', App.Langs),
                     label_class: 'mb-1',
@@ -271,7 +302,7 @@
                     input_group_append_class: null,
                     input_group_append_objs: null,
                     input_group_obj_form: null,
-                    element_data: [],
+                    element_data: list_currency,
                     element_default: -1,
                     element_change: function (e) {
                         // var code = Number($(e.currentTarget).val());
@@ -288,7 +319,7 @@
                     id: 'derailment_rate_currency',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col: 2,
+                    form_group_col: 6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_derailment_rate_currency', App.Langs),
                     label_class: 'mb-1',
@@ -303,7 +334,7 @@
                     input_group_append_class: null,
                     input_group_append_objs: null,
                     input_group_obj_form: null,
-                    element_data: [],
+                    element_data: list_currency,
                     element_default: -1,
                     element_change: function (e) {
                         // var code = Number($(e.currentTarget).val());
@@ -320,7 +351,7 @@
                     id: 'rate_value',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col:2,
+                    form_group_col:6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_rate_value', App.Langs),
                     label_class: 'mb-1',
@@ -340,7 +371,7 @@
                     id: 'derailment_rate_value',
                     validation_group: 'common',
                     form_group_size: 'xl',
-                    form_group_col:2,
+                    form_group_col:6,
                     form_group_class: 'text-left',
                     label: langView('mainuf_label_derailment_rate_value', App.Langs),
                     label_class: 'mb-1',
@@ -354,6 +385,87 @@
                 },
                 childs: []
             };
+            var form_input_coefficient_route_value= {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'coefficient_route_value',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col:6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_coefficient_route_value', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_coefficient_route_value', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_coefficient_not_route_value= {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'coefficient_not_route_value',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col:6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_coefficient_not_route_value', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_coefficient_not_route_value', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_grace_time_value1= {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'grace_time_value1',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col:6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_grace_time_value1', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_grace_time_value1', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var form_input_grace_time_value2= {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'grace_time_value2',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col:6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_grace_time_value2', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_grace_time_value2', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+
 
             //var form_checkbox_distinguish = {
             //    obj: 'bs_checkbox',
@@ -431,18 +543,29 @@
             //    }
             //};
             form_edit_row_1.childs.push(form_input_date_period_start);
-            form_edit_row_1.childs.push(form_select_rate_currency);
-            form_edit_row_1.childs.push(form_input_rate_value);
+            form_edit_row_1.childs.push(form_input_date_period_stop);
+
+            form_edit_row_2.childs.push(form_select_rate_currency);
+            form_edit_row_2.childs.push(form_input_rate_value);
+
+            form_edit_row_3.childs.push(form_select_derailment_rate_currency);
+            form_edit_row_3.childs.push(form_input_derailment_rate_value);
+
+            form_edit_row_4.childs.push(form_input_coefficient_route_value);
+            form_edit_row_4.childs.push(form_input_coefficient_not_route_value);
+
+            form_edit_row_5.childs.push(form_input_grace_time_value1);
+            form_edit_row_5.childs.push(form_input_grace_time_value2);
+
 /*            form_edit_row_1.childs.push(form_checkbox_distinguish);*/
-            form_edit_row_2.childs.push(form_input_date_period_stop);
-            form_edit_row_2.childs.push(form_select_derailment_rate_currency);
-            form_edit_row_2.childs.push(form_input_derailment_rate_value);
 
             //col_edit1.childs.push(bt_apply);
             //row_edit1.childs.push(col_edit1);
-
             objs_edit.push(form_edit_row_1);
             objs_edit.push(form_edit_row_2);
+            objs_edit.push(form_edit_row_3);
+            objs_edit.push(form_edit_row_4);
+            objs_edit.push(form_edit_row_5);
 /*            objs_edit.push(row_edit1);*/
             // Инициализируем форму редактирования
             form_edit.init({
