@@ -11,6 +11,18 @@ namespace EFIDS.Helper
     {
         #region Directory
 
+        public static Directory_Currency GetDirectory_Currency(this Directory_Currency g)
+        {
+            if (g == null) return null;
+            return new Directory_Currency()
+            {
+                id = g.id,
+                currency_ru = g.currency_ru,
+                currency_en = g.currency_en,
+                code = g.code,
+                code_cc = g.code_cc
+            };
+        }
         public static Directory_GenusWagons GetGenusWagons(this Directory_GenusWagons g)
         {
             if (g == null) return null;
@@ -25,7 +37,6 @@ namespace EFIDS.Helper
                 rod_default = g.rod_default
             };
         }
-
         public static Directory_WagonManufacturers GetWagonManufacturers(this Directory_WagonManufacturers g)
         {
             if (g == null) return null;
@@ -568,7 +579,7 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user, 
+                change_user = c.change_user,
             };
         }
         // Справочник сертификационные данные
@@ -1135,11 +1146,13 @@ namespace EFIDS.Helper
                 id_owner = v.id_owner,
                 id_type_ownership = v.id_type_ownership,
                 kol_os = v.kol_os,
-                manual = v.manual, 
+                manual = v.manual,
                 pay_summa = v.pay_summa,
-                tara_uz = v.tara_uz, usl_tip = v.usl_tip, zayava = v.zayava,
+                tara_uz = v.tara_uz,
+                usl_tip = v.usl_tip,
+                zayava = v.zayava,
                 ArrivalSostav = null,
-                Arrival_UZ_Document = null,                
+                Arrival_UZ_Document = null,
                 ArrivalCars = null,
                 Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
@@ -1153,11 +1166,11 @@ namespace EFIDS.Helper
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
                 Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(), 
-                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(), 
-                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(), 
-                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(), 
-                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip() 
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(),
+                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
+                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
             };
         }
 
@@ -1211,7 +1224,7 @@ namespace EFIDS.Helper
                     manual = v.manual,
                     tara_uz = v.tara_uz,
                     usl_tip = v.usl_tip,
-                    zayava = v.zayava,  
+                    zayava = v.zayava,
                     ArrivalCars = null,
                     ArrivalSostav = null,
                     Arrival_UZ_Document = v.Arrival_UZ_Document.GetArrival_UZ_Document(),
@@ -1318,8 +1331,8 @@ namespace EFIDS.Helper
                     create = d.create,
                     create_user = d.create_user,
                     change = d.change,
-                    change_user = d.change_user, 
-                    manual = d.manual, 
+                    change_user = d.change_user,
+                    manual = d.manual,
                     UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
                     Arrival_UZ_Vagon = d.Arrival_UZ_Vagon.ToList().Select(v => v.GetArrival_UZ_Vagon()).ToList(),
                     Arrival_UZ_Document1 = null,
@@ -2240,7 +2253,7 @@ namespace EFIDS.Helper
                 create_user = r.create_user,
                 close = r.close,
                 close_user = r.close_user,
-                parent_id = r.parent_id, 
+                parent_id = r.parent_id,
                 highlight_color = r.highlight_color,
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),

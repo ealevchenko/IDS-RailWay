@@ -84,6 +84,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
         public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
 
+        public virtual DbSet<Directory_Currency> Directory_Currency { get; set; }
+
         public virtual DbSet<Directory_CargoOutGroup> Directory_CargoOutGroup { get; set; }
         public virtual DbSet<Directory_Consignee> Directory_Consignee { get; set; }
         public virtual DbSet<Directory_Shipper> Directory_Shipper { get; set; }
@@ -486,6 +488,12 @@ namespace EFIDS.Concrete
             #endregion
 
             #region СПРАВОЧНИКИ ИДС
+
+            #region Валюта Directory_Currency
+            modelBuilder.Entity<Directory_Currency>()
+                .Property(e => e.code_cc)
+                .IsFixedLength();
+            #endregion
 
             #region Погран переходы Directory_BorderCheckpoint
             modelBuilder.Entity<Directory_BorderCheckpoint>()
