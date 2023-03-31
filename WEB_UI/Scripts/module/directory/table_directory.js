@@ -33,6 +33,24 @@
             'tldir_field_operators_and_genus_genus': 'Род(аббр)',
             'tldir_field_operators_and_genus_genus_abbr': 'Род',
 
+            'tldir_field_usage_fee_period_status_input': '',
+            'tldir_field_usage_fee_period_operators_abbr': 'Оператор',
+            'tldir_field_usage_fee_period_genus_abbr': 'Оператор',
+            'ttdir_field_usage_fee_period_start': 'Начало',
+            'ttdir_field_usage_fee_period_stop': 'Окончание',
+            'tldir_field_usage_fee_period_currency': 'Валюта',
+            'tldir_field_usage_fee_period_derailment_currency': 'Валюта (сход)',
+            'ttdir_field_usage_fee_period_rate': 'Ставка',
+            'ttdir_field_usage_fee_period_rate_derailment': 'Ставка',
+            'ttdir_field_usage_fee_period_coefficient_route': 'Коэф.(маршрут)',
+            'ttdir_field_usage_fee_period_coefficient_not_route': 'Коэф.(Не маршрут)',
+            'ttdir_field_usage_fee_period_grace_time_1': 'Льгот. время (1-е)',
+            'ttdir_field_usage_fee_period_grace_time_2': 'Льгот. время (2-е)',
+            'ttdir_field_usage_fee_period_create': 'Время создания',
+            'ttdir_field_usage_fee_period_create_user': 'Создал',
+            'ttdir_field_usage_fee_period_change': 'Время правки',
+            'ttdir_field_usage_fee_period_change_user': 'Правил',
+
             'tldir_title_all': 'Все',
             'tldir_title_not_epd': 'Без ЭПД',
             'tldir_title_for_loading': 'Под погрузку',
@@ -149,6 +167,168 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('tldir_field_operators_and_genus_genus_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Usage_Fee_Period
+        // Статус Вода состава
+        {
+            field: 'usage_fee_period_status_input',
+            data: function (row, type, val, meta) {
+                if (row.stop != null) {
+                    if (moment().isBefore(row.stop)) {
+                        return '<i class="fa-solid fa-thumbs-up" style="color:#008000"></i>';
+                    } else {
+                        return '<i class="fa-solid fa-square-xmark" style="color:#ff6868"></i>';
+                    }
+                } else {
+                    return '<i class="fa-sharp fa-solid fa-cart-plus" style="color:#1b1bff"></i>';
+                }
+                //if (row.id_arrived !== null && row.id_sostav !== null) {
+                //    return "<i class='fas fa-train' style='color:#795acd;'></i>";#1b1bff
+                //} else { return "<i class='fas fa-user' style='color:#ffbf00;'></i>"; }
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tldir_field_usage_fee_period_status_input', App.Langs), width: "20px", orderable: false, searchable: false
+        },
+        {
+            field: 'usage_fee_period_operators_abbr',
+            data: function (row, type, val, meta) {
+                var operator = row.Directory_OperatorsWagons;
+                return operator !== null ? operator['abbr_' + App.Lang]: null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_usage_fee_period_operators_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_operators_abbr',
+            data: function (row, type, val, meta) {
+                var operator = row.Directory_OperatorsWagons;
+                return operator !== null ? operator['abbr_' + App.Lang]: null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_usage_fee_period_operators_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_genus_abbr',
+            data: function (row, type, val, meta) {
+                var genus = row.Directory_GenusWagons;
+                return genus !== null ? genus['abbr_' + App.Lang]: null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_usage_fee_period_genus_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_start',
+            data: function (row, type, val, meta) {
+                return row.start ? moment(row.start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdir_field_usage_fee_period_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_stop',
+            data: function (row, type, val, meta) {
+                return row.stop ? moment(row.stop).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdir_field_usage_fee_period_stop', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_currency',
+            data: function (row, type, val, meta) {
+                var currency = row.Directory_Currency;
+                return currency !== null ? currency['currency_' + App.Lang]: null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_usage_fee_period_currency', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate',
+            data: function (row, type, val, meta) {
+                return row.rate;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_rate', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_derailment_currency',
+            data: function (row, type, val, meta) {
+                var currency = row.Directory_Currency1;
+                return currency !== null ? currency['currency_' + App.Lang]: null;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_usage_fee_period_derailment_currency', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate_derailment',
+            data: function (row, type, val, meta) {
+                return row.rate_derailment;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_rate_derailment', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_route',
+            data: function (row, type, val, meta) {
+                return row.coefficient_route;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_coefficient_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_not_route',
+            data: function (row, type, val, meta) {
+                return row.coefficient_not_route;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_coefficient_not_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_1',
+            data: function (row, type, val, meta) {
+                return row.grace_time_1;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_grace_time_1', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_2',
+            data: function (row, type, val, meta) {
+                return row.grace_time_2;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_grace_time_2', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_create',
+            data: function (row, type, val, meta) {
+                return row.create ? moment(row.create).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'usage_fee_period_create_user',
+            data: function (row, type, val, meta) {
+                return row.create_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_create_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'usage_fee_period_change',
+            data: function (row, type, val, meta) {
+                return row.change ? moment(row.change).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_change', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'usage_fee_period_change_user',
+            data: function (row, type, val, meta) {
+                return row.change_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_usage_fee_period_change_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -261,6 +441,29 @@
         collums.push({ field: 'operators_and_genus_genus_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_directory.prototype.init_columns_usage_fee_period = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_period_status_input', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operators_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_start', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_currency', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_derailment_currency', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate_derailment', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_not_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_1', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_2', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_create', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_create_user', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_change', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_change_user', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_directory.prototype.init_button_detali = function () {
@@ -289,6 +492,23 @@
     };
     // инициализация кнопок operators_wagons_genus_select
     table_directory.prototype.init_button_operators_wagons_genus_select = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        buttons.push({ name: 'show_selection', action: null });
+        buttons.push({ name: 'select_all', action: null });
+        buttons.push({ name: 'select_none', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_directory.prototype.init_button_usage_fee_period = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -358,7 +578,29 @@
                 this.dom = 'Bfrtip';
                 break;
             };
-
+            case 'usage_fee_period': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('tldir_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.autoWidth = true;
+                this.scrollX = true,
+                //this.scrollY = 300,
+                //this.scrollCollapse = true,
+                this.table_columns = this.init_columns_usage_fee_period();
+                this.table_buttons = this.init_button_usage_fee_period();
+                this.dom = 'Bfrtip';
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -410,6 +652,7 @@
         this.autoWidth = false;
         this.table_columns = [];
         this.table_buttons = [];
+        this.scrollX = false;
         this.dom = 'Bfrtip';
         this.init_type_report();
         this.data = [];
@@ -446,6 +689,7 @@
             },
             select: this.table_select,
             "autoWidth": this.autoWidth,
+            scrollX: this.scrollX,
             //"filter": true,
             //"scrollY": "600px",
             //sScrollX: "100%",
@@ -478,6 +722,28 @@
         // Обработка события выбора
         switch (this.settings.type_report) {
             case 'operators_wagons_select': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'operators_wagons_genus_select': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'usage_fee_period': {
                 this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
                     this.select_rows(); // определим строку
                     this.enable_button();

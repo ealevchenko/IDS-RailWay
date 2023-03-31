@@ -298,6 +298,7 @@
     <Compile Include="Controllers\api\Directoty\IDS_Directory_ModelsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_TypesRepairsWagonsController.cs" />
     <Compile Include="Controllers\api\Directoty\IDS_Directory_WagonManufacturersController.cs" />
+    <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_Usage_FeeController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_UZ_DOC_OUTController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_OutgoingDetentionReturnController.cs" />
     <Compile Include="Controllers\api\IDS\RWT\IDS_RWT_WagonInternalOperationController.cs" />

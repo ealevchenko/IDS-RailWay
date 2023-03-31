@@ -2484,6 +2484,78 @@
             },
         });
     };
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
+    //=============================================================================================================
+    //Получить все периоды
+    ids_wsd.prototype.getUsageFeePeriod = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить все периоды
+    ids_wsd.prototype.getUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/operator/' + id_operator +'/genus/'+id_genus,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriodOfOperatorGenus", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить все периоды
+    ids_wsd.prototype.getLastUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/last/operator/' + id_operator +'/genus/'+id_genus,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getLastUsageFeePeriodOfOperatorGenus", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

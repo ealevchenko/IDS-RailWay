@@ -212,6 +212,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Wagon>>().To<EFIDS.Concrete.EFParkState_Wagon>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Way>>().To<EFIDS.Concrete.EFParkState_Way>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Usage_Fee_Period>>().To<EFIDS.Concrete.EFUsage_Fee_Period>();
+
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalRoutes>>().To<EFIDS.Concrete.EFWagonInternalRoutes>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalMovement>>().To<EFIDS.Concrete.EFWagonInternalMovement>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalOperation>>().To<EFIDS.Concrete.EFWagonInternalOperation>();
