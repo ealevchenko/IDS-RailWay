@@ -9,6 +9,13 @@ namespace EFIDS.Entities
     [Table("IDS.Directory_Currency")]
     public partial class Directory_Currency
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Directory_Currency()
+        {
+            Usage_Fee_Period = new HashSet<Usage_Fee_Period>();
+            Usage_Fee_Period1 = new HashSet<Usage_Fee_Period>();
+        }
+
         public int id { get; set; }
 
         [Required]
@@ -24,5 +31,11 @@ namespace EFIDS.Entities
         [Required]
         [StringLength(3)]
         public string code_cc { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period> Usage_Fee_Period { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period> Usage_Fee_Period1 { get; set; }
     }
 }

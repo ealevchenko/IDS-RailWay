@@ -14,6 +14,9 @@ namespace EFIDS.Concrete
         {
         }
 
+        // Расчет платы за пользование
+        public virtual DbSet<Usage_Fee_Period> Usage_Fee_Period { get; set; }
+
         // SAP Входящая поставка
         public virtual DbSet<SAPIncomingSupply> SAPIncomingSupply { get; set; }
         // SAP Исходящая поставка
@@ -137,6 +140,30 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            #region Расчет платы за пользование
+            modelBuilder.Entity<Directory_Currency>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithOptional(e => e.Directory_Currency)
+                .HasForeignKey(e => e.id_currency_derailment);
+
+            modelBuilder.Entity<Directory_Currency>()
+                .HasMany(e => e.Usage_Fee_Period1)
+                .WithOptional(e => e.Directory_Currency1)
+                .HasForeignKey(e => e.id_currency);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .Property(e => e.rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .Property(e => e.rate_derailment)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .HasMany(e => e.Usage_Fee_Period1)
+                .WithOptional(e => e.Usage_Fee_Period2)
+                .HasForeignKey(e => e.parent_id);
+            #endregion
 
             #region СОСТОЯНИЕ ПАРКА
             modelBuilder.Entity<ParkState_Station>()
@@ -711,6 +738,13 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_GenusWagons
+
+            modelBuilder.Entity<Directory_GenusWagons>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithRequired(e => e.Directory_GenusWagons)
+                .HasForeignKey(e => e.id_genus)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Directory_GenusWagons>()
                 .HasMany(e => e.CardsWagons)
                 .WithRequired(e => e.Directory_GenusWagons)
@@ -795,6 +829,13 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_OperatorsWagons
+
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithRequired(e => e.Directory_OperatorsWagons)
+                .HasForeignKey(e => e.id_operator)
+                .WillCascadeOnDelete(false);
+
             // Морс
             modelBuilder.Entity<Directory_OperatorsWagons>()
                 .HasMany(e => e.CardsWagons)

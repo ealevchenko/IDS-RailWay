@@ -122,6 +122,7 @@
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon.cs" />
     <Compile Include="Concrete\RWT\EFOutgoingDetentionReturn.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Wagon.cs" />
+    <Compile Include="Concrete\RWT\EFUsage_Fee_Period.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Way.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Station.cs" />
     <Compile Include="Concrete\RWT\EFSAPOutgoingSupply.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="Entities\RWT\SAPOutgoingSupply.cs" />
     <Compile Include="Entities\Directory\Directory_CargoOutGroup.cs" />
     <Compile Include="Entities\Directory\Directory_Currency.cs" />
+    <Compile Include="Entities\RWT\Usage_Fee_Period.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@ namespace EFIDS.Entities
             CardsWagons = new HashSet<CardsWagons>();
             Directory_Wagons = new HashSet<Directory_Wagons>();
             Directory_WagonsRent = new HashSet<Directory_WagonsRent>();
+            Usage_Fee_Period = new HashSet<Usage_Fee_Period>();
         }
 
         public int id { get; set; }
@@ -65,5 +66,8 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Directory_WagonsRent> Directory_WagonsRent { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period> Usage_Fee_Period { get; set; }
     }
 }

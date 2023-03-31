@@ -10,7 +10,6 @@ namespace EFIDS.Helper
     public static class ids_library
     {
         #region Directory
-
         public static Directory_Currency GetDirectory_Currency(this Directory_Currency g)
         {
             if (g == null) return null;
@@ -34,7 +33,7 @@ namespace EFIDS.Helper
                 abbr_en = g.abbr_en,
                 genus_en = g.genus_en,
                 rod_uz = g.rod_uz,
-                rod_default = g.rod_default
+                rod_default = g.rod_default, 
             };
         }
         public static Directory_WagonManufacturers GetWagonManufacturers(this Directory_WagonManufacturers g)
@@ -149,7 +148,8 @@ namespace EFIDS.Helper
                 change_user = o.change_user,
                 CardsWagons = null,
                 Directory_Wagons = null,
-                Directory_WagonsRent = null
+                Directory_WagonsRent = null, 
+                Usage_Fee_Period = null
             };
         }
 
@@ -1030,6 +1030,41 @@ namespace EFIDS.Helper
 
         #region RWT
 
+        public static Usage_Fee_Period GetUsage_Fee_Period(this Usage_Fee_Period u)
+        {
+            if (u == null) return null;
+            return new Usage_Fee_Period()
+            {
+                id = u.id,
+                id_operator = u.id_operator,
+                id_genus = u.id_genus,
+                start = u.start,
+                stop = u.stop,
+                id_currency = u.id_currency,
+                rate = u.rate,
+                id_currency_derailment = u.id_currency_derailment,
+                rate_derailment = u.rate_derailment,
+                coefficient_route = u.coefficient_route,
+                coefficient_not_route = u.coefficient_not_route,
+                grace_time_1 = u.grace_time_1,
+                grace_time_2 = u.grace_time_2,
+                note = u.note,
+                create = u.create,
+                create_user = u.create_user,
+                change = u.change,
+                change_user = u.change_user,
+                close = u.close,
+                close_user = u.close_user,
+                parent_id = u.parent_id,
+                Directory_Currency = u.Directory_Currency.GetDirectory_Currency(),
+                Directory_Currency1 = u.Directory_Currency.GetDirectory_Currency(),
+                Usage_Fee_Period1 = null,
+                Usage_Fee_Period2 = null, 
+                Directory_GenusWagons = u.Directory_GenusWagons.GetGenusWagons(), 
+                Directory_OperatorsWagons = u.Directory_OperatorsWagons.GetOperatorsWagons()
+            };
+        }
+
         public static Arrival_UZ_Vagon_Pay GetArrival_UZ_Vagon_Pay(this Arrival_UZ_Vagon_Pay p)
         {
             if (p == null) return null;
@@ -1042,7 +1077,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Cont_Pay GetArrival_UZ_Cont_Pay(this Arrival_UZ_Cont_Pay p)
         {
             if (p == null) return null;
@@ -1055,7 +1089,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon_Cont = null
             };
         }
-
         public static Arrival_UZ_Vagon_Cont GetArrival_UZ_Vagon_Cont(this Arrival_UZ_Vagon_Cont c)
         {
             if (c == null) return null;
@@ -1080,7 +1113,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Vagon_Acts GetArrival_UZ_Vagon_Acts(this Arrival_UZ_Vagon_Acts a)
         {
             if (a == null) return null;
@@ -1100,7 +1132,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Vagon GetArrival_UZ_Vagon(this Arrival_UZ_Vagon v)
         {
             if (v == null) return null;
@@ -1173,7 +1204,6 @@ namespace EFIDS.Helper
                 Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
             };
         }
-
         public static Arrival_UZ_Vagon GetArrival_UZ_Vagon_Arrival_UZ_Document(this Arrival_UZ_Vagon v)
         {
             try
@@ -1252,7 +1282,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static Arrival_UZ_Document_Pay GetArrival_UZ_Document_Pay(this Arrival_UZ_Document_Pay p)
         {
             if (p == null) return null;
