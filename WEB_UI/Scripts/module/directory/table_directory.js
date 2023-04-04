@@ -590,8 +590,10 @@
                 this.leftColumns = 0;
                 this.columnDefs = null;
                 this.order_column = [1, 'asc'];
-                this.type_select_rows = 1; // Выбирать одну
-                this.table_select = true;
+                this.type_select_rows = 2; // Выбирать одну
+                this.table_select = {
+                    style: 'multi ',
+                };
                 this.autoWidth = true;
                 this.scrollX = true,
                 //this.scrollY = 300,

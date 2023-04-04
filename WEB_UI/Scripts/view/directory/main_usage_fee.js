@@ -37,6 +37,20 @@
             'mainuf_title_grace_time_value2': 'Льгот время 2-е',
 
             'mainuf_label_bt_apply': 'Применить',
+            'mainuf_mess_valid_date_period_start': 'Не указано начало',
+            'mainuf_mess_valid_date_period_stop': 'Не указано окончание',
+            'mainuf_mess_valid_before_date': 'Начало должно быть меньше окончания',
+            'mainuf_mess_valid_rate_currency': 'Не указана валюта ставки',
+            'mainuf_mess_valid_rate_value_not_null': 'Не указана ставка',
+            'mainuf_mess_valid_derailment_rate_value_not_null': 'Не указана ставка (сход)',
+
+            'mainuf_form_aplly': 'ПРИМЕНИТЬ?',
+            'mainuf_form_aplly_period_message': 'Применить настройки периода на выбранные операторы',
+            'mainuf_mess_cancel_operation_aplly_period': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА"-Отменена пользователем',
+            'mainuf_mess_update_operation_aplly_period': 'Выполняю операцию "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА"',
+            'mainuf_mess_ok_operation_aplly_period': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА" - выполнена',
+            'mainuf_mess_error_operation_aplly_period': 'Ошибка выполнения операции "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА", код ошибки=',
+            'mainuf_mess_valid_select_period_is_null': 'Не выбраны связки оператор-род',
         },
         'en':  //default language: English
         {
@@ -100,25 +114,91 @@
         });
     }
 
-    var list_operators_genus = [];  // Перечень операторов и родов вагонов
-    var list_currency = [];         // Перечень валют
-    var list_period = [];           // Перечень периодов
-    //var list_create_period = [];           // Перечень периодов
+    var list_operators_genus = [];      // Перечень операторов и родов вагонов
+    var list_currency = [];             // Перечень валют
+    var list_period = [];               // Перечень периодов
+    var list_select_period = [];        // Перечень периодов
+
     var edit_elements = {};
 
     var $form_edit = $('div#form-edit');
-
     var validation = function () {
-        //this.clear_out_validation(); // очистить все сообщения
+        form_edit.validation_common.clear_all();
         var valid = true;
-        // Проверка номера
+        // Проверка 
+
+        if (list_select_period === null || (list_select_period !== null && list_select_period.length === 0)) {
+            form_edit.validation_common.out_error_message(langView('mainuf_mess_valid_select_period_is_null', App.Langs));
+            valid = false;
+        }
+        valid = valid & form_edit.validation_common.check_control_datetime_input(edit_elements.input_datetime_date_period_start, langView('mainuf_mess_valid_date_period_start', App.Langs), '', true);
+        valid = valid & form_edit.validation_common.check_control_datetime_input(edit_elements.input_datetime_date_period_stop, langView('mainuf_mess_valid_date_period_stop', App.Langs), '', true);
+        var date_start = edit_elements.input_datetime_date_period_start.val();
+        var date_stop = edit_elements.input_datetime_date_period_stop.val();
+        if (valid && !moment(date_start).isBefore(date_stop)) {
+            form_edit.validation_common.set_object_error(edit_elements.input_datetime_date_period_start.$element, langView('mainuf_mess_valid_before_date', App.Langs));
+            valid = false;
+        }
+        // Ставка
+        valid = valid & form_edit.validation_common.check_control_select_not_null(edit_elements.select_rate_currency, langView('mainuf_mess_valid_rate_currency', App.Langs), '', true);
+        valid = valid & form_edit.validation_common.check_control_input_not_null(edit_elements.input_number_rate_value, langView('mainuf_mess_valid_rate_value_not_null', App.Langs), '', true);
+        // Ставка сход
+        var drc = edit_elements.select_derailment_rate_currency.val();
+        if (drc >= 0) {
+            valid = valid & form_edit.validation_common.check_control_input_not_null(edit_elements.input_number_derailment_rate_value, langView('mainuf_mess_valid_derailment_rate_value_not_null', App.Langs), '', true);
+        }
         return valid;
     };
 
     var action_apply = function () {
         var valid = validation();
         if (valid) {
+            modal_confirm_form.view(langView('mainuf_form_aplly', App.Langs), langView('mainuf_form_aplly_period_message', App.Langs), function (res) {
+                if (res) {
+                    // Выполнить операцию
+                    LockScreen(langView('mainuf_mess_update_operation_aplly_period', App.Langs));
+                    // Подготовим операцию
 
+                    var list_period = [];
+                    $.each(list_select_period, function (key, el) {
+                        list_period.push({ id: el.id, id_operator: el.id_operator, id_genus: el.id_genus });
+                    }.bind(this));
+                    var operation = {
+                        start: form_edit.get('date_period_start'),
+                        stop: form_edit.get('date_period_stop'),
+                        id_currency: edit_elements.select_rate_currency.val(),
+                        rate: form_edit.get('rate'),
+                        id_currency_derailment: edit_elements.select_derailment_rate_currency.val(),
+                        rate_derailment: form_edit.get('derailment_rate_value'),
+                        coefficient_route: form_edit.get('coefficient_route_value'),
+                        coefficient_not_route: form_edit.get('coefficient_not_route_value'),
+                        grace_time_1: form_edit.get('grace_time_value1'),
+                        grace_time_2: form_edit.get('grace_time_value2'),
+                        note: '',
+                        list_period: list_period,
+                        user: App.User_Name,
+                    };
+                    // Обновим
+                    ids_wsd.postChangeUsageFeePeriod(operation, function (result_operation) {
+                        if (result_operation > 0) {
+                            form_edit.validation_common.out_info_message(langView('mainuf_mess_ok_operation_aplly_period', App.Langs));
+                            LockScreenOff();
+                        } else {
+                            // Ошибка выполнения
+                            form_edit.validation_common.out_error_message(langView('mainuf_mess_error_operation_aplly_period', App.Langs) + result_operation);
+                            LockScreenOff();
+                        }
+                        //// Обновим данные
+                        //this.update_wagon(function (wagon) {
+                        //    this.wiew_detention_wagon_detali(wagon);
+                        //    this.detention_edit = false;
+                        //    LockScreenOff();
+                        //}.bind(this));
+                    }.bind(this));
+                } else {
+                    form_edit.validation_common.out_warning_message(langView('mainuf_mess_cancel_operation_aplly_period', App.Langs))
+                }
+            }.bind(this));
         } else {
 
         }
@@ -175,12 +255,14 @@
                             }.bind(this));
                             this.table_operators_wagons_genus.view(list_operators_genus);
                             list_period = [];
+                            list_select_period = [];
                             this.table_usage_fee_period.view(list_period);
                             LockScreenOff();
                         }.bind(this));
                     } else {
                         this.table_operators_wagons_genus.view(list_operators_genus);
                         list_period = [];
+                        list_select_period = [];
                         this.table_usage_fee_period.view(list_period);
                         LockScreenOff();
                     }
@@ -213,6 +295,7 @@
                         }
                     }.bind(this);
                     list_period = [];
+                    list_select_period = [];
                     if (rows && rows.length > 0) {
                         process_period = rows.length;
                         $.each(rows, function (key, el) {
@@ -281,7 +364,11 @@
 
                 },
                 fn_select_rows: function (rows) {
+                    list_select_period = rows;
+                    form_edit.validation_common.clear_all();
                     if (rows && rows.length > 0) {
+                        form_edit.set('date_period_start', rows[0].start);
+                        form_edit.set('date_period_stop', rows[0].stop);
                         form_edit.set('rate_currency', rows[0].id_currency);
                         form_edit.set('rate_value', rows[0].rate);
                         form_edit.set('derailment_rate_currency', rows[0].id_currency_derailment);
@@ -291,7 +378,16 @@
                         form_edit.set('grace_time_value1', rows[0].grace_time_1);
                         form_edit.set('grace_time_value2', rows[0].grace_time_2);
                     } else {
-
+                        form_edit.set('date_period_start', null);
+                        form_edit.set('date_period_stop', null);
+                        form_edit.set('rate_currency', -1);
+                        form_edit.set('rate_value', null);
+                        form_edit.set('derailment_rate_currency', -1);
+                        form_edit.set('derailment_rate_value', null);
+                        form_edit.set('coefficient_route_value', null);
+                        form_edit.set('coefficient_not_route_value', null);
+                        form_edit.set('grace_time_value1', null);
+                        form_edit.set('grace_time_value2', null);
                     }
                 }.bind(this),
             });
@@ -629,7 +725,7 @@
             objs_edit.push(form_edit_row_3);
             objs_edit.push(form_edit_row_4);
             objs_edit.push(form_edit_row_5);
-            
+
             // Инициализируем форму редактирования
             form_edit.init({
                 alert: alert,
