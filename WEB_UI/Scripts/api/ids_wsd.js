@@ -2556,6 +2556,31 @@
             },
         });
     };
+    // Добавить обновить периоды
+    ids_wsd.prototype.postChangeUsageFeePeriod = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/usage_fee_period/change/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeUsageFeePeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

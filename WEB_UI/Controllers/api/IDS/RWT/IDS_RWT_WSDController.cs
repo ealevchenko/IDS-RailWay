@@ -899,8 +899,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     #endregion
 
     #region СЕРВИС Коммерческое состояние
-
-    #endregion
     public class OperationCommercialCondition
     {
         public long id_wir { get; set; }
@@ -909,6 +907,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool distinguish { get; set; }
         public string user { get; set; }
     }
+    #endregion
+
+    #region СЕРВИС Плата за пользование
+    public class OperationChangeUsageFeePeriod
+    {
+        public DateTime start { get; set; }
+        public DateTime stop { get; set; }
+        public int? id_currency { get; set; }
+        public decimal? rate { get; set; }
+        public int? id_currency_derailment { get; set; }
+        public decimal? rate_derailmen { get; set; }
+        public float? coefficient_route { get; set; }
+        public float? coefficient_not_route { get; set; }
+        public int? grace_time_1 { get; set; }
+        public int? grace_time_2 { get; set; }
+        public string note { get; set; }
+        public List<ListUsageFee> list_period { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
 
     public class view_arrival_sostav
     {
@@ -917,7 +935,6 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int count_wagon { get; set; }
         public string locomotives { get; set; }
     }
-
     public class OperationDislocationWagons
     {
         public int id_way_from { get; set; }
@@ -1901,6 +1918,27 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
         #endregion
+
+        #region СЕРВИС Плата за пользование
+        // POST api/ids/rwt/wsd/service/operation/usage_fee_period/change
+        [HttpPost]
+        [Route("service/operation/usage_fee_period/change")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostChangeUsageFeePeriod([FromBody] OperationChangeUsageFeePeriod value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.ServiceChangeUsageFeePeriod(value.start, value.stop, value.id_currency, value.rate, value.id_currency_derailment, value.rate_derailmen, value.coefficient_route, value.coefficient_not_route, value.grace_time_1, value.grace_time_2, value.note, value.list_period, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
 
         // GET: api/ids/rwt/wsd/view/ways/status/station/id/6
         [Route("view/ways/status/station/id/{id_station:int}")]

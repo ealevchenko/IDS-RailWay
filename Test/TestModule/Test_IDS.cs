@@ -557,7 +557,7 @@ namespace Test.TestModule
             }
             if (upd_doc_uz == null) return;
             ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
-            int res_  = context.SaveChanges();
+            int res_ = context.SaveChanges();
         }
         /// <summary>
         /// Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
@@ -598,6 +598,17 @@ namespace Test.TestModule
         //    IDS_WIR ids = new IDS_WIR(service.Test);
         //    ids.UpdateOutgoing_Thread(new int[] {63447106, 62649314, 62975651 }, @"EUROPE\ealevchenko");
         //}
+        public void IDS_WIR_ServiceChangeUsageFeePeriod()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime start = new DateTime(2023, 1, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2023, 12, 31, 0, 0, 0);
+            List<ListUsageFee> list_period = new List<ListUsageFee>();
+            list_period.Add(new ListUsageFee() { id = 1, id_operator = 14, id_genus = 2 });
+            list_period.Add(new ListUsageFee() { id = 2, id_operator = 14, id_genus = 3 });
+            list_period.Add(new ListUsageFee() { id = 0, id_operator = 14, id_genus = 4 });
+            int result = ids.ServiceChangeUsageFeePeriod(start, stop, (int?)1, (decimal?)50.0f, (int?)2, (decimal?)10.3f, (float?)0.75f, (float?)1.0f, (int?)24, (int?)36, "тест", list_period, @"EUROPE\ealevchenko");
+        }
 
         #endregion
 

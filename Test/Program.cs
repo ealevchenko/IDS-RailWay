@@ -258,6 +258,8 @@ namespace Test
             //tids.IDS_WIR_UpdateOperationOutgoingSostav();               // 
             //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();               // 
 
+            tids.IDS_WIR_ServiceChangeUsageFeePeriod();                 //  Тест обновление периодов
+
             #endregion
 
             #region Test_Logs тест логирования

@@ -34,6 +34,12 @@ namespace IDS
     //    public OTPR otpr { get; set; }
 
     //}
+    public class ListUsageFee
+    {
+        public int id { get; set; }
+        public int id_operator { get; set; }
+        public int id_genus { get; set; }
+    }
 
     /// <summary>
     /// Класс данных задание на роспуск
@@ -8560,7 +8566,7 @@ namespace IDS
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-         public ResultUpdateWagon UpdateOperationOutgoingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
+        public ResultUpdateWagon UpdateOperationOutgoingSostav(ref EFDbContext context, long id_outgoing_sostav, string user)
         {
             ResultUpdateWagon result = new ResultUpdateWagon(0);
             try
@@ -9005,6 +9011,15 @@ namespace IDS
         #endregion
 
         #region СЕРВИСЫ
+        /// <summary>
+        /// Правка разметки по прибытию
+        /// </summary>
+        /// <param name="id_wir"></param>
+        /// <param name="id_condition_arrival"></param>
+        /// <param name="note"></param>
+        /// <param name="distinguish"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int ServiceChangeCommercialCondition(long id_wir, int id_condition_arrival, string note, bool distinguish, string user)
         {
             try
@@ -9050,6 +9065,136 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
 
+        }
+        /// <summary>
+        /// Правка периодов платы за пользование
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="id_currency"></param>
+        /// <param name="rate"></param>
+        /// <param name="id_currency_derailment"></param>
+        /// <param name="rate_derailment"></param>
+        /// <param name="coefficient_route"></param>
+        /// <param name="coefficient_not_route"></param>
+        /// <param name="grace_time_1"></param>
+        /// <param name="grace_time_2"></param>
+        /// <param name="note"></param>
+        /// <param name="list_period"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ServiceChangeUsageFeePeriod(DateTime start, DateTime stop, int? id_currency, decimal? rate, int? id_currency_derailment, decimal? rate_derailment,
+            float? coefficient_route, float? coefficient_not_route, int? grace_time_1, int? grace_time_2, string note, List<ListUsageFee> list_period, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFUsage_Fee_Period ef_efp = new EFUsage_Fee_Period(context);
+
+                if (list_period == null && list_period.Count() == 0) return (int)errors_base.not_input_list_change; // Неуказан список для изменения
+                foreach (ListUsageFee luf in list_period)
+                {
+                    Usage_Fee_Period usp = null;
+                    if (luf.id > 0)
+                    {
+                        usp = ef_efp.Context.Where(u => u.id == luf.id).FirstOrDefault();
+                        if (usp == null) return (int)errors_base.not_usage_fee_period_of_db;  // 
+                    }
+                    else
+                    {
+                        usp = ef_efp.Context.Where(u => u.id_operator == luf.id_operator && u.id_genus == luf.id_genus && u.close == null).OrderByDescending(c => c.stop).FirstOrDefault();
+                    }
+                    if (usp == null)
+                    {
+                        // добавить
+                        Usage_Fee_Period new_usp = new Usage_Fee_Period()
+                        {
+                            id = 0,
+                            id_operator = luf.id_operator,
+                            id_genus = luf.id_genus,
+                            start = start,
+                            stop = stop,
+                            id_currency = id_currency,
+                            rate = rate,
+                            id_currency_derailment = id_currency_derailment,
+                            rate_derailment = rate_derailment,
+                            coefficient_route = coefficient_route,
+                            coefficient_not_route = coefficient_not_route,
+                            grace_time_1 = grace_time_1,
+                            grace_time_2 = grace_time_2,
+                            note = note,
+                            create = DateTime.Now,
+                            create_user = user,
+                            parent_id = null
+                        };
+                        ef_efp.Add(new_usp);
+                    }
+                    else
+                    {
+                        if (start < usp.start || stop <= usp.start) return (int)errors_base.error_usage_fee_date_start_stop;      // 
+                        if (start > usp.start)
+                        {
+                            // добавить
+                            Usage_Fee_Period new_usp = new Usage_Fee_Period()
+                            {
+                                id = 0,
+                                id_operator = usp.id_operator,
+                                id_genus = usp.id_genus,
+                                start = start,
+                                stop = stop,
+                                id_currency = id_currency,
+                                rate = rate,
+                                id_currency_derailment = id_currency_derailment,
+                                rate_derailment = rate_derailment,
+                                coefficient_route = coefficient_route,
+                                coefficient_not_route = coefficient_not_route,
+                                grace_time_1 = grace_time_1,
+                                grace_time_2 = grace_time_2,
+                                note = note,
+                                create = DateTime.Now,
+                                create_user = user,
+                                parent_id = usp.id
+                            };
+                            usp.stop = start;
+                            usp.close = DateTime.Now;
+                            usp.close_user = user;
+                            ef_efp.Update(usp);
+                            ef_efp.Add(new_usp);
+                        }
+                        else
+                        {
+                            usp.stop = stop;
+                            usp.id_currency = id_currency;
+                            usp.rate = rate;
+                            usp.id_currency_derailment = id_currency_derailment;
+                            usp.rate_derailment = rate_derailment;
+                            usp.coefficient_route = coefficient_route;
+                            usp.coefficient_not_route = coefficient_not_route;
+                            usp.grace_time_1 = grace_time_1;
+                            usp.grace_time_2 = grace_time_2;
+                            usp.note = note;
+                            usp.create = DateTime.Now;
+                            usp.create_user = user;
+                            usp.parent_id = usp.id;
+                            usp.change = DateTime.Now;
+                            usp.change_user = user;
+                            ef_efp.Update(usp);
+                        }
+                    }
+                }
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ServiceChangeUsageFeePeriod(start={0}, stop={1}, id_currency={2}, rate={3}, id_currency_derailment={4}, rate_derailment ={5}, coefficient_route={6} , coefficient_not_route={7}, grace_time_1={8}, grace_time_2={9}, note={10}, list_period={11}, user={12})",
+                    start, stop, id_currency, rate, id_currency_derailment, rate_derailment, coefficient_route, coefficient_not_route, grace_time_1, grace_time_2, note, list_period, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
         }
         #endregion
     }
