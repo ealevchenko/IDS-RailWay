@@ -116,12 +116,16 @@
 
     var list_operators_genus = [];      // Перечень операторов и родов вагонов
     var list_currency = [];             // Перечень валют
+    var list_operation_rod = [];        // Перечень выбранных операторов и родов
     var list_period = [];               // Перечень периодов
     var list_select_period = [];        // Перечень периодов
 
     var edit_elements = {};
 
     var $form_edit = $('div#form-edit');
+
+    var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр
+
     var validation = function () {
         form_edit.validation_common.clear_all();
         var valid = true;
@@ -167,7 +171,7 @@
                         start: form_edit.get('date_period_start'),
                         stop: form_edit.get('date_period_stop'),
                         id_currency: edit_elements.select_rate_currency.val(),
-                        rate: form_edit.get('rate'),
+                        rate: form_edit.get('rate_value'),
                         id_currency_derailment: edit_elements.select_derailment_rate_currency.val(),
                         rate_derailment: form_edit.get('derailment_rate_value'),
                         coefficient_route: form_edit.get('coefficient_route_value'),
@@ -188,12 +192,8 @@
                             form_edit.validation_common.out_error_message(langView('mainuf_mess_error_operation_aplly_period', App.Langs) + result_operation);
                             LockScreenOff();
                         }
-                        //// Обновим данные
-                        //this.update_wagon(function (wagon) {
-                        //    this.wiew_detention_wagon_detali(wagon);
-                        //    this.detention_edit = false;
-                        //    LockScreenOff();
-                        //}.bind(this));
+                        // Обновим данные
+                        update_period_operation_rod();
                     }.bind(this));
                 } else {
                     form_edit.validation_common.out_warning_message(langView('mainuf_mess_cancel_operation_aplly_period', App.Langs))
@@ -203,6 +203,68 @@
 
         }
     }
+
+    var update_period_operation_rod = function () {
+        var process_period = 0;
+        // Выход из инициализации
+        var out_load_period = function (process_period) {
+            if (process_period === 0) {
+                table_usage_fee_period.view(list_period);
+                LockScreenOff();
+            }
+        };
+
+        list_period = [];
+        list_select_period = [];
+        if (list_operation_rod && list_operation_rod.length > 0) {
+            process_period = list_operation_rod.length;
+            $.each(list_operation_rod, function (key, el) {
+                ids_wsd.getLastUsageFeePeriodOfOperatorGenus(el.id_operator, el.id_genus, function (list_result) {
+                    if (list_result) {
+                        list_period = list_period.concat(list_result);
+                    } else {
+                        var genus = ids_dir.getGenusWagons_Of_ID(el.id_genus);
+                        var operator = ids_dir.getOperatorsWagons_Of_ID(el.id_operator);
+                        list_period.push({
+                            id: 0,
+                            id_operator: el.id_operator,
+                            id_genus: el.id_genus,
+                            start: null,
+                            stop: null,
+                            id_currency: null,
+                            rate: null,
+                            id_currency_derailment: null,
+                            rate_derailment: null,
+                            coefficient_route: null,
+                            coefficient_not_route: null,
+                            grace_time_1: null,
+                            grace_time_2: null,
+                            note: null,
+                            create: null,
+                            create_user: null,
+                            change: null,
+                            change_user: null,
+                            close: null,
+                            close_user: null,
+                            parent_id: null,
+                            Directory_OperatorsWagons: { abbr_ru: genus.abbr_ru, abbr_en: genus.abbr_en },
+                            Directory_GenusWagons: { abbr_ru: operator.abbr_ru, abbr_en: operator.abbr_en },
+                            Directory_Currency: { currency_ru: '', currency_en: '' },
+                            Directory_Currency1: { currency_ru: '', currency_en: '' }
+                        });
+                        //list_create_period.push({ id_operator: el.id_operator, id_genus: el.id_genus });
+                    }
+                    // На проверку окончания инициализации
+                    process_period--;
+                    out_load_period.call(this, process_period);
+                }.bind(this));
+            }.bind(this));
+            //LockScreenOff();
+        } else {
+            out_load_period(process_period);
+            //LockScreenOff();
+        }
+    };
 
     // После загрузки документа
     $(document).ready(function ($) {
@@ -256,14 +318,14 @@
                             this.table_operators_wagons_genus.view(list_operators_genus);
                             list_period = [];
                             list_select_period = [];
-                            this.table_usage_fee_period.view(list_period);
+                            table_usage_fee_period.view(list_period);
                             LockScreenOff();
                         }.bind(this));
                     } else {
                         this.table_operators_wagons_genus.view(list_operators_genus);
                         list_period = [];
                         list_select_period = [];
-                        this.table_usage_fee_period.view(list_period);
+                        table_usage_fee_period.view(list_period);
                         LockScreenOff();
                     }
                 }.bind(this),
@@ -286,70 +348,72 @@
 
                 },
                 fn_select_rows: function (rows) {
-                    var process_period = 0;
-                    // Выход из инициализации
-                    var out_load_period = function (process_period) {
-                        if (process_period === 0) {
-                            this.table_usage_fee_period.view(list_period);
-                            LockScreenOff();
-                        }
-                    }.bind(this);
-                    list_period = [];
-                    list_select_period = [];
-                    if (rows && rows.length > 0) {
-                        process_period = rows.length;
-                        $.each(rows, function (key, el) {
-                            ids_wsd.getLastUsageFeePeriodOfOperatorGenus(el.id_operator, el.id_genus, function (list_result) {
-                                if (list_result) {
-                                    list_period = list_period.concat(list_result);
-                                } else {
-                                    var genus = ids_dir.getGenusWagons_Of_ID(el.id_genus);
-                                    var operator = ids_dir.getOperatorsWagons_Of_ID(el.id_operator);
-                                    list_period.push({
-                                        id: 0,
-                                        id_operator: el.id_operator,
-                                        id_genus: el.id_genus,
-                                        start: null,
-                                        stop: null,
-                                        id_currency: null,
-                                        rate: null,
-                                        id_currency_derailment: null,
-                                        rate_derailment: null,
-                                        coefficient_route: null,
-                                        coefficient_not_route: null,
-                                        grace_time_1: null,
-                                        grace_time_2: null,
-                                        note: null,
-                                        create: null,
-                                        create_user: null,
-                                        change: null,
-                                        change_user: null,
-                                        close: null,
-                                        close_user: null,
-                                        parent_id: null,
-                                        Directory_OperatorsWagons: { abbr_ru: genus.abbr_ru, abbr_en: genus.abbr_en },
-                                        Directory_GenusWagons: { abbr_ru: operator.abbr_ru, abbr_en: operator.abbr_en },
-                                        Directory_Currency: { currency_ru: '', currency_en: '' },
-                                        Directory_Currency1: { currency_ru: '', currency_en: '' }
-                                    });
-                                    //list_create_period.push({ id_operator: el.id_operator, id_genus: el.id_genus });
-                                }
-                                // На проверку окончания инициализации
-                                process_period--;
-                                out_load_period(process_period);
-                            }.bind(this));
-                        }.bind(this));
-                        //LockScreenOff();
-                    } else {
-                        out_load_period(process_period);
-                        //LockScreenOff();
-                    }
+                    list_operation_rod = rows;
+                    update_period_operation_rod();
+                    //var process_period = 0;
+                    //// Выход из инициализации
+                    //var out_load_period = function (process_period) {
+                    //    if (process_period === 0) {
+                    //        this.table_usage_fee_period.view(list_period);
+                    //        LockScreenOff();
+                    //    }
+                    //}.bind(this);
+                    //list_period = [];
+                    //list_select_period = [];
+                    //if (rows && rows.length > 0) {
+                    //    process_period = rows.length;
+                    //    $.each(rows, function (key, el) {
+                    //        ids_wsd.getLastUsageFeePeriodOfOperatorGenus(el.id_operator, el.id_genus, function (list_result) {
+                    //            if (list_result) {
+                    //                list_period = list_period.concat(list_result);
+                    //            } else {
+                    //                var genus = ids_dir.getGenusWagons_Of_ID(el.id_genus);
+                    //                var operator = ids_dir.getOperatorsWagons_Of_ID(el.id_operator);
+                    //                list_period.push({
+                    //                    id: 0,
+                    //                    id_operator: el.id_operator,
+                    //                    id_genus: el.id_genus,
+                    //                    start: null,
+                    //                    stop: null,
+                    //                    id_currency: null,
+                    //                    rate: null,
+                    //                    id_currency_derailment: null,
+                    //                    rate_derailment: null,
+                    //                    coefficient_route: null,
+                    //                    coefficient_not_route: null,
+                    //                    grace_time_1: null,
+                    //                    grace_time_2: null,
+                    //                    note: null,
+                    //                    create: null,
+                    //                    create_user: null,
+                    //                    change: null,
+                    //                    change_user: null,
+                    //                    close: null,
+                    //                    close_user: null,
+                    //                    parent_id: null,
+                    //                    Directory_OperatorsWagons: { abbr_ru: genus.abbr_ru, abbr_en: genus.abbr_en },
+                    //                    Directory_GenusWagons: { abbr_ru: operator.abbr_ru, abbr_en: operator.abbr_en },
+                    //                    Directory_Currency: { currency_ru: '', currency_en: '' },
+                    //                    Directory_Currency1: { currency_ru: '', currency_en: '' }
+                    //                });
+                    //                //list_create_period.push({ id_operator: el.id_operator, id_genus: el.id_genus });
+                    //            }
+                    //            // На проверку окончания инициализации
+                    //            process_period--;
+                    //            out_load_period(process_period);
+                    //        }.bind(this));
+                    //    }.bind(this));
+                    //    //LockScreenOff();
+                    //} else {
+                    //    out_load_period(process_period);
+                    //    //LockScreenOff();
+                    //}
                 }.bind(this),
             });
             //
-            this.table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр
+/*            var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр*/
             // Инициализация модуля "Таблица операторов вагонов"
-            this.table_usage_fee_period.init({
+            table_usage_fee_period.init({
                 alert: null,
                 detali_table: false,
                 type_report: 'usage_fee_period',     //
