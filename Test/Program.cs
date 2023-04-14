@@ -253,13 +253,13 @@ namespace Test
             //tids.IDS_WIR_UpdateOutgoing_Parallel();            
             //tids.IDS_WIR_UpdateOutgoing_Thread();
 
-            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                       // Тестируем обновление документов в архиве
+            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                           // Тестируем обновление документов в архиве
 
-            //tids.IDS_WIR_UpdateOperationOutgoingSostav();               // 
-            //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();               // 
+            //tids.IDS_WIR_UpdateOperationOutgoingSostav();                 // 
+            //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();            // 
 
-            tids.IDS_WIR_ServiceChangeUsageFeePeriod();                 //  Тест обновление периодов
-
+            //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
+            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             #endregion
 
             #region Test_Logs тест логирования

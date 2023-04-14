@@ -43,6 +43,8 @@ namespace EFIDS.Entities
 
         public int? grace_time_2 { get; set; }
 
+        public bool? hour_after_30 { get; set; }
+
         [StringLength(100)]
         public string note { get; set; }
 

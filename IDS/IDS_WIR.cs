@@ -712,6 +712,8 @@ namespace IDS
         private List<int> list_stations_searsh_arrival_epd = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
         private int min_period_searsh_arrival_epd = -36;
 
+        private List<int> list_groups_cargo = new List<int>() { 11, 16, 20, 24 }; // Список id групп груза с порожними вагонами
+
         public IDS_WIR()
             : base()
         {
@@ -9010,7 +9012,7 @@ namespace IDS
         }
         #endregion
 
-        #region СЕРВИСЫ
+        #region Сервис "Коммерческое состояние (Разметка)"
         /// <summary>
         /// Правка разметки по прибытию
         /// </summary>
@@ -9066,6 +9068,9 @@ namespace IDS
             }
 
         }
+        #endregion
+
+        #region Сервис "Расчет платы за пользование"
         /// <summary>
         /// Правка периодов платы за пользование
         /// </summary>
@@ -9196,7 +9201,213 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        public long GetIDWIR(ref EFDbContext context, long id_wir)
+        {
+            EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+            EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+            EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+            WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id == id_wir).FirstOrDefault();
+            if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+            ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == wir.id_arrival_car).FirstOrDefault();
+            if (arr_car == null) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
+            Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == arr_car.id_arrival_uz_vagon).FirstOrDefault();
+            if (arr_uz_vag == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
+            if (arr_uz_vag.cargo_returns != null && arr_uz_vag.cargo_returns == true)
+            {
+                // Возврат
+                if (wir.parent_id == null) return wir.id;
+                return GetIDWIR(ref context, (long)wir.parent_id);
+            }
+            else
+            {
+                return wir.id;
+            }
+        }
+
+        public class Wagon_Usage_Fee_Period
+        {
+            public DateTime? date_adoption { get; set; }
+            public DateTime? date_outgoing { get; set; }
+            public int id_operator { get; set; }
+            public int id_genus { get; set; }
+            public DateTime start { get; set; }
+            public DateTime stop { get; set; }
+            public int? id_currency { get; set; }
+            public decimal? rate { get; set; }
+            public int? id_currency_derailment { get; set; }
+            public decimal? rate_derailment { get; set; }
+            public float? coefficient_route { get; set; }
+            public float? coefficient_not_route { get; set; }
+            public int? grace_time_1 { get; set; }
+            public int? grace_time_2 { get; set; }
+            public bool? hour_after_30 { get; set; }
+        }
+
+        public class Usage_Fee_Wagon
+        {
+
+            public int num { get; set; }
+            public int id_operator { get; set; }
+            public int id_genus { get; set; }
+            public DateTime date_start { get; set; }
+            public DateTime date_stop { get; set; }
+            public bool route { get; set; }
+            public bool inp_cargo { get; set; }
+            public bool out_cargo { get; set; }
+            public bool derailment { get; set; }
+            public int id_currency { get; set; }
+            public decimal rate { get; set; }
+            public float course { get; set; }
+            public float coefficient { get; set; }
+            public int use_time { get; set; }
+            public int grace_time { get; set; }
+            public int calc_time { get; set; }
+            public decimal calc_fee_amount { get; set; }
+            public DateTime create { get; set; }
+            public string create_user { get; set; }
+        }
+
+        /// <summary>
+        /// Расчет платы за пользование по сданному составу
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int CalcUsageFeeOfOutgoingSostav(long id_sostav, string user)
+        {
+            try
+            {
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
+                EFOutgoing_UZ_Document ef_out_uz_doc = new EFOutgoing_UZ_Document(context);
+
+                EFUsage_Fee_Period ef_uf_per = new EFUsage_Fee_Period(context);
+
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                OutgoingSostav out_sostav = ef_out_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
+                if (out_sostav == null) return (int)errors_base.not_outgoing_sostav_db;                         // В базе данных нет записи состава для оправки
+                if (out_sostav.date_outgoing == null) return (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList();
+                if (list_out_cars == null || list_out_cars.Count() == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки
+                foreach (OutgoingCars car in list_out_cars)
+                {
+                    WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
+                    if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    long id_wir_arrival = GetIDWIR(ref context, wir.id);
+                    // Прибытие
+                    WagonInternalRoutes wir_arrival = ef_wir.Context.Where(w => w.id == id_wir_arrival).FirstOrDefault();
+                    if (wir_arrival == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == wir_arrival.id_arrival_car).FirstOrDefault();
+                    if (arr_car == null) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
+                    ArrivalSostav arr_sostav = ef_arr_sostav.Context.Where(s => s.id == arr_car.id_arrival).FirstOrDefault();
+                    if (arr_sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправки
+                    Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == arr_car.id_arrival_uz_vagon).FirstOrDefault();
+                    if (arr_uz_vag == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
+                    // Отправка
+                    Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(w => w.id == car.id_outgoing_uz_vagon).FirstOrDefault();
+                    if (out_uz_vag == null) return (int)errors_base.not_out_uz_vag_db; // В базе данных нет записи документа на вагон.
+
+                    // Расчеты
+                    List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
+                    List<Usage_Fee_Wagon> list_ufw = new List<Usage_Fee_Wagon>();
+
+                    DateTime date_adoption = (DateTime)arr_sostav.date_adoption;
+                    DateTime date_outgoing = (DateTime)out_sostav.date_outgoing;
+                    //TimeSpan ts = date_outgoing - date_adoption;
+                    //double minutes = ts.TotalMinutes;
+                    //int hour = (int)Math.Truncate(ts.TotalHours);
+                    //int remaining_minutes = (int)Math.Truncate(ts.TotalMinutes - (hour * 60));
+                    int? id_operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.id_operator : null;
+                    int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;
+                    bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;
+                    bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;
+                    bool? route = arr_uz_vag.route;
+                    int num = car.num;
+                    int id_genus = out_uz_vag.id_genus;
+                    // Настройки 
+                    List<Usage_Fee_Period> list_uf_period_arrival = ef_uf_per.Context.Where(p => p.id_operator == id_operator_arrival && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
+                    List<Usage_Fee_Period> list_uf_period_outgoing = ef_uf_per.Context.Where(p => p.id_operator == id_operator_outgoing && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
+                    // оператор не менялся ?
+                    if (id_operator_arrival == id_operator_outgoing)
+                    {
+                        // расчет для одного оператора
+                        List<Usage_Fee_Period> list_period = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_outgoing).OrderByDescending(c => c.start).ToList();
+                        foreach (Usage_Fee_Period ufp in list_period)
+                        {
+                            list_period_setup.Add(new Wagon_Usage_Fee_Period()
+                            {
+                                date_adoption = date_adoption <= ufp.stop ? (DateTime?)date_adoption : null,
+                                date_outgoing = date_outgoing <= ufp.stop ? (DateTime?)date_outgoing : null,
+                                id_operator = (int)ufp.id_operator,
+                                id_genus = ufp.id_genus,
+                                start = ufp.start,
+                                stop = ufp.stop,
+                                id_currency = ufp.id_currency,
+                                rate = ufp.rate,
+                                id_currency_derailment = ufp.id_currency_derailment,
+                                rate_derailment = ufp.rate_derailment,
+                                coefficient_route = ufp.coefficient_route,
+                                coefficient_not_route = ufp.coefficient_not_route,
+                                grace_time_1 = ufp.grace_time_1,
+                                grace_time_2 = ufp.grace_time_2,
+                                hour_after_30 = ufp.hour_after_30
+                            });
+                        }
+                    }
+                    else
+                    {
+                        // расчет для 2-х операторов
+
+                    }
+                    // Начнем расчет
+                    foreach (Wagon_Usage_Fee_Period wufp in list_period_setup)
+                    {
+                        if (wufp.date_adoption != null)
+                        {
+                            // Первый период
+                            TimeSpan tm_period = (wufp.date_outgoing != null ? (DateTime)wufp.date_outgoing : (DateTime)wufp.stop) - (DateTime)wufp.date_adoption;
+                            double minutes_period = tm_period.TotalMinutes;
+                            int hour_period = (int)Math.Truncate(tm_period.TotalHours);
+                            int remaining_minutes_period = (int)Math.Truncate(tm_period.TotalMinutes - (hour_period * 60));
+                        }
+                        // Округление до часа
+                        if (wufp.date_outgoing != null)
+                        {
+                            if (wufp.hour_after_30 != null && wufp.hour_after_30 == true)
+                            {
+
+                            }
+                        }
+                    }
+
+                    // тесты
+                    string rod = out_uz_vag.Directory_GenusWagons.abbr_ru;
+                    string operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.Directory_OperatorsWagons.abbr_ru : null;
+                    string operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.Directory_OperatorsWagons.abbr_ru : null;
+
+                }
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CalcUsageFeeOfOutgoingSostav(id_sostav={0}, user={1})", id_sostav, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
         #endregion
+
+
     }
 }
 
