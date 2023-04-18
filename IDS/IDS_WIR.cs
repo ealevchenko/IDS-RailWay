@@ -9290,10 +9290,13 @@ namespace IDS
                 EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
                 EFOutgoing_UZ_Vagon ef_out_uz_vag = new EFOutgoing_UZ_Vagon(context);
                 EFOutgoing_UZ_Document ef_out_uz_doc = new EFOutgoing_UZ_Document(context);
-
                 EFUsage_Fee_Period ef_uf_per = new EFUsage_Fee_Period(context);
-
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFDirectory_Currency ef_dir_curr = new EFDirectory_Currency(context);
+
+                WebAPIClientBank client_bank = new WebAPIClientBank(base.servece_owner);
+                List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
+
                 OutgoingSostav out_sostav = ef_out_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
                 if (out_sostav == null) return (int)errors_base.not_outgoing_sostav_db;                         // В базе данных нет записи состава для оправки
                 if (out_sostav.date_outgoing == null) return (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
@@ -9321,75 +9324,242 @@ namespace IDS
                     List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
                     List<Usage_Fee_Wagon> list_ufw = new List<Usage_Fee_Wagon>();
 
-                    DateTime date_adoption = (DateTime)arr_sostav.date_adoption;
-                    DateTime date_outgoing = (DateTime)out_sostav.date_outgoing;
-                    //TimeSpan ts = date_outgoing - date_adoption;
-                    //double minutes = ts.TotalMinutes;
-                    //int hour = (int)Math.Truncate(ts.TotalHours);
-                    //int remaining_minutes = (int)Math.Truncate(ts.TotalMinutes - (hour * 60));
-                    int? id_operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.id_operator : null;
-                    int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;
-                    bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;
-                    bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;
-                    bool? route = arr_uz_vag.route;
-                    int num = car.num;
-                    int id_genus = out_uz_vag.id_genus;
-                    // Настройки 
-                    List<Usage_Fee_Period> list_uf_period_arrival = ef_uf_per.Context.Where(p => p.id_operator == id_operator_arrival && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
+                    DateTime date_adoption = (DateTime)arr_sostav.date_adoption;    // Зашел
+                    DateTime date_outgoing = (DateTime)out_sostav.date_outgoing;    // Вышел
+                    //int? id_operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.id_operator : null;      // Оператор по прибытию
+                    int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;   // Оператор по отправке
+                    bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по прибытию
+                    bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по отправке
+                    bool? route = arr_uz_vag.route;                                                                 // Маршрут
+                    int num = car.num;                                                                              // Номер вагона
+                    int id_genus = out_uz_vag.id_genus;                                                             // Род вагона
+                    bool derailment = false;                                                                        // Сход
+                    // Список настройки периода по оператору прибытия
+                    //List<Usage_Fee_Period> list_uf_period_arrival = ef_uf_per.Context.Where(p => p.id_operator == id_operator_arrival && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
+                    // Список настройки периода по оператору отправки
                     List<Usage_Fee_Period> list_uf_period_outgoing = ef_uf_per.Context.Where(p => p.id_operator == id_operator_outgoing && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
-                    // оператор не менялся ?
-                    if (id_operator_arrival == id_operator_outgoing)
+                    // расчет оператора
+                    List<Usage_Fee_Period> list_period = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_outgoing).OrderByDescending(c => c.start).ToList();
+                    foreach (Usage_Fee_Period ufp in list_period)
                     {
-                        // расчет для одного оператора
-                        List<Usage_Fee_Period> list_period = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_outgoing).OrderByDescending(c => c.start).ToList();
-                        foreach (Usage_Fee_Period ufp in list_period)
+                        list_period_setup.Add(new Wagon_Usage_Fee_Period()
                         {
-                            list_period_setup.Add(new Wagon_Usage_Fee_Period()
-                            {
-                                date_adoption = date_adoption <= ufp.stop ? (DateTime?)date_adoption : null,
-                                date_outgoing = date_outgoing <= ufp.stop ? (DateTime?)date_outgoing : null,
-                                id_operator = (int)ufp.id_operator,
-                                id_genus = ufp.id_genus,
-                                start = ufp.start,
-                                stop = ufp.stop,
-                                id_currency = ufp.id_currency,
-                                rate = ufp.rate,
-                                id_currency_derailment = ufp.id_currency_derailment,
-                                rate_derailment = ufp.rate_derailment,
-                                coefficient_route = ufp.coefficient_route,
-                                coefficient_not_route = ufp.coefficient_not_route,
-                                grace_time_1 = ufp.grace_time_1,
-                                grace_time_2 = ufp.grace_time_2,
-                                hour_after_30 = ufp.hour_after_30
-                            });
-                        }
+                            date_adoption = date_adoption <= ufp.stop ? (DateTime?)date_adoption : null,
+                            date_outgoing = date_outgoing <= ufp.stop ? (DateTime?)date_outgoing : null,
+                            id_operator = (int)ufp.id_operator,
+                            id_genus = ufp.id_genus,
+                            start = ufp.start,
+                            stop = ufp.stop,
+                            id_currency = ufp.id_currency,
+                            rate = ufp.rate,
+                            id_currency_derailment = ufp.id_currency_derailment,
+                            rate_derailment = ufp.rate_derailment,
+                            coefficient_route = ufp.coefficient_route,
+                            coefficient_not_route = ufp.coefficient_not_route,
+                            grace_time_1 = ufp.grace_time_1,
+                            grace_time_2 = ufp.grace_time_2,
+                            hour_after_30 = ufp.hour_after_30
+                        });
                     }
-                    else
-                    {
-                        // расчет для 2-х операторов
-
-                    }
-                    // Начнем расчет
+                    // 
+                    int hour_period = 0;                // Время (часов)
+                    int remaining_minutes_period = 0;   // Остаток минут
+                    int grace_time = 0;                 // Льготное время
+                    bool uz_wagon = false;              // Вагоны ЦТЛ
+                    decimal exchange_rate = 1;          // курс валюты
+                    decimal rate = 0;                   // ставка для расчета (с учетом схода)
+                    int stage = 0;                      // этапы расчета (0-одинарный, 1-первый, 2-промежуточный, 3-последний)
+                    float coefficient_route = 1;        // коэффициент маршрута, для всех по умолчанию 1;
+                    int calc_time = 0;                  // Расчетное время
+                    decimal calc_fee_amount = 0;        // Расчетная сумма
+                    // Пройдемся по активным периодам
                     foreach (Wagon_Usage_Fee_Period wufp in list_period_setup)
                     {
+
+                        TimeSpan tm_period;
+                        grace_time = 0;             // сбросим льготный период
+                        exchange_rate = 1;          // сбросим курс
+                        rate = 0;                   // сбросим ставку
+                        coefficient_route = 1;      // сбросим коэффициент
+                        //double minutes_period = 0;
                         if (wufp.date_adoption != null)
                         {
                             // Первый период
-                            TimeSpan tm_period = (wufp.date_outgoing != null ? (DateTime)wufp.date_outgoing : (DateTime)wufp.stop) - (DateTime)wufp.date_adoption;
-                            double minutes_period = tm_period.TotalMinutes;
-                            int hour_period = (int)Math.Truncate(tm_period.TotalHours);
-                            int remaining_minutes_period = (int)Math.Truncate(tm_period.TotalMinutes - (hour_period * 60));
+                            if (wufp.date_outgoing != null)
+                            {
+                                tm_period = (DateTime)wufp.date_outgoing - (DateTime)wufp.date_adoption; // первый и последний период
+                                stage = 0;
+                            }
+                            else
+                            {
+                                tm_period = (DateTime)wufp.stop.Date.AddDays(1).AddMinutes(-1) - (DateTime)wufp.date_adoption; // за первый период
+                                stage = 1;
+                            }
+                            // определим льготный период
+                            if (inp_cargo && out_cargo)
+                            {
+                                grace_time = wufp.grace_time_2 != null ? (int)wufp.grace_time_2 : 0;
+                            }
+                            else
+                            {
+                                grace_time = wufp.grace_time_1 != null ? (int)wufp.grace_time_1 : 0;
+                            }
                         }
-                        // Округление до часа
+                        else
+                        {
+                            if (wufp.date_outgoing != null)
+                            {
+                                tm_period = (DateTime)wufp.date_outgoing - (DateTime)wufp.start; // за последний период
+                                stage = 3;
+                            }
+                            else
+                            {
+                                tm_period = (DateTime)wufp.stop.Date.AddDays(1).AddMinutes(-1) - (DateTime)wufp.start; // за промежуточный период период
+                                stage = 2;
+                            }
+                        }
+                        // просчитаем интервал
+                        //minutes_period = tm_period.TotalMinutes;
+                        hour_period = (int)Math.Truncate(tm_period.TotalHours);
+                        remaining_minutes_period = (int)Math.Truncate(tm_period.TotalMinutes - (hour_period * 60));
+                        // Округление до часа, если это последний период
                         if (wufp.date_outgoing != null)
                         {
                             if (wufp.hour_after_30 != null && wufp.hour_after_30 == true)
                             {
+                                uz_wagon = true;
+                                if (remaining_minutes_period > 30)
+                                {
+                                    hour_period++;
+                                }
+                                remaining_minutes_period = 0;
+                            }
+                            else
+                            {
+                                if (remaining_minutes_period > 0)
+                                {
+                                    hour_period++;
+                                    remaining_minutes_period = 0;
+                                }
 
                             }
                         }
-                    }
+                        // Ставка, курс и валюта (с учетом схода)
 
+                        if (!derailment)
+                        {
+                            if (wufp.id_currency != null)
+                            {
+                                rate = wufp.rate != null ? (decimal)wufp.rate : 0;
+                                if (wufp.id_currency > 1)
+                                {
+                                    // отправимся за курсом
+                                    Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency).FirstOrDefault();
+                                    if (curr != null)
+                                    {
+                                        ExchangeRate res_er = list_exchange_rate.Where(e => e.re == curr.code).FirstOrDefault();
+                                        exchange_rate = res_er.rate;
+                                    }
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // сход
+                            if (wufp.id_currency_derailment != null)
+                            {
+                                rate = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
+                                if (wufp.id_currency_derailment > 1)
+                                {
+                                    // отправимся за курсом
+                                    Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency_derailment).FirstOrDefault();
+                                    if (curr != null)
+                                    {
+                                        ExchangeRate res_er = list_exchange_rate.Where(e => e.re == curr.code).FirstOrDefault();
+                                        exchange_rate = res_er.rate;
+                                    }
+
+                                }
+                            }
+                        }
+
+
+                        // Определим коэффициент маршрута
+                        if (wufp.coefficient_route != null && route != null && route == true)
+                        {
+                            coefficient_route = (float)wufp.coefficient_route;
+                        }
+                        if (wufp.coefficient_not_route != null && route != null && route == false)
+                        {
+                            coefficient_route = (float)wufp.coefficient_not_route;
+                        }
+                        // расчеты
+                        switch (stage)
+                        {
+                            case 0:
+                                {
+                                    int hour_calc = (hour_period - grace_time);
+                                    if (!uz_wagon)
+                                    {
+                                        calc_time = hour_calc + (24 - (hour_calc % 24)); // округлим до целых суток
+                                    }
+                                    calc_fee_amount = ((rate / 24) * calc_time * (decimal)coefficient_route) * exchange_rate;
+                                    break;
+                                };
+                            case 1:
+                                {
+                                    // Первый период
+                                    int hour_calc = (hour_period - grace_time);
+                                    calc_time = hour_calc;
+                                    calc_fee_amount = ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    break;
+                                };
+                            case 2:
+                                {
+                                    // промежуточный период
+                                    int hour_calc = (hour_period - grace_time);
+                                    calc_time += hour_calc;
+                                    calc_fee_amount += ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    // последний период
+                                    int hour_calc = (hour_period - grace_time);
+                                    if (!uz_wagon)
+                                    {
+                                        hour_calc = hour_calc + (24 - (hour_calc % 24)); // округлим до целых суток
+                                        calc_fee_amount += hour_calc;
+                                    }
+                                    calc_fee_amount += ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    break;
+                                }
+                        }
+                    }
+                    //
+                    Usage_Fee_Wagon ufw = new Usage_Fee_Wagon()
+                    {
+                        num = num,
+                        id_operator = (int)id_operator_outgoing,
+                        id_genus = id_genus,
+                        date_start = date_adoption,
+                        date_stop = date_outgoing,
+                        route = route != null && route == true ? true : false,
+                        inp_cargo = inp_cargo,
+                        out_cargo = out_cargo,
+                        derailment = derailment, // сход
+                        //id_currency = ,
+                        //rate = ,
+                        //course = ,
+                        //coefficient = coefficient_route,
+                        //use_time = ,
+                        //grace_time = ,
+                        //calc_time = ,
+                        //calc_fee_amount = ,
+                        //create = ,
+                        //create_user =,
+                    };
                     // тесты
                     string rod = out_uz_vag.Directory_GenusWagons.abbr_ru;
                     string operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.Directory_OperatorsWagons.abbr_ru : null;
