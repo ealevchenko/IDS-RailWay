@@ -38,6 +38,7 @@ namespace IDSLogs.Enum
         MT_MTTransfer = 2400,           // Сервис переноса даных из файлов в БД Метранс
         MT_MTThread = 2500,             // Библиотека потоков выполнения сервисов Метранс
         MT_WebApiClient = 2600,         // Библиотека доступа к WEB API
+
         #endregion
 
         #region Служба Информационно диспечерской системы 3000
@@ -55,6 +56,7 @@ namespace IDSLogs.Enum
         IDS_IDSWIR = 3800,          // Сервис работы с вагонами внутренего перемещения
         IDS_IDSRWT = 3900,          // Сервис работы с вагонами внутренего перемещения
         IDS_IDSEPD = 3950,          // Сервис работы с ЭПД УЗ
+        IDS_WebApiClient = 3960,    // Библиотека доступа к WEB API
 
         #endregion
 

@@ -63,6 +63,7 @@
     <Compile Include="IDS_SAP.cs" />
     <Compile Include="IDS_WIR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebAPIClientBank.cs" />
     <Compile Include="WebAPIClientSAP.cs" />
   </ItemGroup>
   <ItemGroup>
