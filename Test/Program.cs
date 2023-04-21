@@ -170,8 +170,8 @@ namespace Test
 
             //}
 
-
-
+            //double value = 11.94;
+            //Console.WriteLine(Math.Round(value, 1, MidpointRounding.AwayFromZero));
 
             #region Test_KIS Тест Кис
             Test_KIS tkis = new Test_KIS();

@@ -615,8 +615,8 @@ namespace Test.TestModule
         public void IDS_WIR_CalcUsageFeeOfOutgoingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            // //200473
-            int result = ids.CalcUsageFeeOfOutgoingSostav(210779, @"EUROPE\ealevchenko");
+            //210779 //200473 // 210834
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(210786, @"EUROPE\ealevchenko");
         }
 
         #endregion

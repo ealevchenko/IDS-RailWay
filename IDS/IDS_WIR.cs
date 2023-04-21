@@ -9245,7 +9245,7 @@ namespace IDS
 
         public class Usage_Fee_Wagon
         {
-
+            public long id_wir { get; set; }
             public int num { get; set; }
             public int id_operator { get; set; }
             public int id_genus { get; set; }
@@ -9255,9 +9255,10 @@ namespace IDS
             public bool inp_cargo { get; set; }
             public bool out_cargo { get; set; }
             public bool derailment { get; set; }
+            public int count_stage { get; set; }
             public int id_currency { get; set; }
             public decimal rate { get; set; }
-            public float course { get; set; }
+            public decimal exchange_rate { get; set; }
             public float coefficient { get; set; }
             public int use_time { get; set; }
             public int grace_time { get; set; }
@@ -9273,8 +9274,9 @@ namespace IDS
         /// <param name="id_sostav"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int CalcUsageFeeOfOutgoingSostav(long id_sostav, string user)
+        public ResultUpdateIDWagon CalcUsageFeeOfOutgoingSostav(long id_sostav, string user)
         {
+            ResultUpdateIDWagon result = new ResultUpdateIDWagon(id_sostav, 0);
             try
             {
                 if (String.IsNullOrWhiteSpace(user))
@@ -9292,50 +9294,77 @@ namespace IDS
                 EFOutgoing_UZ_Document ef_out_uz_doc = new EFOutgoing_UZ_Document(context);
                 EFUsage_Fee_Period ef_uf_per = new EFUsage_Fee_Period(context);
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
+                EFWagonUsageFee ef_wuf = new EFWagonUsageFee(context);
                 EFDirectory_Currency ef_dir_curr = new EFDirectory_Currency(context);
-
                 WebAPIClientBank client_bank = new WebAPIClientBank(base.servece_owner);
                 List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
-
                 OutgoingSostav out_sostav = ef_out_sostav.Context.Where(s => s.id == id_sostav).FirstOrDefault();
-                if (out_sostav == null) return (int)errors_base.not_outgoing_sostav_db;                         // В базе данных нет записи состава для оправки
-                if (out_sostav.date_outgoing == null) return (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                if (out_sostav == null)
+                {
+                    result.result = (int)errors_base.not_outgoing_sostav_db;                         // В базе данных нет записи состава для оправки
+                    return result;
+                }
+
+                if (out_sostav.date_outgoing == null)
+                {
+                    result.result = (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                    return result;
+                }
                 List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList();
-                if (list_out_cars == null || list_out_cars.Count() == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки
+                if (list_out_cars == null || list_out_cars.Count() == 0)
+                {
+                    result.result = (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки
+                    return result;
+                }
+                result.count = list_out_cars.Count();
                 foreach (OutgoingCars car in list_out_cars)
                 {
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
-                    if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    if (wir == null) {
+                        result.SetErrorResult(car.id,(int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                        continue;
+                    }
+                    WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && (o.id_condition == 76 || o.id_condition == 74)).FirstOrDefault();
                     long id_wir_arrival = GetIDWIR(ref context, wir.id);
                     // Прибытие
                     WagonInternalRoutes wir_arrival = ef_wir.Context.Where(w => w.id == id_wir_arrival).FirstOrDefault();
-                    if (wir_arrival == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    if (wir_arrival == null) { 
+                        result.SetErrorResult(car.id,(int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                        continue;                    
+                    }
                     ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == wir_arrival.id_arrival_car).FirstOrDefault();
-                    if (arr_car == null) return (int)errors_base.not_arrival_cars_db; // Ошибка, нет записи вагона по прибытию 
+                    if (arr_car == null) { 
+                        result.SetErrorResult(car.id,(int)errors_base.not_arrival_cars_db, car.num); // Ошибка, нет записи вагона по прибытию 
+                        continue;                       
+                    }
                     ArrivalSostav arr_sostav = ef_arr_sostav.Context.Where(s => s.id == arr_car.id_arrival).FirstOrDefault();
-                    if (arr_sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправки
+                    if (arr_sostav == null) { 
+                        result.SetErrorResult(car.id,(int)errors_base.not_arrival_sostav_db, car.num); // В базе данных нет записи состава для оправки
+                        continue;                     
+                    }
                     Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == arr_car.id_arrival_uz_vagon).FirstOrDefault();
-                    if (arr_uz_vag == null) return (int)errors_base.not_inp_uz_vag_db; // В базе данных нет записи документа на вагон.
+                    if (arr_uz_vag == null) { 
+                        result.SetErrorResult(car.id,(int)errors_base.not_inp_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
+                        continue;                        
+                    }
                     // Отправка
                     Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(w => w.id == car.id_outgoing_uz_vagon).FirstOrDefault();
-                    if (out_uz_vag == null) return (int)errors_base.not_out_uz_vag_db; // В базе данных нет записи документа на вагон.
-
+                    if (out_uz_vag == null) { 
+                        result.SetErrorResult(car.id,(int)errors_base.not_out_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
+                        continue;                     
+                    }
                     // Расчеты
                     List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
-                    List<Usage_Fee_Wagon> list_ufw = new List<Usage_Fee_Wagon>();
-
                     DateTime date_adoption = (DateTime)arr_sostav.date_adoption;    // Зашел
                     DateTime date_outgoing = (DateTime)out_sostav.date_outgoing;    // Вышел
-                    //int? id_operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.id_operator : null;      // Оператор по прибытию
                     int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;   // Оператор по отправке
                     bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по прибытию
                     bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по отправке
                     bool? route = arr_uz_vag.route;                                                                 // Маршрут
                     int num = car.num;                                                                              // Номер вагона
                     int id_genus = out_uz_vag.id_genus;                                                             // Род вагона
-                    bool derailment = false;                                                                        // Сход
-                    // Список настройки периода по оператору прибытия
-                    //List<Usage_Fee_Period> list_uf_period_arrival = ef_uf_per.Context.Where(p => p.id_operator == id_operator_arrival && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
+                    bool derailment = wio != null ? true : false;                                                   // Сход
                     // Список настройки периода по оператору отправки
                     List<Usage_Fee_Period> list_uf_period_outgoing = ef_uf_per.Context.Where(p => p.id_operator == id_operator_outgoing && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
                     // расчет оператора
@@ -9367,19 +9396,21 @@ namespace IDS
                     int grace_time = 0;                 // Льготное время
                     bool uz_wagon = false;              // Вагоны ЦТЛ
                     decimal exchange_rate = 1;          // курс валюты
-                    decimal rate = 0;                   // ставка для расчета (с учетом схода)
+                    decimal rate_currency = 0;          // ставка для расчета (с учетом схода)
                     int stage = 0;                      // этапы расчета (0-одинарный, 1-первый, 2-промежуточный, 3-последний)
                     float coefficient_route = 1;        // коэффициент маршрута, для всех по умолчанию 1;
+                    int calc_hour_period = 0;           // Время расчетное (часов)
                     int calc_time = 0;                  // Расчетное время
                     decimal calc_fee_amount = 0;        // Расчетная сумма
+                    int id_currency = -1;               // Выбранная валюта
+                    decimal rate = 0;                   // Выбранная ставка
                     // Пройдемся по активным периодам
                     foreach (Wagon_Usage_Fee_Period wufp in list_period_setup)
                     {
-
                         TimeSpan tm_period;
                         grace_time = 0;             // сбросим льготный период
                         exchange_rate = 1;          // сбросим курс
-                        rate = 0;                   // сбросим ставку
+                        rate_currency = 0;                   // сбросим ставку
                         coefficient_route = 1;      // сбросим коэффициент
                         //double minutes_period = 0;
                         if (wufp.date_adoption != null)
@@ -9445,12 +9476,13 @@ namespace IDS
                             }
                         }
                         // Ставка, курс и валюта (с учетом схода)
-
                         if (!derailment)
                         {
                             if (wufp.id_currency != null)
                             {
+                                id_currency = (int)wufp.id_currency;
                                 rate = wufp.rate != null ? (decimal)wufp.rate : 0;
+                                rate_currency = wufp.rate != null ? (decimal)wufp.rate : 0;
                                 if (wufp.id_currency > 1)
                                 {
                                     // отправимся за курсом
@@ -9460,7 +9492,6 @@ namespace IDS
                                         ExchangeRate res_er = list_exchange_rate.Where(e => e.re == curr.code).FirstOrDefault();
                                         exchange_rate = res_er.rate;
                                     }
-
                                 }
                             }
                         }
@@ -9469,7 +9500,9 @@ namespace IDS
                             // сход
                             if (wufp.id_currency_derailment != null)
                             {
+                                id_currency = (int)wufp.id_currency_derailment;
                                 rate = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
+                                rate_currency = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
                                 if (wufp.id_currency_derailment > 1)
                                 {
                                     // отправимся за курсом
@@ -9483,8 +9516,6 @@ namespace IDS
                                 }
                             }
                         }
-
-
                         // Определим коэффициент маршрута
                         if (wufp.coefficient_route != null && route != null && route == true)
                         {
@@ -9499,80 +9530,124 @@ namespace IDS
                         {
                             case 0:
                                 {
+                                    calc_hour_period = hour_period;
                                     int hour_calc = (hour_period - grace_time);
-                                    if (!uz_wagon)
-                                    {
-                                        calc_time = hour_calc + (24 - (hour_calc % 24)); // округлим до целых суток
-                                    }
-                                    calc_fee_amount = ((rate / 24) * calc_time * (decimal)coefficient_route) * exchange_rate;
+                                    // пересчет времени с учетом uz_wagon
+                                    calc_time = hour_calc + (!uz_wagon ? (24 - (hour_calc % 24)) : 0); // округлим до целых суток
+                                    calc_fee_amount = ((rate_currency / 24) * calc_time * (decimal)coefficient_route) * exchange_rate;
                                     break;
                                 };
                             case 1:
                                 {
                                     // Первый период
+                                    calc_hour_period = hour_period;
                                     int hour_calc = (hour_period - grace_time);
                                     calc_time = hour_calc;
-                                    calc_fee_amount = ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    calc_fee_amount = ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
                                     break;
                                 };
                             case 2:
                                 {
                                     // промежуточный период
-                                    int hour_calc = (hour_period - grace_time);
+                                    calc_hour_period += hour_period;
+                                    int hour_calc = (hour_period);
                                     calc_time += hour_calc;
-                                    calc_fee_amount += ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    calc_fee_amount += ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
                                     break;
                                 }
                             case 3:
                                 {
                                     // последний период
-                                    int hour_calc = (hour_period - grace_time);
-                                    if (!uz_wagon)
-                                    {
-                                        hour_calc = hour_calc + (24 - (hour_calc % 24)); // округлим до целых суток
-                                        calc_fee_amount += hour_calc;
-                                    }
-                                    calc_fee_amount += ((rate / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
+                                    calc_hour_period += hour_period;
+                                    int hour_calc = (hour_period);
+                                    // пересчет времени с учетом uz_wagon
+                                    calc_time = hour_calc + (!uz_wagon ? (24 - (hour_calc % 24)) : 0); // округлим до целых суток
+                                    calc_fee_amount += hour_calc;
+                                    calc_fee_amount += ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
                                     break;
                                 }
                         }
                     }
                     //
-                    Usage_Fee_Wagon ufw = new Usage_Fee_Wagon()
+                    WagonUsageFee wuf = null;
+                    if (wir.id_usage_fee != null)
                     {
-                        num = num,
-                        id_operator = (int)id_operator_outgoing,
-                        id_genus = id_genus,
-                        date_start = date_adoption,
-                        date_stop = date_outgoing,
-                        route = route != null && route == true ? true : false,
-                        inp_cargo = inp_cargo,
-                        out_cargo = out_cargo,
-                        derailment = derailment, // сход
-                        //id_currency = ,
-                        //rate = ,
-                        //course = ,
-                        //coefficient = coefficient_route,
-                        //use_time = ,
-                        //grace_time = ,
-                        //calc_time = ,
-                        //calc_fee_amount = ,
-                        //create = ,
-                        //create_user =,
-                    };
-                    // тесты
-                    string rod = out_uz_vag.Directory_GenusWagons.abbr_ru;
-                    string operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.Directory_OperatorsWagons.abbr_ru : null;
-                    string operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.Directory_OperatorsWagons.abbr_ru : null;
-
+                        // Плата расчитана
+                        wuf = ef_wuf.Context.Where(w => w.id == wir.id_usage_fee).FirstOrDefault();
+                        if (wuf != null)
+                        {
+                            wuf.id_operator = (int)id_operator_outgoing;
+                            wuf.id_genus = id_genus;
+                            wuf.date_adoption = date_adoption;
+                            wuf.date_outgoing = date_outgoing;
+                            wuf.route = route != null && route == true ? true : false;
+                            wuf.inp_cargo = inp_cargo;
+                            wuf.out_cargo = out_cargo;
+                            wuf.derailment = derailment;// сход
+                            wuf.count_stage = list_period_setup.Count(); // Количество стадий расчета
+                            wuf.id_currency = id_currency;
+                            wuf.rate = rate;
+                            wuf.exchange_rate = exchange_rate;
+                            wuf.coefficient = coefficient_route;
+                            wuf.use_time = calc_hour_period;
+                            wuf.grace_time = grace_time;
+                            wuf.calc_time = calc_time;
+                            wuf.calc_fee_amount = Math.Round(calc_fee_amount, 1, MidpointRounding.AwayFromZero);
+                            wuf.note = null;
+                            wuf.create = DateTime.Now;
+                            wuf.create_user = user;
+                            ef_wuf.Update(wuf);
+                            result.SetUpdateResult(car.id, 1, car.num);
+                        }
+                    }
+                    else
+                    {
+                        wuf = new WagonUsageFee()
+                        {
+                            id = 0,
+                            id_wir = wir.id,
+                            num = num,
+                            id_operator = (int)id_operator_outgoing,
+                            id_genus = id_genus,
+                            date_adoption = date_adoption,
+                            date_outgoing = date_outgoing,
+                            route = route != null && route == true ? true : false,
+                            inp_cargo = inp_cargo,
+                            out_cargo = out_cargo,
+                            derailment = derailment, // сход
+                            count_stage = list_period_setup.Count(), // Количество стадий расчета
+                            id_currency = id_currency,
+                            rate = rate,
+                            exchange_rate = exchange_rate,
+                            coefficient = coefficient_route,
+                            use_time = calc_hour_period,
+                            grace_time = grace_time,
+                            calc_time = calc_time,
+                            calc_fee_amount = Math.Round(calc_fee_amount, 1, MidpointRounding.AwayFromZero),
+                            manual_time = null,
+                            manual_fee_amount = null,
+                            note = null,
+                            create = DateTime.Now,
+                            create_user = user,
+                            change = null,
+                            change_user = null,
+                        };
+                        wir.WagonUsageFee = wuf;
+                        ef_wir.Update(wir);
+                        result.SetInsertResult(car.id, 1, car.num);
+                    }
+                    //string rod = out_uz_vag.Directory_GenusWagons.abbr_ru;
+                    //string operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.Directory_OperatorsWagons.abbr_ru : null;
+                    //string operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.Directory_OperatorsWagons.abbr_ru : null;
                 }
-
-                return 0;
+                result.SetResult(context.SaveChanges());
+                return result;
             }
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("CalcUsageFeeOfOutgoingSostav(id_sostav={0}, user={1})", id_sostav, user), servece_owner, eventID);
-                return (int)errors_base.global; // Глобальная ошибка
+                result.result = (int)errors_base.global; // Глобальная ошибка
+                return result;
             }
         }
         #endregion
