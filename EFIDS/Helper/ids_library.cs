@@ -2284,7 +2284,8 @@ namespace EFIDS.Helper
                 close = r.close,
                 close_user = r.close_user,
                 parent_id = r.parent_id,
-                highlight_color = r.highlight_color,
+                highlight_color = r.highlight_color, 
+                id_usage_fee = r.id_usage_fee, 
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),
                 OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
@@ -2360,6 +2361,40 @@ namespace EFIDS.Helper
                 Directory_Station = m.Directory_Station.GetDirectory_Station(),
                 Directory_Ways = m.Directory_Ways.GetDirectory_Ways(),
                 Directory_OuterWays = m.Directory_OuterWays.GetDirectory_OuterWays(),
+            };
+        }
+        public static WagonUsageFee GetWagonUsageFee(this WagonUsageFee u)
+        {
+            if (u == null) return null;
+            return new WagonUsageFee()
+            {
+                id=u.id,
+                id_wir = u.id_wir,
+                num = u.num,
+                id_operator = u.id_operator,
+                id_genus = u.id_genus,
+                date_adoption = u.date_adoption,
+                date_outgoing = u.date_outgoing,
+                route = u.route,
+                inp_cargo = u.inp_cargo,
+                out_cargo = u.out_cargo,
+                derailment = u.derailment,
+                count_stage = u.count_stage,
+                id_currency = u.id_currency,
+                rate = u.rate,
+                exchange_rate = u.exchange_rate,
+                coefficient = u.coefficient,
+                use_time = u.use_time,
+                grace_time = u.grace_time,
+                calc_time = u.calc_time,
+                calc_fee_amount = u.calc_fee_amount,
+                manual_time = u.manual_time,
+                manual_fee_amount = u.manual_fee_amount,
+                note = u.note,
+                create = u.create,
+                create_user = u.create_user,
+                change = u.change,
+                change_user = u.change_user,
             };
         }
 

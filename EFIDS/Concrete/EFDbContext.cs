@@ -61,6 +61,7 @@ namespace EFIDS.Concrete
         public virtual DbSet<WagonInternalMovement> WagonInternalMovement { get; set; }
         public virtual DbSet<WagonInternalOperation> WagonInternalOperation { get; set; }
         public virtual DbSet<WagonInternalRoutes> WagonInternalRoutes { get; set; }
+        public virtual DbSet<WagonUsageFee> WagonUsageFee { get; set; }
 
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
@@ -213,6 +214,31 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.WagonInternalRoutes1)
                 .WithOptional(e => e.WagonInternalRoutes2)
                 .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<WagonInternalRoutes>()
+                .Property(e => e.highlight_color)
+                .IsFixedLength();
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.exchange_rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.calc_fee_amount)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.manual_fee_amount)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                 .HasMany(e => e.WagonInternalRoutes)
+                 .WithOptional(e => e.WagonUsageFee)
+                 .HasForeignKey(e => e.id_usage_fee);
 
             #endregion
 

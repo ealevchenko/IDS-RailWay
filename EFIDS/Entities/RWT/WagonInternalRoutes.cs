@@ -49,6 +49,7 @@ namespace EFIDS.Entities
 
         [StringLength(10)]
         public string highlight_color { get; set; }
+        public int? id_usage_fee { get; set; }
 
         public virtual ArrivalCars ArrivalCars { get; set; }
 
@@ -70,5 +71,6 @@ namespace EFIDS.Entities
         public virtual ICollection<WagonInternalRoutes> WagonInternalRoutes1 { get; set; }
 
         public virtual WagonInternalRoutes WagonInternalRoutes2 { get; set; }
+        public virtual WagonUsageFee WagonUsageFee { get; set; }
     }
 }
