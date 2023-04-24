@@ -9093,7 +9093,7 @@ namespace IDS
         /// <param name="list_period"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int ServiceChangeUsageFeePeriod(DateTime start, DateTime stop, int? id_currency, decimal? rate, int? id_currency_derailment, decimal? rate_derailment,
+        public int ServiceChangeUsageFeePeriod(DateTime start, DateTime stop, bool hour_after_30, int? id_currency, decimal? rate, int? id_currency_derailment, decimal? rate_derailment,
             float? coefficient_route, float? coefficient_not_route, int? grace_time_1, int? grace_time_2, string note, List<ListUsageFee> list_period, string user)
         {
             try
@@ -9128,7 +9128,8 @@ namespace IDS
                             id_operator = luf.id_operator,
                             id_genus = luf.id_genus,
                             start = start,
-                            stop = stop,
+                            stop = stop, 
+                            hour_after_30 = hour_after_30,
                             id_currency = id_currency,
                             rate = rate,
                             id_currency_derailment = id_currency_derailment,
@@ -9157,6 +9158,7 @@ namespace IDS
                                 id_genus = usp.id_genus,
                                 start = start,
                                 stop = stop,
+                                hour_after_30 = hour_after_30,
                                 id_currency = id_currency,
                                 rate = rate,
                                 id_currency_derailment = id_currency_derailment,
@@ -9179,6 +9181,7 @@ namespace IDS
                         else
                         {
                             usp.stop = stop;
+                            usp.hour_after_30 = hour_after_30;
                             usp.id_currency = id_currency;
                             usp.rate = rate;
                             usp.id_currency_derailment = id_currency_derailment;
@@ -9201,8 +9204,8 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("ServiceChangeUsageFeePeriod(start={0}, stop={1}, id_currency={2}, rate={3}, id_currency_derailment={4}, rate_derailment ={5}, coefficient_route={6} , coefficient_not_route={7}, grace_time_1={8}, grace_time_2={9}, note={10}, list_period={11}, user={12})",
-                    start, stop, id_currency, rate, id_currency_derailment, rate_derailment, coefficient_route, coefficient_not_route, grace_time_1, grace_time_2, note, list_period, user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("ServiceChangeUsageFeePeriod(start={0}, stop={1}, hour_after_30={2} id_currency={3}, rate={4}, id_currency_derailment={5}, rate_derailment ={6}, coefficient_route={7} , coefficient_not_route={8}, grace_time_1={9}, grace_time_2={10}, note={11}, list_period={12}, user={13})",
+                    start, stop, hour_after_30, id_currency, rate, id_currency_derailment, rate_derailment, coefficient_route, coefficient_not_route, grace_time_1, grace_time_2, note, list_period, user), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }

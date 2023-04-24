@@ -607,7 +607,7 @@ namespace Test.TestModule
             list_period.Add(new ListUsageFee() { id = 1, id_operator = 14, id_genus = 2 });
             list_period.Add(new ListUsageFee() { id = 2, id_operator = 14, id_genus = 3 });
             list_period.Add(new ListUsageFee() { id = 0, id_operator = 14, id_genus = 4 });
-            int result = ids.ServiceChangeUsageFeePeriod(start, stop, (int?)1, (decimal?)50.0f, (int?)2, (decimal?)10.3f, (float?)0.75f, (float?)1.0f, (int?)24, (int?)36, "тест", list_period, @"EUROPE\ealevchenko");
+            int result = ids.ServiceChangeUsageFeePeriod(start, stop, true, (int?)1, (decimal?)50.0f, (int?)2, (decimal?)10.3f, (float?)0.75f, (float?)1.0f, (int?)24, (int?)36, "тест", list_period, @"EUROPE\ealevchenko");
         }
         /// <summary>
         /// Расчет платы за пользование по сданному составу

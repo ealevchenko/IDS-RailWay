@@ -38,6 +38,7 @@
             'tldir_field_usage_fee_period_genus_abbr': 'Оператор',
             'ttdir_field_usage_fee_period_start': 'Начало',
             'ttdir_field_usage_fee_period_stop': 'Окончание',
+            'ttdir_field_usage_fee_period_hour_after_30': 'Окр. часа после 30',
             'tldir_field_usage_fee_period_currency': 'Валюта',
             'tldir_field_usage_fee_period_derailment_currency': 'Валюта (сход)',
             'ttdir_field_usage_fee_period_rate': 'Ставка',
@@ -51,6 +52,7 @@
             'ttdir_field_usage_fee_period_change': 'Время правки',
             'ttdir_field_usage_fee_period_change_user': 'Правил',
 
+            'ttdir_title_yes': 'Да',
             'tldir_title_all': 'Все',
             'tldir_title_not_epd': 'Без ЭПД',
             'tldir_title_for_loading': 'Под погрузку',
@@ -192,7 +194,7 @@
             field: 'usage_fee_period_operators_abbr',
             data: function (row, type, val, meta) {
                 var operator = row.Directory_OperatorsWagons;
-                return operator !== null ? operator['abbr_' + App.Lang]: null;
+                return operator !== null ? operator['abbr_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-50',
             title: langView('tldir_field_usage_fee_period_operators_abbr', App.Langs), width: "50px", orderable: true, searchable: true
@@ -201,7 +203,7 @@
             field: 'usage_fee_period_operators_abbr',
             data: function (row, type, val, meta) {
                 var operator = row.Directory_OperatorsWagons;
-                return operator !== null ? operator['abbr_' + App.Lang]: null;
+                return operator !== null ? operator['abbr_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-50',
             title: langView('tldir_field_usage_fee_period_operators_abbr', App.Langs), width: "50px", orderable: true, searchable: true
@@ -210,7 +212,7 @@
             field: 'usage_fee_period_genus_abbr',
             data: function (row, type, val, meta) {
                 var genus = row.Directory_GenusWagons;
-                return genus !== null ? genus['abbr_' + App.Lang]: null;
+                return genus !== null ? genus['abbr_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-50',
             title: langView('tldir_field_usage_fee_period_genus_abbr', App.Langs), width: "50px", orderable: true, searchable: true
@@ -232,10 +234,18 @@
             title: langView('ttdir_field_usage_fee_period_stop', App.Langs), width: "100px", orderable: true, searchable: true
         },
         {
+            field: 'usage_fee_period_hour_after_30',
+            data: function (row, type, val, meta) {
+                return row.hour_after_30 !== null && row.hour_after_30 === true ? langView('ttdir_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdir_field_usage_fee_period_hour_after_30', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
             field: 'usage_fee_period_currency',
             data: function (row, type, val, meta) {
                 var currency = row.Directory_Currency;
-                return currency !== null ? currency['currency_' + App.Lang]: null;
+                return currency !== null ? currency['currency_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-50',
             title: langView('tldir_field_usage_fee_period_currency', App.Langs), width: "50px", orderable: true, searchable: true
@@ -252,7 +262,7 @@
             field: 'usage_fee_period_derailment_currency',
             data: function (row, type, val, meta) {
                 var currency = row.Directory_Currency1;
-                return currency !== null ? currency['currency_' + App.Lang]: null;
+                return currency !== null ? currency['currency_' + App.Lang] : null;
             },
             className: 'dt-body-left shorten mw-50',
             title: langView('tldir_field_usage_fee_period_derailment_currency', App.Langs), width: "50px", orderable: true, searchable: true
@@ -449,6 +459,7 @@
         collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
         collums.push({ field: 'usage_fee_period_start', title: null, class: null });
         collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_hour_after_30', title: null, class: null });
         collums.push({ field: 'usage_fee_period_currency', title: null, class: null });
         collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
         collums.push({ field: 'usage_fee_period_derailment_currency', title: null, class: null });
@@ -596,9 +607,9 @@
                 };
                 this.autoWidth = true;
                 this.scrollX = true,
-                //this.scrollY = 300,
-                //this.scrollCollapse = true,
-                this.table_columns = this.init_columns_usage_fee_period();
+                    //this.scrollY = 300,
+                    //this.scrollCollapse = true,
+                    this.table_columns = this.init_columns_usage_fee_period();
                 this.table_buttons = this.init_button_usage_fee_period();
                 this.dom = 'Bfrtip';
                 break;

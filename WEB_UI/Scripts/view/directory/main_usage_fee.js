@@ -19,6 +19,7 @@
             'mainuf_title_date_period_start': 'Начало',
             'mainuf_label_date_period_stop': 'Окончание :',
             'mainuf_title_date_period_stop': 'Окончание',
+            'mainuf_label_hour_after_30': 'Округление часа после 30 мин.',
             'mainuf_label_rate_currency': 'Валюта :',
             'mainuf_title_rate_currency': 'Валюта',
             'mainuf_label_derailment_rate_currency': 'Валюта (сход):',
@@ -170,6 +171,7 @@
                     var operation = {
                         start: form_edit.get('date_period_start'),
                         stop: form_edit.get('date_period_stop'),
+                        hour_after_30: form_edit.get('hour_after_30'),
                         id_currency: edit_elements.select_rate_currency.val(),
                         rate: form_edit.get('rate_value'),
                         id_currency_derailment: edit_elements.select_derailment_rate_currency.val(),
@@ -431,19 +433,21 @@
                     list_select_period = rows;
                     form_edit.validation_common.clear_all();
                     if (rows && rows.length > 0) {
-                        form_edit.set('date_period_start', rows[0].start);
-                        form_edit.set('date_period_stop', rows[0].stop);
-                        form_edit.set('rate_currency', rows[0].id_currency);
-                        form_edit.set('rate_value', rows[0].rate);
-                        form_edit.set('derailment_rate_currency', rows[0].id_currency_derailment);
-                        form_edit.set('derailment_rate_value', rows[0].rate_derailment);
-                        form_edit.set('coefficient_route_value', rows[0].coefficient_route);
-                        form_edit.set('coefficient_not_route_value', rows[0].coefficient_not_route);
-                        form_edit.set('grace_time_value1', rows[0].grace_time_1);
-                        form_edit.set('grace_time_value2', rows[0].grace_time_2);
+                        form_edit.set('date_period_start', rows[rows.length-1].start);
+                        form_edit.set('date_period_stop', rows[rows.length - 1].stop);
+                        form_edit.set('hour_after_30', rows[rows.length - 1].hour_after_30);
+                        form_edit.set('rate_currency', rows[rows.length - 1].id_currency);
+                        form_edit.set('rate_value', rows[rows.length - 1].rate);
+                        form_edit.set('derailment_rate_currency', rows[rows.length - 1].id_currency_derailment);
+                        form_edit.set('derailment_rate_value', rows[rows.length - 1].rate_derailment);
+                        form_edit.set('coefficient_route_value', rows[rows.length - 1].coefficient_route);
+                        form_edit.set('coefficient_not_route_value', rows[rows.length - 1].coefficient_not_route);
+                        form_edit.set('grace_time_value1', rows[rows.length - 1].grace_time_1);
+                        form_edit.set('grace_time_value2', rows[rows.length - 1].grace_time_2);
                     } else {
                         form_edit.set('date_period_start', null);
                         form_edit.set('date_period_stop', null);
+                        form_edit.set('hour_after_30', false);
                         form_edit.set('rate_currency', -1);
                         form_edit.set('rate_value', null);
                         form_edit.set('derailment_rate_currency', -1);
@@ -488,6 +492,13 @@
                 childs: []
             };
             var form_edit_row_5 = {
+                obj: 'bs_form_row',
+                options: {
+                    class: null,
+                },
+                childs: []
+            };
+            var form_edit_row_6 = {
                 obj: 'bs_form_row',
                 options: {
                     class: null,
@@ -540,6 +551,33 @@
                     element_fn_close: function (datetime) {
 
                     },
+                },
+                childs: []
+            };
+            var form_checkbox_hour_after_30 = {
+                obj: 'bs_checkbox',
+                element: null,
+                options: {
+                    id: 'hour_after_30',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 12,
+                    form_group_class: 'text-left p-1',
+                    label: langView('mainuf_label_hour_after_30', App.Langs),
+                    label_class:  'mb-1',
+                    checkbox_class: null,
+                    checkbox_title: null,
+                    checkbox_required: null,
+                    checkbox_readonly: false,
+                    element_default: null,
+                    element_change: function (e) {
+                        //event.preventDefault();
+                        //if (this.wagon) {
+                        //    LockScreen(langView('ficcd_mess_run_operation_change_mode_epd', App.Langs));
+                        //    this.view_wagon_detali(this.wagon)
+                        //}
+                        //var res = $(e.currentTarget).prop('checked');
+                    }.bind(this),
                 },
                 childs: []
             };
@@ -766,17 +804,19 @@
             form_edit_row_1.childs.push(form_input_date_period_start);
             form_edit_row_1.childs.push(form_input_date_period_stop);
 
-            form_edit_row_2.childs.push(form_select_rate_currency);
-            form_edit_row_2.childs.push(form_input_rate_value);
+            form_edit_row_2.childs.push(form_checkbox_hour_after_30);
 
-            form_edit_row_3.childs.push(form_select_derailment_rate_currency);
-            form_edit_row_3.childs.push(form_input_derailment_rate_value);
+            form_edit_row_3.childs.push(form_select_rate_currency);
+            form_edit_row_3.childs.push(form_input_rate_value);
 
-            form_edit_row_4.childs.push(form_input_coefficient_route_value);
-            form_edit_row_4.childs.push(form_input_coefficient_not_route_value);
+            form_edit_row_4.childs.push(form_select_derailment_rate_currency);
+            form_edit_row_4.childs.push(form_input_derailment_rate_value);
 
-            form_edit_row_5.childs.push(form_input_grace_time_value1);
-            form_edit_row_5.childs.push(form_input_grace_time_value2);
+            form_edit_row_5.childs.push(form_input_coefficient_route_value);
+            form_edit_row_5.childs.push(form_input_coefficient_not_route_value);
+
+            form_edit_row_6.childs.push(form_input_grace_time_value1);
+            form_edit_row_6.childs.push(form_input_grace_time_value2);
 
             /*            form_edit_row_1.childs.push(form_checkbox_distinguish);*/
 

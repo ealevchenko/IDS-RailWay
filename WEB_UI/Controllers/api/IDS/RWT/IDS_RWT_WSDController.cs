@@ -914,6 +914,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         public DateTime start { get; set; }
         public DateTime stop { get; set; }
+        public bool hour_after_30 { get; set; }
         public int? id_currency { get; set; }
         public decimal? rate { get; set; }
         public int? id_currency_derailment { get; set; }
@@ -1929,7 +1930,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                int result = ids_wir.ServiceChangeUsageFeePeriod(value.start, value.stop, value.id_currency, value.rate, value.id_currency_derailment, value.rate_derailment, value.coefficient_route, value.coefficient_not_route, value.grace_time_1, value.grace_time_2, value.note, value.list_period, value.user);
+                int result = ids_wir.ServiceChangeUsageFeePeriod(value.start, value.stop, value.hour_after_30, value.id_currency, value.rate, value.id_currency_derailment, value.rate_derailment, value.coefficient_route, value.coefficient_not_route, value.grace_time_1, value.grace_time_2, value.note, value.list_period, value.user);
                 return Ok(result);
             }
             catch (Exception e)
