@@ -171,7 +171,7 @@
             'title_type_way': 'Путь станции',
             'title_type_outer_way': 'Перегон',
             'title_link_num': 'Показать историю по вагону...',
-            'title_select': 'Выбирите...',
+            'title_select': 'Выберите...',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
