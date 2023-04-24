@@ -172,8 +172,13 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
             'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
             'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
-            'ttdr_field_outgoing_cars_pay': 'Плата, грн',
-            'ttdr_field_outgoing_cars_pay_act': 'Плата по Акту, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_time': 'Время пользования (ручн.), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount': 'Плата (ручн.), грн',
+            //'ttdr_field_outgoing_cars_pay': 'Плата, грн',
+            //'ttdr_field_outgoing_cars_pay_act': 'Плата по Акту, грн',
+
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
 
@@ -2572,21 +2577,53 @@
         },
         // Оплата
         {
-            field: 'outgoing_cars_pay',
+            field: 'outgoing_cars_wagon_usage_fee_calc_time',
             data: function (row, type, val, meta) {
-                return row.pay !== null ? Number(row.pay).toFixed(2) : null;
+                return row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_pay', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'outgoing_cars_pay_act',
+            field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount',
             data: function (row, type, val, meta) {
-                return row.pay_act !== null ? Number(row.pay_act).toFixed(2) : null;
+                return row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_pay_act', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_manual_time',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_time !== null ? getTimeFromMins(row.wagon_usage_fee_manual_time * 60) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_manual_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //{
+        //    field: 'outgoing_cars_pay',
+        //    data: function (row, type, val, meta) {
+        //        return row.pay !== null ? Number(row.pay).toFixed(2) : null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_pay', App.Langs), width: "50px", orderable: true, searchable: true
+        //},
+        //{
+        //    field: 'outgoing_cars_pay_act',
+        //    data: function (row, type, val, meta) {
+        //        return row.pay_act !== null ? Number(row.pay_act).toFixed(2) : null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_pay_act', App.Langs), width: "50px", orderable: true, searchable: true
+        //},
         {
             field: 'outgoing_cars_arrival_sostav_old_date_adoption',
             data: function (row, type, val, meta) {
@@ -2983,8 +3020,12 @@
         //
         collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
         //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_abbr', title: null, class: null });
