@@ -1,5 +1,7 @@
 use [KRR-PA-CNT-Railway]
 
+declare @id_sostav int = 210786
+
 select 
 	out_car.[id] as outgoing_car_id
 	,out_car.[num]
@@ -384,11 +386,11 @@ select
 	,out_dir_countrys.country_abbr_en as outgoing_uz_vagon_adm_abbr_en			-- Администрации [IDS].[Directory_Countrys] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> РОД ВАГОНА ПО ОТПРАВКЕ [IDS].[Directory_GenusWagons]
 	,out_doc_vag.[id_genus]	 as outgoing_uz_vagon_id_genus							-- id строки род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.rod_uz as outgoing_uz_vagon_rod									-- Код рода вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.genus_ru as outgoing_uz_vagon_rod_name_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.genus_en as outgoing_uz_vagon_rod_name_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.abbr_ru as outgoing_uz_vagon_rod_abbr_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
-	,dir_rod.abbr_en as outgoing_uz_vagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.rod_uz as outgoing_uz_vagon_rod									-- Код рода вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.genus_ru as outgoing_uz_vagon_rod_name_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.genus_en as outgoing_uz_vagon_rod_name_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.abbr_ru as outgoing_uz_vagon_rod_abbr_ru							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+	,out_dir_rod.abbr_en as outgoing_uz_vagon_rod_abbr_en							-- Род вагона [IDS].[Directory_GenusWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--> СОБСТВЕННИК ПО УЗ [IDS].[Directory_OwnersWagons]
 	,out_doc_vag.[id_owner] as outgoing_uz_vagon_id_owner						-- id строки владелец [IDS].[Directory_OwnersWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 	--
@@ -545,6 +547,18 @@ select
 	,il.destination_station as instructional_letters_station_code
 	,let_station_uz.station as instructional_letters_station_name
 	,il.[note] as instructional_letters_note
+			-- Признак учетный вагон
+	,account_balance = (CASE WHEN arr_doc_uz.[klient] = 1 THEN 0 ELSE [IDS].[get_count_account_balance_of_id_operator](out_wag_rent.[id_operator], out_dir_rod.rod_uz) END) -- or arr_doc_vag.[cargo_returns] = 1 
+	--=============== ВРЕМЯ И ОПЛАТА ===================================
+	-- Общий простой  , час
+	,idle_time = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, arr_sost_old.[date_adoption] , out_sost.[date_outgoing])) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption], out_sost.[date_outgoing])) END 
+	-- Общий простой Акт, час
+	,idle_time_act = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, arr_sost_old.[date_adoption_act] , out_sost.[date_outgoing_act])) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption_act], out_sost.[date_outgoing_act])) END 
+	--=============== ПЛАТА ЗА ПОЛЬЗОВАНИЕ ==================
+	,wuf.[calc_time] as wagon_usage_fee_calc_time
+	,wuf.[calc_fee_amount] as wagon_usage_fee_calc_fee_amount
+	,wuf.[manual_time] as wagon_usage_fee_manual_time
+	,wuf.[manual_fee_amount] as wagon_usage_fee_manual_fee_amount
 	--into view_outgoing_cars
 FROM [IDS].[OutgoingSostav] as out_sost
 		--> Отправка вагона
@@ -552,6 +566,10 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
+		--> Предыдущее Прибытие состава c учетом возврата
+		Left JOIN IDS.ArrivalSostav as arr_sost_old ON arr_sost_old.id = [IDS].[get_old_id_arrival_of_wir_parent_id](wir.parent_id)
+		--> Плата за пользование
+		Left JOIN [IDS].[WagonUsageFee] as wuf ON wir.id_usage_fee = wuf.id
 		--> Текущая операция
         Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
 		--==== СДАЧА ВАГОНА, ЗАДЕРЖАНИЯ, ВОЗВРАТ И ОТПРАВКА  ================================================================
@@ -606,7 +624,9 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		--> Справочник строна (Администрация вагона по отправке)
 		Left JOIN IDS.Directory_Countrys as out_dir_countrys ON out_doc_vag.id_countrys = out_dir_countrys.id
 		--> Справочник Род вагона
-		Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
+		--Left JOIN IDS.Directory_GenusWagons as dir_rod ON dir_wagon.id_genus = dir_rod.id
+		--> Справочник Род вагона (По отправке)
+		Left JOIN IDS.Directory_GenusWagons as out_dir_rod ON out_doc_vag.id_genus = out_dir_rod.id
 		--> Справочник Тип вагона
 		Left JOIN IDS.Directory_TypeWagons as dir_type ON arr_doc_vag.id_type =  dir_type.id
 		--> Справочник Разметка по текущей операции
@@ -721,7 +741,5 @@ FROM [IDS].[OutgoingSostav] as out_sost
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 WHERE 
 
---out_sost.id =51208 
---out_sost.id =138457 
-out_sost.id =149906
+out_sost.id =@id_sostav
 order by out_car.position
