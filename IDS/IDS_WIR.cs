@@ -5527,7 +5527,12 @@ namespace IDS
                 sostav.change = DateTime.Now;
                 sostav.change_user = user;
                 ef_out_sostav.Update(sostav);
-                return context.SaveChanges(); // Применить операции
+                int result_sostav = context.SaveChanges(); // Применить операции
+                if (result_sostav >= 0)
+                {
+                    ResultUpdateIDWagon result_calc = CalcUsageFeeOfOutgoingSostav(id_outgoing_sostav, user);
+                }
+                return result_sostav;
             }
             catch (Exception e)
             {
@@ -9321,38 +9326,44 @@ namespace IDS
                 foreach (OutgoingCars car in list_out_cars)
                 {
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
-                    if (wir == null) {
-                        result.SetErrorResult(car.id,(int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                    if (wir == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
                         continue;
                     }
                     WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && (o.id_condition == 76 || o.id_condition == 74)).FirstOrDefault();
                     long id_wir_arrival = GetIDWIR(ref context, wir.id);
                     // Прибытие
                     WagonInternalRoutes wir_arrival = ef_wir.Context.Where(w => w.id == id_wir_arrival).FirstOrDefault();
-                    if (wir_arrival == null) { 
-                        result.SetErrorResult(car.id,(int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
-                        continue;                    
+                    if (wir_arrival == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_wir_db, car.num); // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
+                        continue;
                     }
                     ArrivalCars arr_car = ef_arr_car.Context.Where(c => c.id == wir_arrival.id_arrival_car).FirstOrDefault();
-                    if (arr_car == null) { 
-                        result.SetErrorResult(car.id,(int)errors_base.not_arrival_cars_db, car.num); // Ошибка, нет записи вагона по прибытию 
-                        continue;                       
+                    if (arr_car == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_arrival_cars_db, car.num); // Ошибка, нет записи вагона по прибытию 
+                        continue;
                     }
                     ArrivalSostav arr_sostav = ef_arr_sostav.Context.Where(s => s.id == arr_car.id_arrival).FirstOrDefault();
-                    if (arr_sostav == null) { 
-                        result.SetErrorResult(car.id,(int)errors_base.not_arrival_sostav_db, car.num); // В базе данных нет записи состава для оправки
-                        continue;                     
+                    if (arr_sostav == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_arrival_sostav_db, car.num); // В базе данных нет записи состава для оправки
+                        continue;
                     }
                     Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == arr_car.id_arrival_uz_vagon).FirstOrDefault();
-                    if (arr_uz_vag == null) { 
-                        result.SetErrorResult(car.id,(int)errors_base.not_inp_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
-                        continue;                        
+                    if (arr_uz_vag == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_inp_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
+                        continue;
                     }
                     // Отправка
                     Outgoing_UZ_Vagon out_uz_vag = ef_out_uz_vag.Context.Where(w => w.id == car.id_outgoing_uz_vagon).FirstOrDefault();
-                    if (out_uz_vag == null) { 
-                        result.SetErrorResult(car.id,(int)errors_base.not_out_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
-                        continue;                     
+                    if (out_uz_vag == null)
+                    {
+                        result.SetErrorResult(car.id, (int)errors_base.not_out_uz_vag_db, car.num); // В базе данных нет записи документа на вагон.
+                        continue;
                     }
                     // Расчеты
                     List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
