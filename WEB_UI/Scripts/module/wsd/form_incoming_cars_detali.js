@@ -3033,7 +3033,7 @@
                     textarea_rows: 4,
                     textarea_cols: null,
                     input_size: null,
-                    input_class: 'inp-manual-epd',
+                    input_class: 'inp-manual', //inp-manual-epd'
                     input_title: langView('ficcd_title_name_etsng', App.Langs),
                     input_placeholder: null,
                     input_required: null,
@@ -4394,8 +4394,8 @@
         this.elements.button_add_shipper.hide();
         this.elements.button_add_payer_sender.hide();
         this.elements.button_add_cargo_etsng.hide();
+        //this.elements.button_add_cargo_etsng.show();
         this.elements.button_add_cargo_gng.hide();
-
         // деактивировать элементы ЭПД (Общая)
         this.form.obj_form.validations[0].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
