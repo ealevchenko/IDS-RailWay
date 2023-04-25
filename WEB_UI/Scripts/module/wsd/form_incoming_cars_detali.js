@@ -3033,7 +3033,7 @@
                     textarea_rows: 4,
                     textarea_cols: null,
                     input_size: null,
-                    input_class: 'inp-manual', //inp-manual-epd'
+                    input_class: 'inp-manual-epd', //inp-manual-epd'
                     input_title: langView('ficcd_title_name_etsng', App.Langs),
                     input_placeholder: null,
                     input_required: null,
