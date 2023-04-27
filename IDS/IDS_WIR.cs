@@ -9077,6 +9077,27 @@ namespace IDS
 
         #region Сервис "Расчет платы за пользование"
         /// <summary>
+        /// Класс данных периоды ставок по вагону
+        /// </summary>
+        public class Wagon_Usage_Fee_Period
+        {
+            public DateTime? date_adoption { get; set; }
+            public DateTime? date_outgoing { get; set; }
+            public int id_operator { get; set; }
+            public int id_genus { get; set; }
+            public DateTime start { get; set; }
+            public DateTime stop { get; set; }
+            public int? id_currency { get; set; }
+            public decimal? rate { get; set; }
+            public int? id_currency_derailment { get; set; }
+            public decimal? rate_derailment { get; set; }
+            public float? coefficient_route { get; set; }
+            public float? coefficient_not_route { get; set; }
+            public int? grace_time_1 { get; set; }
+            public int? grace_time_2 { get; set; }
+            public bool? hour_after_30 { get; set; }
+        }
+        /// <summary>
         /// Правка периодов платы за пользование
         /// </summary>
         /// <param name="start"></param>
@@ -9128,7 +9149,7 @@ namespace IDS
                             id_operator = luf.id_operator,
                             id_genus = luf.id_genus,
                             start = start,
-                            stop = stop, 
+                            stop = stop,
                             hour_after_30 = hour_after_30,
                             id_currency = id_currency,
                             rate = rate,
@@ -9231,51 +9252,6 @@ namespace IDS
                 return wir.id;
             }
         }
-
-        public class Wagon_Usage_Fee_Period
-        {
-            public DateTime? date_adoption { get; set; }
-            public DateTime? date_outgoing { get; set; }
-            public int id_operator { get; set; }
-            public int id_genus { get; set; }
-            public DateTime start { get; set; }
-            public DateTime stop { get; set; }
-            public int? id_currency { get; set; }
-            public decimal? rate { get; set; }
-            public int? id_currency_derailment { get; set; }
-            public decimal? rate_derailment { get; set; }
-            public float? coefficient_route { get; set; }
-            public float? coefficient_not_route { get; set; }
-            public int? grace_time_1 { get; set; }
-            public int? grace_time_2 { get; set; }
-            public bool? hour_after_30 { get; set; }
-        }
-
-        public class Usage_Fee_Wagon
-        {
-            public long id_wir { get; set; }
-            public int num { get; set; }
-            public int id_operator { get; set; }
-            public int id_genus { get; set; }
-            public DateTime date_start { get; set; }
-            public DateTime date_stop { get; set; }
-            public bool route { get; set; }
-            public bool inp_cargo { get; set; }
-            public bool out_cargo { get; set; }
-            public bool derailment { get; set; }
-            public int count_stage { get; set; }
-            public int id_currency { get; set; }
-            public decimal rate { get; set; }
-            public decimal exchange_rate { get; set; }
-            public float coefficient { get; set; }
-            public int use_time { get; set; }
-            public int grace_time { get; set; }
-            public int calc_time { get; set; }
-            public decimal calc_fee_amount { get; set; }
-            public DateTime create { get; set; }
-            public string create_user { get; set; }
-        }
-
         /// <summary>
         /// Расчет платы за пользование по сданному составу
         /// </summary>
@@ -9662,6 +9638,41 @@ namespace IDS
                 e.ExceptionMethodLog(String.Format("CalcUsageFeeOfOutgoingSostav(id_sostav={0}, user={1})", id_sostav, user), servece_owner, eventID);
                 result.result = (int)errors_base.global; // Глобальная ошибка
                 return result;
+            }
+        }
+        /// <summary>
+        /// Расчет платы за пользование по сданным составам за выбранный период
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="stop"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public List<ResultUpdateIDWagon> CalcUsageFeeOfOutgoingSostav(DateTime start, DateTime stop, string user)
+        {
+            if (String.IsNullOrWhiteSpace(user))
+            {
+                user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+            }
+            List<ResultUpdateIDWagon> result = new List<ResultUpdateIDWagon>();
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                List<OutgoingSostav> list_sostav = ef_out_sostav.Context.Where(s => s.date_outgoing >= start && s.date_outgoing <= stop).ToList();
+                int count = list_sostav.Count();
+                foreach (OutgoingSostav out_sost in list_sostav)
+                {
+                    ResultUpdateIDWagon res_sost = CalcUsageFeeOfOutgoingSostav(out_sost.id, user);
+                    result.Add(res_sost);
+                    Console.WriteLine("Обработал состав id = {0} [ вагонов: {1}/ добавил: {2}/ обновил: {3} / ОШИБОК: {4}], результат = {5}, осталось {6}", out_sost.id, res_sost.count, res_sost.add, res_sost.update, res_sost.error, res_sost.result, count--);
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("CalcUsageFeeOfOutgoingSostav(start={0}, stop={1})", start, stop), servece_owner, eventID);
+                // Глобальная ошибка
+                return null;
             }
         }
         #endregion
