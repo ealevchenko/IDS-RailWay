@@ -616,6 +616,7 @@ namespace WEB_UI.Controllers.api
         public bool account_balance { get; set; }
         public int? idle_time { get; set; }
         public int? idle_time_act { get; set; }
+        public bool? wagon_usage_fee_derailment { get; set; }
         public int? wagon_usage_fee_calc_time { get; set; }
         public decimal? wagon_usage_fee_calc_fee_amount { get; set; }
         public int? wagon_usage_fee_manual_time { get; set; }
@@ -1297,6 +1298,26 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/outgoing_cars/view/start/2021-01-01T00:00:00/stop/2021-01-20T23:59:59
+        [Route("view/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewOutgoingCarsOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_period](@start, @stop) order by outgoing_sostav_date_outgoing";
+                List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         public object get_string_of_int(int[] vals)
         {

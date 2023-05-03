@@ -29,6 +29,14 @@
             'vtdr_link_title_report_4_1': 'Информация по вагону и собственнику',
             'vtdr_link_title_report_5_1': 'Отчет по отправлению (общий)',
             'vtdr_link_title_report_6_1': 'Отправление ИТОГ',
+            'vtdr_link_title_report_7_1': 'Вагоны с корректировкой платы',
+            'vtdr_link_title_report_8_1': 'История ставок',
+            'vtdr_link_title_report_9_1': 'Плата за пользование (ИТОГ)',
+
+            'vtdr_link_group_title_report_1': 'ОБЩИЕ:',
+            'vtdr_link_group_title_report_2': 'ПРИБЫТИЕ:',
+            'vtdr_link_group_title_report_3': 'ОТПРАВЛЕНИЕ:',
+            'vtdr_link_group_title_report_4': 'ПЛАТА:',
 
             'vtdr_title_report_1_1': 'Статистика {0}',
             'vtdr_title_report_2_1': 'Отчет по прибытию (общий) {0}',
@@ -36,6 +44,9 @@
             'vtdr_title_report_4_1': 'Информация по вагону и собственнику {0}',
             'vtdr_title_report_5_1': 'Отчет по отправлению (общий) {0}',
             'vtdr_title_report_6_1': 'Отправление ИТОГ {0}',
+            'vtdr_title_report_7_1': 'Вагоны с корректировкой платы {0}',
+            'vtdr_title_report_8_1': 'История ставок {0}',
+            'vtdr_title_report_9_1': 'Плата за пользование (ИТОГ) {0}',
 
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
@@ -79,6 +90,10 @@
             'vtdr_label_tab_out_total_ext_station': 'Направление ОТПР',
             'vtdr_label_tab_out_total_cargo_metall': 'Металл ОТПР',
             'vtdr_label_tab_out_total_operators': 'ИТОГ оператор',
+
+            'vtdr_label_tab_usage_fee_cargo': 'Груз ПРИБ',
+            'vtdr_label_tab_usage_fee_operator_amkr': 'Оператор',
+            'vtdr_label_tab_usage_fee_operator_amkr_derailment': 'Сход',
 
             'vtdr_label_button_setup_clear': 'СБРОСИТЬ',
             'vtdr_label_button_setup_select': 'ВЫБРАТЬ',
@@ -403,6 +418,10 @@
         this.pr_outgoing_sostav = [];
         this.kr_outgoing_sostav = [];
 
+        this.outgoing_cars = [];
+        this.outgoing_cars_usage_fee = [];
+        this.outgoing_cars_usage_fee_operator_amkr = [];
+
         this.wagons_not_operation = [];
 
         this.wagons_adoption = [];
@@ -466,7 +485,30 @@
             },
             //<i class="fa-sharp fa-solid fa-chart-simple"></i>
         ];
-
+        // Сылки на отчеты плата за пользование
+        this.report_links_usage_fee = [
+            {
+                text: langView('vtdr_link_title_report_7_1', App.Langs),
+                icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
+                click: function () {
+                    this.init_report_7_1();
+                }.bind(this),
+            },
+            {
+                text: langView('vtdr_link_title_report_8_1', App.Langs),
+                icon: 'fa-sharp fa-solid fa-chart-simple mr-1',
+                click: function () {
+                    this.init_report_8_1();
+                }.bind(this),
+            },
+            {
+                text: langView('vtdr_link_title_report_9_1', App.Langs),
+                icon: 'fa-sharp fa-solid fa-chart-simple mr-1',
+                click: function () {
+                    this.init_report_9_1();
+                }.bind(this),
+            },
+        ];
         // Очистим экран
         this.$panel.empty();
         // Построим основной экран
@@ -521,7 +563,7 @@
         var $h6_cammon = $('<h6></h6>', {
             class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
         });
-        var $sp_cammon = $('<span>ОБЩИЕ:</span>');
+        var $sp_cammon = $('<span>' + langView('vtdr_link_group_title_report_1', App.Langs) + '</span>');
         div_p4.$div.append($h6_cammon.append($sp_cammon));
         var $ul_cammon = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
         $.each(this.report_links_cammon, function (index, element) {
@@ -546,7 +588,7 @@
         var $h6_arrival = $('<h6></h6>', {
             class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
         });
-        var $sp_arrival = $('<span>ПРИБЫТИЕ:</span>');
+        var $sp_arrival = $('<span>' + langView('vtdr_link_group_title_report_2', App.Langs) + '</span>');
         div_p4.$div.append($h6_arrival.append($sp_arrival));
         var $ul_arrival = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
         $.each(this.report_links_arrival, function (index, element) {
@@ -571,10 +613,35 @@
         var $h6_outgoing = $('<h6></h6>', {
             class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
         });
-        var $sp_outgoing = $('<span>ОТПРАВЛЕНИЕ:</span>');
+        var $sp_outgoing = $('<span>' + langView('vtdr_link_group_title_report_3', App.Langs) + '</span>');
         div_p4.$div.append($h6_outgoing.append($sp_outgoing));
         var $ul_outgoing = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
         $.each(this.report_links_outgoing, function (index, element) {
+            var $li = $('<li></li>');
+            var a_link = new this.fe_ui.a({
+                id: null,
+                class: null,
+                href: '#',
+                text: '<i class="' + element.icon + '" style="color:#ffff49"></i>' + element.text, //#44bef1
+                target: null,
+                title: null,
+            });
+            if (typeof element.click === 'function') {
+                a_link.$alink.on("click", element.click);
+            }
+            $li.append(a_link.$alink);
+            $ul_outgoing.append($li);
+        }.bind(this));
+        div_p4.$div.append($ul_outgoing);
+        //--------------------------------------------
+        // Отчеты ПЛАТА ЗА ПОЛЬЗОВАНИЕ
+        var $h6_outgoing = $('<h6></h6>', {
+            class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+        });
+        var $sp_outgoing = $('<span>' + langView('vtdr_link_group_title_report_4', App.Langs) + '</span>');
+        div_p4.$div.append($h6_outgoing.append($sp_outgoing));
+        var $ul_outgoing = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_usage_fee, function (index, element) {
             var $li = $('<li></li>');
             var a_link = new this.fe_ui.a({
                 id: null,
@@ -797,7 +864,6 @@
         var $panel = tabs.$content.find('div#' + name_panel); // Панель
         $panel.append(row.$row);
     };
-
     //----------------------------------------------------------------------
     // ФОРМА ВЫБОРА ВРЕМЕНИ ОТЧЕТА
     // Настройка выбора диапазона отчета
@@ -975,6 +1041,7 @@
             case 1:
             case 2:
             case 3:
+            case 9:
                 {
                     this.div_select_date.show();
                     this.div_interval_date.hide();
@@ -1004,6 +1071,8 @@
             case 4: this.clear_report_4_1(); break;
             case 5: this.clear_report_5_1(); break;
             case 6: this.clear_report_6_1(); break;
+            //.....
+            case 9: this.clear_report_9_1(); break;
         }
         switch (this.type) {
             case 1: {
@@ -1067,6 +1136,8 @@
             case 4: this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(message_report)); break;
             case 5: this.$title_report.text(langView('vtdr_title_report_5_1', App.Langs).format(message_report)); break;
             case 6: this.$title_report.text(langView('vtdr_title_report_6_1', App.Langs).format(message_report)); break;
+            //....
+            case 9: this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(message_report)); break;
         }
     };
     // Показать отчет
@@ -1094,6 +1165,11 @@
             };
             case 6: {
                 this.view_report_6_1(this.start, this.stop);
+                break;
+            };
+            //..
+            case 9: {
+                this.view_report_9_1(this.start, this.stop);
                 break;
             };
         }
@@ -8514,7 +8590,7 @@
                 if (typeof callback === 'function') {
                     callback();
                 }
-            //}.bind(this));
+                //}.bind(this));
             }
         }.bind(this);
 
@@ -9305,19 +9381,6 @@
                 data.push({ "group": element.group_name, "name": element.out_station_name + "-" + element.count_wagon + "ваг.", "value": Number(element.count_wagon) });
             }.bind(this));
 
-            //$.each(list_view, function (key, element) {
-            //    var gn = data.find(function (o) { return o.name === element.group_name; });
-            //    if (gn === undefined) {
-            //        var subData = [];
-            //        subData.push({ name: (element.out_station_name !== null ? element.out_station_name : '?'), value: element.count_wagon })
-            //        data.push({ "name": element.group_name, "value": element.count_wagon, subData: subData });
-
-            //    } else {
-            //        gn.value += element.count_wagon;
-            //        gn.subData.push({ name: (element.out_station_name !== null ? element.out_station_name : '?'), value: element.count_wagon })
-            //    }
-            //}.bind(this));
-
             this.chart_data_total_operator_amkr = data;
             this.view_chart_total_operator_amkr();
             LockScreenOff();
@@ -9901,6 +9964,404 @@
             LockScreenOff();
         }
     };
+    //------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Плата за пользование (ИТОГ)"
+    view_td_report.prototype.init_report_9_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 9;        // номер отчета
+        this.report_panel = 0;  // номер под-отчета
+        this.chart_data_usage_fee_cargo = [];
+        this.chart_data_usage_fee_operator_amkr = [];
+        this.chart_data_usage_fee_operator_amkr_derailment = [];
+
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                     // Инициализация формы выбора периода отчетов
+        //------
+
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+
+        var row_common = new this.fe_ui.bs_row();
+
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        col_view.$col.append(this.$table_view);
+        //----------------------------------------------------------------
+        // Создадим панель выбора отчета
+        this.nav_tabs_usage_fee = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-usage-fee',
+            class_nav: null,
+            id_content: 'tab-usage-fee-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'usage-fee-cargo',
+                    aria_controls: 'usage-fee-cargo-tab',
+                    label: langView('vtdr_label_tab_usage_fee_cargo', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'usage-fee-operator-amkr',
+                    aria_controls: 'usage-fee-operator-amkr-tab',
+                    label: langView('vtdr_label_tab_usage_fee_operator_amkr', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'usage-fee-operator-amkr-derailment',
+                    aria_controls: 'usage-fee-operator-amkr-derailment-tab',
+                    label: langView('vtdr_label_tab_usage_fee_operator_amkr_derailment', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });
+        // Переключатели панелей таблиц отчета
+        //----------------------------------------
+        // Закладка Плата за пользование груз по ПРИБ.
+        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-cargo-tab', 'usage-fee-cargo', 5, 7);
+        // Закладка Плата за пользование груз по операторам.
+        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-operator-amkr-tab', 'usage-fee-operator-amkr', 6, 6);
+        // Закладка Плата за пользование груз по операторам-сход.
+        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-operator-amkr-derailment-tab', 'usage-fee-operator-amkr-derailment', 6, 6);
+        //-------------------------------------------
+        // Дабавим закладку на форму
+        this.$table_view.append(this.nav_tabs_usage_fee.$ul).append(this.nav_tabs_usage_fee.$content);
+        //-----------------------------------------------------------------
+        row_common.$row.append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+
+        // ------------------------------------------------
+        // Запускаем 4 процесса инициализации (паралельно)
+        var process = 6;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                this.report_panel = 0;
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    switch (event.target.id) {
+                        case 'usage-fee-cargo': {
+                            this.report_panel = 0;
+                            this.view_filter_report_usage_fee_cargo();
+                            break;
+                        };
+                        case 'usage-fee-operator-amkr': {
+                            this.report_panel = 1;
+                            this.view_filter_report_usage_fee_operator_amkr();
+                            break;
+                        };
+                        case 'usage-fee-operator-amkr-derailment': {
+                            this.report_panel = 2;
+                            this.view_filter_report_usage_fee_operator_amkr_derailment();
+                            break;
+                        };
+                    };
+                }.bind(this));
+                LockScreenOff();
+            }
+        }.bind(this);
+        // Загрузим справочные данные, определим поля формы правки
+        //this.load_db(['cargo_out_group'], false, function (result) {
+        //-----------------------------------------------
+        // Таблица-Плата за пользование груз по ПРИБ.
+        this.table_usage_fee_cargo = new TTDR('div#usage-fee-cargo');         // Создадим экземпляр
+        this.table_usage_fee_cargo.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'usage_fee_cargo',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: donut_with_radial_gradient
+        this.chart_usage_fee_cargo = new CAM('div#usage-fee-cargo-chart');         // Создадим экземпляр
+        this.chart_usage_fee_cargo.init({
+            alert: null,
+            type_chart: 'donut_with_radial_gradient',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        // Таблица-Плата за пользование груз по операторам.
+        this.table_usage_fee_operator_amkr = new TTDR('div#usage-fee-operator-amkr');         // Создадим экземпляр
+        this.table_usage_fee_operator_amkr.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'usage_fee_operator_amkr',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: partitioned_bar_chart
+        this.chart_usage_fee_operator_amkr = new CAM('div#usage-fee-operator-amkr-chart');         // Создадим экземпляр
+        this.chart_usage_fee_operator_amkr.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        // Таблица-Плата за пользование груз по операторам-сход.
+        this.table_usage_fee_operator_amkr_derailment = new TTDR('div#usage-fee-operator-amkr-derailment');         // Создадим экземпляр
+        this.table_usage_fee_operator_amkr_derailment.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'usage_fee_operator_amkr_derailment',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: partitioned_bar_chart
+        this.chart_usage_fee_operator_amkr_derailment = new CAM('div#usage-fee-operator-amkr-derailment-chart');         // Создадим экземпляр
+        this.chart_usage_fee_operator_amkr_derailment.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        //}.bind(this));
+    };
+    // Показать отчет  "Статистика"
+    view_td_report.prototype.view_report_9_1 = function (start, stop) {
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                this.view_filter_report_usage_fee_cargo();
+                this.view_filter_report_usage_fee_operator_amkr();
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
+        // Отправка
+        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, function (result_cars) {
+            this.outgoing_cars = result_cars;
+            var list_cars_usage_fee = [];
+            var list_usage_fee_operator_amkr = [];
+            var sum_amount = result_cars.filter(function (i) {
+                return i.wagon_usage_fee_calc_fee_amount > 0;
+            }.bind(this)).reduce(function (a, b) {
+                return a + Number(b.wagon_usage_fee_calc_fee_amount);
+            }.bind(this), 0);
+            var sum_amount_derailment = result_cars.filter(function (i) {
+                return i.wagon_usage_fee_calc_fee_amount > 0 && i.wagon_usage_fee_derailment;
+            }.bind(this)).reduce(function (a, b) {
+                return a + Number(b.wagon_usage_fee_calc_fee_amount);
+            }.bind(this), 0);
+
+            // выборка для списков Отчет-Груз по Оператору АМКР
+            $.each(result_cars, function (key, el_wag) {
+                if (el_wag.wagon_usage_fee_calc_fee_amount > 0) {
+                    var op = list_usage_fee_operator_amkr.find(function (o) {
+                        return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
+                            o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
+                    }.bind(this));
+                    if (!op) {
+                        // Не данных 
+                        list_usage_fee_operator_amkr.push({
+                            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
+                            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
+                            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                            id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                            cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                            count_wagon: 1,
+                            sum_calc_time: el_wag.wagon_usage_fee_calc_time ? el_wag.wagon_usage_fee_calc_time : 0,
+                            sum_calc_fee_amount: el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0,
+                            persent: Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount),
+                            persent_derailment: el_wag.wagon_usage_fee_derailment ? Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount_derailment) : 0,
+                            derailment: el_wag.wagon_usage_fee_derailment,
+                        });
+                    } else {
+                        op.count_wagon = op.count_wagon + 1;
+                        op.sum_calc_time = el_wag.wagon_usage_fee_calc_time ? op.sum_calc_time + el_wag.wagon_usage_fee_calc_time : op.sum_calc_time;
+                        op.sum_calc_fee_amount = el_wag.wagon_usage_fee_calc_fee_amount ? op.sum_calc_fee_amount + el_wag.wagon_usage_fee_calc_fee_amount : op.sum_calc_fee_amount;
+                        op.persent = Number(Number(op.sum_calc_fee_amount * 100) / sum_amount);
+                        op.persent_derailment = op.wagon_usage_fee_derailment ? Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment) : 0;
+
+                    };
+                    var cuf = list_cars_usage_fee.find(function (o) {
+                        return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
+                    }.bind(this));
+                    if (!cuf) {
+                        // Не данных 
+                        list_cars_usage_fee.push({
+                            id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                            cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                            count_wagon: 1,
+                            sum_calc_time: el_wag.wagon_usage_fee_calc_time ? el_wag.wagon_usage_fee_calc_time : 0,
+                            sum_calc_fee_amount: el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0,
+                            persent: Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount),
+                        });
+                    } else {
+                        cuf.count_wagon = cuf.count_wagon + 1;
+                        cuf.sum_calc_time = el_wag.wagon_usage_fee_calc_time ? cuf.sum_calc_time + el_wag.wagon_usage_fee_calc_time : cuf.sum_calc_time;
+                        cuf.sum_calc_fee_amount = el_wag.wagon_usage_fee_calc_fee_amount ? cuf.sum_calc_fee_amount + el_wag.wagon_usage_fee_calc_fee_amount : cuf.sum_calc_fee_amount;
+                        cuf.persent = Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount);
+                    };
+                };
+            }.bind(this));
+
+            this.outgoing_cars_usage_fee = this.sort_table(list_cars_usage_fee, 'id_cargo', 'count_wagon', true);
+            this.outgoing_cars_usage_fee_operator_amkr = this.sort_table(list_usage_fee_operator_amkr, 'id_cargo', 'count_wagon', true);
+
+            process_load--;
+            out_load(process_load);
+
+        }.bind(this));
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Плата за пользование груз по ПРИБ."
+    view_td_report.prototype.view_filter_report_usage_fee_cargo = function () {
+        if (this.outgoing_cars_usage_fee) {
+
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_usage_fee_cargo.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(list_view, function (key, element) {
+                var gn = data.find(function (o) { return o.name === element.cargo_name; });
+                if (gn === undefined) {
+                    data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+            }.bind(this));
+
+            this.chart_data_usage_fee_cargo = data;
+            this.view_chart_usage_fee_cargo();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Плата за пользование груз по ПРИБ."
+    view_td_report.prototype.view_chart_usage_fee_cargo = function () {
+        if (this.report_panel === 0 && this.chart_data_usage_fee_cargo) {
+            this.chart_usage_fee_cargo.view(this.chart_data_usage_fee_cargo);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Таблица-Плата за пользование груз по операторам"
+    view_td_report.prototype.view_filter_report_usage_fee_operator_amkr = function () {
+        if (this.outgoing_cars_usage_fee_operator_amkr) {
+
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee_operator_amkr));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_usage_fee_operator_amkr.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(this.sort_table(list_view, 'id_cargo', 'sum_calc_fee_amount', false), function (key, element) {
+                data.push({ "group": element.cargo_name, "name": element.operator_abbr + "-" + element.count_wagon + "ваг.," + Number(element.sum_calc_fee_amount).toFixed(0) + "грн.", "value": Number(Number(element.sum_calc_fee_amount).toFixed(0)) });
+            }.bind(this));
+
+            this.chart_data_usage_fee_operator_amkr = data;
+            this.view_chart_usage_fee_operator_amkr();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Таблица-Плата за пользование груз по операторам"
+    view_td_report.prototype.view_chart_usage_fee_operator_amkr = function () {
+        if (this.report_panel === 1 && this.chart_data_usage_fee_operator_amkr) {
+            this.chart_usage_fee_operator_amkr.view(this.chart_data_usage_fee_operator_amkr);
+        }
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Таблица-Плата за пользование груз по операторам-сход"
+    view_td_report.prototype.view_filter_report_usage_fee_operator_amkr_derailment = function () {
+        if (this.outgoing_cars_usage_fee_operator_amkr) {
+
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee_operator_amkr.filter(function (i) { return i.derailment; }.bind(this))));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_usage_fee_operator_amkr_derailment.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(this.sort_table(list_view, 'id_cargo', 'sum_calc_fee_amount', false), function (key, element) {
+                data.push({ "group": element.cargo_name, "name": element.operator_abbr + "-" + element.count_wagon + "ваг.," + Number(element.sum_calc_fee_amount).toFixed(0) + "грн.", "value": Number(Number(element.sum_calc_fee_amount).toFixed(0)) });
+            }.bind(this));
+
+            this.chart_data_usage_fee_operator_amkr_derailment = data;
+            this.view_chart_usage_fee_operator_amkr_derailment();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Таблица-Плата за пользование груз по операторам-сход"
+    view_td_report.prototype.view_chart_usage_fee_operator_amkr_derailment = function () {
+        if (this.report_panel === 2 && this.chart_data_usage_fee_operator_amkr_derailment) {
+            this.chart_usage_fee_operator_amkr_derailment.view(this.chart_data_usage_fee_operator_amkr_derailment);
+        }
+    }
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_9_1 = function () {
+        this.outgoing_cars = [];
+        this.outgoing_cars_usage_fee = [];
+        this.outgoing_cars_usage_fee_operator_amkr = [];
+        this.outgoing_cars_usage_fee_operator_amkr_derailment = [];
+        if (this.table_usage_fee_cargo) {
+            this.view_filter_report_usage_fee_cargo();
+            this.view_filter_report_usage_fee_operator_amkr();
+            this.view_filter_report_usage_fee_operator_amkr_derailment();
+        }
+        LockScreenOff();
+    };
+
     // группировка и сортировка таблицы
     view_td_report.prototype.sort_table = function (list, field_group, field_sort, desc) {
         var result = [];

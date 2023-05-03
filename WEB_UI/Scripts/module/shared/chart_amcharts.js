@@ -1288,6 +1288,7 @@
             this.chart.appear(1000, 100);
         }
     };
+    //
     chart_amcharts.prototype.view_pie_chart_with_broken_down_slices = function (data) {
         if (this.chart && this.series) {
 

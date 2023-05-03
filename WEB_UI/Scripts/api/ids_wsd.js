@@ -2484,6 +2484,29 @@
             },
         });
     };
+    //Получить отправленные вагоны за период (для отчетов)
+    ids_wsd.prototype.getReportViewOutgoingCarsOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOutgoingCarsOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
     //=============================================================================================================
