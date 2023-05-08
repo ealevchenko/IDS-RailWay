@@ -87,7 +87,7 @@
     var form_edit = new FDL();
 
     var TDIR = App.table_directory;
-
+    var TTDR= App.table_td_report;
 
     var alert = App.alert_form;
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
@@ -121,11 +121,22 @@
     var list_period = [];               // Перечень периодов
     var list_select_period = [];        // Перечень периодов
 
+    var list_ootgoing_num = [];         // Перечень dfujyjd
+
     var edit_elements = {};
 
     var $form_edit = $('div#form-edit');
 
     var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр
+    var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');                     // Создадим экземпляр
+
+
+    var $num_wagon = $('input#num_wagon');
+
+    var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
+        event.preventDefault();
+        search_num($num_wagon.val());
+    });
 
     var validation = function () {
         form_edit.validation_common.clear_all();
@@ -268,6 +279,34 @@
         }
     };
 
+    // Показать вагоны в отправках
+    var view_outgoing_wagon = function () {
+        ids_wsd.getViewOutgoingCarsOfNum($num_wagon.val(), function (vagon_result) {
+            list_ootgoing_num = vagon_result;
+
+            LockScreenOff();
+        }.bind(this));
+    };
+
+    // Проверка номера вагона
+    var search_num = function (num) {
+        alert.clear_message();
+        //clear(); // Очистим экран от старой информации
+        LockScreen(langView('mess_delay', App.Langs));
+        $bt_search_wagon.prop("disabled", true);
+        if (!isNumeric(num) || !is_valid_num_wagon(num)) {
+            // Ошибка ввода
+            alert.out_error_message('Ошибка, введен неправильный номер :' + num);
+            $bt_search_wagon.prop("disabled", false);
+            LockScreenOff();
+        } else {
+            view_outgoing_wagon();
+        }
+
+    };
+
+    var active_tab = 0;
+
     // После загрузки документа
     $(document).ready(function ($) {
         LockScreen(langView('mainuf_init_main', App.Langs));
@@ -280,7 +319,7 @@
             }, 1000);
 
             list_currency = ids_dir.getListCurrency('id', 'currency', App.Lang, null);
-            var process = 4;
+            var process = 5;
 
             // Выход из инициализации
             var out_init = function (process) {
@@ -857,6 +896,65 @@
                     out_init(process);
                 }.bind(this),
             });
+
+            //
+            table_usage_fee_outgoing_cars.init({
+                alert: null,
+                detali_table: false,
+                type_report: 'usage_fee_outgoing_cars',     //
+                link_num: false,
+                ids_dir: ids_dir,
+                fn_init: function () {
+                    // На проверку окончания инициализации
+                    process--;
+                    out_init(process);
+                },
+                fn_action_view_detali: function (rows) {
+
+                },
+                fn_select_rows: function (rows) {
+                    //list_select_period = rows;
+                    //form_edit.validation_common.clear_all();
+                    //if (rows && rows.length > 0) {
+                    //    form_edit.set('date_period_start', rows[rows.length - 1].start);
+                    //    form_edit.set('date_period_stop', rows[rows.length - 1].stop);
+                    //    form_edit.set('hour_after_30', rows[rows.length - 1].hour_after_30);
+                    //    form_edit.set('rate_currency', rows[rows.length - 1].id_currency);
+                    //    form_edit.set('rate_value', rows[rows.length - 1].rate);
+                    //    form_edit.set('derailment_rate_currency', rows[rows.length - 1].id_currency_derailment);
+                    //    form_edit.set('derailment_rate_value', rows[rows.length - 1].rate_derailment);
+                    //    form_edit.set('coefficient_route_value', rows[rows.length - 1].coefficient_route);
+                    //    form_edit.set('coefficient_not_route_value', rows[rows.length - 1].coefficient_not_route);
+                    //    form_edit.set('grace_time_value1', rows[rows.length - 1].grace_time_1);
+                    //    form_edit.set('grace_time_value2', rows[rows.length - 1].grace_time_2);
+                    //} else {
+                    //    form_edit.set('date_period_start', null);
+                    //    form_edit.set('date_period_stop', null);
+                    //    form_edit.set('hour_after_30', false);
+                    //    form_edit.set('rate_currency', -1);
+                    //    form_edit.set('rate_value', null);
+                    //    form_edit.set('derailment_rate_currency', -1);
+                    //    form_edit.set('derailment_rate_value', null);
+                    //    form_edit.set('coefficient_route_value', null);
+                    //    form_edit.set('coefficient_not_route_value', null);
+                    //    form_edit.set('grace_time_value1', null);
+                    //    form_edit.set('grace_time_value2', null);
+                    //}
+                }.bind(this),
+            });
+
+            //
+            $('button[data-toggle="pill"]').on('shown.bs.tab', function (event) {
+                switch (event.target.id) {
+                    case 'pills-rates-tab': {
+                        active_tab = 0; break;
+                    }
+                    case 'pills-correction-tab': {
+                        active_tab = 1; break;
+                    }
+                }
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            })
 
             // Запрос информации от сервера (1 раз в минуту)
             setInterval(function () {

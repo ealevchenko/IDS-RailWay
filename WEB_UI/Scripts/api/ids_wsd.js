@@ -2507,6 +2507,29 @@
             },
         });
     };
+    //Получить отправленные вагоны по номеру вагона (для отчетов)
+    ids_wsd.prototype.getViewOutgoingCarsOfNum= function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
     //=============================================================================================================

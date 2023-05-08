@@ -1317,7 +1317,23 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
+        // GET: api/ids/rwt/outgoing_cars/view/num/52179876
+        [Route("view/num/{num:int}")]
+        [ResponseType(typeof(ViewOutgoingCars))]
+        public IHttpActionResult GetViewOutgoingCarsOfNum(int num)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_num](@num) order by 1 desc";
+                List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_num).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         public object get_string_of_int(int[] vals)
         {
