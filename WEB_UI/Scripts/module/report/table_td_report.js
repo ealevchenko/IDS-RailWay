@@ -296,6 +296,19 @@
             'ttdr_field_usage_fee_wagon_persent_fee_amount': '% от общей платы',
             'ttdr_field_usage_fee_wagon_persent_derailment_fee_amount': '% от общей платы',
 
+            'ttdr_field_usage_fee_period_start': 'Начало периода',
+            'ttdr_field_usage_fee_period_stop': 'Окончание периода',
+            'ttdr_field_usage_fee_period_operator': 'Оператор',
+            'ttdr_field_usage_fee_period_operator_abbr': 'Оператор (аббр)',
+            'ttdr_field_usage_fee_period_genus_abbr': 'Род',
+            'ttdr_field_usage_fee_period_rate': 'Ставка',
+            'ttdr_field_usage_fee_period_rate_derailment': 'Ставка, сход',
+            'ttdr_field_usage_fee_period_grace_time_1': 'Льготное время 1',
+            'ttdr_field_usage_fee_period_grace_time_2': 'Льготное время 2',
+            'ttdr_field_usage_fee_period_coefficient_route': 'Коэф.маршрут',
+            'ttdr_field_usage_fee_period_coefficient_not_route': 'Коэф.не маршрут',
+            'ttdr_field_usage_fee_period_hour_after_30': 'Полный час после 30 мин.',
+
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
 
@@ -322,6 +335,7 @@
 
 
             'ttdr_title_all': 'Все',
+            'ttdr_title_yes': 'Да',
             'ttdr_title_not_epd': 'Без ЭПД',
             'ttdr_title_for_loading': 'Под погрузку',
             'ttdr_title_route': 'маршрут',
@@ -2616,22 +2630,6 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
         },
-        //{
-        //    field: 'outgoing_cars_pay',
-        //    data: function (row, type, val, meta) {
-        //        return row.pay !== null ? Number(row.pay).toFixed(2) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_outgoing_cars_pay', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        //{
-        //    field: 'outgoing_cars_pay_act',
-        //    data: function (row, type, val, meta) {
-        //        return row.pay_act !== null ? Number(row.pay_act).toFixed(2) : null;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_outgoing_cars_pay_act', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
         {
             field: 'outgoing_cars_arrival_sostav_old_date_adoption',
             data: function (row, type, val, meta) {
@@ -2697,6 +2695,105 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_usage_fee_wagon_persent_derailment_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        //
+        {
+            field: 'usage_fee_period_start',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_start ? moment(row.usage_fee_period_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_usage_fee_period_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_stop',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_stop ? moment(row.usage_fee_period_stop).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_usage_fee_period_stop', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_operator',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_operator_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-200',
+            title: langView('ttdr_field_usage_fee_period_operator', App.Langs), width: "200px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_operator_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_genus_abbr',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_genus_abbr_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_genus_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_rate !== null ? Number(row.usage_fee_period_rate).toFixed(2) + ' ' + row['usage_fee_period_derailment_currency_' + App.Lang] : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_usage_fee_period_rate', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate_derailment',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_rate_derailment !== null ? Number(row.usage_fee_period_rate_derailment).toFixed(2) + ' ' + row['usage_fee_period_derailment_currency_' + App.Lang] : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_usage_fee_period_rate_derailment', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_1',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_grace_time_1;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_grace_time_1', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_2',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_grace_time_2;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_grace_time_2', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_route',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_coefficient_route;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_coefficient_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_not_route',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_coefficient_not_route;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_coefficient_not_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_hour_after_30',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_hour_after_30 ? langView('ttdr_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_hour_after_30', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3351,6 +3448,7 @@
         collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
     table_td_report.prototype.init_columns_usage_fee_operator_amkr_derailment = function () {
         var collums = [];
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
@@ -3363,6 +3461,24 @@
         collums.push({ field: 'usage_fee_wagon_persent_derailment_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_td_report.prototype.init_columns_usage_fee_period = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_period_start', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_hour_after_30', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate_derailment', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_1', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_2', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_not_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -3790,6 +3906,20 @@
             }.bind(this)
         });
         //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -4915,6 +5045,28 @@
                 };
                 break;
             };
+            case 'usage_fee_period': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period();
+                this.table_buttons = this.init_button_usage_fee_period();
+                this.dom = 'Bfrtip';
+                break;
+            };
+
+
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка

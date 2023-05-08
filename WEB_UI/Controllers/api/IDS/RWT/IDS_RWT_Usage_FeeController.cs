@@ -11,6 +11,55 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
+    
+
+    public class ViewUsageFeePeriod
+    {
+        public int id_usage_fee_period { get; set; }
+        public int usage_fee_period_id_operator { get; set; }
+        public string usage_fee_period_operator_abbr_ru { get; set; }
+        public string usage_fee_period_operator_ru { get; set; }
+        public string usage_fee_period_operator_abbr_en { get; set; }
+        public string usage_fee_period_operator_en { get; set; }
+        public bool? usage_fee_period_operators_paid { get; set; }
+        public bool? usage_fee_period_operators_rop { get; set; }
+        public bool? usage_fee_period_operators_local_use { get; set; }
+        public string usage_fee_period_operators_color { get; set; }
+        public int usage_fee_period_id_genus { get; set; }
+        public string usage_fee_period_genus_ru { get; set; }
+        public string usage_fee_period_genus_en { get; set; }
+        public string usage_fee_period_genus_abbr_ru { get; set; }
+        public string usage_fee_period_genus_abbr_en { get; set; }
+        public int? usage_fee_period_rod_uz { get; set; }
+        public DateTime usage_fee_period_start { get; set; }
+        public DateTime usage_fee_period_stop { get; set; }
+        public int? usage_fee_period_id_currency { get; set; }
+        public string usage_fee_period_currency_ru { get; set; }
+        public string usage_fee_period_currency_en { get; set; }
+        public int? usage_fee_period_code { get; set; }
+        public string usage_fee_period_code_cc { get; set; }
+        public decimal? usage_fee_period_rate { get; set; }
+        public int? usage_fee_period_id_currency_derailment { get; set; }
+        public string usage_fee_period_derailment_currency_ru { get; set; }
+        public string usage_fee_period_derailment_currency_en { get; set; }
+        public int? usage_fee_period_derailment_code { get; set; }
+        public string usage_fee_period_derailment_code_cc { get; set; }
+        public decimal? usage_fee_period_rate_derailment { get; set; }
+        public float? usage_fee_period_coefficient_route { get; set; }
+        public float? usage_fee_period_coefficient_not_route { get; set; }
+        public int? usage_fee_period_grace_time_1 { get; set; }
+        public int? usage_fee_period_grace_time_2 { get; set; }
+        public string usage_fee_period_note { get; set; }
+        public DateTime usage_fee_period_create { get; set; }
+        public string usage_fee_period_create_user { get; set; }
+        public DateTime? usage_fee_period_change { get; set; }
+        public string usage_fee_period_change_user { get; set; }
+        public DateTime? usage_fee_period_close { get; set; }
+        public string usage_fee_period_close_user { get; set; }
+        public int? usage_fee_period_parent_id { get; set; }
+        public bool? usage_fee_period_hour_after_30 { get; set; }
+    }
+
     [RoutePrefix("api/ids/rwt/usage_fee")]
     public class IDS_RWT_Usage_FeeController : ApiController
     {
@@ -93,6 +142,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 Usage_Fee_Period usp = this.ef_ids.Context.Where(u => u.id_operator == id_operator && u.id_genus == id_genus).OrderByDescending(c=>c.id).ToList().Select(c => c.GetUsage_Fee_Period()).FirstOrDefault();
                 return Ok(usp);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        // GET: api/ids/rwt/usage_fee/period/start/2023-04-01T00:00:00/stop/2023-04-30T23:59:59
+        [Route("period/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(ViewUsageFeePeriod))]
+        public IHttpActionResult GetUsage_Fee_PeriodOfDateTime(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_usage_fee_period_of_period](@start, @stop) order by usage_fee_period_start";
+                List<ViewUsageFeePeriod> list = this.ef_ids.Database.SqlQuery<ViewUsageFeePeriod>(sql, p_start, p_stop).ToList();
+                return Ok(list);
             }
             catch (Exception e)
             {

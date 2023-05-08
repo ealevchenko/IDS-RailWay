@@ -2604,6 +2604,30 @@
             },
         });
     };
+    // Получить ставки на вагоны за период (для отчетов)
+    ids_wsd.prototype.getReportUsage_Fee_PeriodOfDateTime = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportUsage_Fee_PeriodOfDateTime", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
 
     App.ids_wsd = ids_wsd;
 

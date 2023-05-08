@@ -422,6 +422,8 @@
         this.outgoing_cars_usage_fee = [];
         this.outgoing_cars_usage_fee_operator_amkr = [];
 
+        this.usage_fee_period = [];
+
         this.wagons_not_operation = [];
 
         this.wagons_adoption = [];
@@ -1041,6 +1043,7 @@
             case 1:
             case 2:
             case 3:
+            case 8:
             case 9:
                 {
                     this.div_select_date.show();
@@ -1072,6 +1075,7 @@
             case 5: this.clear_report_5_1(); break;
             case 6: this.clear_report_6_1(); break;
             //.....
+            case 8: this.clear_report_8_1(); break;
             case 9: this.clear_report_9_1(); break;
         }
         switch (this.type) {
@@ -1137,6 +1141,7 @@
             case 5: this.$title_report.text(langView('vtdr_title_report_5_1', App.Langs).format(message_report)); break;
             case 6: this.$title_report.text(langView('vtdr_title_report_6_1', App.Langs).format(message_report)); break;
             //....
+            case 8: this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(message_report)); break;
             case 9: this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(message_report)); break;
         }
     };
@@ -1168,6 +1173,10 @@
                 break;
             };
             //..
+            case 8: {
+                this.view_report_8_1(this.start, this.stop);
+                break;
+            };
             case 9: {
                 this.view_report_9_1(this.start, this.stop);
                 break;
@@ -9965,6 +9974,120 @@
         }
     };
     //------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "История ставок"
+    view_td_report.prototype.init_report_8_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 8;        // номер отчета
+        this.report_panel = 0;  // номер под-отчета
+
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        //------
+
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+
+        var row_common = new this.fe_ui.bs_row();
+
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        col_view.$col.append(this.$table_view);
+        //----------------------------------------------------------------
+        // Дабавим закладку на форму
+        this.$table_view.append('<div id="usage-fee-period" class="col-xl-12"></div>');
+        //-----------------------------------------------------------------
+        row_common.$row.append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+
+        // ------------------------------------------------
+        // Запускаем 4 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                this.report_panel = 0;
+
+                LockScreenOff();
+            }
+        }.bind(this);
+        // Загрузим справочные данные, определим поля формы правки
+        //this.load_db(['cargo_out_group'], false, function (result) {
+        //-----------------------------------------------
+        // Таблица-Плата за пользование груз по ПРИБ.
+        this.table_usage_fee_period = new TTDR('div#usage-fee-period');         // Создадим экземпляр
+        this.table_usage_fee_period.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'usage_fee_period',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+
+        //}.bind(this));
+    };
+    // Показать отчет  "История ставок"
+    view_td_report.prototype.view_report_8_1 = function (start, stop) {
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                this.view_filter_report_usage_fee_period();
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
+        // Отправка
+        this.ids_wsd.getReportUsage_Fee_PeriodOfDateTime(start, stop, function (result_ufp) {
+            this.usage_fee_period = result_ufp;
+
+            process_load--;
+            out_load(process_load);
+
+        }.bind(this));
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Плата за пользование груз по ПРИБ."
+    view_td_report.prototype.view_filter_report_usage_fee_period = function () {
+        if (this.usage_fee_period) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.usage_fee_period));
+            // Отобразим
+            this.table_usage_fee_period.view(list_view);
+            LockScreenOff();
+        }
+    };
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_8_1 = function () {
+        this.usage_fee_period = [];
+        //this.outgoing_cars_usage_fee = [];
+        //this.outgoing_cars_usage_fee_operator_amkr = [];
+        //this.outgoing_cars_usage_fee_operator_amkr_derailment = [];
+        //if (this.table_usage_fee_cargo) {
+        //    this.view_filter_report_usage_fee_cargo();
+        //    this.view_filter_report_usage_fee_operator_amkr();
+        //    this.view_filter_report_usage_fee_operator_amkr_derailment();
+        //}
+        LockScreenOff();
+    };
+    //------------------------------------------------------------------------------------------------
     // Инициализировать отчет "Плата за пользование (ИТОГ)"
     view_td_report.prototype.init_report_9_1 = function () {
         // очистим основное окно отчета
@@ -10163,7 +10286,7 @@
         });
         //}.bind(this));
     };
-    // Показать отчет  "Статистика"
+    // Показать отчет  "Плата за пользование (ИТОГ)"
     view_td_report.prototype.view_report_9_1 = function (start, stop) {
         // Запускаем 6 процесса инициализации (паралельно)
         var process_load = 1;
