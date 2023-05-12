@@ -309,8 +309,16 @@
             'ttdr_field_usage_fee_period_coefficient_not_route': 'Коэф.не маршрут',
             'ttdr_field_usage_fee_period_hour_after_30': 'Полный час после 30 мин.',
 
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption': 'Дата приема.',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act': 'Дата приема (акт).',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата сдачи.',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата сдачи (акт)',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз ОТПР',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route': 'Маршрут/не маршрут',
+
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
-            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
 
             'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
             'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
@@ -2792,8 +2800,71 @@
             className: 'dt-body-center shorten mw-50',
             title: langView('ttdr_field_usage_fee_period_hour_after_30', App.Langs), width: "50px", orderable: true, searchable: true
         },
-
-
+        // usage_fee_outgoing_cars
+        {
+            field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption_act ? moment(row.arrival_sostav_date_adoption_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing ? moment(row.outgoing_sostav_date_outgoing).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing_act ? moment(row.outgoing_sostav_date_outgoing_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route',
+            data: function (row, type, val, meta) {
+                if (row.arrival_uz_vagon_route !== null) {
+                    if (row.arrival_uz_vagon_route) {
+                        return langView('ttdr_title_route', App.Langs);
+                    } else {
+                        return langView('ttdr_title_not_route', App.Langs);
+                    }
+                } else {
+                    return null;
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -2852,6 +2923,7 @@
     ];
 
     var pageTotal = 0;
+    var id_select = null;          // выбранная строка
 
     // Показать правильную дату
     function getTimeFromMins(mins) {
@@ -3478,7 +3550,22 @@
         collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
-
+    //
+    table_td_report.prototype.init_columns_usage_fee_outgoing_cars = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -3910,6 +3997,20 @@
     };
     //
     table_td_report.prototype.init_button_usage_fee_period = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_outgoing_cars = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -5065,8 +5166,26 @@
                 this.dom = 'Bfrtip';
                 break;
             };
-
-
+            case 'usage_fee_outgoing_cars': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [3, 'desc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_outgoing_cars();
+                this.table_buttons = this.init_button_usage_fee_outgoing_cars();
+                this.dom = 'Bfrtip';
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -5279,6 +5398,10 @@
                         }
                         break;
                     };
+                    case 'usage_fee_outgoing_cars': {
+                        $(row).attr('id', data.outgoing_car_id);
+                        break;
+                    };
                 };
             }.bind(this),
             footerCallback: this.footerCallback,
@@ -5384,6 +5507,17 @@
                 }.bind(this));
                 break;
             };
+            case 'usage_fee_outgoing_cars': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
         };
         // На проверку окончания инициализации
         //----------------------------------
@@ -5426,14 +5560,21 @@
         };
     };
     // Показать данные
-    table_td_report.prototype.view = function (data) {
+    table_td_report.prototype.view = function (data, id_select) {
         this.data = data;
+        this.id_select = id_select;
         this.out_clear();
         LockScreen(langView('ttdr_mess_view_report', App.Langs));
         this.obj_t_report.clear();
         this.obj_t_report.rows.add(data);
         this.obj_t_report.order(this.order_column);
         this.obj_t_report.draw();
+        if (id_select !== null) {
+            this.id_select = id_select
+            this.obj_t_report.row('#' + this.id_select).select();
+        } else {
+            this.id_select = null;
+        }
         this.view_footer(data);
         this.select_rows();
         this.enable_button();

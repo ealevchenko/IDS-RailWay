@@ -217,6 +217,7 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalRoutes>>().To<EFIDS.Concrete.EFWagonInternalRoutes>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalMovement>>().To<EFIDS.Concrete.EFWagonInternalMovement>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalOperation>>().To<EFIDS.Concrete.EFWagonInternalOperation>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.WagonUsageFee>>().To<EFIDS.Concrete.EFWagonUsageFee>();
 
             kernel.Bind<EFIDS_Arhiv.Abstract.IStringRepository<EFIDS_Arhiv.Entities.UZ_DOC_PDF>>().To<EFIDS_Arhiv.Concrete.EFUZ_DOC_PDF>();
 

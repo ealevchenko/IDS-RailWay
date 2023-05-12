@@ -14,6 +14,8 @@
             'mainuf_load_reference': 'Загружаю справочники...',
             'mainuf_init_main': 'Инициализация формы ...',
             'mainuf_load': 'Загружаю ...',
+            'mainuf_update': 'Обновляю ...',
+
 
             'mainuf_label_date_period_start': 'Начало :',
             'mainuf_title_date_period_start': 'Начало',
@@ -87,7 +89,7 @@
     var form_edit = new FDL();
 
     var TDIR = App.table_directory;
-    var TTDR= App.table_td_report;
+    var TTDR = App.table_td_report;
 
     var alert = App.alert_form;
     var alert = new alert($('div#main-alert')); // Создадим класс ALERTG
@@ -121,21 +123,27 @@
     var list_period = [];               // Перечень периодов
     var list_select_period = [];        // Перечень периодов
 
-    var list_ootgoing_num = [];         // Перечень dfujyjd
+    var list_outgoing_num = [];         // Перечень
+    var select_rows = null;
 
     var edit_elements = {};
 
     var $form_edit = $('div#form-edit');
 
     var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр
-    var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');                     // Создадим экземпляр
+    var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');       // Создадим экземпляр
 
 
     var $num_wagon = $('input#num_wagon');
+    var $manual_fee_amount = $('input#manual_fee_amount');
 
     var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
         event.preventDefault();
         search_num($num_wagon.val());
+    });
+    var $bt_update_wagon = $('button#bt_update_wagon').on('click', function (event) {
+        event.preventDefault();
+        update_manual_fee_amount($manual_fee_amount.val());
     });
 
     var validation = function () {
@@ -282,10 +290,30 @@
     // Показать вагоны в отправках
     var view_outgoing_wagon = function () {
         ids_wsd.getViewOutgoingCarsOfNum($num_wagon.val(), function (vagon_result) {
-            list_ootgoing_num = vagon_result;
-
+            list_outgoing_num = vagon_result;
+            table_usage_fee_outgoing_cars.view(vagon_result, select_rows !== null ? select_rows.outgoing_car_id : null);
             LockScreenOff();
         }.bind(this));
+    };
+    // править плату за пользование
+    var update_outgoing_wagon = function () {
+        if (select_rows !== null) {
+            var options = {
+                id_wir: select_rows.id_wir,
+                manual_fee_amount: Number($manual_fee_amount.val())
+            };
+            ids_wsd.postUpdateManualFeeAmount(options, function (result) {
+                if (result >= 0) {
+                    view_outgoing_wagon();
+                    alert.out_info_message('Правка платы за пользование, выполнена!');
+                } else {
+                    alert.out_error_message('Ошибка, правки платы за пользование, код ошибки :' + result);
+                    LockScreenOff();
+                }
+
+            }.bind(this));
+        }
+
     };
 
     // Проверка номера вагона
@@ -301,6 +329,23 @@
             LockScreenOff();
         } else {
             view_outgoing_wagon();
+            $bt_search_wagon.prop("disabled", false);
+        }
+    };
+
+    // Проверка номера вагона
+    var update_manual_fee_amount = function (num) {
+        alert.clear_message();
+        LockScreen(langView('mainuf_update', App.Langs));
+        $bt_update_wagon.prop("disabled", true);
+        if (!isNumeric(num)) {
+            // Ошибка ввода
+            alert.out_error_message('Ошибка, введена неправильная сумма :' + num);
+            $bt_update_wagon.prop("disabled", false);
+            LockScreenOff();
+        } else {
+            update_outgoing_wagon();
+            $bt_update_wagon.prop("disabled", false);
         }
 
     };
@@ -310,6 +355,9 @@
     // После загрузки документа
     $(document).ready(function ($) {
         LockScreen(langView('mainuf_init_main', App.Langs));
+        $bt_update_wagon.prop("disabled", true);
+        $manual_fee_amount.val('');
+        $manual_fee_amount.prop("disabled", true);
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
         load_db(['operators_wagons', 'currency', 'genus_wagon'], true, function (result) {
@@ -452,7 +500,7 @@
                 }.bind(this),
             });
             //
-/*            var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр*/
+            /*            var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр*/
             // Инициализация модуля "Таблица операторов вагонов"
             table_usage_fee_period.init({
                 alert: null,
@@ -472,7 +520,7 @@
                     list_select_period = rows;
                     form_edit.validation_common.clear_all();
                     if (rows && rows.length > 0) {
-                        form_edit.set('date_period_start', rows[rows.length-1].start);
+                        form_edit.set('date_period_start', rows[rows.length - 1].start);
                         form_edit.set('date_period_stop', rows[rows.length - 1].stop);
                         form_edit.set('hour_after_30', rows[rows.length - 1].hour_after_30);
                         form_edit.set('rate_currency', rows[rows.length - 1].id_currency);
@@ -603,7 +651,7 @@
                     form_group_col: 12,
                     form_group_class: 'text-left p-1',
                     label: langView('mainuf_label_hour_after_30', App.Langs),
-                    label_class:  'mb-1',
+                    label_class: 'mb-1',
                     checkbox_class: null,
                     checkbox_title: null,
                     checkbox_required: null,
@@ -913,33 +961,18 @@
 
                 },
                 fn_select_rows: function (rows) {
-                    //list_select_period = rows;
-                    //form_edit.validation_common.clear_all();
-                    //if (rows && rows.length > 0) {
-                    //    form_edit.set('date_period_start', rows[rows.length - 1].start);
-                    //    form_edit.set('date_period_stop', rows[rows.length - 1].stop);
-                    //    form_edit.set('hour_after_30', rows[rows.length - 1].hour_after_30);
-                    //    form_edit.set('rate_currency', rows[rows.length - 1].id_currency);
-                    //    form_edit.set('rate_value', rows[rows.length - 1].rate);
-                    //    form_edit.set('derailment_rate_currency', rows[rows.length - 1].id_currency_derailment);
-                    //    form_edit.set('derailment_rate_value', rows[rows.length - 1].rate_derailment);
-                    //    form_edit.set('coefficient_route_value', rows[rows.length - 1].coefficient_route);
-                    //    form_edit.set('coefficient_not_route_value', rows[rows.length - 1].coefficient_not_route);
-                    //    form_edit.set('grace_time_value1', rows[rows.length - 1].grace_time_1);
-                    //    form_edit.set('grace_time_value2', rows[rows.length - 1].grace_time_2);
-                    //} else {
-                    //    form_edit.set('date_period_start', null);
-                    //    form_edit.set('date_period_stop', null);
-                    //    form_edit.set('hour_after_30', false);
-                    //    form_edit.set('rate_currency', -1);
-                    //    form_edit.set('rate_value', null);
-                    //    form_edit.set('derailment_rate_currency', -1);
-                    //    form_edit.set('derailment_rate_value', null);
-                    //    form_edit.set('coefficient_route_value', null);
-                    //    form_edit.set('coefficient_not_route_value', null);
-                    //    form_edit.set('grace_time_value1', null);
-                    //    form_edit.set('grace_time_value2', null);
-                    //}
+                    alert.clear_message();
+                    if (rows && rows.length > 0) {
+                        select_rows = rows[0];
+                        $bt_update_wagon.prop("disabled", false);
+                        $manual_fee_amount.prop("disabled", false);
+                        $manual_fee_amount.val(rows[0].wagon_usage_fee_manual_fee_amount);
+                    } else {
+                        select_rows = null;
+                        $bt_update_wagon.prop("disabled", true);
+                        $manual_fee_amount.val('');
+                        $manual_fee_amount.prop("disabled", true);
+                    }
                 }.bind(this),
             });
 

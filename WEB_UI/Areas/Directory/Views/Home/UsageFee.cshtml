@@ -143,32 +143,51 @@
                         <div class="col-sm-12">
                             <div class="card bg-light mb-3">
                                 <div class="card-header text-center">
-                                    КОРРЕКТИРОВКА ИТОГОВОЙ СУММЫ ПЛАТЫ В РУЧНОМ РЕЖИМЕ
+                                    <form class="form-inline">
+                                        <label class="col-form-label text-dark mr-2" for="num_wagon">Найти вагон:</label>
+                                        <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" placeholder="Номер вагона" aria-label="Search">
+                                        <button class="btn btn-primary my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Search</button>
+                                        <div class="ml-3">КОРРЕКТИРОВКА ИТОГОВОЙ СУММЫ ПЛАТЫ В РУЧНОМ РЕЖИМЕ</div>
+                                    </form>
+
                                 </div>
                                 <div class="card-body">
                                     <div class="row mb-1">
                                         <div class="col-sm-12">
-                                            <form class="form-inline">
-                                                <label class="col-form-label text-dark mr-2" for="num_wagon">Найти вагон:</label>
-                                                <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" placeholder="Номер вагона" aria-label="Search">
-                                                <button class="btn btn-primary my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Search</button>
-                                            </form>
+                                            <fieldset class="border-primary">
+                                                <legend class="text-primary">Скорректировать</legend>
+                                                <div class="form-inline">
+                                                    <label class="col-form-label text-dark mr-2" for="manual_fee_amount">Плата:</label>
+                                                    <input class="form-control mr-sm-2" id="manual_fee_amount" name="manual_fee_amount" type="number">
+                                                    <button class="btn btn-primary my-2 my-sm-0" id="bt_update_wagon" name="bt_update_wagon">Применить</button>
+                                                </div>
+                                            </fieldset>
                                         </div>
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-sm-12">
-                                            <div class="card bg-light mb-3">
-                                                <div class="card-header text-center">ВЫБРАННЫЕ ВАГОНЫ</div>
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-sm-12" id="usage-fee-outgoing-cars">
+                                            <fieldset class="border-primary">
+                                                <legend class="text-primary">Перечень вагонов</legend>
+                                                <div id="usage-fee-outgoing-cars">
 
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    @*<div class="row mb-1">
+                                            <div class="col-sm-12">
+                                                <div class="card bg-light mb-3">
+                                                    <div class="card-header text-center">ВЫБРАННЫЕ ВАГОНЫ</div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-12" id="usage-fee-outgoing-cars">
+
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </div>*@
                                 </div>
                             </div>
                         </div>

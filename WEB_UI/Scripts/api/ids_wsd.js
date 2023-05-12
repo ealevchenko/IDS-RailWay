@@ -2650,6 +2650,31 @@
             },
         });
     };
+    // Обновить плату за пользование
+    ids_wsd.prototype.postUpdateManualFeeAmount = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/usage_fee/manual_fee_amount/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateManualFeeAmount", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
 
     App.ids_wsd = ids_wsd;

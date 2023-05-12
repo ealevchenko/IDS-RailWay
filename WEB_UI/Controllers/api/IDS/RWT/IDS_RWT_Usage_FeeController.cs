@@ -11,8 +11,12 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
-    
 
+    public class ManualFeeAmount
+    {
+        public long id_wir { get; set; }
+        public decimal? manual_fee_amount { get; set; }
+    }
     public class ViewUsageFeePeriod
     {
         public int id_usage_fee_period { get; set; }
@@ -64,10 +68,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     public class IDS_RWT_Usage_FeeController : ApiController
     {
         protected IRepository<Usage_Fee_Period> ef_ids;
+        protected IRepository<WagonUsageFee> ef_wuf;
 
-        public IDS_RWT_Usage_FeeController(IRepository<Usage_Fee_Period> ids)
+        public IDS_RWT_Usage_FeeController(IRepository<Usage_Fee_Period> ids, IRepository<WagonUsageFee> ef_wuf)
         {
             this.ef_ids = ids;
+            this.ef_wuf = ef_wuf;
         }
         // GET: api/ids/rwt/usage_fee/period/all
         [Route("period/all")]
@@ -126,7 +132,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
-        
+
         // GET: api/ids/rwt/usage_fee/period/last/operator/14/genus/3
         /// <summary>
         /// Получить последний период по оператору и роду
@@ -140,7 +146,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                Usage_Fee_Period usp = this.ef_ids.Context.Where(u => u.id_operator == id_operator && u.id_genus == id_genus).OrderByDescending(c=>c.id).ToList().Select(c => c.GetUsage_Fee_Period()).FirstOrDefault();
+                Usage_Fee_Period usp = this.ef_ids.Context.Where(u => u.id_operator == id_operator && u.id_genus == id_genus).OrderByDescending(c => c.id).ToList().Select(c => c.GetUsage_Fee_Period()).FirstOrDefault();
                 return Ok(usp);
             }
             catch (Exception e)
@@ -166,6 +172,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/usage_fee/manual_fee_amount
+        [HttpPost]
+        [Route("manual_fee_amount")]
+        public int PostUpdateManualFeeAmount(ManualFeeAmount value)
+        {
+            try
+            {
+                WagonUsageFee wuf = this.ef_wuf.Context.Where(u => u.id_wir == value.id_wir).FirstOrDefault();
+                wuf.manual_fee_amount = value.manual_fee_amount;
+                this.ef_wuf.Update(wuf);
+                int res = this.ef_wuf.Save();
+                return res;
+            }
+            catch (Exception e)
+            {
+                return -1;
             }
         }
 
