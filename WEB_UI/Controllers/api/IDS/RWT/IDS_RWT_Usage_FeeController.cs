@@ -141,13 +141,16 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         /// <param name="id_genus"></param>
         /// <returns></returns>
         [Route("period/last/operator/{id_operator:int}/genus/{id_genus:int}")]
-        [ResponseType(typeof(Usage_Fee_Period))]
+        [ResponseType(typeof(ViewUsageFeePeriod))]
         public IHttpActionResult GetLastUsage_Fee_Period(int id_operator, int id_genus)
         {
             try
             {
-                Usage_Fee_Period usp = this.ef_ids.Context.Where(u => u.id_operator == id_operator && u.id_genus == id_genus).OrderByDescending(c => c.id).ToList().Select(c => c.GetUsage_Fee_Period()).FirstOrDefault();
-                return Ok(usp);
+                System.Data.SqlClient.SqlParameter i_id_operator = new System.Data.SqlClient.SqlParameter("@id_operator", id_operator);
+                System.Data.SqlClient.SqlParameter i_id_genus = new System.Data.SqlClient.SqlParameter("@id_genus", id_genus);
+                string sql = "select * from [IDS].[get_view_usage_fee_period_of_operator_genus](@id_operator, @id_genus) order by usage_fee_period_start";
+                List<ViewUsageFeePeriod> list = this.ef_ids.Database.SqlQuery<ViewUsageFeePeriod>(sql, i_id_operator, i_id_genus).ToList();
+                return Ok(list);
             }
             catch (Exception e)
             {

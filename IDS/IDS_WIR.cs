@@ -8077,7 +8077,7 @@ namespace IDS
                     // Состав определен (сдан или отправлен)
                     if (sostav.status >= 2 && sostav.status <= 3)
                     {
-                        List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList();
+                        List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList(); // && c.num == 64056625
                         if (list_out_car != null && list_out_car.Count() > 0)
                         {
                             List<EPDOutgoingCar> list_update_epd = new List<EPDOutgoingCar>(); // Список для обновления
@@ -9302,7 +9302,7 @@ namespace IDS
                     return result;
                 }
                 result.count = list_out_cars.Count();
-                foreach (OutgoingCars car in list_out_cars)
+                foreach (OutgoingCars car in list_out_cars) //.Where(w => w.num == 24460487)
                 {
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
                     if (wir == null)
@@ -9358,8 +9358,20 @@ namespace IDS
                     // Список настройки периода по оператору отправки
                     List<Usage_Fee_Period> list_uf_period_outgoing = ef_uf_per.Context.Where(p => p.id_operator == id_operator_outgoing && p.id_genus == id_genus).OrderByDescending(c => c.id).ToList();
                     // расчет оператора
-                    List<Usage_Fee_Period> list_period = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_outgoing).OrderByDescending(c => c.start).ToList();
-                    foreach (Usage_Fee_Period ufp in list_period)
+                    List<Usage_Fee_Period> list_period_where = new List<Usage_Fee_Period>();
+                    list_period_where.Clear();
+                    Usage_Fee_Period arr_perriod = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_adoption).FirstOrDefault();
+                    Usage_Fee_Period out_perriod = list_uf_period_outgoing.Where(o => o.start <= date_outgoing && o.stop >= date_outgoing).FirstOrDefault();
+                    if (arr_perriod != null)
+                    {
+                        list_period_where.Add(arr_perriod);
+                        if (out_perriod !=null && arr_perriod.id != out_perriod.id)
+                        {
+                            list_period_where.Add(out_perriod);
+                        }
+                    }
+                    //List<Usage_Fee_Period> list_period = list_uf_period_outgoing.Where(o => o.start <= date_adoption || o.stop >= date_outgoing).OrderByDescending(c => c.start).ToList();
+                    foreach (Usage_Fee_Period ufp in list_period_where)
                     {
                         list_period_setup.Add(new Wagon_Usage_Fee_Period()
                         {

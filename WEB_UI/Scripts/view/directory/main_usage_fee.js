@@ -130,7 +130,7 @@
 
     var $form_edit = $('div#form-edit');
 
-    var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр
+    var table_usage_fee_period = new TTDR('div#usage-fee-period');                     // Создадим экземпляр
     var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');       // Создадим экземпляр
 
 
@@ -187,18 +187,21 @@
                     $.each(list_select_period, function (key, el) {
                         list_period.push({ id: el.id, id_operator: el.id_operator, id_genus: el.id_genus });
                     }.bind(this));
+                    var start = moment(form_edit.get('date_period_start')).set({ 'hour': 0, 'minute': 0, 'second': 0 }).format();       //.format('YYYY-MM-DD HH:mm:ss"');
+                    var stop = moment(form_edit.get('date_period_stop')).set({ 'hour': 23, 'minute': 59, 'second': 59 }).format();      //.format('YYYY-MM-DD HH:mm:ss"');
+
                     var operation = {
-                        start: form_edit.get('date_period_start'),
-                        stop: form_edit.get('date_period_stop'),
+                        start: start,
+                        stop: stop,
                         hour_after_30: form_edit.get('hour_after_30'),
-                        id_currency: edit_elements.select_rate_currency.val(),
+                        id_currency: get_select_number_value(edit_elements.select_rate_currency),
                         rate: form_edit.get('rate_value'),
-                        id_currency_derailment: edit_elements.select_derailment_rate_currency.val(),
+                        id_currency_derailment: get_select_number_value(edit_elements.select_derailment_rate_currency),
                         rate_derailment: form_edit.get('derailment_rate_value'),
                         coefficient_route: form_edit.get('coefficient_route_value'),
                         coefficient_not_route: form_edit.get('coefficient_not_route_value'),
-                        grace_time_1: form_edit.get('grace_time_value1'),
-                        grace_time_2: form_edit.get('grace_time_value2'),
+                        grace_time_1: get_input_number_value(form_edit.get('grace_time_value1')),
+                        grace_time_2: get_input_number_value(form_edit.get('grace_time_value2')),
                         note: '',
                         list_period: list_period,
                         user: App.User_Name,
@@ -241,39 +244,56 @@
             process_period = list_operation_rod.length;
             $.each(list_operation_rod, function (key, el) {
                 ids_wsd.getLastUsageFeePeriodOfOperatorGenus(el.id_operator, el.id_genus, function (list_result) {
-                    if (list_result) {
+                    if (list_result && list_result.length > 0) {
                         list_period = list_period.concat(list_result);
                     } else {
                         var genus = ids_dir.getGenusWagons_Of_ID(el.id_genus);
                         var operator = ids_dir.getOperatorsWagons_Of_ID(el.id_operator);
                         list_period.push({
-                            id: 0,
-                            id_operator: el.id_operator,
-                            id_genus: el.id_genus,
-                            start: null,
-                            stop: null,
-                            id_currency: null,
-                            rate: null,
-                            id_currency_derailment: null,
-                            rate_derailment: null,
-                            coefficient_route: null,
-                            coefficient_not_route: null,
-                            grace_time_1: null,
-                            grace_time_2: null,
-                            note: null,
-                            create: null,
-                            create_user: null,
-                            change: null,
-                            change_user: null,
-                            close: null,
-                            close_user: null,
-                            parent_id: null,
-                            Directory_OperatorsWagons: { abbr_ru: genus.abbr_ru, abbr_en: genus.abbr_en },
-                            Directory_GenusWagons: { abbr_ru: operator.abbr_ru, abbr_en: operator.abbr_en },
-                            Directory_Currency: { currency_ru: '', currency_en: '' },
-                            Directory_Currency1: { currency_ru: '', currency_en: '' }
+                            id_usage_fee_period: 0,
+                            usage_fee_period_id_operator: el.id_operator,
+                            usage_fee_period_operator_abbr_ru: operator.abbr_ru,
+                            usage_fee_period_operator_ru: operator.operators_ru,
+                            usage_fee_period_operator_abbr_en: operator.abbr_en,
+                            usage_fee_period_operator_en: operator.operators_en,
+                            usage_fee_period_operators_paid: null,
+                            usage_fee_period_operators_rop: null,
+                            usage_fee_period_operators_local_use: null,
+                            usage_fee_period_operators_color: null,
+                            usage_fee_period_id_genus: el.id_genus,
+                            usage_fee_period_genus_ru: genus.genus_ru,
+                            usage_fee_period_genus_en: genus.genus_en,
+                            usage_fee_period_genus_abbr_ru: genus.abbr_ru,
+                            usage_fee_period_genus_abbr_en: genus.abbr_en,
+                            usage_fee_period_rod_uz: null,
+                            usage_fee_period_start: null,
+                            usage_fee_period_stop: null,
+                            usage_fee_period_id_currency: null,
+                            usage_fee_period_currency_ru: null,
+                            usage_fee_period_currency_en: null,
+                            usage_fee_period_code: null,
+                            usage_fee_period_code_cc: null,
+                            usage_fee_period_rate: null,
+                            usage_fee_period_id_currency_derailment: null,
+                            usage_fee_period_derailment_currency_ru: null,
+                            usage_fee_period_derailment_currency_en: null,
+                            usage_fee_period_derailment_code: null,
+                            usage_fee_period_derailment_code_cc: null,
+                            usage_fee_period_rate_derailment: null,
+                            usage_fee_period_coefficient_route: null,
+                            usage_fee_period_coefficient_not_route: null,
+                            usage_fee_period_grace_time_1: null,
+                            usage_fee_period_grace_time_2: null,
+                            usage_fee_period_note: null,
+                            usage_fee_period_create: null,
+                            usage_fee_period_create_user: null,
+                            usage_fee_period_change: null,
+                            usage_fee_period_change_user: null,
+                            usage_fee_period_close: null,
+                            usage_fee_period_close_user: null,
+                            usage_fee_period_parent_id: null,
+                            usage_fee_period_hour_after_30: null,
                         });
-                        //list_create_period.push({ id_operator: el.id_operator, id_genus: el.id_genus });
                     }
                     // На проверку окончания инициализации
                     process_period--;
@@ -352,6 +372,21 @@
 
     var active_tab = 0;
 
+    var form_edit_clear = function () {
+        $('button#apply').prop("disabled", true);
+        form_edit.set('date_period_start', null); form_edit.disable('date_period_start');
+        form_edit.set('date_period_stop', null); form_edit.disable('date_period_stop');
+        form_edit.set('hour_after_30', false); form_edit.disable('hour_after_30');
+        form_edit.set('rate_currency', -1); form_edit.disable('rate_currency');
+        form_edit.set('rate_value', null); form_edit.disable('rate_value');
+        form_edit.set('derailment_rate_currency', -1); form_edit.disable('derailment_rate_currency');
+        form_edit.set('derailment_rate_value', null); form_edit.disable('derailment_rate_value');
+        form_edit.set('coefficient_route_value', null); form_edit.disable('coefficient_route_value');
+        form_edit.set('coefficient_not_route_value', null); form_edit.disable('coefficient_not_route_value');
+        form_edit.set('grace_time_value1', null); form_edit.disable('grace_time_value1');
+        form_edit.set('grace_time_value2', null); form_edit.disable('grace_time_value2');
+    };
+
     // После загрузки документа
     $(document).ready(function ($) {
         LockScreen(langView('mainuf_init_main', App.Langs));
@@ -411,6 +446,7 @@
                             LockScreenOff();
                         }.bind(this));
                     } else {
+                        form_edit_clear();
                         this.table_operators_wagons_genus.view(list_operators_genus);
                         list_period = [];
                         list_select_period = [];
@@ -437,75 +473,16 @@
 
                 },
                 fn_select_rows: function (rows) {
+                    form_edit_clear();
                     list_operation_rod = rows;
                     update_period_operation_rod();
-                    //var process_period = 0;
-                    //// Выход из инициализации
-                    //var out_load_period = function (process_period) {
-                    //    if (process_period === 0) {
-                    //        this.table_usage_fee_period.view(list_period);
-                    //        LockScreenOff();
-                    //    }
-                    //}.bind(this);
-                    //list_period = [];
-                    //list_select_period = [];
-                    //if (rows && rows.length > 0) {
-                    //    process_period = rows.length;
-                    //    $.each(rows, function (key, el) {
-                    //        ids_wsd.getLastUsageFeePeriodOfOperatorGenus(el.id_operator, el.id_genus, function (list_result) {
-                    //            if (list_result) {
-                    //                list_period = list_period.concat(list_result);
-                    //            } else {
-                    //                var genus = ids_dir.getGenusWagons_Of_ID(el.id_genus);
-                    //                var operator = ids_dir.getOperatorsWagons_Of_ID(el.id_operator);
-                    //                list_period.push({
-                    //                    id: 0,
-                    //                    id_operator: el.id_operator,
-                    //                    id_genus: el.id_genus,
-                    //                    start: null,
-                    //                    stop: null,
-                    //                    id_currency: null,
-                    //                    rate: null,
-                    //                    id_currency_derailment: null,
-                    //                    rate_derailment: null,
-                    //                    coefficient_route: null,
-                    //                    coefficient_not_route: null,
-                    //                    grace_time_1: null,
-                    //                    grace_time_2: null,
-                    //                    note: null,
-                    //                    create: null,
-                    //                    create_user: null,
-                    //                    change: null,
-                    //                    change_user: null,
-                    //                    close: null,
-                    //                    close_user: null,
-                    //                    parent_id: null,
-                    //                    Directory_OperatorsWagons: { abbr_ru: genus.abbr_ru, abbr_en: genus.abbr_en },
-                    //                    Directory_GenusWagons: { abbr_ru: operator.abbr_ru, abbr_en: operator.abbr_en },
-                    //                    Directory_Currency: { currency_ru: '', currency_en: '' },
-                    //                    Directory_Currency1: { currency_ru: '', currency_en: '' }
-                    //                });
-                    //                //list_create_period.push({ id_operator: el.id_operator, id_genus: el.id_genus });
-                    //            }
-                    //            // На проверку окончания инициализации
-                    //            process_period--;
-                    //            out_load_period(process_period);
-                    //        }.bind(this));
-                    //    }.bind(this));
-                    //    //LockScreenOff();
-                    //} else {
-                    //    out_load_period(process_period);
-                    //    //LockScreenOff();
-                    //}
                 }.bind(this),
             });
-            //
-            /*            var table_usage_fee_period = new TDIR('div#usage-fee-period');                     // Создадим экземпляр*/
             // Инициализация модуля "Таблица операторов вагонов"
             table_usage_fee_period.init({
                 alert: null,
                 detali_table: false,
-                type_report: 'usage_fee_period',     //
+                type_report: 'usage_fee_period_select',     //
                 link_num: false,
                 ids_dir: ids_dir,
                 fn_init: function () {
@@ -520,29 +497,20 @@
                     list_select_period = rows;
                     form_edit.validation_common.clear_all();
                     if (rows && rows.length > 0) {
-                        form_edit.set('date_period_start', rows[rows.length - 1].start);
-                        form_edit.set('date_period_stop', rows[rows.length - 1].stop);
-                        form_edit.set('hour_after_30', rows[rows.length - 1].hour_after_30);
-                        form_edit.set('rate_currency', rows[rows.length - 1].id_currency);
-                        form_edit.set('rate_value', rows[rows.length - 1].rate);
-                        form_edit.set('derailment_rate_currency', rows[rows.length - 1].id_currency_derailment);
-                        form_edit.set('derailment_rate_value', rows[rows.length - 1].rate_derailment);
-                        form_edit.set('coefficient_route_value', rows[rows.length - 1].coefficient_route);
-                        form_edit.set('coefficient_not_route_value', rows[rows.length - 1].coefficient_not_route);
-                        form_edit.set('grace_time_value1', rows[rows.length - 1].grace_time_1);
-                        form_edit.set('grace_time_value2', rows[rows.length - 1].grace_time_2);
+                        $('button#apply').prop("disabled", false);
+                        form_edit.set('date_period_start', rows[rows.length - 1].usage_fee_period_start); form_edit.enable('date_period_start');
+                        form_edit.set('date_period_stop', rows[rows.length - 1].usage_fee_period_stop); form_edit.enable('date_period_stop');
+                        form_edit.set('hour_after_30', rows[rows.length - 1].usage_fee_period_hour_after_30); form_edit.enable('hour_after_30');
+                        form_edit.set('rate_currency', rows[rows.length - 1].usage_fee_period_id_currency); form_edit.enable('rate_currency');
+                        form_edit.set('rate_value', rows[rows.length - 1].usage_fee_period_rate); form_edit.enable('rate_value');
+                        form_edit.set('derailment_rate_currency', rows[rows.length - 1].usage_fee_period_id_currency_derailment); form_edit.enable('derailment_rate_currency');
+                        form_edit.set('derailment_rate_value', rows[rows.length - 1].usage_fee_period_rate_derailment); form_edit.enable('derailment_rate_value');
+                        form_edit.set('coefficient_route_value', rows[rows.length - 1].usage_fee_period_coefficient_route); form_edit.enable('coefficient_route_value');
+                        form_edit.set('coefficient_not_route_value', rows[rows.length - 1].usage_fee_period_coefficient_not_route); form_edit.enable('coefficient_not_route_value');
+                        form_edit.set('grace_time_value1', rows[rows.length - 1].usage_fee_period_grace_time_1); form_edit.enable('grace_time_value1');
+                        form_edit.set('grace_time_value2', rows[rows.length - 1].usage_fee_period_grace_time_2); form_edit.enable('grace_time_value2');
                     } else {
-                        form_edit.set('date_period_start', null);
-                        form_edit.set('date_period_stop', null);
-                        form_edit.set('hour_after_30', false);
-                        form_edit.set('rate_currency', -1);
-                        form_edit.set('rate_value', null);
-                        form_edit.set('derailment_rate_currency', -1);
-                        form_edit.set('derailment_rate_value', null);
-                        form_edit.set('coefficient_route_value', null);
-                        form_edit.set('coefficient_not_route_value', null);
-                        form_edit.set('grace_time_value1', null);
-                        form_edit.set('grace_time_value2', null);
+                        form_edit_clear();
                     }
                 }.bind(this),
             });
@@ -905,8 +873,6 @@
             form_edit_row_6.childs.push(form_input_grace_time_value1);
             form_edit_row_6.childs.push(form_input_grace_time_value2);
 
-            /*            form_edit_row_1.childs.push(form_checkbox_distinguish);*/
-
             col_edit1.childs.push(bt_apply);
             row_edit1.childs.push(col_edit1);
 
@@ -975,7 +941,7 @@
                     }
                 }.bind(this),
             });
-
+            form_edit_clear();
             //
             $('button[data-toggle="pill"]').on('shown.bs.tab', function (event) {
                 switch (event.target.id) {
@@ -988,7 +954,6 @@
                 }
                 $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
             })
-
             // Запрос информации от сервера (1 раз в минуту)
             setInterval(function () {
                 get_server_info();

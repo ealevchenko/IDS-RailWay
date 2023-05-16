@@ -145,12 +145,12 @@ namespace EFIDS.Concrete
             modelBuilder.Entity<Directory_Currency>()
                 .HasMany(e => e.Usage_Fee_Period)
                 .WithOptional(e => e.Directory_Currency)
-                .HasForeignKey(e => e.id_currency_derailment);
+                .HasForeignKey(e => e.id_currency);
 
             modelBuilder.Entity<Directory_Currency>()
                 .HasMany(e => e.Usage_Fee_Period1)
                 .WithOptional(e => e.Directory_Currency1)
-                .HasForeignKey(e => e.id_currency);
+                .HasForeignKey(e => e.id_currency_derailment);
 
             modelBuilder.Entity<Usage_Fee_Period>()
                 .Property(e => e.rate)

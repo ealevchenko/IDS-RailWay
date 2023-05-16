@@ -607,9 +607,7 @@
                 };
                 this.autoWidth = true;
                 this.scrollX = true,
-                    //this.scrollY = 300,
-                    //this.scrollCollapse = true,
-                    this.table_columns = this.init_columns_usage_fee_period();
+                this.table_columns = this.init_columns_usage_fee_period();
                 this.table_buttons = this.init_button_usage_fee_period();
                 this.dom = 'Bfrtip';
                 break;

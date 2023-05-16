@@ -296,6 +296,7 @@
             'ttdr_field_usage_fee_wagon_persent_fee_amount': '% от общей платы',
             'ttdr_field_usage_fee_wagon_persent_derailment_fee_amount': '% от общей платы',
 
+            'ttdr_field_usage_fee_period_status_input': '',
             'ttdr_field_usage_fee_period_start': 'Начало периода',
             'ttdr_field_usage_fee_period_stop': 'Окончание периода',
             'ttdr_field_usage_fee_period_operator': 'Оператор',
@@ -2705,6 +2706,22 @@
         },
         //
         {
+            field: 'usage_fee_period_status_input',
+            data: function (row, type, val, meta) {
+                if (row.usage_fee_period_stop != null) {
+                    if (moment().isBefore(row.usage_fee_period_stop)) {
+                        return '<i class="fa-solid fa-thumbs-up" style="color:#008000"></i>';
+                    } else {
+                        return '<i class="fa-solid fa-square-xmark" style="color:#ff6868"></i>';
+                    }
+                } else {
+                    return '<i class="fa-sharp fa-solid fa-cart-plus" style="color:#1b1bff"></i>';
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_period_status_input', App.Langs), width: "20px", orderable: false, searchable: false
+        },
+        {
             field: 'usage_fee_period_start',
             data: function (row, type, val, meta) {
                 return row.usage_fee_period_start ? moment(row.usage_fee_period_start).format(format_datetime) : null;
@@ -3551,6 +3568,24 @@
         return init_columns_detali(collums, list_collums);
     };
     //
+    table_td_report.prototype.init_columns_usage_fee_period_select  = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_period_status_input', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_start', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_hour_after_30', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate_derailment', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_1', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_2', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_not_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
     table_td_report.prototype.init_columns_usage_fee_outgoing_cars = function () {
         var collums = [];
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
@@ -3997,6 +4032,20 @@
     };
     //
     table_td_report.prototype.init_button_usage_fee_period = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period_select = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -5166,6 +5215,28 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            case 'usage_fee_period_select': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false; // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 2; // Выбирать одну
+                this.table_select = {
+                    style: 'multi ',
+                };
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period_select();
+                this.table_buttons = this.init_button_usage_fee_period_select();
+                this.dom = 'Bfrtip';
+                break;
+            };
             case 'usage_fee_outgoing_cars': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
                 this.pageLength = 10;
@@ -5508,6 +5579,17 @@
                 break;
             };
             case 'usage_fee_outgoing_cars': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'usage_fee_period_select': {
                 this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
                     this.select_rows(); // определим строку
                     this.enable_button();
