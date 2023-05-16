@@ -5155,6 +5155,28 @@
         }
         return undefined;
     };
+    // Активировать компонент
+    form_dialog.prototype.enable = function (id) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                element.element.enable();
+            }
+        }
+    };
+    // Деактивировать компонент
+    form_dialog.prototype.disable = function (id) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                element.element.disable();
+            }
+        }
+    };
     // Установить или обновить значение компонента
     form_dialog.prototype.val = function (id, value) {
         if (value !== undefined) {
