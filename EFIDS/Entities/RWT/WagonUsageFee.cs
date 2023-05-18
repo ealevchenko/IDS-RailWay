@@ -61,6 +61,7 @@ namespace EFIDS.Entities
 
         [Column(TypeName = "money")]
         public decimal? manual_fee_amount { get; set; }
+        public int? downtime { get; set; }
 
         [StringLength(100)]
         public string note { get; set; }
