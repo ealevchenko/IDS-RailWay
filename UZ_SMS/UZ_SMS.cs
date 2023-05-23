@@ -647,8 +647,10 @@ namespace UZ
                 DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and [depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932' and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
-                    "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)))) order by [dt]";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                    "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))    )) order by [dt]";
+
+                // and (([depart_code] in (0,7932,'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932'))
                 //"" +
                 //""and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)" +
                 //" and CONVERT(nvarchar(max), raw_xml) like(N'%" + num.ToString() + "%') " + 
