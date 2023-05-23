@@ -617,6 +617,7 @@ namespace WEB_UI.Controllers.api
         public int? idle_time { get; set; }
         public int? idle_time_act { get; set; }
         public bool? wagon_usage_fee_derailment { get; set; }
+        public int? wagon_usage_fee_downtime { get; set; }
         public int? wagon_usage_fee_calc_time { get; set; }
         public decimal? wagon_usage_fee_calc_fee_amount { get; set; }
         public int? wagon_usage_fee_manual_time { get; set; }

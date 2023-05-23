@@ -172,8 +172,10 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
             'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
             'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
-            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования, час',
-            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_downtime': 'Время пользования, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования (расчетное), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final': 'Плата, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата (расч.), грн',
             'ttdr_field_outgoing_cars_wagon_usage_fee_manual_time': 'Время пользования (ручн.), час',
             'ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount': 'Плата (ручн.), грн',
 
@@ -2608,12 +2610,28 @@
         },
         // Оплата
         {
+            field: 'outgoing_cars_wagon_usage_fee_downtime',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
             field: 'outgoing_cars_wagon_usage_fee_calc_time',
             data: function (row, type, val, meta) {
                 return row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : (row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
             field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount',
@@ -3263,12 +3281,13 @@
         //
         collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
         //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_abbr', title: null, class: null });
@@ -3568,7 +3587,7 @@
         return init_columns_detali(collums, list_collums);
     };
     //
-    table_td_report.prototype.init_columns_usage_fee_period_select  = function () {
+    table_td_report.prototype.init_columns_usage_fee_period_select = function () {
         var collums = [];
         collums.push({ field: 'usage_fee_period_status_input', title: null, class: null });
         collums.push({ field: 'usage_fee_period_start', title: null, class: null });
@@ -3595,10 +3614,12 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
@@ -5345,7 +5366,12 @@
                 //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="25"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="7"></td></tr>' +
+                '<td class="dt-centr" colspan="25"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr" colspan="7"></td></tr > ' +
                 '</tfoot > '));
         }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
@@ -5811,8 +5837,8 @@
                     var sum_vesg1 = 0;
                     var sum_idle_time = 0;
                     var sum_idle_time_act = 0;
-                    var sum_pay = 0;
-                    var sum_pay_act = 0;
+                    var downtime = 0;
+                    var fee_amount = 0;
                     $.each(data, function (i, el) {
                         sum_vesg1 += el.outgoing_uz_vagon_vesg;
                         sum_count_wagon++;
@@ -5821,8 +5847,8 @@
                         }
                         sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
                         sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
-                        sum_pay += el.pay !== null ? el.pay : 0;
-                        sum_pay_act += el.pay_act !== null ? el.pay_act : 0;
+                        downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
+                        fee_amount += el.wagon_usage_fee_manual_fee_amount !== null ? el.wagon_usage_fee_manual_fee_amount : (el.wagon_usage_fee_calc_fee_amount !== null ? el.wagon_usage_fee_calc_fee_amount : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-outgoing_cars_num').every(function () {
@@ -5840,11 +5866,11 @@
                 this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
                     $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_pay').every(function () {
-                    $(this.footer()).html(sum_pay ? Number(sum_pay).toFixed(2) : Number(0).toFixed(2));
+                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
+                    $(this.footer()).html(downtime ? Number(downtime).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_pay_act').every(function () {
-                    $(this.footer()).html(sum_pay_act ? Number(sum_pay_act).toFixed(2) : Number(0).toFixed(2));
+                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_calc_fee_amount_final').every(function () {
+                    $(this.footer()).html(fee_amount ? Number(fee_amount).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
             };
