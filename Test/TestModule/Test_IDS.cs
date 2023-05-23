@@ -371,7 +371,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(210978, @"EUROPE\ealevchenko");
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(210970, @"EUROPE\ealevchenko");
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 574955 };
+            List<int> list = new List<int>() { 702443, 702444, 702450, 702449, 702451, 702452, 702453, 702454, 702174, 702175, 702177, 702178, 702179, 702180, 702181, 409712, 409714, 409694 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>
