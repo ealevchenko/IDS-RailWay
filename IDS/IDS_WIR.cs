@@ -8077,7 +8077,7 @@ namespace IDS
                     // Состав определен (сдан или отправлен)
                     if (sostav.status >= 2 && sostav.status <= 3)
                     {
-                        List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList(); // && c.num == 56163777
+                        List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList(); //  && c.num == 56113137 || c.num == 60575859
                         if (list_out_car != null && list_out_car.Count() > 0)
                         {
                             List<EPDOutgoingCar> list_update_epd = new List<EPDOutgoingCar>(); // Список для обновления
@@ -9346,8 +9346,9 @@ namespace IDS
                     }
                     // Расчеты
                     List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
-                    DateTime date_adoption = (DateTime)arr_sostav.date_adoption;    // Зашел
-                    DateTime date_outgoing = (DateTime)out_sostav.date_outgoing;    // Вышел
+                    DateTime date_adoption = arr_sostav.date_adoption_act !=null ? (DateTime)arr_sostav.date_adoption_act : (arr_car.date_adoption_act!=null ? (DateTime)arr_car.date_adoption_act: (DateTime)arr_sostav.date_adoption);    // Зашел
+                    DateTime date_outgoing = out_sostav.date_outgoing_act != null ? (DateTime)out_sostav.date_outgoing_act : (car.date_outgoing_act != null ? (DateTime)car.date_outgoing_act : (DateTime)out_sostav.date_outgoing);//   Вышел (согласно всех актов)
+                    
                     int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;   // Оператор по отправке
                     bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по прибытию
                     bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по отправке
