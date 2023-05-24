@@ -323,6 +323,7 @@
                 id_wir: select_rows.id_wir,
                 manual_fee_amount: Number($manual_fee_amount.val()),
                 note: $note.val(),
+                user: App.User_Name,
             };
             ids_wsd.postUpdateManualFeeAmount(options, function (result) {
                 if (result >= 0) {

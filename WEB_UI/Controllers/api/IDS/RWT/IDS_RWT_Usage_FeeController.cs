@@ -17,6 +17,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long id_wir { get; set; }
         public decimal? manual_fee_amount { get; set; }
         public string note { get; set; }
+        public string user { get; set; }
     }
     public class ViewUsageFeePeriod
     {
@@ -189,6 +190,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 WagonUsageFee wuf = this.ef_wuf.Context.Where(u => u.id_wir == value.id_wir).FirstOrDefault();
                 wuf.manual_fee_amount = value.manual_fee_amount;
                 wuf.note = value.note;
+                wuf.change_user = value.user;
+                wuf.change = DateTime.Now;
                 this.ef_wuf.Update(wuf);
                 int res = this.ef_wuf.Save();
                 return res;

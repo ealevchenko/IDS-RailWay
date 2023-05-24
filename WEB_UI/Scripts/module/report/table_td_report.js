@@ -181,6 +181,10 @@
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
             'ttdr_field_outgoing_cars_wagon_usage_fee_note': 'Примечание, плата за пользование',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create': 'Плата расчитана',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create_user': 'Плату расчитал',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change': 'Плата правка',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change_user': 'Плату правил',
 
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
@@ -2679,6 +2683,38 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_note', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_create',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_create ? moment(row.wagon_usage_fee_create).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_create_user',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_create_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_create_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_change',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_change ? moment(row.wagon_usage_fee_change).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_change', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_change_user',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_change_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_change_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
         // 
         {
             field: 'usage_fee_sum_calc_time',
@@ -3646,6 +3682,10 @@
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_create', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_create_user', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------
