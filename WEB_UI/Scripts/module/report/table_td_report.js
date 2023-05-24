@@ -178,12 +178,9 @@
             'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата (расч.), грн',
             'ttdr_field_outgoing_cars_wagon_usage_fee_manual_time': 'Время пользования (ручн.), час',
             'ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount': 'Плата (ручн.), грн',
-
-            //'ttdr_field_outgoing_cars_pay': 'Плата, грн',
-            //'ttdr_field_outgoing_cars_pay_act': 'Плата по Акту, грн',
-
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_note': 'Примечание, плата за пользование',
 
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
@@ -2673,6 +2670,14 @@
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_note',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_note;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_note', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // 
         {
             field: 'usage_fee_sum_calc_time',
@@ -3615,11 +3620,12 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------

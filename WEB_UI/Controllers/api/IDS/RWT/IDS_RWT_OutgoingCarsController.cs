@@ -622,6 +622,7 @@ namespace WEB_UI.Controllers.api
         public decimal? wagon_usage_fee_calc_fee_amount { get; set; }
         public int? wagon_usage_fee_manual_time { get; set; }
         public decimal? wagon_usage_fee_manual_fee_amount { get; set; }
+        public string wagon_usage_fee_note { get; set; }
     }
 
     public class ViewIncomingOutgoing

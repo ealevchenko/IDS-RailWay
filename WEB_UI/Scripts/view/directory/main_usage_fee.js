@@ -136,6 +136,7 @@
 
     var $num_wagon = $('input#num_wagon');
     var $manual_fee_amount = $('input#manual_fee_amount');
+    var $note = $('input#note');
 
     var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
         event.preventDefault();
@@ -320,7 +321,8 @@
         if (select_rows !== null) {
             var options = {
                 id_wir: select_rows.id_wir,
-                manual_fee_amount: Number($manual_fee_amount.val())
+                manual_fee_amount: Number($manual_fee_amount.val()),
+                note: $note.val(),
             };
             ids_wsd.postUpdateManualFeeAmount(options, function (result) {
                 if (result >= 0) {
@@ -392,7 +394,9 @@
         LockScreen(langView('mainuf_init_main', App.Langs));
         $bt_update_wagon.prop("disabled", true);
         $manual_fee_amount.val('');
+        $note.val('');
         $manual_fee_amount.prop("disabled", true);
+        $note.prop("disabled", true);
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
         load_db(['operators_wagons', 'currency', 'genus_wagon'], true, function (result) {
@@ -933,11 +937,15 @@
                         $bt_update_wagon.prop("disabled", false);
                         $manual_fee_amount.prop("disabled", false);
                         $manual_fee_amount.val(rows[0].wagon_usage_fee_manual_fee_amount);
+                        $note.prop("disabled", false);
+                        $note.val(rows[0].wagon_usage_fee_note);
                     } else {
                         select_rows = null;
                         $bt_update_wagon.prop("disabled", true);
                         $manual_fee_amount.val('');
                         $manual_fee_amount.prop("disabled", true);
+                        $note.val('');
+                        $note.prop("disabled", true);
                     }
                 }.bind(this),
             });
