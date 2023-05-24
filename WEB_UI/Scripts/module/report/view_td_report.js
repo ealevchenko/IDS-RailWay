@@ -94,6 +94,7 @@
             'vtdr_label_tab_usage_fee_cargo': 'Груз ПРИБ',
             'vtdr_label_tab_usage_fee_operator_amkr': 'Оператор',
             'vtdr_label_tab_usage_fee_operator_amkr_derailment': 'Сход',
+            'vtdr_label_tab_usage_fee_cargo_not_derailment': 'Груз ПРИБ (без схода)',
 
             'vtdr_label_button_setup_clear': 'СБРОСИТЬ',
             'vtdr_label_button_setup_select': 'ВЫБРАТЬ',
@@ -10097,6 +10098,7 @@
         this.chart_data_usage_fee_cargo = [];
         this.chart_data_usage_fee_operator_amkr = [];
         this.chart_data_usage_fee_operator_amkr_derailment = [];
+        this.chart_data_usage_fee_cargo_not_derailment = [];
 
         $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(''));   // выведем название отчета
@@ -10146,6 +10148,13 @@
                     disable: false,
                     click: null,
                 },
+                {
+                    id: 'usage-fee-cargo-not-derailment',
+                    aria_controls: 'usage-fee-cargo-not-derailment-tab',
+                    label: langView('vtdr_label_tab_usage_fee_cargo_not_derailment', App.Langs),
+                    disable: false,
+                    click: null,
+                },
             ],
         });
         // Переключатели панелей таблиц отчета
@@ -10156,6 +10165,9 @@
         this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-operator-amkr-tab', 'usage-fee-operator-amkr', 6, 6);
         // Закладка Плата за пользование груз по операторам-сход.
         this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-operator-amkr-derailment-tab', 'usage-fee-operator-amkr-derailment', 6, 6);
+        // Закладка Плата за пользование груз по ПРИБ-без схода.
+        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-cargo-not-derailment-tab', 'usage-fee-cargo-not-derailment', 6, 6);
+
         //-------------------------------------------
         // Дабавим закладку на форму
         this.$table_view.append(this.nav_tabs_usage_fee.$ul).append(this.nav_tabs_usage_fee.$content);
@@ -10166,7 +10178,7 @@
 
         // ------------------------------------------------
         // Запускаем 4 процесса инициализации (паралельно)
-        var process = 6;
+        var process = 8;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -10187,6 +10199,11 @@
                         case 'usage-fee-operator-amkr-derailment': {
                             this.report_panel = 2;
                             this.view_filter_report_usage_fee_operator_amkr_derailment();
+                            break;
+                        };
+                        case 'usage-fee-cargo-not-derailment': {
+                            this.report_panel = 3;
+                            this.view_filter_report_usage_fee_cargo_not_derailment();
                             break;
                         };
                     };
@@ -10284,6 +10301,36 @@
                 out_init(process);
             },
         });
+        // Таблица-Плата за пользование груз по ПРИБ (без схода).
+        this.table_usage_fee_cargo_not_derailment = new TTDR('div#usage-fee-cargo-not-derailment');         // Создадим экземпляр
+        this.table_usage_fee_cargo_not_derailment.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'usage_fee_cargo_not_derailment',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: donut_with_radial_gradient
+        this.chart_usage_fee_cargo_not_derailment = new CAM('div#usage-fee-cargo-not-derailment-chart');         // Создадим экземпляр
+        this.chart_usage_fee_cargo_not_derailment.init({
+            alert: null,
+            type_chart: 'donut_with_radial_gradient',     //stacked_column_chart_percent
+            list_name: this.ids_dir.list_cargo_out_group,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+
         //}.bind(this));
     };
     // Показать отчет  "Плата за пользование (ИТОГ)"
@@ -10295,6 +10342,8 @@
             if (process_load === 0) {
                 this.view_filter_report_usage_fee_cargo();
                 this.view_filter_report_usage_fee_operator_amkr();
+                this.view_filter_report_usage_fee_operator_amkr_derailment()
+                this.view_filter_report_usage_fee_cargo_not_derailment()
                 LockScreenOff();
             }
         }.bind(this);
@@ -10306,16 +10355,20 @@
             var list_cars_usage_fee = [];
             var list_usage_fee_operator_amkr = [];
             var sum_amount = result_cars.filter(function (i) {
-                return i.wagon_usage_fee_calc_fee_amount > 0;
+                return i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0;
             }.bind(this)).reduce(function (a, b) {
-                return a + Number(b.wagon_usage_fee_calc_fee_amount);
+                return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
             var sum_amount_derailment = result_cars.filter(function (i) {
-                return i.wagon_usage_fee_calc_fee_amount > 0 && i.wagon_usage_fee_derailment;
+                return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && i.wagon_usage_fee_derailment;
             }.bind(this)).reduce(function (a, b) {
-                return a + Number(b.wagon_usage_fee_calc_fee_amount);
+                return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
-
+            var sum_amount_not_derailment = result_cars.filter(function (i) {
+                return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && !i.wagon_usage_fee_derailment;
+            }.bind(this)).reduce(function (a, b) {
+                return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
+            }.bind(this), 0);
             // выборка для списков Отчет-Груз по Оператору АМКР
             $.each(result_cars, function (key, el_wag) {
                 if (el_wag.wagon_usage_fee_calc_fee_amount > 0) {
@@ -10323,6 +10376,7 @@
                         return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
                             o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
                     }.bind(this));
+                    var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
                     if (!op) {
                         // Не данных 
                         list_usage_fee_operator_amkr.push({
@@ -10333,22 +10387,24 @@
                             cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
                             count_wagon: 1,
                             sum_calc_time: el_wag.wagon_usage_fee_calc_time ? el_wag.wagon_usage_fee_calc_time : 0,
-                            sum_calc_fee_amount: el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0,
-                            persent: Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount),
-                            persent_derailment: el_wag.wagon_usage_fee_derailment ? Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount_derailment) : 0,
+                            sum_calc_fee_amount: fee_amout,
+                            persent: Number(Number(fee_amout * 100) / sum_amount),
+                            persent_derailment: el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_derailment) : 0,
                             derailment: el_wag.wagon_usage_fee_derailment,
                         });
                     } else {
                         op.count_wagon = op.count_wagon + 1;
                         op.sum_calc_time = el_wag.wagon_usage_fee_calc_time ? op.sum_calc_time + el_wag.wagon_usage_fee_calc_time : op.sum_calc_time;
-                        op.sum_calc_fee_amount = el_wag.wagon_usage_fee_calc_fee_amount ? op.sum_calc_fee_amount + el_wag.wagon_usage_fee_calc_fee_amount : op.sum_calc_fee_amount;
+                        op.sum_calc_fee_amount = op.sum_calc_fee_amount + fee_amout;
                         op.persent = Number(Number(op.sum_calc_fee_amount * 100) / sum_amount);
                         op.persent_derailment = op.wagon_usage_fee_derailment ? Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment) : 0;
 
                     };
+                    //--------------------------------------------------------
                     var cuf = list_cars_usage_fee.find(function (o) {
                         return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
                     }.bind(this));
+                    var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
                     if (!cuf) {
                         // Не данных 
                         list_cars_usage_fee.push({
@@ -10356,14 +10412,17 @@
                             cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
                             count_wagon: 1,
                             sum_calc_time: el_wag.wagon_usage_fee_calc_time ? el_wag.wagon_usage_fee_calc_time : 0,
-                            sum_calc_fee_amount: el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0,
-                            persent: Number(Number(el_wag.wagon_usage_fee_calc_fee_amount * 100) / sum_amount),
+                            sum_calc_fee_amount: fee_amout,
+                            persent: Number(Number(fee_amout * 100) / sum_amount),
+                            persent_not_derailment: !el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_not_derailment) : 0,
+                            derailment: el_wag.wagon_usage_fee_derailment,
                         });
                     } else {
                         cuf.count_wagon = cuf.count_wagon + 1;
                         cuf.sum_calc_time = el_wag.wagon_usage_fee_calc_time ? cuf.sum_calc_time + el_wag.wagon_usage_fee_calc_time : cuf.sum_calc_time;
-                        cuf.sum_calc_fee_amount = el_wag.wagon_usage_fee_calc_fee_amount ? cuf.sum_calc_fee_amount + el_wag.wagon_usage_fee_calc_fee_amount : cuf.sum_calc_fee_amount;
+                        cuf.sum_calc_fee_amount = cuf.sum_calc_fee_amount + fee_amout;
                         cuf.persent = Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount);
+                        cuf.persent_not_derailment = !cuf.wagon_usage_fee_derailment ? Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount_not_derailment) : 0;
                     };
                 };
             }.bind(this));
@@ -10471,6 +10530,42 @@
             this.chart_usage_fee_operator_amkr_derailment.view(this.chart_data_usage_fee_operator_amkr_derailment);
         }
     }
+    // Выполнить фильтрацию и вывести данные по отчету "Плата за пользование груз по ПРИБ. (без схода)"
+    view_td_report.prototype.view_filter_report_usage_fee_cargo_not_derailment = function () {
+        if (this.outgoing_cars_usage_fee) {
+
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee.filter(function (i) { return !i.derailment; }.bind(this))));
+            // Применим фильтр
+
+            // Отобразим
+            this.table_usage_fee_cargo_not_derailment.view(list_view);
+
+            var data = [
+
+            ];
+
+            $.each(list_view, function (key, element) {
+                var gn = data.find(function (o) { return o.name === element.cargo_name; });
+                if (gn === undefined) {
+                    data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                } else {
+                    gn.value += element.count_wagon;
+                }
+            }.bind(this));
+
+            this.chart_data_usage_fee_cargo_not_derailment = data;
+            this.view_chart_usage_fee_cargo_not_derailment();
+            LockScreenOff();
+        }
+    };
+    // Вывести данные по диаграмме "Плата за пользование груз по ПРИБ.(без схода)"
+    view_td_report.prototype.view_chart_usage_fee_cargo_not_derailment= function () {
+        if (this.report_panel === 3 && this.chart_data_usage_fee_cargo_not_derailment) {
+            this.chart_usage_fee_cargo_not_derailment.view(this.chart_data_usage_fee_cargo_not_derailment);
+        }
+    };
+
     // Очистить таблицы
     view_td_report.prototype.clear_report_9_1 = function () {
         this.outgoing_cars = [];

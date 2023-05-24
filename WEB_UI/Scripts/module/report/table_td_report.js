@@ -294,6 +294,7 @@
             'ttdr_field_usage_fee_wagon_calc_fee_amount': 'На 1 ваг.,грн',
             'ttdr_field_usage_fee_wagon_persent_fee_amount': '% от общей платы',
             'ttdr_field_usage_fee_wagon_persent_derailment_fee_amount': '% от общей платы',
+            'ttdr_field_usage_fee_wagon_persent_not_derailment_fee_amount': '% от общей платы',
 
             'ttdr_field_usage_fee_period_status_input': '',
             'ttdr_field_usage_fee_period_start': 'Начало периода',
@@ -2727,6 +2728,14 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_usage_fee_wagon_persent_derailment_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'usage_fee_wagon_persent_not_derailment_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.persent_not_derailment !== null ? Number(row.persent_not_derailment).toFixed(2) : 0.00;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_persent_not_derailment_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         //
         {
             field: 'usage_fee_period_status_input',
@@ -3548,6 +3557,17 @@
         collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    table_td_report.prototype.init_columns_usage_fee_cargo_not_derailment = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_not_derailment_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //
     table_td_report.prototype.init_columns_usage_fee_operator_amkr = function () {
         var collums = [];
@@ -4031,6 +4051,20 @@
     };
     //
     table_td_report.prototype.init_button_usage_fee_cargo = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_cargo_not_derailment = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -5086,6 +5120,26 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            case 'usage_fee_cargo_not_derailment': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_cargo_not_derailment();
+                this.table_buttons = this.init_button_usage_fee_cargo_not_derailment();
+                this.dom = 'Bfrtip';
+                break;
+            };
             case 'usage_fee_operator_amkr': {
                 //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
                 //this.pageLength = -1;
@@ -5432,6 +5486,9 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'usage_fee_cargo') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'usage_fee_cargo_not_derailment') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'usage_fee_operator_amkr') {
@@ -6291,6 +6348,45 @@
                     $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_persent_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'usage_fee_cargo_not_derailment': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var usage_fee_wagon_calc_time = 0;
+                    var usage_fee_wagon_calc_fee_amount = 0;
+
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_usage_fee_sum_calc_time += el.sum_calc_time;
+                        sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent_not_derailment;
+                    });
+                }
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                    $(this.footer()).html(sum_usage_fee_sum_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_not_derailment_fee_amount').every(function () {
                     $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
                 });
                 break;

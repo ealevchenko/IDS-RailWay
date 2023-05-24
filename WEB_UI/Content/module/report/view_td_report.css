@@ -11756,8 +11756,8 @@ fieldset {
 #outgoing-total-ext-station-chart,
 #outgoing-total-ext-station-ukr-chart,
 #outgoing-total-ext-station-exp-chart,
-#usage-fee-cargo-chart
-{
+#usage-fee-cargo-not-derailment-chart,
+#usage-fee-cargo-chart {
     width: 100%;
     height: 500px;
 }
