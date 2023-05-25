@@ -3593,6 +3593,7 @@
         collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
     table_td_report.prototype.init_columns_usage_fee_cargo_not_derailment = function () {
         var collums = [];
         collums.push({ field: 'total_cargo_name', title: null, class: null });
@@ -5151,7 +5152,7 @@
                 this.fixedHeader = false;   // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'desc'];
+                this.order_column = [6, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -5171,7 +5172,7 @@
                 this.fixedHeader = false;   // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'desc'];
+                this.order_column = [6, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;

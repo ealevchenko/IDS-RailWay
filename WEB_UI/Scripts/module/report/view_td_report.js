@@ -10166,7 +10166,7 @@
         // Закладка Плата за пользование груз по операторам-сход.
         this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-operator-amkr-derailment-tab', 'usage-fee-operator-amkr-derailment', 6, 6);
         // Закладка Плата за пользование груз по ПРИБ-без схода.
-        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-cargo-not-derailment-tab', 'usage-fee-cargo-not-derailment', 6, 6);
+        this.init_panel_horizontal_report(this.nav_tabs_usage_fee, 'usage-fee-cargo-not-derailment-tab', 'usage-fee-cargo-not-derailment', 5, 7);
 
         //-------------------------------------------
         // Дабавим закладку на форму
@@ -10453,9 +10453,9 @@
             $.each(list_view, function (key, element) {
                 var gn = data.find(function (o) { return o.name === element.cargo_name; });
                 if (gn === undefined) {
-                    data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                    data.push({ "name": element.cargo_name, "value": element.sum_calc_fee_amount });
                 } else {
-                    gn.value += element.count_wagon;
+                    gn.value += element.sum_calc_fee_amount;
                 }
             }.bind(this));
 
@@ -10548,9 +10548,9 @@
             $.each(list_view, function (key, element) {
                 var gn = data.find(function (o) { return o.name === element.cargo_name; });
                 if (gn === undefined) {
-                    data.push({ "name": element.cargo_name, "value": element.count_wagon });
+                    data.push({ "name": element.cargo_name, "value": element.sum_calc_fee_amount });
                 } else {
-                    gn.value += element.count_wagon;
+                    gn.value += element.sum_calc_fee_amount;
                 }
             }.bind(this));
 
