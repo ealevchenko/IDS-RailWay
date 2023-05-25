@@ -5044,7 +5044,7 @@
             // Общая информация
             this.elements.input_number_num_car.val(wagon.num);
             this.elements.input_number_position_arrival.val(this.wagon_settings.type === 1 ? this.wagon_settings.position : wagon.arrival_car_position_arrival);
-            this.elements.input_datetime_date_adoption_act.val(wagon.arrival_sostav_date_adoption_act);
+            this.elements.input_datetime_date_adoption_act.val(wagon.arrival_car_date_adoption_act);
             // Сделать не активным окно номер основной накладной
             //
             this.elements.input_text_document_nom_main_doc.val(nom_main_doc);
