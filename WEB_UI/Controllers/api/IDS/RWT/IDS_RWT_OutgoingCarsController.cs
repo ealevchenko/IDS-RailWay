@@ -1075,7 +1075,11 @@ namespace WEB_UI.Controllers.api
         public string sap_outgoing_supply_payer_code { get; set; }
         public string sap_outgoing_supply_payer_name { get; set; }
         public int? simple_car { get; set; }
-        public decimal? pay_car { get; set; }
+        //public decimal? pay_car { get; set; }
+        public bool? wagon_usage_fee_derailment { get; set; }
+        public int? wagon_usage_fee_downtime { get; set; }
+        public decimal? wagon_usage_fee_calc_fee_amount { get; set; }
+        public decimal? wagon_usage_fee_manual_fee_amount { get; set; }
     }
     /// <summary>
     /// Класс набора данных для выбора вагонов по отправке

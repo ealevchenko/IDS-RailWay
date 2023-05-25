@@ -326,7 +326,9 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
 
             'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
-            'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
+            //'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Время пользования',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final': 'Плата , грн.',
 
             'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
 
@@ -2024,14 +2026,31 @@
             title: langView('ttdr_field_incoming_outgoing_car_simple_car', App.Langs), width: "50px", orderable: true, searchable: true
         },
         // Оплата
+        //{
+        //    field: 'incoming_outgoing_car_pay_car',
+        //    data: function (row, type, val, meta) {
+        //        return row.pay_car;
+        //    },
+        //    className: 'dt-body-right',
+        //    title: langView('ttdr_field_incoming_outgoing_car_pay_car', App.Langs), width: "50px", orderable: true, searchable: true
+        //},
         {
-            field: 'incoming_outgoing_car_pay_car',
+            field: 'incoming_outgoing_car_wagon_usage_fee_downtime',
             data: function (row, type, val, meta) {
-                return row.pay_car;
+                return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
             },
-            className: 'dt-body-right',
-            title: langView('ttdr_field_incoming_outgoing_car_pay_car', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : (row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
         //----------------------------------------------------
         {
             field: 'incoming_outgoing_car_wir_note',
@@ -3477,7 +3496,9 @@
         //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
 
