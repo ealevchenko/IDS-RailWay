@@ -621,7 +621,7 @@ namespace Test.TestModule
         public void IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            DateTime start = new DateTime(2023, 5, 10, 0, 0, 0);
+            DateTime start = new DateTime(2023, 3, 1, 0, 0, 0);
             DateTime stop = new DateTime(2023, 5, 31, 23, 59, 59);
             List<ResultUpdateIDWagon> res = ids.CalcUsageFeeOfOutgoingSostav(start, stop, @"EUROPE\ealevchenko");
         }
