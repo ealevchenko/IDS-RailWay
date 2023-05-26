@@ -58,6 +58,7 @@
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
             'vtdr_card_header_report_1_1_not_oper': 'ВАГОНЫ БЕЗ ОПЕРАТОРОВ',
             'vtdr_load_adoption_sostav': 'Выполняю операцию выборка принятых составов ...',
+            'vtdr_load_vagon': 'Выполняю операцию выборки вагонов ...',
             'vtdr_load_incoming_outgoing_car': 'Выполняю операцию выборки информации по вагону ...',
 
             'vtdr_card_header_report_2_1_group': 'Общая информация',
@@ -424,6 +425,7 @@
         this.outgoing_cars_usage_fee_operator_amkr = [];
 
         this.usage_fee_period = [];
+        this.manual_usage_fee = [];
 
         this.wagons_not_operation = [];
 
@@ -814,7 +816,7 @@
         var $panel = tabs.$content.find('div#' + name_panel); // Панель
         $panel.append(row.$row);
     };
-
+    //
     view_td_report.prototype.init_panel_horizontal_char2_report = function (tabs, name_panel, name_div, tab_col, char_col) {
         // Груз по Оператору АМКР
         var card_chart1 = new this.fe_ui.bs_card({
@@ -1044,6 +1046,7 @@
             case 1:
             case 2:
             case 3:
+            case 7:
             case 8:
             case 9:
                 {
@@ -1075,7 +1078,7 @@
             case 4: this.clear_report_4_1(); break;
             case 5: this.clear_report_5_1(); break;
             case 6: this.clear_report_6_1(); break;
-            //.....
+            case 7: this.clear_report_7_1(); break;
             case 8: this.clear_report_8_1(); break;
             case 9: this.clear_report_9_1(); break;
         }
@@ -1141,7 +1144,7 @@
             case 4: this.$title_report.text(langView('vtdr_title_report_4_1', App.Langs).format(message_report)); break;
             case 5: this.$title_report.text(langView('vtdr_title_report_5_1', App.Langs).format(message_report)); break;
             case 6: this.$title_report.text(langView('vtdr_title_report_6_1', App.Langs).format(message_report)); break;
-            //....
+            case 7: this.$title_report.text(langView('vtdr_title_report_7_1', App.Langs).format(message_report)); break;
             case 8: this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(message_report)); break;
             case 9: this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(message_report)); break;
         }
@@ -1173,7 +1176,10 @@
                 this.view_report_6_1(this.start, this.stop);
                 break;
             };
-            //..
+            case 7: {
+                this.view_report_7_1(this.start, this.stop);
+                break;
+            };
             case 8: {
                 this.view_report_8_1(this.start, this.stop);
                 break;
@@ -9975,6 +9981,110 @@
         }
     };
     //------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Вагоны с корректировкой платы"
+    view_td_report.prototype.init_report_7_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 7;        // номер отчета
+        this.report_panel = 0;  // номер под-отчета
+
+        $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_7_1', App.Langs).format(''));   // выведем название отчета
+        this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
+        //------
+
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+
+        var row_common = new this.fe_ui.bs_row();
+
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        col_view.$col.append(this.$table_view);
+        //----------------------------------------------------------------
+        // Дабавим закладку на форму
+        this.$table_view.append('<div id="manual-usage-fee" class="col-xl-12"></div>');
+        //-----------------------------------------------------------------
+        row_common.$row.append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+
+        // ------------------------------------------------
+        // Запускаем 1 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                this.report_panel = 0;
+
+                LockScreenOff();
+            }
+        }.bind(this);
+        // Загрузим справочные данные, определим поля формы правки
+        //this.load_db(['cargo_out_group'], false, function (result) {
+        //-----------------------------------------------
+        // Таблица-Вагоны с корректировкой платы.
+        this.table_manual_usage_fee = new TTDR('div#manual-usage-fee');         // Создадим экземпляр
+        this.table_manual_usage_fee.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'manual_usage_fee',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        //}.bind(this));
+    };
+    // Показать отчет  "Вагоны с корректировкой платы"
+    view_td_report.prototype.view_report_7_1 = function (start, stop) {
+        // Запускаем 1 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                this.view_filter_report_manual_usage_fee();
+                LockScreenOff();
+            }
+        }.bind(this);
+
+        LockScreen(langView('vtdr_load_vagon', App.Langs));
+        // Отправка
+        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, function (result_cars) {
+            this.manual_usage_fee = result_cars.filter(function (i) { return i.wagon_usage_fee_manual_fee_amount!==null  }.bind(this));
+            process_load--;
+            out_load(process_load);
+
+        }.bind(this));
+    };
+    // Выполнить фильтрацию и вывести данные по отчету "Вагоны с корректировкой платы"
+    view_td_report.prototype.view_filter_report_manual_usage_fee = function () {
+        if (this.manual_usage_fee) {
+            // сделаем копию данных
+            var list_view = JSON.parse(JSON.stringify(this.manual_usage_fee));
+            // Отобразим
+            this.table_manual_usage_fee.view(list_view);
+            LockScreenOff();
+        }
+    };
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_7_1 = function () {
+        this.manual_usage_fee = [];
+        LockScreenOff();
+    };
+    //------------------------------------------------------------------------------------------------
     // Инициализировать отчет "История ставок"
     view_td_report.prototype.init_report_8_1 = function () {
         // очистим основное окно отчета
@@ -10055,7 +10165,7 @@
             }
         }.bind(this);
 
-        LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
+        LockScreen(langView('vtdr_load_vagon', App.Langs));
         // Отправка
         this.ids_wsd.getReportUsage_Fee_PeriodOfDateTime(start, stop, function (result_ufp) {
             this.usage_fee_period = result_ufp;

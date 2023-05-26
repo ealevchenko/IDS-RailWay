@@ -314,6 +314,8 @@
             'ttdr_field_usage_fee_period_coefficient_not_route': 'Коэф.не маршрут',
             'ttdr_field_usage_fee_period_hour_after_30': 'Полный час после 30 мин.',
 
+            'ttdr_field_arrival_uz_document_nom_doc': '№ накладной',
+            'ttdr_field_arrival_uz_document_nom_main_doc': '№ накладной',
             'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption': 'Дата приема.',
             'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act': 'Дата приема (акт).',
             'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
@@ -2904,6 +2906,23 @@
             className: 'dt-body-center shorten mw-50',
             title: langView('ttdr_field_usage_fee_period_hour_after_30', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        // Документ по прибытию
+        {
+            field: 'arrival_uz_document_nom_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_arrival_uz_document_nom_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_uz_document_nom_main_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_main_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_arrival_uz_document_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         // usage_fee_outgoing_cars
         {
             field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption',
@@ -3710,6 +3729,32 @@
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_td_report.prototype.init_columns_manual_usage_fee = function () {
+        var collums = [];
+
+        collums.push({ field: 'outgoing_cars_num', title: null, class: null });
+        collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_create', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_create_user', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -4183,6 +4228,20 @@
     };
     //
     table_td_report.prototype.init_button_usage_fee_outgoing_cars = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_manual_usage_fee = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'field', action: null });
@@ -5397,6 +5456,26 @@
                 this.autoWidth = true;
                 this.table_columns = this.init_columns_usage_fee_outgoing_cars();
                 this.table_buttons = this.init_button_usage_fee_outgoing_cars();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'manual_usage_fee': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [3, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_manual_usage_fee();
+                this.table_buttons = this.init_button_manual_usage_fee();
                 this.dom = 'Bfrtip';
                 break;
             };
