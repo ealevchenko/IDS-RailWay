@@ -169,7 +169,7 @@
             'fogcd_form_return_present': 'Выполнить?',
             'fogcd_form_return_present_message': 'Подтвердите выполнение операции «ВЕРНУТЬ ВАГОН № {0} ПРЕДЪЯВЛЕННЫ НА УЗ»?',
             'fogcd_form_remove_wagon': 'Выполнить?',
-            'fogcd_form_remove_wagon_message': 'Подтвердите выполнение операции «УБРАТЬ ВАГОН № {0} ИЗ СОТАВА ДЛЯ ПРЕДЪЯВЛЕНИЯ»?',
+            'fogcd_form_remove_wagon_message': 'Подтвердите выполнение операции «УБРАТЬ ВАГОН № {0} ИЗ СОСТАВА ДЛЯ ПРЕДЪЯВЛЕНИЯ»?',
             'fogcd_title_fieldset_detention_return': 'ЗАДЕРЖАНИЕ/ВОЗВРАТ',
             'fogcd_title_fieldset_detention': 'ЗАДЕРЖАНИЕ',
             'fogcd_title_fieldset_return': 'ВОЗВРАТ',

@@ -75,7 +75,7 @@
 
             'vtdr_load_select_cars': 'Выполняю операцию выборка вагонов ...',
 
-            'vtdr_label_tab_total_cargo_operator_amkr': 'Груз по Оператору АМКР',
+            'vtdr_label_tab_total_cargo_operator_amkr': 'Груз по Оператору',
             'vtdr_label_tab_total_operator_to_arr': 'Оператор по ПРИБ',
             'vtdr_label_tab_total_cargo_to_arr': 'Груз ПРИБ',
             'vtdr_label_tab_total_group_cargo_to_arr': 'Группа ПРИБ',
@@ -8706,7 +8706,7 @@
             // выборка для списков отчета
             var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this));
             if (!ow) {
-                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang] });
+                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang] });
             }
             var lm = this.list_limiting.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting }.bind(this));
             if (!lm) {

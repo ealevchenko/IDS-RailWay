@@ -28,10 +28,10 @@
 
             'tldir_field_operators_wagons_abbr': 'Оператор аббр.',
             'tldir_field_operators_wagons_operators': 'Оператор полное название',
-            'tldir_field_operators_and_genus_operators': 'Оператор(аббр)',
-            'tldir_field_operators_and_genus_operators_abbr': 'Оператор',
-            'tldir_field_operators_and_genus_genus': 'Род(аббр)',
-            'tldir_field_operators_and_genus_genus_abbr': 'Род',
+            'tldir_field_operators_and_genus_operators': 'Оператор',
+            'tldir_field_operators_and_genus_operators_abbr': 'Оператор(аббр)',
+            'tldir_field_operators_and_genus_genus': 'Род',
+            'tldir_field_operators_and_genus_genus_abbr': 'Род(аббр)',
 
             'tldir_field_usage_fee_period_status_input': '',
             'tldir_field_usage_fee_period_operators_abbr': 'Оператор',
@@ -70,7 +70,7 @@
             'tldir_title_button_field_view_all': 'Показать все',
             'tldir_title_button_field_clear': 'Сбросить',
             'tldir_title_button_show_selection': 'Только выбранные',
-            'tldir_title_button_select_all': 'Выбрть все',
+            'tldir_title_button_select_all': 'Выбрать все',
             'tldir_title_button_select_none': 'Убрать все',
         },
         'en':  //default language: English

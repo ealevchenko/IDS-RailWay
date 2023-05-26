@@ -181,8 +181,8 @@
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
             'ttdr_field_outgoing_cars_wagon_usage_fee_note': 'Примечание, плата за пользование',
-            'ttdir_field_outgoing_cars_wagon_usage_fee_create': 'Плата расчитана',
-            'ttdir_field_outgoing_cars_wagon_usage_fee_create_user': 'Плату расчитал',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create': 'Плата рассчитана',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create_user': 'Плату рассчитал',
             'ttdir_field_outgoing_cars_wagon_usage_fee_change': 'Плата правка',
             'ttdir_field_outgoing_cars_wagon_usage_fee_change_user': 'Плату правил',
 
@@ -3370,7 +3370,7 @@
         collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' }); //25
         //
         collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
 
@@ -5573,7 +5573,7 @@
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr" colspan="25"></td>' +
                 '<td class="dt-centr"></td>' +
-                '<td class="dt-centr"></td>' +
+                //'<td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td>' +
                 '<td class="dt-centr" colspan="7"></td></tr > ' +
@@ -6071,9 +6071,9 @@
                 this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
                     $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
-                    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
-                });
+                //this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
+                //    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
+                //});
                 this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
                     $(this.footer()).html(downtime ? Number(downtime).toFixed(2) : Number(0).toFixed(2));
                 });
