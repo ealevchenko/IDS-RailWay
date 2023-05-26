@@ -2873,6 +2873,22 @@
             }
 
         }.bind(this));
+        // Отсортируем по алфавиту
+        this.list_operators_wagons = this.sort_text(this.list_operators_wagons, "text");
+        this.list_limiting = this.sort_text(this.list_limiting, "text");
+        this.list_owners = this.sort_text(this.list_owners, "text");
+        this.list_station_from = this.sort_text(this.list_station_from, "text");
+        this.list_cargo = this.sort_text(this.list_cargo, "text");
+        this.list_certification_data = this.sort_text(this.list_certification_data, "text");
+        this.list_cargo_sap = this.sort_text(this.list_cargo_sap, "text");
+        this.list_group_arrival = this.sort_text(this.list_group_arrival, "text");
+        this.list_consignee = this.sort_text(this.list_consignee, "text");
+        this.list_division = this.sort_text(this.list_division, "text");
+        this.list_genus = this.sort_text(this.list_genus, "text");
+        this.list_condition = this.sort_text(this.list_condition, "text");
+        this.list_payer_name = this.sort_text(this.list_payer_name, "text");
+        this.list_payer_code = this.sort_text(this.list_payer_code, "text");
+        this.list_station_amkr = this.sort_text(this.list_station_amkr, "text");
         //
         this.view_table_group_sostav(this.list_group_sostav);
 
@@ -4341,6 +4357,18 @@
                 this.list_division.push({ value: el_wag.arrival_uz_vagon_id_division_on_amkr, text: el_wag['arrival_uz_vagon_division_abbr_' + App.Lang] });
             }
         }.bind(this));
+        // Отсортируем по алфавиту
+        this.list_station_amkr = this.sort_text(this.list_station_amkr, "text");
+        this.list_operation_amkr = this.sort_text(this.list_operation_amkr, "text");
+        this.list_limiting = this.sort_text(this.list_limiting, "text");
+        this.list_cargo = this.sort_text(this.list_cargo, "text");
+        this.list_certification_data = this.sort_text(this.list_certification_data, "text");
+        this.list_group_arrival = this.sort_text(this.list_group_arrival, "text");
+        this.list_genus = this.sort_text(this.list_genus, "text");
+        this.list_cargo_sap = this.sort_text(this.list_cargo_sap, "text");
+        this.list_station_from = this.sort_text(this.list_station_from, "text");
+        this.list_division = this.sort_text(this.list_division, "text");
+
         if (typeof callback === 'function') {
             callback();
         }
@@ -7470,6 +7498,26 @@
                 this.list_code_payer_sender.push({ value: value.outgoing_uz_document_code_payer, text: value.outgoing_uz_document_code_payer });
             }
         }.bind(this));
+        // Отсортируем по алфавиту
+        this.list_operators_wagons = this.sort_text(this.list_operators_wagons, "text");
+        this.list_limiting = this.sort_text(this.list_limiting, "text");
+        this.list_owners = this.sort_text(this.list_owners, "text");
+        this.list_genus = this.sort_text(this.list_genus, "text");
+        this.list_out_division = this.sort_text(this.list_out_division, "text");
+        this.list_out_cargo = this.sort_text(this.list_out_cargo, "text");
+        this.list_out_cargo_group = this.sort_text(this.list_out_cargo_group, "text");
+        this.list_out_sap_cargo = this.sort_text(this.list_out_sap_cargo, "text");
+        this.list_out_ext_station_to = this.sort_text(this.list_out_ext_station_to, "text");
+        this.list_out_inlandrailway_to = this.sort_text(this.list_out_inlandrailway_to, "text");
+        this.list_out_border_checkpoint = this.sort_text(this.list_out_border_checkpoint, "text");
+        this.list_arr_cargo = this.sort_text(this.list_arr_cargo, "text");
+        this.list_certification_data = this.sort_text(this.list_certification_data, "text");
+        this.list_arr_cargo_group = this.sort_text(this.list_arr_cargo_group, "text");
+        this.list_arr_condition = this.sort_text(this.list_arr_condition, "text");
+        this.list_arr_division = this.sort_text(this.list_arr_division, "text");
+        this.list_station_from = this.sort_text(this.list_station_from, "text");
+        this.list_payer_sender_name = this.sort_text(this.list_payer_sender_name, "text");
+        this.list_code_payer_sender = this.sort_text(this.list_code_payer_sender, "text");
         //
         this.view_table_group_sostav_outgoing(this.list_group_sostav_outgoing);
 
@@ -8682,6 +8730,13 @@
                 this.list_station_from.push({ value: value.outgoing_sostav_id_station_from, text: value['outgoing_sostav_from_station_amkr_abbr_' + App.Lang] });
             }
         }.bind(this));
+        // Отсортируем по алфавиту
+        this.list_operators_wagons = this.sort_text(this.list_operators_wagons, "text");
+        this.list_limiting = this.sort_text(this.list_limiting, "text");
+        this.list_out_division = this.sort_text(this.list_out_division, "text");
+        this.list_out_cargo = this.sort_text(this.list_out_cargo, "text");
+        this.list_out_ext_station_to = this.sort_text(this.list_out_ext_station_to, "text");
+        this.list_station_from = this.sort_text(this.list_station_from, "text");
         if (typeof callback === 'function') {
             callback();
         }
@@ -10063,7 +10118,7 @@
         LockScreen(langView('vtdr_load_vagon', App.Langs));
         // Отправка
         this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, function (result_cars) {
-            this.manual_usage_fee = result_cars.filter(function (i) { return i.wagon_usage_fee_manual_fee_amount!==null  }.bind(this));
+            this.manual_usage_fee = result_cars.filter(function (i) { return i.wagon_usage_fee_manual_fee_amount !== null }.bind(this));
             process_load--;
             out_load(process_load);
 
@@ -10670,12 +10725,11 @@
         }
     };
     // Вывести данные по диаграмме "Плата за пользование груз по ПРИБ.(без схода)"
-    view_td_report.prototype.view_chart_usage_fee_cargo_not_derailment= function () {
+    view_td_report.prototype.view_chart_usage_fee_cargo_not_derailment = function () {
         if (this.report_panel === 3 && this.chart_data_usage_fee_cargo_not_derailment) {
             this.chart_usage_fee_cargo_not_derailment.view(this.chart_data_usage_fee_cargo_not_derailment);
         }
     };
-
     // Очистить таблицы
     view_td_report.prototype.clear_report_9_1 = function () {
         this.outgoing_cars = [];
@@ -10689,7 +10743,18 @@
         }
         LockScreenOff();
     };
-
+    //
+    view_td_report.prototype.sort_text = function (list, name) {
+        return list.sort(function (a, b) {
+            var nameA = a[name] !== null ? a[name].toLowerCase() : '',
+                nameB = b[name] !== null ? b[name].toLowerCase() : ''
+            if (nameA < nameB) //сортируем строки по возрастанию
+                return -1
+            if (nameA > nameB)
+                return 1
+            return 0 // Никакой сортировки
+        });
+    }
     // группировка и сортировка таблицы
     view_td_report.prototype.sort_table = function (list, field_group, field_sort, desc) {
         var result = [];
