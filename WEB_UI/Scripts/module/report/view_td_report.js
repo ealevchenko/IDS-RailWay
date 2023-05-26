@@ -4413,6 +4413,7 @@
     view_td_report.prototype.process_data_report_3_2 = function (data, callback) {
         var list_result = [];
         // выборка для списков Отчет-Груз по Оператору АМКР
+        var sum_count = data.length;
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
                 return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator &&
@@ -4429,10 +4430,12 @@
                     limiting_name: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_name_' + App.Lang],
                     limiting_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang],
                     count_wagon: 1,
-                    count_persent: 0
+                    perent_wagon: Number(100 / sum_count).toFixed(2),
+                    //count_persent: 0
                 });
             } else {
                 op.count_wagon = op.count_wagon + 1;
+                op.perent_wagon = Number((op.count_wagon * 100) / sum_count).toFixed(2);
             };
         }.bind(this));
         if (typeof callback === 'function') {
@@ -4506,13 +4509,13 @@
     view_td_report.prototype.process_data_report_3_5 = function (data, callback) {
         var list_result = [];
         // выборка для списков Отчет-Род вагона ПРИБ.
-        var sum_count = 0;
+        var sum_count = data.length;
         $.each(data, function (key, el_wag) {
             var obj = list_result.find(function (o) {
                 return o.id_genus === el_wag.arrival_uz_vagon_id_genus
             }.bind(this));
             if (!obj) {
-                sum_count++;
+                //sum_count++;
                 // Не данных 
                 list_result.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
@@ -4522,7 +4525,7 @@
                     perent_wagon: Number(100 / sum_count).toFixed(2),
                 });
             } else {
-                sum_count++;
+                //sum_count++;
                 obj.count_wagon = obj.count_wagon + 1;
                 obj.perent_wagon = Number((obj.count_wagon * 100) / sum_count).toFixed(2);
             };

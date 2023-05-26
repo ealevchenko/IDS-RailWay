@@ -344,6 +344,8 @@
             'ttdr_field_curr_wagons_rent_limiting_name': 'Ограничение',
             'ttdr_field_curr_wagons_rent_limiting_abbr': 'Ограничение',
 
+            'ttdr_field_genus_vagon': 'Род вагона',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
 
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
@@ -3408,6 +3410,7 @@
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -3441,10 +3444,11 @@
     table_td_report.prototype.init_columns_adoption_genus_to_arr = function () {
         var collums = [];
         //collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_rod_abbr', title: null, class: null });
+        collums.push({ field: 'total_rod_abbr', title: langView('ttdr_field_genus_vagon', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: null, class: null });
         return init_columns_detali(collums, list_collums);
+
     };
     // инициализация полей adoption_cargo_sap_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_sap_to_arr = function () {
@@ -4469,7 +4473,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [0, 'asc'];
+                this.order_column = [3, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -5579,7 +5583,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_operator_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_to_arr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
@@ -5588,7 +5592,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_genus_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_sap_to_arr') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
@@ -6110,12 +6114,17 @@
             case 'adoption_operator_to_arr': {
                 if (data) {
                     var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
                 });
                 break;
             };
@@ -6178,13 +6187,18 @@
             case 'adoption_genus_to_arr': {
                 if (data) {
                     var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
                     //var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
                 });
                 break;
             };
