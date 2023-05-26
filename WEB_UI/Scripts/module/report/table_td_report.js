@@ -3390,7 +3390,7 @@
     // инициализация полей adoption_cargo_operation_amkr
     table_td_report.prototype.init_columns_adoption_cargo_operation_amkr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: null, class: null });
@@ -3404,7 +3404,7 @@
     // инициализация полей adoption_operator_to_ar
     table_td_report.prototype.init_columns_adoption_operator_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3414,7 +3414,7 @@
     // инициализация полей adoption_cargo_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_group_name', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: null, class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
@@ -3428,7 +3428,7 @@
     // инициализация полей adoption_group_cargo_to_arr
     table_td_report.prototype.init_columns_adoption_group_cargo_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_group_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3440,7 +3440,7 @@
     // инициализация полей adoption_genus_to_arr
     table_td_report.prototype.init_columns_adoption_genus_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_rod_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: null, class: null });
@@ -3449,7 +3449,7 @@
     // инициализация полей adoption_cargo_sap_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_sap_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_sap_cargo_code', title: null, class: null });
         collums.push({ field: 'total_sap_cargo_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3461,7 +3461,7 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_station_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_station_from_name', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3473,7 +3473,7 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_division_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: null, class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
@@ -3486,7 +3486,7 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_to_gs = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_cargo_name', title: null, class: null });
         collums.push({ field: 'total_station_on_name', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
@@ -3536,7 +3536,7 @@
     // инициализация полей outgoing_cargo_operator
     table_td_report.prototype.init_columns_outgoing_cargo_operator = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
         //collums.push({ field: 'total_cargo_name', title: null, class: null });
@@ -4449,7 +4449,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4469,7 +4469,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4489,7 +4489,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = [{ visible: false, targets: 1 }];
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4518,12 +4518,12 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td colspan="7">' + group.group_name + '</td></tr>');
+                                    .before('<tr class="group"><td colspan="6">' + group.group_name + '</td></tr>');
                                 last = group.group_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
@@ -4541,7 +4541,7 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
@@ -4557,7 +4557,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4577,7 +4577,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [3, 'desc'];
+                this.order_column = [2, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4619,7 +4619,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4639,7 +4639,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4659,7 +4659,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4679,7 +4679,7 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4739,7 +4739,7 @@
                 this.fixedHeader = false;   // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 //this.columnDefs = [{ visible: false, targets: 3 }];
-                this.order_column = [2, 'asc'];
+                this.order_column = [1, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4766,12 +4766,12 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td colspan="5">' + group.cargo_out_group_name + '</td></tr>');
+                                    .before('<tr class="group"><td colspan="4">' + group.cargo_out_group_name + '</td></tr>');
                                 last = group.cargo_out_group_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
@@ -4784,7 +4784,7 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
@@ -5576,34 +5576,34 @@
                 '</tfoot > '));
         }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_operator_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_group_cargo_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_genus_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_sap_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_station_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_division_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_to_gs') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_cargo_operator') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_cargo_ext_station') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
