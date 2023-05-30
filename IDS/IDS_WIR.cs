@@ -9533,7 +9533,8 @@ namespace IDS
                                     calc_hour_period = hour_period;
                                     int hour_calc = (hour_period - grace_time);
                                     // пересчет времени с учетом uz_wagon
-                                    calc_time = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                    //calc_time = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                    calc_time = hour_calc + (!uz_wagon ? (24 - (hour_calc % 24)) : 0); // округлим до целых суток
                                     calc_fee_amount = ((rate_currency / 24) * calc_time * (decimal)coefficient_route) * exchange_rate;
                                     break;
                                 };
@@ -9561,7 +9562,8 @@ namespace IDS
                                     calc_hour_period += hour_period;
                                     int hour_calc = (hour_period);
                                     // пересчет времени с учетом uz_wagon
-                                    hour_calc = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                    //hour_calc = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                    hour_calc = hour_calc + (!uz_wagon ? (24 - (hour_calc % 24)) : 0); // округлим до целых
                                     calc_time += hour_calc;
                                     calc_fee_amount += ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
                                     break;
