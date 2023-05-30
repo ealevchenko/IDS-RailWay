@@ -2980,8 +2980,9 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
-                List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 50000000).ToList();
-                //List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == 64238173).ToList();
+                List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 20000000).ToList();
+                //list_arr_uz_doc_vag = list_arr_uz_doc_vag.Where(v => v.num == 61298329).ToList();
+                //List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == 61298329).ToList();
                 result.count = list_arr_uz_doc_vag.Count();
                 foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
                 {
@@ -2991,83 +2992,83 @@ namespace IDS
                         if (dir_wag != null)
                         {
                             TimeSpan deff = vag.create - dir_wag.create;
-                            // создание двух строк состоит в диапазоне 3 часов (тоесть вагон зашел первый раз, создалась строка справочника затем отметка о прибытии)
-                            // Определится с временем задержки
-                            if (deff.TotalHours <= 24 * 6)
+                            // Получим бит привышения времени 6 дней от содания справочника и входа вагона(исключим изменения владельца, даты ремонта.. по старым записям захода вагона)
+                            bool old_time = deff.TotalHours > 24 * 6;
+                            //if (deff.TotalHours <= 24 * 6)
+                            //{
+                            // записи находятся в диапазоне
+                            // Получим основные обновления
+                            int id_countrys = dir_wag.id_countrys;
+                            int id_genus = dir_wag.id_genus;
+                            int id_owner = dir_wag.id_owner;
+                            double gruzp = dir_wag.gruzp;
+                            double? tara = dir_wag.tara;
+                            int kol_os = dir_wag.kol_os;
+                            string usl_tip = dir_wag.usl_tip;
+                            DateTime? date_rem_uz = dir_wag.date_rem_uz;
+                            DateTime? date_rem_vag = dir_wag.date_rem_vag;
+                            int? id_type_ownership = dir_wag.id_type_ownership;
+                            // проверим изменения и обновим
+                            bool update = false;
+                            if ((vag.id_countrys == 0 || vag.id_countrys == null) && id_countrys != 0)
                             {
-                                // записи находятся в диапазоне
-                                // Получим основные обновления
-                                int id_countrys = dir_wag.id_countrys;
-                                int id_genus = dir_wag.id_genus;
-                                int id_owner = dir_wag.id_owner;
-                                double gruzp = dir_wag.gruzp;
-                                double? tara = dir_wag.tara;
-                                int kol_os = dir_wag.kol_os;
-                                string usl_tip = dir_wag.usl_tip;
-                                DateTime? date_rem_uz = dir_wag.date_rem_uz;
-                                DateTime? date_rem_vag = dir_wag.date_rem_vag;
-                                int? id_type_ownership = dir_wag.id_type_ownership;
-                                // проверим изменения и обновим
-                                bool update = false;
-                                if ((vag.id_countrys == 0 || vag.id_countrys == null) && id_countrys != 0)
-                                {
-                                    vag.id_countrys = id_countrys;
-                                    update = true;
-                                }
-                                if ((vag.id_genus == 0 || vag.id_genus == null) && id_genus != 0)
-                                {
-                                    vag.id_genus = id_genus;
-                                    update = true;
-                                }
-                                if ((vag.id_owner == 0 || vag.id_owner == null) && id_owner != 0)
-                                {
-                                    vag.id_owner = id_owner;
-                                    update = true;
-                                }
-                                if (vag.gruzp_uz == null && gruzp != 0)
-                                {
-                                    vag.gruzp_uz = gruzp;
-                                    update = true;
-                                }
-                                if ((vag.kol_os == null || vag.kol_os == 0) && kol_os != 0)
-                                {
-                                    vag.kol_os = kol_os;
-                                    update = true;
-                                }
-                                if (vag.date_rem_uz == null && date_rem_uz != null)
-                                {
-                                    vag.date_rem_uz = date_rem_uz;
-                                    update = true;
-                                }
-                                if (vag.date_rem_vag == null && date_rem_vag != null)
-                                {
-                                    vag.date_rem_vag = date_rem_vag;
-                                    update = true;
-                                }
-                                if (vag.id_type_ownership == null && id_type_ownership != null)
-                                {
-                                    vag.id_type_ownership = id_type_ownership;
-                                    update = true;
-                                }
-                                if (update)
-                                {
-                                    vag.change_user = user;
-                                    vag.change = DateTime.Now;
-                                    ef_arr_uz_doc_vag.Update(vag);
-                                    result.SetUpdateResult(1, vag.id);
-                                    //int context.SaveChanges();
-                                }
-                                else
-                                {
-                                    // Пропустить
-                                    result.SetUpdateResult(0, vag.id);
-                                }
+                                vag.id_countrys = id_countrys;
+                                update = true;
+                            }
+                            if ((vag.id_genus == 0 || vag.id_genus == null) && id_genus != 0)
+                            {
+                                vag.id_genus = id_genus;
+                                update = true;
+                            }
+                            if (!old_time && (vag.id_owner == 0 || vag.id_owner == null) && id_owner != 0)
+                            {
+                                vag.id_owner = id_owner;
+                                update = true;
+                            }
+                            if (!old_time && vag.gruzp_uz == null && gruzp != 0)
+                            {
+                                vag.gruzp_uz = gruzp;
+                                update = true;
+                            }
+                            if ((vag.kol_os == null || vag.kol_os == 0) && kol_os != 0)
+                            {
+                                vag.kol_os = kol_os;
+                                update = true;
+                            }
+                            if (!old_time && vag.date_rem_uz == null && date_rem_uz != null)
+                            {
+                                vag.date_rem_uz = date_rem_uz;
+                                update = true;
+                            }
+                            if (!old_time && vag.date_rem_vag == null && date_rem_vag != null)
+                            {
+                                vag.date_rem_vag = date_rem_vag;
+                                update = true;
+                            }
+                            if (!old_time && vag.id_type_ownership == null && id_type_ownership != null)
+                            {
+                                vag.id_type_ownership = id_type_ownership;
+                                update = true;
+                            }
+                            if (update)
+                            {
+                                vag.change_user = user;
+                                vag.change = DateTime.Now;
+                                ef_arr_uz_doc_vag.Update(vag);
+                                result.SetUpdateResult(1, vag.id);
+                                //int context.SaveChanges();
                             }
                             else
                             {
                                 // Пропустить
                                 result.SetUpdateResult(0, vag.id);
                             }
+                            //}
+                            //else
+                            //{
+                            //    // Пропустить
+                            //    result.SetUpdateResult(0, vag.id);
+                            //}
                         }
                         else
                         {
@@ -9346,9 +9347,9 @@ namespace IDS
                     }
                     // Расчеты
                     List<Wagon_Usage_Fee_Period> list_period_setup = new List<Wagon_Usage_Fee_Period>();
-                    DateTime date_adoption = arr_sostav.date_adoption_act !=null ? (DateTime)arr_sostav.date_adoption_act : (arr_car.date_adoption_act!=null ? (DateTime)arr_car.date_adoption_act: (DateTime)arr_sostav.date_adoption);    // Зашел
+                    DateTime date_adoption = arr_sostav.date_adoption_act != null ? (DateTime)arr_sostav.date_adoption_act : (arr_car.date_adoption_act != null ? (DateTime)arr_car.date_adoption_act : (DateTime)arr_sostav.date_adoption);    // Зашел
                     DateTime date_outgoing = out_sostav.date_outgoing_act != null ? (DateTime)out_sostav.date_outgoing_act : (car.date_outgoing_act != null ? (DateTime)car.date_outgoing_act : (DateTime)out_sostav.date_outgoing);//   Вышел (согласно всех актов)
-                    
+
                     int? id_operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.id_operator : null;   // Оператор по отправке
                     bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по прибытию
                     bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по отправке
