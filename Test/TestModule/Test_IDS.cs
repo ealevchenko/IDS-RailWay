@@ -613,7 +613,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(210873, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(210839, @"EUROPE\ealevchenko");
         }
         /// <summary>
         /// Расчет платы за пользование по сданным составам за выбранный период
@@ -621,8 +621,8 @@ namespace Test.TestModule
         public void IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            DateTime start = new DateTime(2023, 3, 1, 0, 0, 0);
-            DateTime stop = new DateTime(2023, 5, 31, 23, 59, 59);
+            DateTime start = new DateTime(2023, 5, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2023, 5, 10, 23, 59, 59);
             List<ResultUpdateIDWagon> res = ids.CalcUsageFeeOfOutgoingSostav(start, stop, @"EUROPE\ealevchenko");
         }
 
