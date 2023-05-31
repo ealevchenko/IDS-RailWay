@@ -186,11 +186,10 @@
 
                     var list_period = [];
                     $.each(list_select_period, function (key, el) {
-                        list_period.push({ id: el.id, id_operator: el.id_operator, id_genus: el.id_genus });
+                        list_period.push({ id: el.id_usage_fee_period, id_operator: el.usage_fee_period_id_operator, id_genus: el.usage_fee_period_id_genus });
                     }.bind(this));
                     var start = moment(form_edit.get('date_period_start')).set({ 'hour': 0, 'minute': 0, 'second': 0 }).format();       //.format('YYYY-MM-DD HH:mm:ss"');
                     var stop = moment(form_edit.get('date_period_stop')).set({ 'hour': 23, 'minute': 59, 'second': 59 }).format();      //.format('YYYY-MM-DD HH:mm:ss"');
-
                     var operation = {
                         start: start,
                         stop: stop,

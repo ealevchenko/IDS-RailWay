@@ -9194,7 +9194,7 @@ namespace IDS
                                 create_user = user,
                                 parent_id = usp.id
                             };
-                            usp.stop = start;
+                            usp.stop = start.AddSeconds(-1);
                             usp.close = DateTime.Now;
                             usp.close_user = user;
                             ef_efp.Update(usp);
