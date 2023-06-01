@@ -122,7 +122,6 @@ namespace Test.TestModule
         #endregion
 
         #region IDSDirectory
-
         public void IDSDirectory_GetID_Directory_StationOfCodeCS()
         {
 
@@ -180,6 +179,13 @@ namespace Test.TestModule
 
         #region IDS_Directory
 
+        public void IDS_Directory_ClearDirectory_Cargo()
+        {
+
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int res = ids.ClearDirectory_Cargo();
+
+        }
         /// <summary>
         /// Тест считования и создания внешней станции
         /// </summary>

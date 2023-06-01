@@ -10,227 +10,29 @@
 
     var alert = new ALERT($('div#main-alert')); // Создадим класс ALERTG
 
-    //var TDPW = App.table_dir_park_ways;
-    //var tdpw = new TDPW('div#park-ways'); // Создадим экземпляр таблицы
+    var directory = App.ids_directory;
+    var ids_dir = new directory();
 
-    //var TDPARK = App.table_dir_park_station;
-    //var tdpark = new TDPARK('div#park'); // Создадим экземпляр таблицы
-
-    //var wsd = App.ids_wsd;
-    //var ids_wsd = new wsd();
-
-    //var directory = App.ids_directory;
-    //var ids_dir = new directory();
-
-
-
-    //var MCF = App.modal_confirm_form;
-    //var mcf_test = new MCF('confirm-test'); // Создадим экземпляр окно сообщений
-
-
-
-    //var OP_SEND = App.operation_send;
-    //var oper_send = new OP_SEND('div#operation-send'); // Создадим экземпляр
-
-    //var TCOPER = App.table_cars_operation;
-    //var tab_car_oper = new TCOPER('div#cars-oper'); // Создадим экземпляр
-
-    //var TCWay = App.table_cars_way;
-    //var t_wagons = new TCWay('div#wagons'); // Создадим экземпляр
-
-    //var VSC = App.view_send_cars;
-    //var vsc = new VSC('div#wagons'); // Создадим экземпляр
-
-    //var TSOW = App.table_sostav_outer_way;
-    //var t_sow = new TSOW('div#sostav');             // Создадим экземпляр
-
-    //var TCOW = App.table_cars_outer_way;
-    //var t_cow = new TCOW('div#wagons');             // Создадим экземпляр
-
-    //var VAC = App.view_arrival_cars;
-    //var vac = new VAC('div#arrival');             // Создадим экземпляр
-
-    //var TCOW = App.table_cars_outer_way;
-    //var t_cow = new TCOW('div#wagons');             // Создадим экземпляр
-
-    //var VHOA = App.view_history_operation_arrival;
-    //var vhoa = new VHOA('div#history_operation_arrival');             // Создадим экземпляр
-
-    //var VRC = App.view_return_cars;
-    //var vrc = new VRC('div#return');             // Создадим экземпляр
-    //var TTB = App.table_total_balance;
-    //var table_total_balance = new TTB('div#total-balance');             // Создадим экземпляр
-
-    //var VRRC = App.view_report_remainder_cars;
-    //var report_remainder_cars = new VRRC('div#remainder-cars');             // Создадим экземпляр
-
-    //////var TOC = App.table_outgoing_cars;
-    //////var table_outgoing_cars = new TOC('div#outgoing-cars');             // Создадим экземпляр
-
-    var FOCD = App.form_outgoing_cars_detali;
-    var form_outgoing_cars_detali = new FOCD('div#outgoing-cars-detali');             // Создадим экземпляр
-
-    // Создадим форму правки операторов
-    var FDL = App.form_dialog;
-
-
-
-    $('button#arrival').on('click', function (e) {
-        //var data = oper_send.operation;
-        //tab_car_oper.view(data);
-        //trWay.update_station_of_id(8);
-        //trWay.update_park_of_id(8, 3);
-        //trWay.update_way_of_id(227);
-        /*        trWay.open_way(8, 75, 244);*/
-        //mcf_test.view('Подпись', 'Текст сообщения', function (result) {
-
-        //})
-        //oper_send.update();
-        //t_wagons.update(54152087);
-        //vhoa.update();
-
-    });
-
+    var load_db = function (list, update, callback) {
+        if (list) {
+            ids_dir.load(list, false, update, function (result) {
+                if (typeof callback === 'function') {
+                    callback(result);
+                }
+            });
+        };
+    };
     // После загрузки документа
     $(document).ready(function ($) {
-
         var start = moment('05/01/2021').set({ 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 })._d;
         var stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 0 })._d;
-
-        //table_outgoing_sostav.init({
-        //    type_report: 'outgoing_sostav',
-        //    alert: alert,
-        //    ids_wsd: null,
-        //    fn_action_view_wagons: function (rows_sostav) {
-
-        //    },
-        //}, function (init) {
-        //    table_outgoing_sostav.load_outgoing_sostav(start, stop, function (sostav) {
-        //        this.view(sostav, null, null);
-        //        LockScreenOff();
-        //    }.bind(table_outgoing_sostav));
-
-        //});
-
-        //////table_outgoing_cars.init({
-        //////    type_report: 'outgoing_cars',
-        //////    alert: alert,
-        //////    ids_wsd: null,
-        //////    fn_action_view_wagons: function (rows) {
-
-        //////    },
-        //////    fn_init: function (init) {
-        //////        table_outgoing_cars.load_outgoing_cars_of_id_sostav(127615, function (wagons) {
-        //////            this.view(wagons, null, null);
-        //////            LockScreenOff();
-        //////        }.bind(table_outgoing_cars));
-        //////    },
-        //////});
-
-        form_outgoing_cars_detali.init({
-            alert: alert,
-            ids_wsd: null,
-            ids_dir: null,
-            fn_init: function (init) {
-                LockScreenOff();
-            }.bind(this),
+        //var name = 'Смолы каменноугольные,не поименованные в алфавите';
+        var name = 'Смолы каменноугольные, не поименованные в алфавите';
+        load_db(['cargo_etsng'], false, function (result) {
+            var obj = ids_dir.getCargoETSNG_Of_Name_find('cargo_etsng_name', name, App.Lang);
         });
-        
 
-        //report_remainder_cars.init({
-        //    alert: null,
-        //    ids_dir: null,
-        //    ids_wsd: null,
-        //}, function (init) {
-        //    report_remainder_cars.load(true);
-        //    //LockScreenOff();
-        //});
 
-        //table_total_balance.init({
-        //    ids_wsd: null,
-        //}, function (init) {
-        //    table_total_balance.load();
-        //    //LockScreenOff();
-        //});
-
-        //vrc.init({
-        //    alert: null,
-        //    ids_dir: null,
-        //    ids_wsd: null,
-        //    fn_db_update: function (list) {
-        //    }.bind(this),
-        //}, function (init) {
-        //    vrc.view(107);//880
-        //    LockScreenOff();
-        //});
-
-        //        vhoa.init({
-        //            alert: null,
-        //            ids_dir: null,
-        //            ids_wsd: null,
-        //            fn_db_update: function (list) {
-        //            }.bind(this),
-        //        }, function (init) {
-        ///*            vac.view(123);//880*/
-        //            LockScreenOff();
-        //        });
-        //t_sow.init({
-        //    alert: alert,
-        //    type_report: 'arrival-outer-way',  // Прибвыающие составы на внешнем пути
-        //    ids_wsd: ids_wsd,
-        //}, function () {
-        //    t_sow.load_ow_arr_sostav();
-        //    //t_wagons.load_of_way(218, 54152087);//112
-        //    //t_wagons.load_of_way(218);//112
-        //});
-        //vac.init({
-        //    alert: null,
-        //    ids_dir: null,
-        //    ids_wsd: null,
-        //    fn_db_update: function (list) {
-        //    }.bind(this),
-        //}, function (init) {
-        //    vac.view(123);//880
-        //    LockScreenOff();
-        //});
-        //t_cow.init({
-        //    alert: alert,
-        //    type_report: 'arrival-wagons-outer-way',  // Прибвыающие вагоны на внешнем пути
-        //    ids_wsd: ids_wsd,
-        //}, function () {
-        //    t_cow.load_ow_arr_wagons_of_sostav('51-29092021153500');
-        //    //t_wagons.load_of_way(218, 54152087);//112
-        //    //t_wagons.load_of_way(218);//112
-        //});
-
-        //vsc.init({
-        //    alert: null,
-        //    ids_dir: null,
-        //    ids_wsd: null,
-        //    fn_db_update: function (list) {
-        //    }.bind(this),
-        //}, function (init) {
-        //    vsc.view(215)
-        //    //LockScreenOff();
-        //});
-
-        //t_wagons.init({
-        //    alert: alert,
-        //    ids_wsd: ids_wsd,
-        //}, function () {
-        //    //t_wagons.load_of_way(218, 54152087);//112
-        //    t_wagons.load_of_way(218);//112
-        //});
-
-        //oper_send.init({
-        //    alert: alert,
-        //    ids_dir: ids_dir,
-        //    ids_wsd: ids_wsd,
-        //},
-        //    function () {
-        //        // Инициализация закончилась
-        //        tab_car_oper.init({ alert: alert });
-        //    });
         LockScreenOff();
 
     });
