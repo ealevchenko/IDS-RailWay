@@ -6223,8 +6223,11 @@
             obj_db = obj ? obj : null;
         } else {
             if (name && name !== '') {
-                var obj = this.ids_dir.getCargoETSNG_Of_CultureName('cargo_etsng_name', name);
-                obj_db = obj && obj.length > 0 ? obj[0] : 0;
+                //var obj = this.ids_dir.getCargoETSNG_Of_CultureName('cargo_etsng_name', name);
+                //obj_db = obj && obj.length > 0 ? obj[0] : 0;
+                var obj = this.ids_dir.getCargoETSNG_Of_Name_find('cargo_etsng_name', name, App.Lang);
+                obj_db = obj ? obj : null;
+
             } else {
                 return undefined; // Не один параметр не задан
             }

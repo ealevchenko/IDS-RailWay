@@ -7857,7 +7857,7 @@
         }
     };
     //------------------------------------------------------------------------------------------------
-    // Инициализировать отчет "Прибытие ИТОГ"
+    // Инициализировать отчет "Отправление ИТОГ"
     view_td_report.prototype.init_report_6_1 = function () {
         // очистим основное окно отчета
         this.$main_report.empty();
@@ -8819,6 +8819,7 @@
                 if (!op) {
                     // Не данных 
                     list_result.push({
+                        id_sort: (el_wag.outgoing_uz_vagon_id_group * 10000)+el_wag.outgoing_uz_vagon_id_cargo,
                         id_cargo: el_wag.outgoing_uz_vagon_id_cargo,
                         cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
                         id_group: el_wag.outgoing_uz_vagon_id_group,
@@ -8919,7 +8920,7 @@
                 });
             };
             // Выборка по украине
-            if (el_wag.outgoing_uz_document_to_code_railway === 22) {
+            if (el_wag.outgoing_uz_document_to_code_railway === 22 && !el_wag.outgoing_uz_document_station_to_port) {
                 var ukr = list_result_ukr.find(function (o) {
                     return o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group && o.code_inlandrailway === el_wag.outgoing_uz_document_to_code_inlandrailway
                 }.bind(this));
@@ -9283,7 +9284,7 @@
             out_process_data(process);
         }.bind(this));
         this.process_data_report_6_3_1(wagons_outgoing, function (result) {
-            this.total_division_metals = this.sort_table(result, 'id_group', 'count_wagon', true);
+            this.total_division_metals = this.sort_table(result, 'id_sort', 'count_wagon', true);
             this.total_cargo_metall = this.sort_table(result, 'id_division', 'count_wagon', true);
             process--;
             out_process_data(process);

@@ -2189,6 +2189,18 @@
         }
         return objs;
     };
+    //  Вернуть первый объект в указаным поле которых есть текст text (проверка убирает все пробелы и выравнивает буквы)
+    ids_directory.prototype.getObjs_Of_text_find = function (list_obj, ftext, text, lang) {
+        var objs = null;
+        var field = lang ? ftext + '_' + lang : ftext;
+        if (list_obj && list_obj.length > 0) {
+            objs = list_obj.find(function (o) {
+                var txt1 = o[field].split(' ').join('').toUpperCase(), txt2 = text.split(' ').join('').toUpperCase();
+                return txt1 === txt2 ? true : false;
+            });
+        }
+        return objs;
+    };
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
     //*======= ids_directory.list_currency  (Справочник валют) ====================================== Directory_Currency
@@ -2426,6 +2438,13 @@
         if (this.list_cargo_etsng) {
             var obj = getObjects(this.list_cargo_etsng, name + '_' + App.Lang, text);
             return obj;
+        }
+        return null;
+    };
+    // Получим первую строку в указаным поле которых есть текст text (проверка убирает все пробелы и выравнивает буквы)
+    ids_directory.prototype.getCargoETSNG_Of_Name_find = function (name, text, lang) {
+        if (this.list_cargo_etsng) {
+            return this.getObjs_Of_text_find(this.list_cargo_etsng, name, text, lang);
         }
         return null;
     };

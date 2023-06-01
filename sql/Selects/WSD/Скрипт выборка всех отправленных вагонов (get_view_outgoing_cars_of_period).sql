@@ -1,5 +1,6 @@
 declare @start datetime = convert(datetime,'2023-05-01',120)
 declare @stop datetime = convert(datetime,'2023-06-01',120)
+declare @num int = 56067531
 
 
 	select
@@ -559,7 +560,8 @@ declare @stop datetime = convert(datetime,'2023-06-01',120)
 		--> Текущее внетренее перемещение
 		Left JOIN IDS.WagonInternalRoutes as wir ON out_car.id = wir.[id_outgoing_car]
 		--> Следующее внетренее перемещение
-		Left JOIN IDS.WagonInternalRoutes as wir_next ON wir.id = wir_next.parent_id
+		--Left JOIN IDS.WagonInternalRoutes as wir_next ON wir.id = wir_next.parent_id
+		Left JOIN IDS.WagonInternalRoutes as wir_next ON wir_next.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalRoutes] where [parent_id]= wir.id order by id desc)
 		Left JOIN IDS.ArrivalCars as arr_car_next ON wir_next.id_arrival_car = arr_car_next.id
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag_next ON arr_car_next.id_arrival_uz_vagon = arr_doc_vag_next.id
 		--> Предыдущее Прибытие состава c учетом возврата
@@ -740,7 +742,7 @@ declare @stop datetime = convert(datetime,'2023-06-01',120)
 		--> Справочник платильщик (по отправке)
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 	WHERE 
-
+	--out_car.[num] = @num and
 	--out_sost.date_readiness_uz>= @start and out_sost.date_readiness_uz<=@stop and out_car.position_outgoing is not null
-	out_sost.date_outgoing>= @start and out_sost.date_outgoing<=@stop and out_car.position_outgoing is not null and arr_doc_vag_next.cargo_returns is null --[IDS].[get_next_arrival_cars_return_cargo_of_id_wir](wir.id) is null
+	out_sost.date_outgoing>= @start and out_sost.date_outgoing<=@stop and out_car.position_outgoing is not null and arr_doc_vag_next.cargo_returns is not null --[IDS].[get_next_arrival_cars_return_cargo_of_id_wir](wir.id) is null
 	order by out_sost.num_doc, out_car.position_outgoing

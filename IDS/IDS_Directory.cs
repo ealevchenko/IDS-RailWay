@@ -29,6 +29,61 @@ namespace IDS
 
         }
 
+        public int ClearDirectory_Cargo()
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext();
+                EFDirectory_CargoETSNG ef_etsng = new EFDirectory_CargoETSNG(context);
+                EFDirectory_Cargo ef_cargo = new EFDirectory_Cargo(context);
+                EFArrival_UZ_Vagon ef_arr_uz = new EFArrival_UZ_Vagon(context);
+                EFOutgoing_UZ_Vagon ef_out_uz = new EFOutgoing_UZ_Vagon(context);
+                List<IGrouping<int, Directory_CargoETSNG>> group_etsng = ef_etsng.Context.GroupBy(c => c.code).ToList();
+                //foreach (IGrouping<int, Directory_CargoETSNG> gr in group_etsng.Where(g => g.Count() > 1).ToList())
+                foreach (IGrouping<int, Directory_CargoETSNG> gr in group_etsng.Where(g => g.Key == 324116).ToList())
+                {
+                    List<int> list_id_etsng = gr.Select(g => g.id).ToList();
+                    int id_original = 0;
+                    foreach (int id in list_id_etsng)
+                    {
+                        if (id_original == 0)
+                        {
+                            id_original = id;
+                        }
+                        else
+                        {
+                            Directory_Cargo cargo = ef_cargo.Context.Where(c => c.id_cargo_etsng == id).FirstOrDefault();
+                            if (cargo != null)
+                            {
+                                List<Arrival_UZ_Vagon> arrs = ef_arr_uz.Context.Where(a => a.id_cargo == cargo.id).ToList();
+                                List<Outgoing_UZ_Vagon> outs = ef_out_uz.Context.Where(o => o.id_cargo == cargo.id).ToList();
+                                foreach (Arrival_UZ_Vagon arr in arrs)
+                                {
+                                    arr.id_cargo = id_original;
+                                    ef_arr_uz.Update(arr);
+                                }
+                                foreach (Outgoing_UZ_Vagon ot in outs)
+                                {
+                                    ot.id_cargo = id_original;
+                                    ef_out_uz.Update(ot);
+                                }
+                                ef_cargo.Delete(cargo.id);
+
+                            }
+                            ef_etsng.Delete(id);
+                        }
+                    }
+
+                }
+                int result = context.SaveChanges();
+                return result;
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
         #region СПРАВОЧНИК ЖЕЛЕЗНЫХ ДОРОГ (IDS.Directory_Railway)
         ///// <summary>
         ///// Получить строку справочника железных дорог по имени администрации
@@ -1563,7 +1618,7 @@ namespace IDS
                     count++;
                     int res = CorrectDateTime_Of_Directory_WagonsRenf(wag.num, user);
                     result.SetUpdateResult(res, wag.num);
-                    Console.WriteLine("Вагон {0}, исправлено строк :{1} - осталось вагонов {2}",wag.num, result.result, result.count-count);
+                    Console.WriteLine("Вагон {0}, исправлено строк :{1} - осталось вагонов {2}", wag.num, result.result, result.count - count);
                 }
                 return result;
 
