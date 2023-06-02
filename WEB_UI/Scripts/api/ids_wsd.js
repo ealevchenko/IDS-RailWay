@@ -2485,10 +2485,10 @@
         });
     };
     //Получить отправленные вагоны за период (для отчетов)
-    ids_wsd.prototype.getReportViewOutgoingCarsOfPeriod = function (start, stop, callback) {
+    ids_wsd.prototype.getReportViewOutgoingCarsOfPeriod = function (start, stop, is_acts, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString() + '/is_acts/'+ is_acts,
             async: true,
             dataType: 'json',
             beforeSend: function () {

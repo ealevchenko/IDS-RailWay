@@ -1114,6 +1114,7 @@ namespace WEB_UI.Controllers.api
         public int[] id_station_from { get; set; }
         public int[] code_payer_sender_name { get; set; }
         public int[] code_payer_sender { get; set; }
+        public bool IsActs { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/outgoing_cars")]
@@ -1309,17 +1310,18 @@ namespace WEB_UI.Controllers.api
             }
         }
 
-        // GET: api/ids/rwt/outgoing_cars/view/start/2021-01-01T00:00:00/stop/2021-01-20T23:59:59
-        [Route("view/start/{start:datetime}/stop/{stop:datetime}")]
+        // GET: api/ids/rwt/outgoing_cars/view/start/2021-01-01T00:00:00/stop/2021-01-20T23:59:59/is_acts/True
+        [Route("view/start/{start:datetime}/stop/{stop:datetime}/is_acts/{is_acts:bool}")]
         [ResponseType(typeof(ViewOutgoingCars))]
-        public IHttpActionResult GetViewOutgoingCarsOfPeriod(DateTime start, DateTime stop)
+        public IHttpActionResult GetViewOutgoingCarsOfPeriod(DateTime start, DateTime stop, bool is_acts)
         {
             try
             {
                 System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
-                string sql = "select * from [IDS].[get_view_outgoing_cars_of_period](@start, @stop) order by outgoing_sostav_date_outgoing";
-                List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop).ToList();
+                System.Data.SqlClient.SqlParameter b_is_acts = new System.Data.SqlClient.SqlParameter("@IsActs", is_acts);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_period](@start, @stop, @IsActs) order by outgoing_sostav_date_outgoing";
+                List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, b_is_acts).ToList();
                 return Ok(list);
             }
             catch (Exception e)
@@ -1395,9 +1397,10 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_id_station_from = new System.Data.SqlClient.SqlParameter("@id_station_from", get_string_of_int(value.id_station_from));
                 System.Data.SqlClient.SqlParameter p_code_payer_sender_name = new System.Data.SqlClient.SqlParameter("@code_payer_sender_name", get_string_of_int(value.code_payer_sender_name));
                 System.Data.SqlClient.SqlParameter p_code_payer_sender = new System.Data.SqlClient.SqlParameter("@code_payer_sender", get_string_of_int(value.code_payer_sender));
+                System.Data.SqlClient.SqlParameter b_is_acts = new System.Data.SqlClient.SqlParameter("@IsActs", value.IsActs);
 
-                string sql = "EXEC [IDS].[get_view_outgoing_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @id_operator, @id_limiting, @id_owner,@id_genus, @id_out_division, @id_out_cargo, @id_out_cargo_group, @out_sap_cargo_code, @out_code_ext_station_to, @out_code_inlandrailway_to, @out_code_border_checkpoint, @id_arr_cargo, @id_certification_data, @id_arr_cargo_group, @id_arr_condition, @id_arr_division, @id_station_from, @code_payer_sender_name, @code_payer_sender";
-                List<ViewOutgoingCars> result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_id_operator, p_id_limiting, p_id_owner, p_id_genus, p_id_out_division, p_id_out_cargo, p_id_out_cargo_group, p_out_sap_cargo_code, p_out_code_ext_station_to, p_out_code_inlandrailway_to, p_out_code_border_checkpoint, p_id_arr_cargo, p_id_certification_data, p_id_arr_cargo_group, p_id_arr_condition, p_id_arr_division, p_id_station_from, p_code_payer_sender_name, p_code_payer_sender).ToList();
+                string sql = "EXEC [IDS].[get_view_outgoing_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @id_operator, @id_limiting, @id_owner,@id_genus, @id_out_division, @id_out_cargo, @id_out_cargo_group, @out_sap_cargo_code, @out_code_ext_station_to, @out_code_inlandrailway_to, @out_code_border_checkpoint, @id_arr_cargo, @id_certification_data, @id_arr_cargo_group, @id_arr_condition, @id_arr_division, @id_station_from, @code_payer_sender_name, @code_payer_sender, @IsActs";
+                List<ViewOutgoingCars> result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_id_operator, p_id_limiting, p_id_owner, p_id_genus, p_id_out_division, p_id_out_cargo, p_id_out_cargo_group, p_out_sap_cargo_code, p_out_code_ext_station_to, p_out_code_inlandrailway_to, p_out_code_border_checkpoint, p_id_arr_cargo, p_id_certification_data, p_id_arr_cargo_group, p_id_arr_condition, p_id_arr_division, p_id_station_from, p_code_payer_sender_name, p_code_payer_sender, b_is_acts).ToList();
                 return Ok(result);
             }
             catch (Exception e)

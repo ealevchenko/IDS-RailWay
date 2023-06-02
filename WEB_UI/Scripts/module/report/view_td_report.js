@@ -52,7 +52,8 @@
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
             'vtdr_title_report_type_3': '«За месяц» c:{0} по {1}',
             'vtdr_title_report_type_4': '«За период» c:{0} по {1}',
-            'vtdr_title_report_type_5': '«За отчетный период» c:{0} по {1}',
+            'vtdr_title_report_type_5': '«За отчетный период (продажа)» c:{0} по {1}',
+            'vtdr_title_report_type_6': '«За отчетный период (плата)» c:{0} по {1}',
 
             'vtdr_card_header_report_1_1_arr': 'ПРИБЫТИЕ',
             'vtdr_card_header_report_1_1_out': 'СДАЧА',
@@ -912,7 +913,8 @@
                 { value: 2, text: 'Календарные сутки' },
                 { value: 3, text: 'От начала месяца' },
                 { value: 4, text: 'Произвольный выбор' },
-                { value: 5, text: 'Отчетный период' },
+                { value: 5, text: 'Отчетный период (продажа)' },
+                { value: 6, text: 'Отчетный период (плата)' },
             ],
             default: this.type,
             select: function (event, ui) {
@@ -1023,6 +1025,7 @@
         this.type = type;
         this.form_panel.set('type_select', this.type);
         switch (type) {
+            case 6:
             case 5: {
                 this.start = moment().set({ 'year': this.year, 'month': this.month, 'date': 1, 'hour': 20, 'minute': 1, 'second': 0 }).subtract(1, 'days')._d;
                 this.stop = moment().set({ 'year': (this.month < 11 ? this.year : this.year + 1), 'month': (this.month < 11 ? this.month + 1 : 0), 'date': 1, 'hour': 20, 'minute': 0, 'second': 0 }).subtract(1, 'days')._d;
@@ -1046,9 +1049,9 @@
             case 1:
             case 2:
             case 3:
-            case 7:
-            case 8:
-            case 9:
+            //case 7:
+            //case 8:
+            //case 9:
                 {
                     this.div_select_date.show();
                     this.div_interval_date.hide();
@@ -1169,11 +1172,11 @@
                 break;
             };
             case 5: {
-                this.view_report_5_1(this.start, this.stop);
+                this.view_report_5_1(this.start, this.stop, this.type === 6 ? true : false );
                 break;
             };
             case 6: {
-                this.view_report_6_1(this.start, this.stop);
+                this.view_report_6_1(this.start, this.stop, this.type === 6 ? true : false);
                 break;
             };
             case 7: {
@@ -1185,7 +1188,7 @@
                 break;
             };
             case 9: {
-                this.view_report_9_1(this.start, this.stop);
+                this.view_report_9_1(this.start, this.stop, this.type === 6 ? true : false);
                 break;
             };
         }
@@ -7248,7 +7251,7 @@
         /*}.bind(this));*/
     };
     // Показать отчет  "Отчет по отправке (общий)"
-    view_td_report.prototype.view_report_5_1 = function (start, stop) {
+    view_td_report.prototype.view_report_5_1 = function (start, stop, is_acts) {
         // Запускаем 6 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -7288,6 +7291,7 @@
             id_station_from: null,
             code_payer_sender: null,
             code_payer_sender_name: null,
+            IsActs: is_acts,
         };
         // Загрузим данные
         this.load_select_report_5_1(where, function () {
@@ -7327,6 +7331,7 @@
                 id_station_from: this.select_station_amkr.val(),                        // Станция примыкания ОТПР
                 code_payer_sender_name: this.select_payer_sender_name.val(),                 // Плательщик ОТПР
                 code_payer_sender: this.select_code_payer_sender.val(),            // Код плат.ОТПР
+                IsActs: false,
             };
         } else {
             cur_where = where;
@@ -8606,7 +8611,7 @@
         //}.bind(this));
     };
     // Показать отчет  "Отчет по отправлению (общий)"
-    view_td_report.prototype.view_report_6_1 = function (start, stop) {
+    view_td_report.prototype.view_report_6_1 = function (start, stop, is_acts) {
         // Запускаем 1 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -8631,6 +8636,7 @@
             id_out_cargo: null,
             out_code_ext_station_to: null,
             id_station_from: null,
+            IsActs: is_acts,
         };
         // Загрузим данные
         this.load_select_report_6_1(where, function () {
@@ -8676,6 +8682,7 @@
                 id_out_cargo: this.select_out_cargo.val(),                              // Груз ОТПР
                 out_code_ext_station_to: this.select_out_ext_station_to.val(),          // Станция назначения
                 id_station_from: this.select_station_amkr.val(),                        // Станция примыкания ОТПР
+                IsActs: false,
             };
         } else {
             cur_where = where;
@@ -10503,7 +10510,7 @@
         //}.bind(this));
     };
     // Показать отчет  "Плата за пользование (ИТОГ)"
-    view_td_report.prototype.view_report_9_1 = function (start, stop) {
+    view_td_report.prototype.view_report_9_1 = function (start, stop, is_acts) {
         // Запускаем 6 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -10519,7 +10526,7 @@
 
         LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
         // Отправка
-        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, function (result_cars) {
+        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, is_acts, function (result_cars) {
             this.outgoing_cars = result_cars;
             var list_cars_usage_fee = [];
             var list_usage_fee_operator_amkr = [];

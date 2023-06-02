@@ -1,13 +1,15 @@
-declare @start datetime = convert(datetime,'2023-05-01',120)
-declare @stop datetime = convert(datetime,'2023-06-01',120)
-declare @num int = 56067531
+use [KRR-PA-CNT-Railway]
 
+	declare @start datetime = convert(datetime,'2023-03-31 20:01:00',120) 
+	declare @stop datetime = convert(datetime,'2023-04-30 20:00:00',120)
+	declare @IsActs bit = 1
 
-	select
+	select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
 
+	select 
 		out_car.[id] as outgoing_car_id
-		--,[next_return cargo] = ([IDS].[get_next_arrival_cars_return_cargo_of_id_wir](wir.id))
-		--,arr_doc_vag_next.cargo_returns
+		--,date_start = (case when @IsActs=1 then (case when arr_sost.[date_adoption_act] is not null then arr_sost.[date_adoption_act] else arr_sost.[date_adoption] end) else arr_sost.[date_adoption]  end)
+		--,date_stop = (case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)
 		,out_car.[num]
 		,out_car.[position] as outgoing_car_position
 		,wir.id as id_wir
@@ -742,7 +744,12 @@ declare @num int = 56067531
 		--> Справочник платильщик (по отправке)
 		Left JOIN [IDS].[Directory_PayerSender] as out_payer_sender ON out_doc_sostav.[code_payer] = out_payer_sender.[code]
 	WHERE 
-	--out_car.[num] = @num and
+
 	--out_sost.date_readiness_uz>= @start and out_sost.date_readiness_uz<=@stop and out_car.position_outgoing is not null
-	out_sost.date_outgoing>= @start and out_sost.date_outgoing<=@stop and out_car.position_outgoing is not null and arr_doc_vag_next.cargo_returns is not null --[IDS].[get_next_arrival_cars_return_cargo_of_id_wir](wir.id) is null
+	--out_car.[num] = 63532584 and
+
+	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)>= @start and 
+	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)<=@stop and 
+	out_car.position_outgoing is not null and 
+	arr_doc_vag_next.cargo_returns is null
 	order by out_sost.num_doc, out_car.position_outgoing
