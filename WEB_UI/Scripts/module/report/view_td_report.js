@@ -105,6 +105,7 @@
             'vtdr_label_client': 'Клиентура',
             'vtdr_label_not_client': 'Без учета клиентуры',
             'vtdr_label_paid': 'Платные',
+            'vtdr_label_shu': 'ШУ',
 
             'vtdr_label_wagon_nums': '№№ ваг:',
             'vtdr_title_wagon_nums': 'Введите номера вагонов',
@@ -1051,9 +1052,9 @@
             case 1:
             case 2:
             case 3:
-            //case 7:
-            //case 8:
-            //case 9:
+                //case 7:
+                //case 8:
+                //case 9:
                 {
                     this.div_select_date.show();
                     this.div_interval_date.hide();
@@ -1174,7 +1175,7 @@
                 break;
             };
             case 5: {
-                this.view_report_5_1(this.start, this.stop, this.type === 6 ? true : false );
+                this.view_report_5_1(this.start, this.stop, this.type === 6 ? true : false);
                 break;
             };
             case 6: {
@@ -5441,6 +5442,7 @@
         this.switch_client.val(false);
         this.switch_not_client.val(false);
         this.switch_paid.val(false);
+        this.switch_shu.val(true);
         this.select_station_amkr.val(-1);
         // Обработать и показать данные
         this.process_data_view_report_3_1(this.clone_wagons_adoption, null);
@@ -5454,6 +5456,7 @@
             this.switch_client.val(false);
             this.switch_not_client.val(false);
             this.switch_paid.val(false);
+            this.switch_shu.val(true);
             this.select_station_amkr.val(-1);
             this.wagons_adoption = [];
             this.clone_wagons_adoption = [];
@@ -8057,6 +8060,25 @@
         });
         row_setup_sw5.$row.append(sw_paid.$element);
         this.switch_paid = sw_paid.element;
+        // ШУ
+        var row_setup_sw6 = new this.fe_ui.bs_row();
+        var sw_shu = new this.fe_ui.bs_switch({
+            id: 'shu',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_shu', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+            }.bind(this),
+        });
+        row_setup_sw6.$row.append(sw_shu.$element);
+        this.switch_shu = sw_shu.element;
         // Оператор по отправке
         var row_setup6_1 = new this.fe_ui.bs_row();
         var select_operation_amkr = new this.fe_ui.bs_select_multiple({
@@ -8225,6 +8247,7 @@
             .append(row_setup_sw3.$row)
             .append(row_setup_sw4.$row)
             .append(row_setup_sw5.$row)
+            .append(row_setup_sw6.$row)
             .append(row_setup6_1.$row)
             .append(row_setup6_2.$row)
             .append(row_setup6_3.$row)
@@ -8832,7 +8855,7 @@
                 if (!op) {
                     // Не данных 
                     list_result.push({
-                        id_sort: (el_wag.outgoing_uz_vagon_id_group * 10000)+el_wag.outgoing_uz_vagon_id_cargo,
+                        id_sort: (el_wag.outgoing_uz_vagon_id_group * 10000) + el_wag.outgoing_uz_vagon_id_cargo,
                         id_cargo: el_wag.outgoing_uz_vagon_id_cargo,
                         cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
                         id_group: el_wag.outgoing_uz_vagon_id_group,
@@ -8881,32 +8904,35 @@
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
             };
         }.bind(this));
-        $.each(this.mine_cargo, function (key, el_mc) {
-            var res = list_groups_cargo.indexOf(el_mc.id_group_cargo);
-            if (res === -1) {
-                var op = list_result.find(function (o) {
-                    return o.id_group === el_mc.id_group_cargo &&
-                        o.id_division === el_mc.id_division
-                }.bind(this));
-                if (!op) {
-                    // Не данных 
-                    list_result.push({
-                        id_group: el_mc.id_group_cargo,
-                        group_name: el_mc['cargo_group_name_' + App.Lang],
-                        id_out_group: el_mc.id_out_group_cargo,
-                        cargo_out_group_name: el_mc['cargo_out_group_name_' + App.Lang],
-                        cargo_name: el_mc['cargo_name_' + App.Lang],
-                        id_division: el_mc.id_division,
-                        division_abbr: el_mc['division_abbr_' + App.Lang],
-                        count_wagon: el_mc.count_wagon,
-                        sum_vesg: el_mc.vesg,
-                    });
-                } else {
-                    op.count_wagon = op.count_wagon ? op.count_wagon + el_mc.count_wagon : op.count_wagon;
-                    op.sum_vesg = el_mc.vesg ? el_mc.vesg + op.sum_vesg : op.sum_vesg;
-                };
-            }
-        }.bind(this));
+        if (this.switch_shu.val() === true) {
+            $.each(this.mine_cargo, function (key, el_mc) {
+                var res = list_groups_cargo.indexOf(el_mc.id_group_cargo);
+                if (res === -1) {
+                    var op = list_result.find(function (o) {
+                        return o.id_group === el_mc.id_group_cargo &&
+                            o.id_division === el_mc.id_division
+                    }.bind(this));
+                    if (!op) {
+                        // Не данных 
+                        list_result.push({
+                            id_group: el_mc.id_group_cargo,
+                            group_name: el_mc['cargo_group_name_' + App.Lang],
+                            id_out_group: el_mc.id_out_group_cargo,
+                            cargo_out_group_name: el_mc['cargo_out_group_name_' + App.Lang],
+                            cargo_name: el_mc['cargo_name_' + App.Lang],
+                            id_division: el_mc.id_division,
+                            division_abbr: el_mc['division_abbr_' + App.Lang],
+                            count_wagon: el_mc.count_wagon,
+                            sum_vesg: el_mc.vesg,
+                        });
+                    } else {
+                        op.count_wagon = op.count_wagon ? op.count_wagon + el_mc.count_wagon : op.count_wagon;
+                        op.sum_vesg = el_mc.vesg ? el_mc.vesg + op.sum_vesg : op.sum_vesg;
+                    };
+                }
+            }.bind(this));
+        }
+
 
         if (typeof callback === 'function') {
             //callback(list_sort_result);
@@ -10038,6 +10064,7 @@
         if (this.switch_client) { this.switch_client.val(false); }
         if (this.switch_not_client) { this.switch_not_client.val(false); }
         if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.switch_shu) { this.switch_shu.val(true); }
         if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
         if (this.select_limiting) { this.select_limiting.val(-1); }
         if (this.select_out_division) { this.select_out_division.val(-1); }
