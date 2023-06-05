@@ -405,7 +405,7 @@
 
         this.report = null;         // Номер выбранного отчета
         this.report_panel = null;   // Номер выбранного панели отчета
-        this.type = 1;          // Тип диапазона времени отчета
+        this.type = 1;              // Тип диапазона времени отчета
         // Диапазон времени
         this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
         this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
@@ -436,6 +436,8 @@
         this.wagons_outgoing = [];
         this.mine_cargo = [];
         this.clone_wagons_outgoing = [];
+
+        this.is_acts = false;
 
         // Сылки на общие отчеты 
         this.report_links_cammon = [
@@ -6360,6 +6362,7 @@
     //--------------------------------------------------------------------------------------------------
     // Инициализировать отчет "Отчет по отправке (общий)"
     view_td_report.prototype.init_report_5_1 = function () {
+        this.is_acts = false;
         // очистим основное окно отчета
         this.$main_report.empty();
         this.report = 5; // номер отчета
@@ -7252,6 +7255,7 @@
     };
     // Показать отчет  "Отчет по отправке (общий)"
     view_td_report.prototype.view_report_5_1 = function (start, stop, is_acts) {
+        this.is_acts = is_acts;
         // Запускаем 6 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -7291,7 +7295,7 @@
             id_station_from: null,
             code_payer_sender: null,
             code_payer_sender_name: null,
-            IsActs: is_acts,
+            IsActs: this.is_acts,
         };
         // Загрузим данные
         this.load_select_report_5_1(where, function () {
@@ -7331,7 +7335,7 @@
                 id_station_from: this.select_station_amkr.val(),                        // Станция примыкания ОТПР
                 code_payer_sender_name: this.select_payer_sender_name.val(),                 // Плательщик ОТПР
                 code_payer_sender: this.select_code_payer_sender.val(),            // Код плат.ОТПР
-                IsActs: false,
+                IsActs: this.is_acts,
             };
         } else {
             cur_where = where;
@@ -7864,6 +7868,7 @@
     //------------------------------------------------------------------------------------------------
     // Инициализировать отчет "Отправление ИТОГ"
     view_td_report.prototype.init_report_6_1 = function () {
+        this.is_acts = false;
         // очистим основное окно отчета
         this.$main_report.empty();
         this.report = 6;        // номер отчета
@@ -8612,6 +8617,7 @@
     };
     // Показать отчет  "Отчет по отправлению (общий)"
     view_td_report.prototype.view_report_6_1 = function (start, stop, is_acts) {
+        this.is_acts = is_acts;
         // Запускаем 1 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -8636,7 +8642,7 @@
             id_out_cargo: null,
             out_code_ext_station_to: null,
             id_station_from: null,
-            IsActs: is_acts,
+            IsActs: this.is_acts,
         };
         // Загрузим данные
         this.load_select_report_6_1(where, function () {
@@ -8682,7 +8688,7 @@
                 id_out_cargo: this.select_out_cargo.val(),                              // Груз ОТПР
                 out_code_ext_station_to: this.select_out_ext_station_to.val(),          // Станция назначения
                 id_station_from: this.select_station_amkr.val(),                        // Станция примыкания ОТПР
-                IsActs: false,
+                IsActs: this.is_acts,
             };
         } else {
             cur_where = where;
@@ -10267,6 +10273,7 @@
     //------------------------------------------------------------------------------------------------
     // Инициализировать отчет "Плата за пользование (ИТОГ)"
     view_td_report.prototype.init_report_9_1 = function () {
+        this.is_acts = false;
         // очистим основное окно отчета
         this.$main_report.empty();
         this.report = 9;        // номер отчета
@@ -10511,6 +10518,7 @@
     };
     // Показать отчет  "Плата за пользование (ИТОГ)"
     view_td_report.prototype.view_report_9_1 = function (start, stop, is_acts) {
+        this.is_acts = is_acts;
         // Запускаем 6 процесса инициализации (паралельно)
         var process_load = 1;
         // Выход из загрузки
@@ -10526,7 +10534,7 @@
 
         LockScreen(langView('vtdr_load_adoption_sostav', App.Langs));
         // Отправка
-        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, is_acts, function (result_cars) {
+        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, this.is_acts, function (result_cars) {
             this.outgoing_cars = result_cars;
             var list_cars_usage_fee = [];
             var list_usage_fee_operator_amkr = [];
@@ -10602,7 +10610,6 @@
                     };
                 };
             }.bind(this));
-
             this.outgoing_cars_usage_fee = this.sort_table(list_cars_usage_fee, 'id_cargo', 'count_wagon', true);
             this.outgoing_cars_usage_fee_operator_amkr = this.sort_table(list_usage_fee_operator_amkr, 'id_cargo', 'count_wagon', true);
 
