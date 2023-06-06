@@ -199,6 +199,8 @@
             'ttdr_field_outgoing_cars_arrival_uz_document_station_from_name': 'Ст. ОТПР',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_name': 'Разметка ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_name': 'Разметка ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_abbr': 'Разметка ОТПР',
             'ttdr_field_outgoing_cars_arrival_sostav_id_station_on': 'id Ст.примыкания ПРИБ',
             'ttdr_field_outgoing_cars_arrival_sostav_station_on_name': 'Ст.примыкания ПРИБ',
             'ttdr_field_outgoing_cars_arrival_sostav_station_on_abbr': 'Ст.примыкания ПРИБ',
@@ -2512,6 +2514,23 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Разметка по отправке
+        {
+            field: 'outgoing_cars_outgoing_uz_vagon_condition_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // Станция примыкания по прибытию
         {
             field: 'outgoing_cars_arrival_sostav_id_station_on',
@@ -3367,7 +3386,9 @@
         collums.push({ field: 'outgoing_cars_arrival_uz_document_code_stn_from', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
-        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' }); //25
+        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr', title: null, class: null });
+        //26
         //
         collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
@@ -5571,7 +5592,7 @@
                 //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="25"></td>' +
+                '<td class="dt-centr" colspan="26"></td>' +
                 '<td class="dt-centr"></td>' +
                 //'<td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td>' +
