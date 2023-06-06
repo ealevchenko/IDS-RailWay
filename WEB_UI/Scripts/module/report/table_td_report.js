@@ -3057,6 +3057,10 @@
             autoClose: true
         },
         {
+            button: 'print',
+            extend: 'print',
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -3793,6 +3797,7 @@
     table_td_report.prototype.init_button_adoption_sostav = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3807,6 +3812,7 @@
     table_td_report.prototype.init_button_outgoing_sostav = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3821,6 +3827,7 @@
     table_td_report.prototype.init_button_adoption_sostav_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3835,6 +3842,7 @@
     table_td_report.prototype.init_button_outgoing_sostav_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3849,6 +3857,7 @@
     table_td_report.prototype.init_button_sostav_arrival_naturka = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3863,6 +3872,7 @@
     table_td_report.prototype.init_button_sostav_outgoing_naturka = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3877,6 +3887,7 @@
     table_td_report.prototype.init_button_adoption_wagon_not_operation = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3891,6 +3902,7 @@
     table_td_report.prototype.init_button_adoption_common_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3905,6 +3917,7 @@
     table_td_report.prototype.init_button_outgoing_common_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3919,6 +3932,7 @@
     table_td_report.prototype.init_button_adoption_cargo_operation_amkr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3933,6 +3947,7 @@
     table_td_report.prototype.init_button_adoption_operator_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3947,6 +3962,7 @@
     table_td_report.prototype.init_button_adoption_cargo_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3961,6 +3977,7 @@
     table_td_report.prototype.init_button_adoption_group_cargo_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3975,6 +3992,7 @@
     table_td_report.prototype.init_button_adoption_genus_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3989,6 +4007,7 @@
     table_td_report.prototype.init_button_adoption_cargo_sap_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4003,6 +4022,7 @@
     table_td_report.prototype.init_button_adoption_station_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4017,6 +4037,7 @@
     table_td_report.prototype.init_button_adoption_division_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4031,6 +4052,7 @@
     table_td_report.prototype.init_button_adoption_to_gs = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4045,6 +4067,7 @@
     table_td_report.prototype.init_button_incoming_outgoing_car = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4059,6 +4082,7 @@
     table_td_report.prototype.init_button_list_wagons_rent = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4073,6 +4097,7 @@
     table_td_report.prototype.init_button_outgoing_cargo_operator = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4087,6 +4112,7 @@
     table_td_report.prototype.init_button_outgoing_cargo_ext_station = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4101,6 +4127,7 @@
     table_td_report.prototype.init_button_outgoing_total_operators = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4115,6 +4142,7 @@
     table_td_report.prototype.init_button_outgoing_total_operators_cargo = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4129,6 +4157,7 @@
     table_td_report.prototype.init_button_outgoing_total_division_metall = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4143,6 +4172,7 @@
     table_td_report.prototype.init_button_outgoing_total_division_cargo = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4157,6 +4187,7 @@
     table_td_report.prototype.init_button_outgoing_total_cargo_metall = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4171,6 +4202,7 @@
     table_td_report.prototype.init_button_outgoing_total_ext_station = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4185,6 +4217,7 @@
     table_td_report.prototype.init_button_usage_fee_cargo = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4199,6 +4232,7 @@
     table_td_report.prototype.init_button_usage_fee_cargo_not_derailment = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4213,6 +4247,7 @@
     table_td_report.prototype.init_button_usage_fee_operator_amkr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4227,6 +4262,7 @@
     table_td_report.prototype.init_button_usage_fee_period = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4241,6 +4277,7 @@
     table_td_report.prototype.init_button_usage_fee_period_select = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4255,6 +4292,7 @@
     table_td_report.prototype.init_button_usage_fee_outgoing_cars = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -4269,6 +4307,7 @@
     table_td_report.prototype.init_button_manual_usage_fee = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
