@@ -1346,7 +1346,6 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
         public object get_string_of_int(int[] vals)
         {
             if (vals != null && vals.Count() > 0)
@@ -1355,7 +1354,6 @@ namespace WEB_UI.Controllers.api
             }
             return (object)DBNull.Value;
         }
-
         /// <summary>
         /// Выборка принятых вагонов по условию
         /// </summary>

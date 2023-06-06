@@ -8416,7 +8416,7 @@
         this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
         this.chart_total_outgoing_cargo_operator.init({
             alert: null,
-            type_chart: 'pie_exploding_pie_chart',     //stacked_column_chart_percent
+            type_chart: 'stacked_column_chart_percent',     //pie_exploding_pie_chart   stacked_column_chart_percent
             list_name: this.ids_dir.list_cargo_out_group,
             fn_init: function () {
                 // На проверку окончания инициализации
@@ -9384,87 +9384,34 @@
             // Отобразим
             this.table_total_outgoing_cargo_operator.view(list_view);
 
-            var data = [
-
-            ];
-
-            //[
-            //{
-            //    name: "Lithuania",
-            //    value: 500,
-            //    subData: [
-            //        { name: "АПП рр", value: 200 },
-            //        { name: "B", value: 150 },
-            //        { name: "C", value: 100 },
-            //        { name: "D", value: 100 }
-            //    ]
-            //},
-            //{
-            //    name: "Czechia",
-            //    value: 300,
-            //    subData: [
-            //        { name: "B", value: 150 }
-            //    ]
-            //},
-            //{
-            //    name: "Ireland",
-            //    value: 200,
-            //    subData: [
-            //        { name: "АПП рр", value: 110 },
-            //        { name: "C", value: 30 }
-            //    ]
-            //},
-            //{
-            //    name: "Germany",
-            //    value: 150,
-            //    subData: [
-            //        { name: "АПП рр", value: 80 },
-            //        { name: "B", value: 40 },
-            //        { name: "C", value: 30 }
-            //    ]
-            //},
-            //{
-            //    name: "Australia",
-            //    value: 140,
-            //    subData: [
-            //        { name: "АПП рр", value: 90 },
-            //        { name: "B", value: 40 },
-            //        { name: "C", value: 10 }
-            //    ]
-            //},
-            //{
-            //    name: "Austria",
-            //    value: 120,
-            //    subData: [
-            //        { name: "АПП рр", value: 60 },
-            //        { name: "B", value: 30 },
-            //        { name: "C", value: 30 }
-            //    ]
-            //}
-            //];
-
+            var data = [];
             $.each(list_view, function (key, element) {
-                var gn = data.find(function (o) { return o.name === shorten_string(element.cargo_out_group_name); });
-                if (gn === undefined) {
-                    var subData = [];
-                    subData.push({ name: element.operator_abbr, value: element.count_wagon })
-                    data.push({ "name": shorten_string(element.cargo_out_group_name), "value": element.count_wagon, subData: subData });
-
-                } else {
-                    gn.value += element.count_wagon;
-                    gn.subData.push({ name: element.operator_abbr, value: element.count_wagon })
-                }
-                //var op = data.find(function (o) { return o.name === element.operator_abbr; });
-                //if (op === undefined) {
-                //    var subData = [];
-                //    subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
-                //    data.push({ "name": element.operator_abbr, "value": element.count_wagon, subData: subData });
-
-                //} else {
-                //    op.value += element.count_wagon;
-                //    op.subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
-                //}
+                data.push({ "group": element.operator_abbr, "name": element.cargo_out_group_name, "fieldName": element.id_out_group, "value": element.count_wagon });
             }.bind(this));
+
+            //var data = [];
+            //$.each(list_view, function (key, element) {
+            //    var gn = data.find(function (o) { return o.name === shorten_string(element.cargo_out_group_name); });
+            //    if (gn === undefined) {
+            //        var subData = [];
+            //        subData.push({ name: element.operator_abbr, value: element.count_wagon })
+            //        data.push({ "name": shorten_string(element.cargo_out_group_name), "value": element.count_wagon, subData: subData });
+
+            //    } else {
+            //        gn.value += element.count_wagon;
+            //        gn.subData.push({ name: element.operator_abbr, value: element.count_wagon })
+            //    }
+            //    //var op = data.find(function (o) { return o.name === element.operator_abbr; });
+            //    //if (op === undefined) {
+            //    //    var subData = [];
+            //    //    subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
+            //    //    data.push({ "name": element.operator_abbr, "value": element.count_wagon, subData: subData });
+
+            //    //} else {
+            //    //    op.value += element.count_wagon;
+            //    //    op.subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
+            //    //}
+            //}.bind(this));
 
             this.chart_data_total_outgoing_cargo_operator = data;
             this.view_chart_total_outgoing_cargo_operator();
