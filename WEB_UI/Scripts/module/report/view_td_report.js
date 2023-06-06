@@ -9401,16 +9401,6 @@
             //        gn.value += element.count_wagon;
             //        gn.subData.push({ name: element.operator_abbr, value: element.count_wagon })
             //    }
-            //    //var op = data.find(function (o) { return o.name === element.operator_abbr; });
-            //    //if (op === undefined) {
-            //    //    var subData = [];
-            //    //    subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
-            //    //    data.push({ "name": element.operator_abbr, "value": element.count_wagon, subData: subData });
-
-            //    //} else {
-            //    //    op.value += element.count_wagon;
-            //    //    op.subData.push({ name: element.cargo_out_group_name, value: element.count_wagon })
-            //    //}
             //}.bind(this));
 
             this.chart_data_total_outgoing_cargo_operator = data;
