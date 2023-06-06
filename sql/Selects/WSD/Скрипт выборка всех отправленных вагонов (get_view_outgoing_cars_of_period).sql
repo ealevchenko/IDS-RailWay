@@ -4,7 +4,7 @@ use [KRR-PA-CNT-Railway]
 	declare @stop datetime = convert(datetime,'2023-04-30 20:00:00',120)
 	declare @IsActs bit = 1
 
-	select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
+	--select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
 
 	select 
 		out_car.[id] as outgoing_car_id
@@ -747,7 +747,7 @@ use [KRR-PA-CNT-Railway]
 
 	--out_sost.date_readiness_uz>= @start and out_sost.date_readiness_uz<=@stop and out_car.position_outgoing is not null
 	--out_car.[num] = 63532584 and
-
+	arr_wag_rent.[id_operator] not in (188, 1237, 1238) and
 	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)>= @start and 
 	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)<=@stop and 
 	out_car.position_outgoing is not null and 
