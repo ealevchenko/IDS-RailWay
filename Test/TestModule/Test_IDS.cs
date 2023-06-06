@@ -619,7 +619,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(210839, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(211055, @"EUROPE\ealevchenko");
         }
         /// <summary>
         /// Расчет платы за пользование по сданным составам за выбранный период

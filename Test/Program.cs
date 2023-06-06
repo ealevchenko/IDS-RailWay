@@ -259,7 +259,7 @@ namespace Test
             //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();            // 
 
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
-            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();            //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 
@@ -314,7 +314,7 @@ namespace Test
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
-            tids.IDS_Directory_ClearDirectory_Cargo();    // Административной функции очистить от дублей справочник грузов
+            //tids.IDS_Directory_ClearDirectory_Cargo();    // Административной функции очистить от дублей справочник грузов
             #endregion
 
             Console.WriteLine("Press any key to exit...");
