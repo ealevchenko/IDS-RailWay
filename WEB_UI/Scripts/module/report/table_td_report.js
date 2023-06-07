@@ -332,6 +332,7 @@
             'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
             //'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
             'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Время пользования',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime1': 'Общий простой , час',
             'ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final': 'Плата , грн.',
 
             'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
@@ -3543,9 +3544,9 @@
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
         //collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime1', App.Langs), class: null }); 
         collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });

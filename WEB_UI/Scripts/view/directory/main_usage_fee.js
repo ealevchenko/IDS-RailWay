@@ -54,6 +54,9 @@
             'mainuf_mess_ok_operation_aplly_period': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА" - выполнена',
             'mainuf_mess_error_operation_aplly_period': 'Ошибка выполнения операции "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА", код ошибки=',
             'mainuf_mess_valid_select_period_is_null': 'Не выбраны связки оператор-род',
+
+            'mainuf_error_value_manual_fee_amount': 'Ошибка, введена неправильная сумма :{0} - число должно быть больше 0 и иметь 2 знака после точки!',
+
         },
         'en':  //default language: English
         {
@@ -360,9 +363,9 @@
         alert.clear_message();
         LockScreen(langView('mainuf_update', App.Langs));
         $bt_update_wagon.prop("disabled", true);
-        if (!isNumeric(num)) {
+        if (!isDecimal(num)) {
             // Ошибка ввода
-            alert.out_error_message('Ошибка, введена неправильная сумма :' + num);
+            alert.out_error_message(langView('mainuf_error_value_manual_fee_amount', App.Langs).format(num));
             $bt_update_wagon.prop("disabled", false);
             LockScreenOff();
         } else {
