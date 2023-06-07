@@ -762,6 +762,9 @@ var get_select_string_value = function (select) {
 var isNumeric = function (value) {
     return /^\d+$/.test(value);
 };
+var isDecimal = function (value) {
+    return /^(0|[1-9]\d*)(\.[0-9]{1,2})?$/.test(value);
+};
 
 //==============================================================================================
 /* ----------------------------------------------------------
