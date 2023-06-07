@@ -1,12 +1,14 @@
 use [KRR-PA-CNT-Railway]
 
-	declare @start datetime = convert(datetime,'2023-03-31 20:01:00',120) 
-	declare @stop datetime = convert(datetime,'2023-04-30 20:00:00',120)
-	declare @IsActs bit = 1
+	declare @start datetime = convert(datetime,'2023-06-01 20:01:00',120) 
+	declare @stop datetime = convert(datetime,'2023-06-30 20:00:00',120)
+	declare @IsActs bit = 0
 
 	--select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
 
 	select 
+	--arr_wag_rent.[id_operator]
+	--,out_wag_rent.[id_operator] 
 		out_car.[id] as outgoing_car_id
 		--,date_start = (case when @IsActs=1 then (case when arr_sost.[date_adoption_act] is not null then arr_sost.[date_adoption_act] else arr_sost.[date_adoption] end) else arr_sost.[date_adoption]  end)
 		--,date_stop = (case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)
@@ -746,8 +748,8 @@ use [KRR-PA-CNT-Railway]
 	WHERE 
 
 	--out_sost.date_readiness_uz>= @start and out_sost.date_readiness_uz<=@stop and out_car.position_outgoing is not null
-	--out_car.[num] = 63532584 and
-	arr_wag_rent.[id_operator] not in (188, 1237, 1238) and
+	--out_car.[num] = 24012866 and
+	(out_wag_rent.[id_operator] not in (188, 1237, 1238) or out_wag_rent.[id_operator] is null) and
 	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)>= @start and 
 	(case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)<=@stop and 
 	out_car.position_outgoing is not null and 
