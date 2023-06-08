@@ -2667,8 +2667,6 @@
     <Content Include="Scripts\view\idsreport\main_sd_report.js" />
     <Content Include="Scripts\view\idsrwt\main_incoming.js" />
     <Content Include="Scripts\view\idsrwt\main_outgoing.js" />
-    <Content Include="Scripts\view\idsrwt\incoming.js" />
-    <Content Include="Scripts\view\idsrwt\arrival.js" />
     <Content Include="Scripts\view\idsrwt\test.js" />
     <Content Include="Scripts\view\idsrwt\wsd.js" />
     <Content Include="Scripts\view\shared\common.js" />
