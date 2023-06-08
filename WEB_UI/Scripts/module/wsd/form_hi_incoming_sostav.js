@@ -19,6 +19,8 @@
     var max_err_date_adoption = 3 * 24 * 60;    // TODO: Максимальная разница в минутах дата приема
     var min_err_date_adoption_act = -2 * 60;    // TODO: Минимальная разница в минутах дата приема по акту
     var max_err_date_arrival_act = 2 * 60;      // TODO: Максимальная разница в минутах дата приема по акту
+    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko'];               // Список админов для правки
+
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -197,6 +199,8 @@
             // Создадим форму правки операторов
             var FIF = App.form_infield;
             this.form = new FIF();
+
+            var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
 
             // Определим поля
             var fl_id = {
@@ -767,7 +771,7 @@
                 close: null,
                 add_validation: null,
                 edit_validation: null,
-                default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
+                default: null, //moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
                 row: null,
                 col: null,
                 col_prefix: null,
@@ -787,7 +791,7 @@
                 close: null,
                 add_validation: null,
                 edit_validation: null,
-                default: App.User_Name,
+                default: null, //App.User_Name,
                 row: null,
                 col: null,
                 col_prefix: null,
@@ -840,8 +844,8 @@
             fields.push(fl_train);
             fields.push(fl_composition_index);
             fields.push(fl_date_arrival);
-            fields.push(this.settings.mode === 0 ? fl_date_adoption : fl_date_adoption_1);
-            fields.push(this.settings.mode === 0 ? fl_date_adoption_act : fl_date_adoption_act_1);
+            fields.push(this.settings.mode === 0 ? (!user_adm ? fl_date_adoption : fl_date_adoption_1) : fl_date_adoption_1);
+            fields.push(this.settings.mode === 0 ? (!user_adm ? fl_date_adoption_act : fl_date_adoption_act_1) : fl_date_adoption_act_1);
             fields.push(fl_station_from);
             fields.push(this.settings.mode === 0 ? fl_station_on : fl_station_on_1);
             fields.push(this.settings.mode === 0 ? fl_way : fl_way_1);
@@ -983,6 +987,8 @@
         // Добавить или править состав
         if (this.settings.mode === 0) {
             if (data.old === null) {
+                data.new.create = moment().format("YYYY-MM-DDThh:mm:ss");
+                data.new.create_user = App.User_Name;
                 // Добавить
                 this.ids_wsd.postIncomingSostav(data.new, function (result) {
                     if (result > 0) {
@@ -1018,7 +1024,7 @@
         if (this.settings.mode === 1) {
             var operation = {
                 id_arrival_sostav: data.new.id,
-                num_doc : Number(data.new.num_doc),
+                num_doc: Number(data.new.num_doc),
                 train: data.new.train,
                 composition_index: data.new.composition_index,
                 date_arrival: data.new.date_arrival,
@@ -1045,8 +1051,6 @@
                 }
             }.bind(this));
         }
-
-
     };
     // Очистить сообщения
     form_hi_incoming_sostav.prototype.out_clear = function () {

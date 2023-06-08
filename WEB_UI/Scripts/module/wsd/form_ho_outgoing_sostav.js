@@ -12,6 +12,7 @@
 
     var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
     var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
+    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko'];               // Список админов для правки
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -482,14 +483,14 @@
                     }
                 }.bind(this),
             });
-
-
             //-------------------------------------
         }.bind(this));
     }
     // Уточняющая валидация данных 
     form_ho_outgoing_sostav.prototype.validation = function (result) {
         var valid = true;
+        var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        if (user_adm) return valid;
         // Сдесь можно проверить дополнительно
         var current = moment();
         var date_readiness_amkr = moment(result.old.date_readiness_amkr);
