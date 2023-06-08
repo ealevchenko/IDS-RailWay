@@ -10098,7 +10098,7 @@
 
         LockScreen(langView('vtdr_load_vagon', App.Langs));
         // Отправка
-        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, function (result_cars) {
+        this.ids_wsd.getReportViewOutgoingCarsOfPeriod(start, stop, false, function (result_cars) {
             this.manual_usage_fee = result_cars.filter(function (i) { return i.wagon_usage_fee_manual_fee_amount !== null }.bind(this));
             process_load--;
             out_load(process_load);
