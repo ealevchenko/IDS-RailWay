@@ -10128,6 +10128,9 @@
         this.report = 8;        // номер отчета
         this.report_panel = 0;  // номер под-отчета
 
+        this.list_operators = [];
+        this.list_rod = [];
+
         $('#sidebar').toggleClass('active');                                                // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(''));   // выведем название отчета
         this.init_select_report();                                                          // Инициализация формы выбора периода отчетов
@@ -10148,6 +10151,59 @@
         });
         col_view.$col.append(this.$table_view);
         //----------------------------------------------------------------
+        // Создадим форму выбора для отчета
+        this.form_panel_operator_rod = new FIL();
+        var fl_select_operators = {
+            type: 'select',
+            id: 'operators',
+            prefix: 'sm',
+            title: langView('vtdr_title_operation_amkr', App.Langs),
+            list: this.list_operators,
+            default: this.type,
+            select: function (event, ui) {
+                event.preventDefault();
+                // Обработать выбор
+                this.view_filter_report_usage_fee_period();
+                //var id = Number($(event.currentTarget).val());
+                //this.select_report(id);
+            }.bind(this),
+        };
+        var fl_select_genus = {
+            type: 'select',
+            id: 'genus',
+            prefix: 'sm',
+            title: langView('vtdr_title_genus', App.Langs),
+            list: this.list_rod,
+            default: this.month + 1,
+            select: function (event, ui) {
+                event.preventDefault();
+                this.view_filter_report_usage_fee_period();
+                // Обработать выбор
+            }.bind(this),
+        };
+        //var fl_button = {
+        //    type: 'button',
+        //    id: 'button',
+        //    prefix: 'sm',
+        //    title: langView('vtdr_title_button', App.Langs),
+        //    icon: 'fas fa-retweet',
+        //    select: function (e, ui) {
+        //        event.preventDefault();
+        //        this.view_filter_report_usage_fee_period();
+        //        //this.view_report();
+        //    }.bind(this),
+        //};
+        var fields = [];
+        fields.push(fl_select_operators);
+        fields.push(fl_select_genus);
+/*        fields.push(fl_button);*/
+        // Инициализация формы
+        this.form_panel_operator_rod.init({
+            fields: fields,
+            cl_form: 'd-flex w-100 mb-2'
+        });
+
+        this.$table_view.append(this.form_panel_operator_rod.$form);
         // Дабавим закладку на форму
         this.$table_view.append('<div id="usage-fee-period" class="col-xl-12"></div>');
         //-----------------------------------------------------------------
@@ -10187,6 +10243,8 @@
             },
         });
 
+        this.select_operations = this.form_panel_operator_rod.get_element('operators');
+        this.select_rod = this.form_panel_operator_rod.get_element('genus');
         //}.bind(this));
     };
     // Показать отчет  "История ставок"
@@ -10196,6 +10254,22 @@
         // Выход из загрузки
         var out_load = function (process_load) {
             if (process_load === 0) {
+                this.list_operators = [];
+                this.list_rod = [];
+                $.each(this.usage_fee_period, function (key, value) {
+                    // выборка для списков отчета
+                    var lop = this.list_operators.find(function (o) { return o.value === value.usage_fee_period_id_operator }.bind(this));
+                    if (!lop) {
+                        this.list_operators.push({ value: value.usage_fee_period_id_operator, text: value['usage_fee_period_operator_abbr_' + App.Lang] });
+                    }
+                    var lrod = this.list_rod.find(function (o) { return o.value === value.usage_fee_period_id_genus }.bind(this));
+                    if (!lrod) {
+                        this.list_rod.push({ value: value.usage_fee_period_id_genus, text: value['usage_fee_period_genus_abbr_' + App.Lang] });
+                    }
+                }.bind(this));
+                //
+                this.select_operations.update(this.list_operators, -1);
+                this.select_rod.update(this.list_rod, -1);
                 this.view_filter_report_usage_fee_period();
                 LockScreenOff();
             }
@@ -10216,6 +10290,18 @@
         if (this.usage_fee_period) {
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.usage_fee_period));
+            var id_operator = Number(this.select_operations.val());
+            var id_genus = Number(this.select_rod.val());
+            if (id_operator >= 0) {
+                list_view = list_view.filter(function (i) {
+                    return i.usage_fee_period_id_operator === id_operator
+                }.bind(this));
+            }
+            if (id_genus >= 0) {
+                list_view = list_view.filter(function (i) {
+                    return i.usage_fee_period_id_genus === id_genus
+                }.bind(this));
+            }
             // Отобразим
             this.table_usage_fee_period.view(list_view);
             LockScreenOff();
@@ -10224,14 +10310,13 @@
     // Очистить таблицы
     view_td_report.prototype.clear_report_8_1 = function () {
         this.usage_fee_period = [];
-        //this.outgoing_cars_usage_fee = [];
-        //this.outgoing_cars_usage_fee_operator_amkr = [];
-        //this.outgoing_cars_usage_fee_operator_amkr_derailment = [];
-        //if (this.table_usage_fee_cargo) {
-        //    this.view_filter_report_usage_fee_cargo();
-        //    this.view_filter_report_usage_fee_operator_amkr();
-        //    this.view_filter_report_usage_fee_operator_amkr_derailment();
-        //}
+        this.list_operators = [];
+        this.list_rod = [];
+        if (this.select_operations) this.select_operations.update(this.list_operators, -1);
+        if (this.select_rod) this.select_rod.update(this.list_rod, -1);
+        if (this.table_usage_fee_period) {
+            this.view_filter_report_usage_fee_period();
+        }
         LockScreenOff();
     };
     //------------------------------------------------------------------------------------------------
@@ -10825,6 +10910,12 @@
             this.table_wagons_rent.destroy();
             this.table_wagons_rent = null;
         }
+
+        if (this.this.table_usage_fee_period) {
+            this.this.table_usage_fee_period.destroy();
+            this.this.table_usage_fee_period = null;
+        }
+
         // Графики
         if (this.chart_total_cargo_operation_amkr) {
             this.chart_total_cargo_operation_amkr.destroy();
