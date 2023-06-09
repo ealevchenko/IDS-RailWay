@@ -1441,6 +1441,16 @@
         }.bind(this));
         return result;
     };
+    // Получить элемент
+    form_inline.prototype.get_element = function (id) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) return field.element
+        }
+        return null;
+    };
     // Установит значение компонента
     form_inline.prototype.set = function (id, value) {
         if (this.settings.fields) {
