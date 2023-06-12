@@ -9,6 +9,9 @@ use [KRR-PA-CNT-Railway]
 	select 
 	--arr_wag_rent.[id_operator]
 	--,out_wag_rent.[id_operator] 
+	--arr_group_dir_operator.id
+	--,out_group_dir_operator.id
+	--, out_dir_operator.id
 		out_car.[id] as outgoing_car_id
 		--,date_start = (case when @IsActs=1 then (case when arr_sost.[date_adoption_act] is not null then arr_sost.[date_adoption_act] else arr_sost.[date_adoption] end) else arr_sost.[date_adoption]  end)
 		--,date_stop = (case when @IsActs=1 then (case when out_sost.[date_outgoing_act]is not null then out_sost.[date_outgoing_act] else out_sost.[date_outgoing] end) else out_sost.[date_outgoing]  end)
@@ -335,6 +338,12 @@ use [KRR-PA-CNT-Railway]
 		,arr_wag_rent.[rent_end] as outgoing_uz_vagon_arrival_wagons_rent_end						-- Конец аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_operator.[paid] as outgoing_uz_vagon_arrival_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_operator.[color] as outgoing_uz_vagon_arrival_wagons_rent_operator_color			-- Цвет оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Outgoing_UZ_Vagon]
+		--> ОПЕРАТОР ПО ПРИБИТИЮ ИТОГОВЫЙ [IDS].[Directory_OperatorsWagons]
+		,arr_group_dir_operator.[id] as outgoing_uz_vagon_arrival_wagons_rent_group_id_operator			-- id строки оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,arr_group_dir_operator.[operators_ru] as outgoing_uz_vagon_arrival_wagons_rent_group_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,arr_group_dir_operator.[operators_en] as outgoing_uz_vagon_arrival_wagons_rent_group_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,arr_group_dir_operator.[abbr_ru] as outgoing_uz_vagon_arrival_wagons_rent_operator_group_abbr_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,arr_group_dir_operator.[abbr_en] as outgoing_uz_vagon_arrival_wagons_rent_operator_group_abbr_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 		--> ОГРАНИЧЕНИЕ ПО ПРИБЫТИЮ [IDS].[Directory_LimitingLoading]
 		,arr_wag_rent.[id_limiting] as outgoing_uz_vagon_arrival_wagons_rent_id_limiting			-- id строки оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_limload.[limiting_name_ru] as outgoing_uz_vagon_arrival_wagons_rent_limiting_name_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по прибытию [IDS].[Outgoing_UZ_Vagon]
@@ -353,6 +362,12 @@ use [KRR-PA-CNT-Railway]
 		,out_wag_rent.[rent_end] as outgoing_uz_vagon_outgoing_wagons_rent_end					-- Конец аренды оператора [IDS].[Directory_WagonsRent] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_operator.[paid] as outgoing_uz_vagon_outgoing_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_operator.[color] as outgoing_uz_vagon_outgoing_wagons_rent_operator_color		-- Цвет оператора [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		--> ОПЕРАТОР ПО ОТПРАВКЕ ИТОГОВЫЙ [IDS].[Directory_OperatorsWagons]
+		,out_group_dir_operator.[id] as outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator			-- id строки оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_group_dir_operator.[operators_ru] as outgoing_uz_vagon_outgoing_wagons_rent_group_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_group_dir_operator.[operators_en] as outgoing_uz_vagon_outgoing_wagons_rent_group_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_group_dir_operator.[abbr_ru] as outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
+		,out_group_dir_operator.[abbr_en] as outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_en	-- Оператор [IDS].[Directory_OperatorsWagons] по отправке [IDS].[Outgoing_UZ_Vagon]
 		--> ОГРАНИЧЕНИЕ ПО ОТПРАВКЕ [IDS].[Directory_LimitingLoading]
 		,out_wag_rent.[id_limiting] as outgoing_uz_vagon_outgoing_wagons_rent_id_limiting					-- id строки оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,out_dir_limload.[limiting_name_ru] as outgoing_uz_vagon_outgoing_wagons_rent_limiting_name_ru	-- Оганичение [IDS].[Directory_LimitingLoading] по отправке [IDS].[Outgoing_UZ_Vagon]
@@ -611,10 +626,14 @@ use [KRR-PA-CNT-Railway]
 		Left JOIN [IDS].[Directory_WagonsRent] as out_wag_rent ON out_doc_vag.id_wagons_rent_outgoing = out_wag_rent.id
 		--> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
+		--> Справочник Оператор вагона (Итоговый) по прибытию
+		Left JOIN IDS.Directory_OperatorsWagons as arr_group_dir_operator ON arr_group_dir_operator.id = (SELECT (case when parent_id is null then id else parent_id end) FROM [IDS].[Directory_OperatorsWagons] where [id]=arr_wag_rent.id_operator)
 		--> Справочник Ограничение погрузки по прибытию
 		Left JOIN IDS.Directory_LimitingLoading as arr_dir_limload ON arr_wag_rent.id_limiting =  arr_dir_limload.id
 		--> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as out_dir_operator ON out_wag_rent.id_operator =  out_dir_operator.id
+		--> Справочник Оператор вагона (Итоговый) по отправке
+		Left JOIN IDS.Directory_OperatorsWagons as out_group_dir_operator ON out_group_dir_operator.id = (SELECT (case when parent_id is null then id else parent_id end) FROM [IDS].[Directory_OperatorsWagons] where [id]=out_wag_rent.id_operator)
 		--> Справочник Ограничение погрузки по прибытию
 		Left JOIN IDS.Directory_LimitingLoading as out_dir_limload ON out_wag_rent.id_limiting =  out_dir_limload.id
 		-- Переделал 10.02.2022

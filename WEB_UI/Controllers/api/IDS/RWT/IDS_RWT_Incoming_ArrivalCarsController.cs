@@ -143,6 +143,11 @@ namespace WEB_UI.Controllers.api
         public DateTime? arrival_uz_vagon_arrival_wagons_rent_end { get; set; }
         public bool? arrival_uz_vagon_arrival_wagons_rent_operator_paid { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_operator_color { get; set; }
+        public int? arrival_uz_vagon_arrival_wagons_rent_group_id_operator { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_group_operators_ru { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_group_operators_en { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_ru { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_en { get; set; }
         public int? arrival_uz_vagon_arrival_wagons_rent_id_limiting { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_limiting_name_ru { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_limiting_name_en { get; set; }

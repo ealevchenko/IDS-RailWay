@@ -2817,9 +2817,9 @@
 
             }
             // выборка для списков отчета
-            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_group_id_operator }.bind(this));
             if (!ow) {
-                this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                this.list_operators_wagons.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_group_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_' + App.Lang] });
             }
             var lm = this.list_limiting.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
             if (!lm) {
@@ -4322,9 +4322,9 @@
         // выборка для списков Отчет-Груз по Оператору АМКР
         $.each(data, function (key, el_wag) {
             // выборка для списков отчета
-            var ow = this.list_operation_amkr.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+            var ow = this.list_operation_amkr.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator }.bind(this));
             if (!ow) {
-                this.list_operation_amkr.push({ value: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                this.list_operation_amkr.push({ value: el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator, text: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_' + App.Lang] });
             }
             var lm = this.list_limiting.find(function (o) { return o.value === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting }.bind(this));
             if (!lm) {
@@ -4384,7 +4384,7 @@
         // выборка для списков Отчет-Груз по Оператору АМКР
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
-                return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator &&
+                return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator &&
                     o.id_limiting === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting &&
                     o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
             }.bind(this));
@@ -4392,9 +4392,9 @@
                 // Не данных 
                 list_result.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
-                    id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator,
-                    operators: el_wag['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang],
-                    operator_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang],
+                    id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator,
+                    operators: el_wag['arrival_uz_vagon_arrival_wagons_rent_group_operators_' + App.Lang],
+                    operator_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_' + App.Lang],
                     id_limiting: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting,
                     limiting_name: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_name_' + App.Lang],
                     limiting_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang],
@@ -4422,16 +4422,16 @@
         var sum_count = data.length;
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
-                return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator &&
+                return o.id_operator === el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator &&
                     o.id_limiting === el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting
             }.bind(this));
             if (!op) {
                 // Не данных 
                 list_result.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
-                    id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_operator,
-                    operators: el_wag['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang],
-                    operator_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang],
+                    id_operator: el_wag.arrival_uz_vagon_arrival_wagons_rent_group_id_operator,
+                    operators: el_wag['arrival_uz_vagon_arrival_wagons_rent_group_operators_' + App.Lang],
+                    operator_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_' + App.Lang],
                     id_limiting: el_wag.arrival_uz_vagon_arrival_wagons_rent_id_limiting,
                     limiting_name: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_name_' + App.Lang],
                     limiting_abbr: el_wag['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang],
@@ -5442,7 +5442,7 @@
         this.switch_client.val(false);
         this.switch_not_client.val(false);
         this.switch_paid.val(false);
-        this.switch_shu.val(true);
+        //this.switch_shu.val(true);
         this.select_station_amkr.val(-1);
         // Обработать и показать данные
         this.process_data_view_report_3_1(this.clone_wagons_adoption, null);
@@ -5456,7 +5456,7 @@
             this.switch_client.val(false);
             this.switch_not_client.val(false);
             this.switch_paid.val(false);
-            this.switch_shu.val(true);
+            //this.switch_shu.val(true);
             this.select_station_amkr.val(-1);
             this.wagons_adoption = [];
             this.clone_wagons_adoption = [];
@@ -7421,9 +7421,9 @@
             }
 
             // выборка для списков отчета
-            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this));
+            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator }.bind(this));
             if (!ow) {
-                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang] });
+                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang] });
             }
             var lm = this.list_limiting.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting }.bind(this));
             if (!lm) {
@@ -8740,9 +8740,9 @@
         // выборка для списков
         $.each(data, function (key, value) {
             // выборка для списков отчета
-            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator }.bind(this));
+            var ow = this.list_operators_wagons.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator }.bind(this));
             if (!ow) {
-                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang] });
+                this.list_operators_wagons.push({ value: value.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator, text: value['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang] });
             }
             var lm = this.list_limiting.find(function (o) { return o.value === value.outgoing_uz_vagon_outgoing_wagons_rent_id_limiting }.bind(this));
             if (!lm) {
@@ -8785,16 +8785,16 @@
         var list_result = [];
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
-                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
+                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
                     o.id_out_group === el_wag.outgoing_uz_vagon_id_out_group
             }.bind(this));
             if (!op) {
                 // Не данных 
                 list_result.push({
                     period: moment(this.start).format(format_datetime) + ' - ' + moment(this.stop).format(format_datetime),
-                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
-                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
-                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator,
+                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang],
+                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang],
                     id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
                     cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
                     cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
@@ -9191,14 +9191,14 @@
         var sum_count = data && data.length > 0 ? data.length : 0;
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
-                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator
+                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator
             }.bind(this));
             if (!op) {
                 // Не данных 
                 list_result.push({
-                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
-                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
-                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator,
+                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang],
+                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang],
                     count_wagon: 1,
                     sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
                     perent_wagon: Number(100 / sum_count).toFixed(2),
@@ -9219,7 +9219,7 @@
         var sum_count = 0;
         $.each(data, function (key, el_wag) {
             var op = list_result.find(function (o) {
-                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
+                return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
                     o.id_group === el_wag.outgoing_uz_vagon_id_group
             }.bind(this));
             sum_count = data.filter(function (i) {
@@ -9228,9 +9228,9 @@
             if (!op) {
                 // Не данных 
                 list_result.push({
-                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
-                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
-                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                    id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator,
+                    operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang],
+                    operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang],
                     id_group: el_wag.outgoing_uz_vagon_id_group,
                     group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
                     //cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
@@ -10606,16 +10606,16 @@
             $.each(result_cars, function (key, el_wag) {
                 if (el_wag.wagon_usage_fee_calc_fee_amount > 0) {
                     var op = list_usage_fee_operator_amkr.find(function (o) {
-                        return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator &&
+                        return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
                             o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
                     }.bind(this));
                     var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
                     if (!op) {
                         // Не данных 
                         list_usage_fee_operator_amkr.push({
-                            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_id_operator,
-                            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operators_' + App.Lang],
-                            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr_' + App.Lang],
+                            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator,
+                            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang],
+                            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang],
                             id_cargo: el_wag.arrival_uz_vagon_id_cargo,
                             cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
                             count_wagon: 1,
