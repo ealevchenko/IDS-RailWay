@@ -862,6 +862,11 @@ namespace EFIDS.Concrete
                 .HasForeignKey(e => e.id_operator)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Directory_OperatorsWagons1)
+                .WithOptional(e => e.Directory_OperatorsWagons2)
+                .HasForeignKey(e => e.parent_id);
+
             // Морс
             modelBuilder.Entity<Directory_OperatorsWagons>()
                 .HasMany(e => e.CardsWagons)
