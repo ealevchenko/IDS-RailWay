@@ -377,7 +377,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(210970, @"EUROPE\ealevchenko");
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(221119, @"EUROPE\ealevchenko");
         }
 
         /// <summary>
@@ -621,6 +621,31 @@ namespace Test.TestModule
             //210779 //200473 // 210834
             ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(211055, @"EUROPE\ealevchenko");
         }
+        public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            //210779 //200473 // 210834
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfIncomingSostav(263194, @"EUROPE\ealevchenko");
+        }
+        public void IDS_WIR_GetExchangeRate()
+        {
+            try
+            {
+                WebAPIClientBank client_bank = new WebAPIClientBank(service.Test);
+                List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
+                Console.WriteLine(String.Format("Count :{0}", list_exchange_rate.Count()));
+                foreach (ExchangeRate er in list_exchange_rate)
+                {
+                    Console.WriteLine(er.cc);
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         /// <summary>
         /// Расчет платы за пользование по сданным составам за выбранный период
         /// </summary>

@@ -227,7 +227,7 @@ namespace Test
             //tids.IDS_WIR_ArrivalWagonsOfStation();                    // Операция роспуск
             //tids.IDS_WIR_OperationReturnProvideWagons();              // Тест операции вернуть пръедявленый состав
 
-            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();           // Тест операции обновления ЭПД состава который отправили
+            ////tids.IDS_WIR_OperationUpdateEPDSendingSostav();           // Тест операции обновления ЭПД состава который отправили
 
             //tids.IDS_WIR_GetWagonsOperationOfSend();                  // Тест формирования отчета операции отправки (вагоны)
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
@@ -259,8 +259,10 @@ namespace Test
             //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();            // 
 
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
-            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
-            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();            //  Расчет платы за пользование по сданным составам за выбранный период
+            //tids.IDS_WIR_GetExchangeRate();
+            tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 
             #region Test_Logs тест логирования
