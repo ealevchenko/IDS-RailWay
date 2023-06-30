@@ -2981,7 +2981,7 @@ namespace IDS
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
                 List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 20000000).ToList();
-                //list_arr_uz_doc_vag = list_arr_uz_doc_vag.Where(v => v.num == 61298329).ToList();
+                //list_arr_uz_doc_vag = list_arr_uz_doc_vag.Where(v => v.num == 26246199).ToList();
                 //List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == 61298329).ToList();
                 result.count = list_arr_uz_doc_vag.Count();
                 foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
@@ -8372,10 +8372,11 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFOutgoing_UZ_Vagon ef_out_uz_doc_vag = new EFOutgoing_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
-                List<Outgoing_UZ_Vagon> list_arr_uz_doc_vag = ef_out_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 50000000).ToList();
-                result.count = list_arr_uz_doc_vag.Count();
+                List<Outgoing_UZ_Vagon> list_out_uz_doc_vag = ef_out_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 20000000).ToList();
+                //list_out_uz_doc_vag = list_out_uz_doc_vag.Where(d => d.num == 26246199).ToList();
+                result.count = list_out_uz_doc_vag.Count();
                 int sum = 0;
-                foreach (Outgoing_UZ_Vagon vag in list_arr_uz_doc_vag)
+                foreach (Outgoing_UZ_Vagon vag in list_out_uz_doc_vag)
                 {
                     sum++;
                     if (vag.num.IsCorrectNumCar())

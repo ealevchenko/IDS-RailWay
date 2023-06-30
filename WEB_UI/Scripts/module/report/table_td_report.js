@@ -2940,7 +2940,7 @@
         {
             field: 'arrival_uz_document_nom_main_doc',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_document_nom_main_doc;
+                return row.arrival_uz_document_nom_main_doc < 0 ? langView('ttdr_title_not_epd', App.Langs) : row.arrival_uz_document_nom_main_doc;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_arrival_uz_document_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
@@ -3763,7 +3763,7 @@
     table_td_report.prototype.init_columns_manual_usage_fee = function () {
         var collums = [];
 
-        collums.push({ field: 'outgoing_cars_num', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_num', title: null, class: 'fixed-column' });
         collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', title: null, class: null });
@@ -3772,7 +3772,7 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: langView('ttdr_field_usage_fee_sum_calc_time', App.Langs), class: null });
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
@@ -5532,8 +5532,8 @@
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
-                this.fixedHeader = false;            // вкл. фикс. заголовка
-                this.leftColumns = 0;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 1;
                 this.columnDefs = null;
                 this.order_column = [3, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
