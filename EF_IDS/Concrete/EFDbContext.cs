@@ -14,7 +14,6 @@ public partial class EFDbContext : DbContext
     public EFDbContext(DbContextOptions<EFDbContext> options)
         : base(options)
     {
-
     }
 
     public virtual DbSet<ArrivalCar> ArrivalCars { get; set; }
@@ -43,6 +42,8 @@ public partial class EFDbContext : DbContext
 
     public virtual DbSet<CardsWagonsRepair> CardsWagonsRepairs { get; set; }
 
+    public virtual DbSet<DirectoryBankRate> DirectoryBankRates { get; set; }
+
     public virtual DbSet<DirectoryBorderCheckpoint> DirectoryBorderCheckpoints { get; set; }
 
     public virtual DbSet<DirectoryCargo> DirectoryCargos { get; set; }
@@ -66,6 +67,8 @@ public partial class EFDbContext : DbContext
     public virtual DbSet<DirectoryConsignee> DirectoryConsignees { get; set; }
 
     public virtual DbSet<DirectoryCountry> DirectoryCountrys { get; set; }
+
+    public virtual DbSet<DirectoryCurrency> DirectoryCurrencies { get; set; }
 
     public virtual DbSet<DirectoryDepo> DirectoryDepos { get; set; }
 
@@ -183,6 +186,8 @@ public partial class EFDbContext : DbContext
 
     public virtual DbSet<Setting> Settings { get; set; }
 
+    public virtual DbSet<UsageFeePeriod> UsageFeePeriods { get; set; }
+
     public virtual DbSet<UzDoc> UzDocs { get; set; }
 
     public virtual DbSet<UzDocOut> UzDocOuts { get; set; }
@@ -193,6 +198,8 @@ public partial class EFDbContext : DbContext
 
     public virtual DbSet<WagonInternalRoute> WagonInternalRoutes { get; set; }
 
+    public virtual DbSet<WagonUsageFee> WagonUsageFees { get; set; }
+
     public virtual DbSet<WagonsMotionSignal> WagonsMotionSignals { get; set; }
 
     public virtual DbSet<WebAccess> WebAccesses { get; set; }
@@ -201,7 +208,7 @@ public partial class EFDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=krr-sql-paclx03;Initial Catalog=KRR-PA-CNT-Railway;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;");
+        => optionsBuilder.UseSqlServer("data source=krr-sql-paclx03;initial catalog=KRR-PA-CNT-Railway;integrated security=True;TrustServerCertificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -433,6 +440,11 @@ public partial class EFDbContext : DbContext
             entity.Property(e => e.Code).ValueGeneratedNever();
         });
 
+        modelBuilder.Entity<DirectoryCurrency>(entity =>
+        {
+            entity.Property(e => e.CodeCc).IsFixedLength();
+        });
+
         modelBuilder.Entity<DirectoryDepo>(entity =>
         {
             entity.Property(e => e.Code).ValueGeneratedNever();
@@ -475,6 +487,11 @@ public partial class EFDbContext : DbContext
             entity.HasOne(d => d.IdLocomotiveStatusNavigation).WithMany(p => p.DirectoryLocomotives)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Directory_Locomotive_Directory_LocomotiveStatus");
+        });
+
+        modelBuilder.Entity<DirectoryOperatorsWagon>(entity =>
+        {
+            entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent).HasConstraintName("FK_Directory_OperatorsWagons_Directory_OperatorsWagons");
         });
 
         modelBuilder.Entity<DirectoryOuterWay>(entity =>
@@ -751,6 +768,23 @@ public partial class EFDbContext : DbContext
             entity.HasOne(d => d.IdOutgoingCarNavigation).WithMany(p => p.SapoutgoingSupplies).HasConstraintName("FK_SAPOutgoingSupply_OutgoingCars");
         });
 
+        modelBuilder.Entity<UsageFeePeriod>(entity =>
+        {
+            entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.UsageFeePeriodIdCurrencyNavigations).HasConstraintName("FK_Usage_Fee_Period_Directory_Currency2");
+
+            entity.HasOne(d => d.IdCurrencyDerailmentNavigation).WithMany(p => p.UsageFeePeriodIdCurrencyDerailmentNavigations).HasConstraintName("FK_Usage_Fee_Period_Directory_Currency3");
+
+            entity.HasOne(d => d.IdGenusNavigation).WithMany(p => p.UsageFeePeriods)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usage_Fee_Period_Directory_GenusWagons");
+
+            entity.HasOne(d => d.IdOperatorNavigation).WithMany(p => p.UsageFeePeriods)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usage_Fee_Period_Directory_OperatorsWagons");
+
+            entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent).HasConstraintName("FK_Usage_Fee_Period_Usage_Fee_Period");
+        });
+
         modelBuilder.Entity<WagonInternalMovement>(entity =>
         {
             entity.HasOne(d => d.IdOuterWayNavigation).WithMany(p => p.WagonInternalMovements).HasConstraintName("FK_WagonInternalMovement_Directory_OuterWays");
@@ -808,6 +842,8 @@ public partial class EFDbContext : DbContext
             entity.HasOne(d => d.IdSapIncomingSupplyNavigation).WithMany(p => p.WagonInternalRoutes).HasConstraintName("FK_WagonInternalRoutes_SAPIncomingSupply");
 
             entity.HasOne(d => d.IdSapOutboundSupplyNavigation).WithMany(p => p.WagonInternalRoutes).HasConstraintName("FK_WagonInternalRoutes_SAPOutgoingSupply");
+
+            entity.HasOne(d => d.IdUsageFeeNavigation).WithMany(p => p.WagonInternalRoutes).HasConstraintName("FK_WagonInternalRoutes_WagonUsageFee");
 
             entity.HasOne(d => d.NumNavigation).WithMany(p => p.WagonInternalRoutes)
                 .OnDelete(DeleteBehavior.ClientSetNull)

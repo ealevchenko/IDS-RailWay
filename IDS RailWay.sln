@@ -76,6 +76,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCore", "TestCore\TestCore.csproj", "{EAAD95AA-A4A1-47E9-9374-70C8B322D8BB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IDSCORE", "IDSCORE", "{21C5287D-22AD-4446-A07D-146A02C3297D}"
+	ProjectSection(SolutionItems) = preProject
+		Readmi.txt = Readmi.txt
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EF_IDS", "EF_IDS\EF_IDS.csproj", "{47A9F3F6-EF84-4EAF-9DD9-EA6057A3B6BC}"
 EndProject

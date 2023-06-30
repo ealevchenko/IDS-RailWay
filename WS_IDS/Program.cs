@@ -9,7 +9,8 @@ try
         .UseWindowsService()
         .ConfigureServices(services =>
         {
-            services.AddHostedService<UpdateRent>();
+            services.AddHostedService<UpdateBankRate>();
+            //services.AddHostedService<UpdateRent>();
         }).ConfigureLogging(logging =>
         {
             logging.ClearProviders();

@@ -59,6 +59,9 @@ public partial class DirectoryOperatorsWagon
     [Column("monitoring_idle_time")]
     public bool? MonitoringIdleTime { get; set; }
 
+    [Column("parent_id")]
+    public int? ParentId { get; set; }
+
     [InverseProperty("IdOperatorWagonNavigation")]
     public virtual ICollection<CardsWagon> CardsWagons { get; } = new List<CardsWagon>();
 
@@ -70,4 +73,14 @@ public partial class DirectoryOperatorsWagon
 
     [InverseProperty("IdOperatorNavigation")]
     public virtual ICollection<DirectoryWagonsRent> DirectoryWagonsRents { get; } = new List<DirectoryWagonsRent>();
+
+    [InverseProperty("Parent")]
+    public virtual ICollection<DirectoryOperatorsWagon> InverseParent { get; } = new List<DirectoryOperatorsWagon>();
+
+    [ForeignKey("ParentId")]
+    [InverseProperty("InverseParent")]
+    public virtual DirectoryOperatorsWagon? Parent { get; set; }
+
+    [InverseProperty("IdOperatorNavigation")]
+    public virtual ICollection<UsageFeePeriod> UsageFeePeriods { get; } = new List<UsageFeePeriod>();
 }

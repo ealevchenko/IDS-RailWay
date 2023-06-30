@@ -63,4 +63,7 @@ public partial class DirectoryGenusWagon
 
     [InverseProperty("IdGenusNavigation")]
     public virtual ICollection<OutgoingUzVagon> OutgoingUzVagons { get; } = new List<OutgoingUzVagon>();
+
+    [InverseProperty("IdGenusNavigation")]
+    public virtual ICollection<UsageFeePeriod> UsageFeePeriods { get; } = new List<UsageFeePeriod>();
 }

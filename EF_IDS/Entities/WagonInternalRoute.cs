@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EF_IDS.Entities;
 
 [Table("WagonInternalRoutes", Schema = "IDS")]
+[Index("ParentId", Name = "NCI_WIR_parent_id")]
 [Index("IdArrivalCar", Name = "NCI_id_arrival_car_id_sap_incoming_supply")]
 [Index("IdOutgoingCar", Name = "NCI_id_outgoing_car")]
 public partial class WagonInternalRoute
@@ -58,6 +59,9 @@ public partial class WagonInternalRoute
     [StringLength(10)]
     public string? HighlightColor { get; set; }
 
+    [Column("id_usage_fee")]
+    public int? IdUsageFee { get; set; }
+
     [ForeignKey("IdArrivalCar")]
     [InverseProperty("WagonInternalRoutes")]
     public virtual ArrivalCar? IdArrivalCarNavigation { get; set; }
@@ -73,6 +77,10 @@ public partial class WagonInternalRoute
     [ForeignKey("IdSapOutboundSupply")]
     [InverseProperty("WagonInternalRoutes")]
     public virtual SapoutgoingSupply? IdSapOutboundSupplyNavigation { get; set; }
+
+    [ForeignKey("IdUsageFee")]
+    [InverseProperty("WagonInternalRoutes")]
+    public virtual WagonUsageFee? IdUsageFeeNavigation { get; set; }
 
     [InverseProperty("Parent")]
     public virtual ICollection<WagonInternalRoute> InverseParent { get; } = new List<WagonInternalRoute>();

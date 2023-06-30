@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EF_IDS.Entities;
 
 [Table("Arrival_UZ_Vagon", Schema = "IDS")]
+[Index("CargoReturns", Name = "NCI_Arr_uz_vag_cargo_ret")]
 public partial class ArrivalUzVagon
 {
     [Key]
