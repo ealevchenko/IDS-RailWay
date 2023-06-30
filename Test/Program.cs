@@ -247,7 +247,7 @@ namespace Test
             //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
-            //tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
+            tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
 
             //tids.IDS_WIR_UpdateOutgoing_Async();
             //tids.IDS_WIR_UpdateOutgoing_Parallel();            
@@ -260,7 +260,7 @@ namespace Test
 
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
             //tids.IDS_WIR_GetExchangeRate();
-            tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
+            //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
