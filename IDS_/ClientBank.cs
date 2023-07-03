@@ -24,27 +24,35 @@ namespace IDS_
 
         private readonly ILogger<Object> _logger;
         private readonly IConfiguration _configuration;
+        private string reqUrl;
+        private string Method;
+        private string Accept;
+        private string ContentType;
 
         public ClientBank(ILogger<Object> logger, IConfiguration configuration) : base()
         {
             _logger = logger;
             _configuration = configuration;
+            reqUrl = _configuration["BankRate:reqUrl"];
+            Method = _configuration["BankRate:Method"];
+            Accept = _configuration["BankRate:Accept"];
+            ContentType = _configuration["BankRate:ContentType"];
         }
 
         public List<BankRate> GetBankRates()
         {
             try
             {
-                string reqUrl = $"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
+                //string reqUrl = $"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
                        | SecurityProtocolType.Tls11
                        | SecurityProtocolType.Tls12;
                 //| SecurityProtocolType.Ssl3;
                 HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(reqUrl);
-                request.Method = "GET";
-                request.Accept = "application/json";
-                request.ContentType = "application/json; charset=utf-8";
+                request.Method = Method;//"GET";
+                request.Accept = Accept;//"application/json";
+                request.ContentType = ContentType;//"application/json; charset=utf-8";
                 try
                 {
                     using (System.Net.WebResponse response = request.GetResponse())
@@ -60,12 +68,14 @@ namespace IDS_
                         }
                         catch (Exception e)
                         {
+                            _logger.LogError("[GetBankRates] - {0}", e);
                             return null;
                         }
                     }
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError("[GetBankRates] - {0}", e);
                     return null;
 
                 }
@@ -73,6 +83,7 @@ namespace IDS_
             }
             catch (Exception e)
             {
+                _logger.LogError("[GetBankRates] - {0}", e);
                 return null;
             }
 

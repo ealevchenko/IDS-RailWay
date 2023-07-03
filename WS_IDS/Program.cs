@@ -10,7 +10,7 @@ try
         .ConfigureServices(services =>
         {
             services.AddHostedService<UpdateBankRate>();
-            //services.AddHostedService<UpdateRent>();
+            services.AddHostedService<UpdateRent>();
         }).ConfigureLogging(logging =>
         {
             logging.ClearProviders();
