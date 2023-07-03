@@ -59,6 +59,7 @@
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoOutGroup.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_BankRate.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Currency.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OperatorsWagonsGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Entities\Directory\Directory_Currency.cs" />
     <Compile Include="Entities\RWT\Usage_Fee_Period.cs" />
     <Compile Include="Entities\RWT\WagonUsageFee.cs" />
+    <Compile Include="Entities\Directory\Directory_BankRate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

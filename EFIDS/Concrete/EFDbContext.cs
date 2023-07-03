@@ -16,6 +16,7 @@ namespace EFIDS.Concrete
 
         // Расчет платы за пользование
         public virtual DbSet<Usage_Fee_Period> Usage_Fee_Period { get; set; }
+        public virtual DbSet<Directory_BankRate> Directory_BankRate { get; set; }
 
         // SAP Входящая поставка
         public virtual DbSet<SAPIncomingSupply> SAPIncomingSupply { get; set; }

@@ -10125,9 +10125,12 @@ namespace IDS
                 EFWagonUsageFee ef_wuf = new EFWagonUsageFee(context);
                 EFDirectory_Currency ef_dir_curr = new EFDirectory_Currency(context);
                 EFDirectory_OperatorsWagons ef_dir_oper_wag = new EFDirectory_OperatorsWagons(context);
-                WebAPIClientBank client_bank = new WebAPIClientBank(base.servece_owner);
-                List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
-                if (list_exchange_rate == null)
+                EFDirectory_BankRate ef_dir_br = new EFDirectory_BankRate(context);
+                //WebAPIClientBank client_bank = new WebAPIClientBank(base.servece_owner);
+                //List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
+                DateTime date = DateTime.Now.Date;
+                List<Directory_BankRate> list_bank = ef_dir_br.Context.Where(b => b.date == date).ToList();
+                if (list_bank == null || list_bank.Count() < 2)
                 {
                     result.result = (int)errors_base.not_list_exchange_rate;    // Ошибка, нет данных по курсу валют
                     return result;
@@ -10327,8 +10330,8 @@ namespace IDS
                                     Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency).FirstOrDefault();
                                     if (curr != null)
                                     {
-                                        ExchangeRate res_er = list_exchange_rate.Where(e => e.re == curr.code).FirstOrDefault();
-                                        exchange_rate = res_er.rate;
+                                        Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
+                                        exchange_rate = (decimal)res_er.rate;
                                     }
                                 }
                             }
@@ -10347,8 +10350,8 @@ namespace IDS
                                     Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency_derailment).FirstOrDefault();
                                     if (curr != null)
                                     {
-                                        ExchangeRate res_er = list_exchange_rate.Where(e => e.re == curr.code).FirstOrDefault();
-                                        exchange_rate = res_er.rate;
+                                        Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
+                                        exchange_rate = (decimal)res_er.rate;
                                     }
 
                                 }
