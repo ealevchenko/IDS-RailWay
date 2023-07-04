@@ -2756,7 +2756,7 @@
         {
             field: 'usage_fee_sum_calc_time',
             data: function (row, type, val, meta) {
-                return row.sum_calc_time;
+                return row.sum_calc_time != null ? getHourFromMins(row.sum_calc_time) : 0;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_usage_fee_sum_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
@@ -2764,7 +2764,7 @@
         {
             field: 'usage_fee_wagon_calc_time',
             data: function (row, type, val, meta) {
-                return row.sum_calc_time !== null && row.count_wagon ? Number(row.sum_calc_time / row.count_wagon).toFixed(0) : 0;
+                return row.sum_calc_time !== null && row.count_wagon ? getHourFromMins(Number(row.sum_calc_time / row.count_wagon)).toFixed(0) : 0;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_usage_fee_wagon_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
@@ -3073,6 +3073,11 @@
         let hours = Math.trunc(mins / 60);
         let minutes = mins % 60;
         return hours + ':' + minutes;
+    };
+    // Показать Часы
+    function getHourFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        return hours;
     };
 
     //-----------------------------------------------------------------------------------------
@@ -5341,12 +5346,9 @@
                     var sum_usage_fee_sum_calc_time = 0;
                     var sum_usage_fee_sum_calc_fee_amount = 0;
                     var sum_usage_fee_wagon_persent_fee_amount = 0;
-
-
                     var intVal = function (i) {
                         return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
                     };
-
                     api
                         //.column(1, { page: 'current' })
                         .data()
@@ -5356,7 +5358,7 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + sum_usage_fee_sum_calc_time + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_time / count).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
@@ -5378,7 +5380,7 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + sum_usage_fee_sum_calc_time + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_time / count).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
@@ -5424,7 +5426,7 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + sum_usage_fee_sum_calc_time + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_time / count).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
@@ -5446,7 +5448,7 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + sum_usage_fee_sum_calc_time + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_time / count).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
@@ -6535,13 +6537,13 @@
                         sum_usage_fee_wagon_persent_fee_amount += el.persent;
                     });
                 }
-                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
                 usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
-                    $(this.footer()).html(sum_usage_fee_sum_calc_time);
+                    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
                     $(this.footer()).html(usage_fee_wagon_calc_time);
@@ -6574,13 +6576,13 @@
                         sum_usage_fee_wagon_persent_fee_amount += el.persent_not_derailment;
                     });
                 }
-                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
                 usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
-                    $(this.footer()).html(sum_usage_fee_sum_calc_time);
+                    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
                     $(this.footer()).html(usage_fee_wagon_calc_time);
@@ -6613,13 +6615,13 @@
                         sum_usage_fee_wagon_persent_fee_amount += el.persent;
                     });
                 }
-                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
                 usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
-                    $(this.footer()).html(sum_usage_fee_sum_calc_time);
+                    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
                     $(this.footer()).html(usage_fee_wagon_calc_time);
@@ -6652,13 +6654,13 @@
                         sum_usage_fee_wagon_persent_fee_amount += el.persent_derailment;
                     });
                 }
-                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
                 usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
-                    $(this.footer()).html(sum_usage_fee_sum_calc_time);
+                    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
                     $(this.footer()).html(usage_fee_wagon_calc_time);
