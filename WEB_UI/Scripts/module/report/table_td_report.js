@@ -107,7 +107,6 @@
 
             'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
             'ttdr_field_outgoing_cars_num': '№ вагона',
-            //'ttdr_field_sostav_outgoing_naturka_num': '№ вагона',
             'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
 
 
@@ -172,7 +171,7 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
             'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
             'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
-            'ttdr_field_outgoing_cars_wagon_usage_fee_downtime': 'Время пользования, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_downtime': 'Общий простой, час',
             'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования (расчетное), час',
             'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final': 'Плата, грн',
             'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата (расч.), грн',
@@ -232,7 +231,6 @@
             'ttdr_field_outgoing_cars_epd_pl_name_plat': 'Плательщик ОТПР (ЭПД)',
             'ttdr_field_outgoing_cars_epd_distance_way': 'Тар.расс. ОТПР (ЭПД)',
 
-            //'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
             'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
             'ttdr_field_adoption_wagon_not_operation_date_adoption': 'Дата приема',
             'ttdr_field_adoption_wagon_not_operation_cargo_name': 'Груз ПРИБ.',
@@ -259,8 +257,6 @@
             'ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr': 'Дата отправления на АМКР',
             'ttdr_field_incoming_cars_arrival_sostav_epd_date_vid': 'Дата раскредитовки',
 
-            //'ttdr_field_incoming_cars_number_in_sequence': '№ п.п',
-            //'ttdr_field_sostav_outgoing_naturka_number_in_sequence': '№ п.п',
             'ttdr_field_sostav_outgoing_naturka_arrival_uz_vagon_cargo_name': 'Груз по прибытию',
             'ttdr_field_sostav_outgoing_naturka_arrival_sostav_date_arrival': 'Дата приема с УЗ',
 
@@ -330,9 +326,7 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
 
             'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
-            //'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
-            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Время пользования',
-            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime1': 'Общий простой , час',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Общий простой, час',
             'ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final': 'Плата , грн.',
 
             'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
@@ -3395,7 +3389,7 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr', title: null, class: null });
         //26
         //
-        collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
@@ -3546,7 +3540,7 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
         //collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime1', App.Langs), class: null }); 
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null }); 
         collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
@@ -3772,15 +3766,10 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: langView('ttdr_field_usage_fee_sum_calc_time', App.Langs), class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_create', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_create_user', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_change', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
         return init_columns_detali(collums, list_collums);
@@ -5632,7 +5621,7 @@
                 //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="26"></td>' +
+                '<td class="dt-centr" colspan="25"></td>' +
                 '<td class="dt-centr"></td>' +
                 //'<td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td>' +
