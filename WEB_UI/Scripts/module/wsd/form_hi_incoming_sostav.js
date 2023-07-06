@@ -895,6 +895,8 @@
     // Уточняющая валидация данных 
     form_hi_incoming_sostav.prototype.validation = function (result) {
         var valid = true;
+        var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        if (user_adm) return valid;
         //// Сдесь можно проверить дополнительно
         var current = moment();
         var current_date_arrival = result.old && result.old.date_arrival ? moment(result.old.date_arrival) : null;
