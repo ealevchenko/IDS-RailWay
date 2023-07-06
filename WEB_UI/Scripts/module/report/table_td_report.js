@@ -6096,7 +6096,7 @@
                     var sum_vesg = 0;
                     var sum_vesg1 = 0;
                     var sum_idle_time = 0;
-                    var sum_idle_time_act = 0;
+                    //var sum_idle_time_act = 0;
                     var downtime = 0;
                     var fee_amount = 0;
                     $.each(data, function (i, el) {
@@ -6106,7 +6106,7 @@
                             sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
                         }
                         sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
-                        sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
+                        //sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
                         downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
                         fee_amount += el.wagon_usage_fee_manual_fee_amount !== null ? el.wagon_usage_fee_manual_fee_amount : (el.wagon_usage_fee_calc_fee_amount !== null ? el.wagon_usage_fee_calc_fee_amount : 0);
                     });
@@ -6127,7 +6127,7 @@
                 //    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
                 //});
                 this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
-                    $(this.footer()).html(downtime ? Number(downtime).toFixed(2) : Number(0).toFixed(2));
+                    $(this.footer()).html(downtime ? getTimeFromMins(downtime) : '0:00');
                 });
                 this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_calc_fee_amount_final').every(function () {
                     $(this.footer()).html(fee_amount ? Number(fee_amount).toFixed(2) : Number(0).toFixed(2));
