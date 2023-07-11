@@ -44,13 +44,13 @@ namespace Test.TestModule
         //    IDSTransfer ids = new IDSTransfer(service.Test);
         //    ids.InsertOutgoingSostavOfKis();
         //}
+        //TODO: Удалил
+        //public void IDSTransfer_IncomingArrivalSostav()
+        //{
 
-        public void IDSTransfer_IncomingArrivalSostav()
-        {
-
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
+        //}
 
         //public void IDSTransfer_IncomingArrivalSostav_All()
         //{
@@ -426,16 +426,16 @@ namespace Test.TestModule
         /// <summary>
         ///  Поставить вагон в систему ИДС
         /// </summary>
-        public void IDS_WIR_IncomingWagon()
-        {
-            IDS_WIR ids = new IDS_WIR(service.Test);
-            EFDbContext context = new EFDbContext();
-            EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
-            ArrivalCars wagon = ef_car.Context.Where(c => c.id == 1120017).FirstOrDefault();
-            int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021, 08, 30, 15, 50, 00), 113, wagon, @"EUROPE\ealevchenko");
-            int res_sava = context.SaveChanges();
-            //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
-        }
+        //public void IDS_WIR_IncomingWagon()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    EFDbContext context = new EFDbContext();
+        //    EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
+        //    ArrivalCars wagon = ef_car.Context.Where(c => c.id == 1120017).FirstOrDefault();
+        //    int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021, 08, 30, 15, 50, 00), 113, wagon, @"EUROPE\ealevchenko");
+        //    int res_sava = context.SaveChanges();
+        //    //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
+        //}
         // Тест формирования отчета операции отправки (вагоны)
         public void IDS_WIR_GetWagonsOperationOfSend()
         {

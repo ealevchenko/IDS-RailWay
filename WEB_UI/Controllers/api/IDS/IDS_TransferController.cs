@@ -129,27 +129,27 @@ namespace WEB_UI.Controllers.api.RWT
         }
 
         
-        // POST api/ids/transfer/incoming/arrival_sostav/
-        /// <summary>
-        /// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("incoming/arrival_sostav")]
-        [ResponseType(typeof(int))]
-        public IHttpActionResult PostIncomingArrivalSostav([FromBody]TransferObject value)
-        {
-            try
-            {
-                IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
-                int result = ids_tr.IncomingArrivalSostav(value.id, null, value.user);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //// POST api/ids/transfer/incoming/arrival_sostav/
+        ///// <summary>
+        ///// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
+        ///// </summary>
+        ///// <param name="value"></param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //[Route("incoming/arrival_sostav")]
+        //[ResponseType(typeof(int))]
+        //public IHttpActionResult PostIncomingArrivalSostav([FromBody]TransferObject value)
+        //{
+        //    try
+        //    {
+        //        IDSTransfer ids_tr = new IDSTransfer(service.WebAPI_IDS);
+        //        int result = ids_tr.IncomingArrivalSostav(value.id, null, value.user);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(e.Message);
+        //    }
+        //}
     }
 }
