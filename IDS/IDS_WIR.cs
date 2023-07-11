@@ -644,6 +644,7 @@ namespace IDS
         public List<Doc_Vagon_Cont> conts { get; set; }
         public List<Doc_Vagon_Pay> pays { get; set; }
         public List<Doc_Vagon_Acts> acts { get; set; }
+        public int? id_wagons_rent_arrival { get; set; }
     }
     /// <summary>
     /// Класс набора данных информации по найденым вагонам
@@ -727,103 +728,103 @@ namespace IDS
         }
 
         #region ПРИБЫТИЕ ВАГОНОВ (АРМ ДИСПЕТЧЕРА)
-        //TODO: !!!Удалить старое прибытие
-        /// <summary>
-        /// Принять вагон
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="id_station"></param>
-        /// <param name="id_way"></param>
-        /// <param name="date_start"></param>
-        /// <param name="position"></param>
-        /// <param name="wagon"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public int IncomingWagon(ref EFDbContext context, int id_station, int id_way, DateTime date_start, int position, ArrivalCars wagon, string user)
-        {
-            try
-            {
-                long? parent_id = null;
-                // Получим последнюю запись по вагону
-                WagonInternalRoutes last_wir = context.GetLastWagon(wagon.num);
-                if (last_wir != null)
-                {
-                    // Запись есть проверим, для этого прибытия была создана запись
-                    if (last_wir.id_arrival_car == wagon.id) return 0; // Строка для вагона уже создана
-                    // Запись не закрыта (!Запись перед созданием должна быть закрыта, вагон выйти из АМКР)
-                    parent_id = last_wir.CloseWagon(date_start, "Закрыта принудительно, вагон зашел с новым составом.", user);
-                    context.Update(last_wir); // Обновим контекст
-                }
-                // Определим входящую поставку
-                List<SAPIncomingSupply> sap_is = wagon.SAPIncomingSupply.ToList();
-                Arrival_UZ_Vagon vag_doc = wagon.Arrival_UZ_Vagon;
+        ////TODO: !!!Удалить старое прибытие
+        ///// <summary>
+        ///// Принять вагон
+        ///// </summary>
+        ///// <param name="context"></param>
+        ///// <param name="id_station"></param>
+        ///// <param name="id_way"></param>
+        ///// <param name="date_start"></param>
+        ///// <param name="position"></param>
+        ///// <param name="wagon"></param>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //public int IncomingWagon(ref EFDbContext context, int id_station, int id_way, DateTime date_start, int position, ArrivalCars wagon, string user)
+        //{
+        //    try
+        //    {
+        //        long? parent_id = null;
+        //        // Получим последнюю запись по вагону
+        //        WagonInternalRoutes last_wir = context.GetLastWagon(wagon.num);
+        //        if (last_wir != null)
+        //        {
+        //            // Запись есть проверим, для этого прибытия была создана запись
+        //            if (last_wir.id_arrival_car == wagon.id) return 0; // Строка для вагона уже создана
+        //            // Запись не закрыта (!Запись перед созданием должна быть закрыта, вагон выйти из АМКР)
+        //            parent_id = last_wir.CloseWagon(date_start, "Закрыта принудительно, вагон зашел с новым составом.", user);
+        //            context.Update(last_wir); // Обновим контекст
+        //        }
+        //        // Определим входящую поставку
+        //        List<SAPIncomingSupply> sap_is = wagon.SAPIncomingSupply.ToList();
+        //        Arrival_UZ_Vagon vag_doc = wagon.Arrival_UZ_Vagon;
 
-                // Создадим новую строкку
-                WagonInternalRoutes new_wir = new WagonInternalRoutes()
-                {
-                    id = 0,
-                    num = wagon.num,
-                    id_arrival_car = wagon.id,
-                    id_sap_incoming_supply = sap_is != null && sap_is.Count() > 0 ? (long?)sap_is[0].id : null,
-                    create = DateTime.Now,
-                    create_user = user,
-                    parent_id = parent_id
+        //        // Создадим новую строкку
+        //        WagonInternalRoutes new_wir = new WagonInternalRoutes()
+        //        {
+        //            id = 0,
+        //            num = wagon.num,
+        //            id_arrival_car = wagon.id,
+        //            id_sap_incoming_supply = sap_is != null && sap_is.Count() > 0 ? (long?)sap_is[0].id : null,
+        //            create = DateTime.Now,
+        //            create_user = user,
+        //            parent_id = parent_id
 
-                };
-                new_wir.SetStationWagon_old(id_station, id_way, date_start, position, null, user);
-                new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_start, null, user);
-                context.Insert(new_wir); // Обновим контекст
-                return 1;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("IncomingWagon(context={0}, id_station={1}, id_way={2}, date_start={3}, position={4}, wagon={5}, user={6})",
-                    context, id_station, id_way, date_start, position, wagon, user), servece_owner, eventID);
-                return -1;// Возвращаем id=-1 , Ошибка
-            }
-        }
-        //TODO: !!!Удалить старое прибытие
-        /// <summary>
-        /// Принять вагоны
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="id_station"></param>
-        /// <param name="id_way"></param>
-        /// <param name="date_start"></param>
-        /// <param name="wagons"></param>
-        /// <param name="numeration"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public ResultTransfer IncomingWagons(ref EFDbContext context, int id_station, int id_way, DateTime date_start, List<ArrivalCars> wagons, bool numeration, string user)
-        {
-            ResultTransfer rt = new ResultTransfer(wagons.Count());
-            try
-            {
+        //        };
+        //        new_wir.SetStationWagon_old(id_station, id_way, date_start, position, null, user);
+        //        new_wir.SetOpenOperation(1, date_start, (int)vag_doc.id_condition, vag_doc.vesg > 0 ? 1 : 0, null, null, null, user).SetCloseOperation(date_start, null, user);
+        //        context.Insert(new_wir); // Обновим контекст
+        //        return 1;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("IncomingWagon(context={0}, id_station={1}, id_way={2}, date_start={3}, position={4}, wagon={5}, user={6})",
+        //            context, id_station, id_way, date_start, position, wagon, user), servece_owner, eventID);
+        //        return -1;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
+        ////TODO: !!!Удалить старое прибытие
+        ///// <summary>
+        ///// Принять вагоны
+        ///// </summary>
+        ///// <param name="context"></param>
+        ///// <param name="id_station"></param>
+        ///// <param name="id_way"></param>
+        ///// <param name="date_start"></param>
+        ///// <param name="wagons"></param>
+        ///// <param name="numeration"></param>
+        ///// <param name="user"></param>
+        ///// <returns></returns>
+        //public ResultTransfer IncomingWagons(ref EFDbContext context, int id_station, int id_way, DateTime date_start, List<ArrivalCars> wagons, bool numeration, string user)
+        //{
+        //    ResultTransfer rt = new ResultTransfer(wagons.Count());
+        //    try
+        //    {
 
 
-                if (context == null)
-                {
-                    context = new EFDbContext();
-                }
-                int position = context.GetNextPosition(id_way);
-                foreach (ArrivalCars wagon in numeration ? wagons.OrderByDescending(w => w.position_arrival) : wagons.OrderBy(w => w.position_arrival))
-                {
-                    int result = IncomingWagon(ref context, id_station, id_way, date_start, position, wagon, user);
-                    rt.SetMovedResult(result, wagon.num);
-                    position++;
-                }
-                rt.SetResult(context.SaveChanges());
-                return rt;
+        //        if (context == null)
+        //        {
+        //            context = new EFDbContext();
+        //        }
+        //        int position = context.GetNextPosition(id_way);
+        //        foreach (ArrivalCars wagon in numeration ? wagons.OrderByDescending(w => w.position_arrival) : wagons.OrderBy(w => w.position_arrival))
+        //        {
+        //            int result = IncomingWagon(ref context, id_station, id_way, date_start, position, wagon, user);
+        //            rt.SetMovedResult(result, wagon.num);
+        //            position++;
+        //        }
+        //        rt.SetResult(context.SaveChanges());
+        //        return rt;
 
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("IncomingWagons(context={0}, id_station={1}, id_way={2}, date_start={3}, wagons={4}, numeration={5}, user={6})",
-                    context, id_station, id_way, date_start, wagons, numeration, user), servece_owner, eventID);
-                rt.SetResult(-1);
-                return rt;// Возвращаем id=-1 , Ошибка
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("IncomingWagons(context={0}, id_station={1}, id_way={2}, date_start={3}, wagons={4}, numeration={5}, user={6})",
+        //            context, id_station, id_way, date_start, wagons, numeration, user), servece_owner, eventID);
+        //        rt.SetResult(-1);
+        //        return rt;// Возвращаем id=-1 , Ошибка
+        //    }
+        //}
 
         //----------------------------------------------------------          
         /// <summary>
@@ -1823,6 +1824,7 @@ namespace IDS
                         tara_uz = arrival_doc_vag.tara_uz,
                         usl_tip = arrival_doc_vag.usl_tip,
                         zayava = getSubstringField(arrival_doc_vag.zayava, 100),
+                        id_wagons_rent_arrival = arrival_doc_vag.id_wagons_rent_arrival,
                         create = DateTime.Now,
                         create_user = user,
                         change = null,
@@ -1872,6 +1874,7 @@ namespace IDS
                         arr_uz_doc_vag.tara_uz = arrival_doc_vag.tara_uz;
                         arr_uz_doc_vag.usl_tip = arrival_doc_vag.usl_tip;
                         arr_uz_doc_vag.zayava = getSubstringField(arrival_doc_vag.zayava, 100);
+                        arr_uz_doc_vag.id_wagons_rent_arrival = arrival_doc_vag.id_wagons_rent_arrival;
                         arr_uz_doc_vag.change = DateTime.Now;
                         arr_uz_doc_vag.change_user = user;
                         arr_uz_doc_vag.manual = uz_doc_manual;
@@ -9625,7 +9628,8 @@ namespace IDS
                                     // пересчет времени с учетом uz_wagon
                                     //calc_time = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
                                     var remainder = (hour_calc % 24);
-                                    if (remainder > 0) {
+                                    if (remainder > 0)
+                                    {
                                         remainder = 24 - remainder;
                                     }
                                     calc_time = hour_calc + (!uz_wagon ? remainder : 0); // округлим до целых суток

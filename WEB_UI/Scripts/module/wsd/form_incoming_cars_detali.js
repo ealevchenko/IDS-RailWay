@@ -7119,6 +7119,7 @@
                             conts: this.epd.main_doc_conts,
                             pays: this.epd.main_doc_vagon_pay,
                             acts: this.epd.main_doc_vagon_acts,
+                            id_wagons_rent_arrival: this.ids_current_rent && this.ids_current_rent.id ? this.ids_current_rent.id : null,
                         };
                         //---------------------------------------------------------------
                         var arrival_doc = null;         // Досылочный документ 
@@ -7188,6 +7189,7 @@
                                 conts: this.epd.doc_conts,
                                 pays: this.epd.doc_vagon_pay,
                                 acts: this.epd.doc_vagon_acts,
+                                id_wagons_rent_arrival: this.ids_current_rent && this.ids_current_rent.id ? this.ids_current_rent.id : null,
                             };
                         }
                         //------------------------------------------------------------------
