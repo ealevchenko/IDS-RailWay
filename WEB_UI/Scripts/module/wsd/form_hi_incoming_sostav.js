@@ -19,7 +19,7 @@
     var max_err_date_adoption = 3 * 24 * 60;    // TODO: Максимальная разница в минутах дата приема
     var min_err_date_adoption_act = -2 * 60;    // TODO: Минимальная разница в минутах дата приема по акту
     var max_err_date_arrival_act = 2 * 60;      // TODO: Максимальная разница в минутах дата приема по акту
-    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko'];               // Список админов для правки
+    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko'];               // Список админов для правки , 
 
 
     // Массив текстовых сообщений 
