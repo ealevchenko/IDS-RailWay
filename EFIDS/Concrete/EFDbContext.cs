@@ -1139,6 +1139,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Vagon1)
                 .WithOptional(e => e.Directory_WagonsRent1)
                 .HasForeignKey(e => e.id_wagons_rent_outgoing);
+
+            modelBuilder.Entity<Directory_WagonsRent>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_WagonsRent)
+                .HasForeignKey(e => e.id_wagons_rent_arrival);
             #endregion
 
             #region Directory_Ways

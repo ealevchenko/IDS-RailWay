@@ -1183,7 +1183,8 @@ namespace EFIDS.Helper
                 pay_summa = v.pay_summa,
                 tara_uz = v.tara_uz,
                 usl_tip = v.usl_tip,
-                zayava = v.zayava,
+                zayava = v.zayava, 
+                id_wagons_rent_arrival = v.id_wagons_rent_arrival,
                 ArrivalSostav = null,
                 Arrival_UZ_Document = null,
                 ArrivalCars = null,
@@ -1203,7 +1204,8 @@ namespace EFIDS.Helper
                 Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
                 Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
                 Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
-                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
+                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent()
             };
         }
         public static Arrival_UZ_Vagon GetArrival_UZ_Vagon_Arrival_UZ_Document(this Arrival_UZ_Vagon v)
@@ -1256,7 +1258,9 @@ namespace EFIDS.Helper
                     manual = v.manual,
                     tara_uz = v.tara_uz,
                     usl_tip = v.usl_tip,
-                    zayava = v.zayava,
+                    zayava = v.zayava, 
+                    pay_summa = v.pay_summa, 
+                    id_wagons_rent_arrival = v.id_wagons_rent_arrival,
                     ArrivalCars = null,
                     ArrivalSostav = null,
                     Arrival_UZ_Document = v.Arrival_UZ_Document.GetArrival_UZ_Document(),
@@ -1276,7 +1280,8 @@ namespace EFIDS.Helper
                     Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
                     Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
                     Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
-                    Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
+                    Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                    Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent(),
                 };
             }
             catch (Exception e)

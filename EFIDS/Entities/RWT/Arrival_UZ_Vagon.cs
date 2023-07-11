@@ -116,6 +116,8 @@ namespace EFIDS.Entities
 
         public int? pay_summa { get; set; }
 
+        public int? id_wagons_rent_arrival { get; set; }
+
         public virtual Arrival_UZ_Document Arrival_UZ_Document { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -159,5 +161,7 @@ namespace EFIDS.Entities
         public virtual Directory_OwnersWagons Directory_OwnersWagons { get; set; }
 
         public virtual Directory_TypeOwnerShip Directory_TypeOwnerShip { get; set; }
+
+        public virtual Directory_WagonsRent Directory_WagonsRent { get; set; }
     }
 }
