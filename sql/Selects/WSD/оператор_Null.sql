@@ -4,8 +4,8 @@ declare @da datetime = '2022-07-26 10:20:00.000'
 
 SELECT * FROM [IDS].[Directory_WagonsRent] where [num] = 1450 
 and (
---(@dt is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=@da) 
---OR 
+(@dt is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=@da) 
+OR 
 (@dt is not null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=@dt)
 ) order by [id] desc
 
