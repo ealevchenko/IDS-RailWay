@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime = convert(datetime,'2023-07-10 12:55:00',120)
+declare @date datetime = convert(datetime,'2023-07-11 14:54:00',120)
 
 	select 
 		 wir.id
@@ -184,7 +184,8 @@ declare @date datetime = convert(datetime,'2023-07-10 12:55:00',120)
 		Left JOIN IDS.InstructionalLetters as il ON ilw.id_instructional_letters = il.id
 		--==== СПРАВОЧНИКИ ===================================================================================
 		--> Справочник аренд
-		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_adoption])) order by [id] desc)	
+		--Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_adoption])) order by [id] desc)	
+		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = arr_doc_vag.id_wagons_rent_arrival
 		--> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
 		--> Справочник Разметка по прибытию
