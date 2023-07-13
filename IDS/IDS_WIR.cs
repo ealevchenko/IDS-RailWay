@@ -6273,7 +6273,7 @@ namespace IDS
                         UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
                         if (upd_doc_uz != null)
                         {
-                            if (((int)upd_doc_uz.status) >= 8)
+                            if (((int)upd_doc_uz.status) >= 8) // 
                             {
                                 // Достигли конца обновления
 
@@ -6416,6 +6416,13 @@ namespace IDS
                     result.SetResult((int)errors_base.not_inp_uz_doc_db);
                     return result; // В базе данных нет записи документа на состав.          
                 }
+
+                doc_vag.date_otpr = doc_uz.otpr.date_otpr;
+                doc_vag.srok_end = doc_uz.otpr.srok_end;
+                doc_vag.date_grpol = doc_uz.otpr.date_grpol;
+                doc_vag.date_pr = doc_uz.otpr.date_pr;
+                doc_vag.date_vid = doc_uz.otpr.date_vid;
+
                 List<Arrival_UZ_Vagon> list_vagon = doc_vag.Arrival_UZ_Vagon.ToList();
                 result.count = list_vagon.Count();
                 bool upd_pl = false;
