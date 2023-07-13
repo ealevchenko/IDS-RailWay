@@ -1769,11 +1769,12 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa', App.Langs), width: "50px", orderable: true, searchable: true
         },
-        //TODO: Переделать (убрать otpr)
+        //
         {
             field: 'incoming_cars_arrival_sostav_epd_date_otpr',
             data: function (row, type, val, meta) {
-                return row.otpr && row.otpr.date_otpr ? moment(row.otpr.date_otpr).format(format_datetime) : null;
+                //return row.otpr && row.otpr.date_otpr ? moment(row.otpr.date_otpr).format(format_datetime) : null;
+                return row.arrival_uz_document_date_otpr ? moment(row.arrival_uz_document_date_otpr).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1781,7 +1782,8 @@
         {
             field: 'incoming_cars_arrival_sostav_epd_date_vid',
             data: function (row, type, val, meta) {
-                return row.otpr && row.otpr.date_vid ? moment(row.otpr.date_vid).format(format_datetime) : null;
+                //return row.otpr && row.otpr.date_vid ? moment(row.otpr.date_vid).format(format_datetime) : null;
+                return row.arrival_uz_document_date_vid ? moment(row.arrival_uz_document_date_vid).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_epd_date_vid', App.Langs), width: "100px", orderable: true, searchable: true

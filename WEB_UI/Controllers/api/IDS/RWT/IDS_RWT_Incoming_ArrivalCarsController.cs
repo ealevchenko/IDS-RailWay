@@ -261,6 +261,12 @@ namespace WEB_UI.Controllers.api
         public long? arrival_uz_document_parent_id { get; set; }
         // добавил 10-05-2022
         public bool? arrival_uz_document_manual { get; set; }
+        // добавил 13-07-2023
+        public DateTime? arrival_uz_document_date_otpr { get; set; }
+        public DateTime? arrival_uz_document_srok_end { get; set; }
+        public DateTime? arrival_uz_document_date_grpol { get; set; }
+        public DateTime? arrival_uz_document_date_pr { get; set; }
+        public DateTime? arrival_uz_document_date_vid { get; set; }
         // Исправил 27.04.2022
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }

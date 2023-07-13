@@ -291,77 +291,77 @@
     var FIL = App.form_inline;
     var TTDR = App.table_td_report;
     var CAM = App.chart_amcharts;
+    //// асинхронно добавим распарсеный ЭПД
+    //var wagons_get_epd_async = function (row, callback) {
+    //    var base = this;
+    //    var len = row.length;
+    //    if (len === 0) {
+    //        if (typeof callback === 'function') {
+    //            callback();
+    //        }
+    //        return 0;
+    //    }
+    //    function GetEPDWagonsAsync(i) {
+    //        if (i < len) {
+    //            // Поместим следующий вызов функции в цикл событий.
+    //            setTimeout(function () {
+    //                this.ids_wsd.getOTPR_UZ_DOCOfNum(row[i].arrival_car_num_doc, function (doc_uz_sms) {
+    //                    row[i].otpr = null;
+    //                    if (doc_uz_sms !== null) {
+    //                        // Получим дату отправки
+    //                        row[i].otpr = doc_uz_sms;
+    //                    };
+    //                    GetEPDWagonsAsync.call(this, i + 1);
+    //                }.bind(this));
+    //            }.bind(this), 0);
+    //        } else {
+    //            // Так как достигнут конец массива, мы вызываем коллбэк
+    //            if (typeof callback === 'function') {
+    //                callback();
+    //            } else return 0;
+    //        }
+    //    }
+    //    GetEPDWagonsAsync.call(this, 0);
+    //};
     // асинхронно добавим распарсеный ЭПД
-    var wagons_get_epd_async = function (row, callback) {
-        var base = this;
-        var len = row.length;
-        if (len === 0) {
-            if (typeof callback === 'function') {
-                callback();
-            }
-            return 0;
-        }
-        function GetEPDWagonsAsync(i) {
-            if (i < len) {
-                // Поместим следующий вызов функции в цикл событий.
-                setTimeout(function () {
-                    this.ids_wsd.getOTPR_UZ_DOCOfNum(row[i].arrival_car_num_doc, function (doc_uz_sms) {
-                        row[i].otpr = null;
-                        if (doc_uz_sms !== null) {
-                            // Получим дату отправки
-                            row[i].otpr = doc_uz_sms;
-                        };
-                        GetEPDWagonsAsync.call(this, i + 1);
-                    }.bind(this));
-                }.bind(this), 0);
-            } else {
-                // Так как достигнут конец массива, мы вызываем коллбэк
-                if (typeof callback === 'function') {
-                    callback();
-                } else return 0;
-            }
-        }
-        GetEPDWagonsAsync.call(this, 0);
-    };
-    // асинхронно добавим распарсеный ЭПД
-    var wagons_get_out_epd_async = function (row, callback) {
-        var base = this;
-        var len = row.length;
-        if (len === 0) {
-            if (typeof callback === 'function') {
-                callback();
-            }
-            return 0;
-        }
-        function GetEPDWagonsAsync(i) {
-            if (i < len) {
-                // Поместим следующий вызов функции в цикл событий.
-                setTimeout(function () {
-                    this.ids_wsd.getOTPR_UZ_DOC_OUTOfNum(row[i].outgoing_uz_document_id_doc_uz, function (doc_uz_sms) {
-                        row[i].otpr = null;
-                        row[i].vagon = null;
-                        if (doc_uz_sms !== null) {
-                            // Получим дату отправки
-                            row[i].otpr = doc_uz_sms;
-                            if (doc_uz_sms && doc_uz_sms.vagon && doc_uz_sms.vagon.length > 0) {
-                                for (var iv = 0; iv < doc_uz_sms.vagon.length; iv++) {
-                                    if (Number(doc_uz_sms.vagon[iv].nomer) === row[i].num)
-                                        row[i].vagon = doc_uz_sms.vagon[iv];
-                                }
-                            }
-                        };
-                        GetEPDWagonsAsync.call(this, i + 1);
-                    }.bind(this));
-                }.bind(this), 0);
-            } else {
-                // Так как достигнут конец массива, мы вызываем коллбэк
-                if (typeof callback === 'function') {
-                    callback();
-                } else return 0;
-            }
-        }
-        GetEPDWagonsAsync.call(this, 0);
-    };
+    //var wagons_get_out_epd_async = function (row, callback) {
+    //    var base = this;
+    //    var len = row.length;
+    //    if (len === 0) {
+    //        if (typeof callback === 'function') {
+    //            callback();
+    //        }
+    //        return 0;
+    //    }
+    //    function GetEPDWagonsAsync(i) {
+    //        if (i < len) {
+    //            // Поместим следующий вызов функции в цикл событий.
+    //            setTimeout(function () {
+    //                this.ids_wsd.getOTPR_UZ_DOC_OUTOfNum(row[i].outgoing_uz_document_id_doc_uz, function (doc_uz_sms) {
+    //                    row[i].otpr = null;
+    //                    row[i].vagon = null;
+    //                    if (doc_uz_sms !== null) {
+    //                        // Получим дату отправки
+    //                        row[i].otpr = doc_uz_sms;
+    //                        if (doc_uz_sms && doc_uz_sms.vagon && doc_uz_sms.vagon.length > 0) {
+    //                            for (var iv = 0; iv < doc_uz_sms.vagon.length; iv++) {
+    //                                if (Number(doc_uz_sms.vagon[iv].nomer) === row[i].num)
+    //                                    row[i].vagon = doc_uz_sms.vagon[iv];
+    //                            }
+    //                        }
+    //                    };
+    //                    GetEPDWagonsAsync.call(this, i + 1);
+    //                }.bind(this));
+    //            }.bind(this), 0);
+    //        } else {
+    //            // Так как достигнут конец массива, мы вызываем коллбэк
+    //            if (typeof callback === 'function') {
+    //                callback();
+    //            } else return 0;
+    //        }
+    //    }
+    //    GetEPDWagonsAsync.call(this, 0);
+    //};
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function view_td_report(selector) {
@@ -2746,18 +2746,18 @@
         this.ids_wsd.postReportAdoptionWagonOfWhere(cur_where, function (result_wagons) {
             this.wagons_adoption = result_wagons;
             // Обновим спсисок вагонов распарсиным ЭПД
-            wagons_get_epd_async.call(this, this.wagons_adoption, function () {
-                // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
-                if (where) {
-                    this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_adoption));
-                }
-                // Обработать и показать данные
-                this.process_data_view_report_2_1(this.wagons_adoption, cur_where);
-                // Выход
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }.bind(this));
+            //wagons_get_epd_async.call(this, this.wagons_adoption, function () {
+            // Проверим если это выбор толко по времени (первый выбор) тогда клонируем
+            if (where) {
+                this.clone_wagons_adoption = JSON.parse(JSON.stringify(this.wagons_adoption));
+            }
+            // Обработать и показать данные
+            this.process_data_view_report_2_1(this.wagons_adoption, cur_where);
+            // Выход
+            if (typeof callback === 'function') {
+                callback();
+            }
+            //}.bind(this));
         }.bind(this));
     };
     // Обработать и показать данные
