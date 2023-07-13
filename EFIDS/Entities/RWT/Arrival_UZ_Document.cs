@@ -68,6 +68,15 @@ namespace EFIDS.Entities
         public string change_user { get; set; }
 
         public bool? manual { get; set; }
+        public DateTime? date_otpr { get; set; }
+
+        public DateTime? srok_end { get; set; }
+
+        public DateTime? date_grpol { get; set; }
+
+        public DateTime? date_pr { get; set; }
+
+        public DateTime? date_vid { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Document_Acts> Arrival_UZ_Document_Acts { get; set; }

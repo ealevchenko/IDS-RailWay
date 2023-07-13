@@ -1303,7 +1303,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null,
             };
         }
-
         public static Arrival_UZ_Document_Docs GetArrival_UZ_Document_Docs(this Arrival_UZ_Document_Docs d)
         {
             if (d == null) return null;
@@ -1320,7 +1319,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null,
             };
         }
-
         public static Arrival_UZ_Document_Acts GetArrival_UZ_Document_Acts(this Arrival_UZ_Document_Acts a)
         {
             if (a == null) return null;
@@ -1340,7 +1338,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null
             };
         }
-
         public static Arrival_UZ_Document GetArrival_UZ_Document_Arrival_UZ_Vagon(this Arrival_UZ_Document d)
         {
             try
@@ -1369,6 +1366,11 @@ namespace EFIDS.Helper
                     change = d.change,
                     change_user = d.change_user,
                     manual = d.manual,
+                    date_otpr = d.date_otpr,
+                    srok_end = d.srok_end,
+                    date_grpol = d.date_grpol,
+                    date_pr = d.date_pr,
+                    date_vid = d.date_vid,
                     UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
                     Arrival_UZ_Vagon = d.Arrival_UZ_Vagon.ToList().Select(v => v.GetArrival_UZ_Vagon()).ToList(),
                     Arrival_UZ_Document1 = null,
@@ -1383,7 +1385,6 @@ namespace EFIDS.Helper
                     Arrival_UZ_Document_Acts = d.Arrival_UZ_Document_Acts.ToList().Select(a => a.GetArrival_UZ_Document_Acts()).ToList(),
                     Arrival_UZ_Document_Docs = d.Arrival_UZ_Document_Docs.ToList().Select(s => s.GetArrival_UZ_Document_Docs()).ToList(),
                     Arrival_UZ_Document_Pay = d.Arrival_UZ_Document_Pay.ToList().Select(p => p.GetArrival_UZ_Document_Pay()).ToList(),
-
                 };
             }
             catch (Exception e)
@@ -1391,7 +1392,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static Arrival_UZ_Document GetArrival_UZ_Document(this Arrival_UZ_Document d)
         {
             try
@@ -1420,6 +1420,11 @@ namespace EFIDS.Helper
                     change = d.change,
                     change_user = d.change_user,
                     manual = d.manual,
+                    date_otpr = d.date_otpr,
+                    srok_end = d.srok_end,
+                    date_grpol = d.date_grpol,
+                    date_pr = d.date_pr,
+                    date_vid = d.date_vid,
                     UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
                     Arrival_UZ_Vagon = null,
                     Arrival_UZ_Document1 = null,
@@ -1442,7 +1447,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static ArrivalSostav GetArrivalSostav_ArrivalCars(this ArrivalSostav s)
         {
             try
