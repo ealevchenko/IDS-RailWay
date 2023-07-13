@@ -1769,6 +1769,7 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        //TODO: Переделать (убрать otpr)
         {
             field: 'incoming_cars_arrival_sostav_epd_date_otpr',
             data: function (row, type, val, meta) {
@@ -2242,50 +2243,50 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng', App.Langs), width: "50px", orderable: true, searchable: true
         }, // Код ГНГ 
-        {
-            field: 'outgoing_cars_epd_route_stn_to',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
-                    return row.otpr.route[0].stn_to;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_route_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код станции назначения  
-        {
-            field: 'outgoing_cars_epd_route_name_to',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
-                    return row.otpr.route[0].name_to;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_route_name_to', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // станция назначения 
-        {
-            field: 'outgoing_cars_epd_joint_stn',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn) {
-                    return row.otpr.route[0].joint[0].stn;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_joint_stn', App.Langs), width: "500px", orderable: true, searchable: true
-        }, // Код погранперехода
-        {
-            field: 'outgoing_cars_epd_joint_stn_name',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn_name) {
-                    return row.otpr.route[0].joint[0].stn_name;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_joint_stn_name', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // погранперехода
+        //{
+        //    field: 'outgoing_cars_epd_route_stn_to',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
+        //            return row.otpr.route[0].stn_to;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_epd_route_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
+        //}, // Код станции назначения  
+        //{
+        //    field: 'outgoing_cars_epd_route_name_to',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
+        //            return row.otpr.route[0].name_to;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_outgoing_cars_epd_route_name_to', App.Langs), width: "100px", orderable: true, searchable: true
+        //}, // станция назначения 
+        //{
+        //    field: 'outgoing_cars_epd_joint_stn',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn) {
+        //            return row.otpr.route[0].joint[0].stn;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_epd_joint_stn', App.Langs), width: "500px", orderable: true, searchable: true
+        //}, // Код погранперехода
+        //{
+        //    field: 'outgoing_cars_epd_joint_stn_name',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn_name) {
+        //            return row.otpr.route[0].joint[0].stn_name;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_outgoing_cars_epd_joint_stn_name', App.Langs), width: "50px", orderable: true, searchable: true
+        //}, // погранперехода
         {
             field: 'outgoing_cars_epd_vagon_collect_v_vesg',
             data: function (row, type, val, meta) {
@@ -2330,75 +2331,75 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_epd_vagon_gruzp', App.Langs), width: "50px", orderable: true, searchable: true
         }, // ГП, тн
-        {
-            field: 'outgoing_cars_epd_client_kod',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].kod) {
-                    return row.otpr.client[1].kod;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_client_kod', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код грузополучателя
-        {
-            field: 'outgoing_cars_epd_client_name',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].name) {
-                    return row.otpr.client[1].name;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_client_name', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // Грузополучатель
-        {
-            field: 'outgoing_cars_epd_pl_kod_plat',
-            data: function (row, type, val, meta) {
-                //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].kod_plat) {
-                //    return row.otpr.pl[1].kod_plat;
-                //}
-                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
-                    $.each(row.otpr.pl, function (key, el) {
-                        if (el.type == "0") {
-                            return row.otpr.pl[key].kod_plat;
-                        }
-                    }.bind(this));
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_pl_kod_plat', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код плат ОТПР
-        {
-            field: 'outgoing_cars_epd_pl_name_plat',
-            data: function (row, type, val, meta) {
-                //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].name_plat) {
-                //    return row.otpr.pl[1].name_plat;
-                //}
-                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
-                    $.each(row.otpr.pl, function (key, el) {
-                        if (el.type == "0") {
-                            return row.otpr.pl[key].name_plat;
-                        }
-                    }.bind(this));
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_pl_name_plat', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // Плательщик ОТПР
-        {
-            field: 'outgoing_cars_epd_distance_way',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.distance_way) {
-                    return row.otpr.distance_way;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_distance_way', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Тар.расс. ОТПР
+        //{
+        //    field: 'outgoing_cars_epd_client_kod',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].kod) {
+        //            return row.otpr.client[1].kod;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_epd_client_kod', App.Langs), width: "50px", orderable: true, searchable: true
+        //}, // Код грузополучателя
+        //{
+        //    field: 'outgoing_cars_epd_client_name',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].name) {
+        //            return row.otpr.client[1].name;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_outgoing_cars_epd_client_name', App.Langs), width: "100px", orderable: true, searchable: true
+        //}, // Грузополучатель
+        //{
+        //    field: 'outgoing_cars_epd_pl_kod_plat',
+        //    data: function (row, type, val, meta) {
+        //        //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].kod_plat) {
+        //        //    return row.otpr.pl[1].kod_plat;
+        //        //}
+        //        if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
+        //            $.each(row.otpr.pl, function (key, el) {
+        //                if (el.type == "0") {
+        //                    return row.otpr.pl[key].kod_plat;
+        //                }
+        //            }.bind(this));
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_epd_pl_kod_plat', App.Langs), width: "50px", orderable: true, searchable: true
+        //}, // Код плат ОТПР
+        //{
+        //    field: 'outgoing_cars_epd_pl_name_plat',
+        //    data: function (row, type, val, meta) {
+        //        //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].name_plat) {
+        //        //    return row.otpr.pl[1].name_plat;
+        //        //}
+        //        if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
+        //            $.each(row.otpr.pl, function (key, el) {
+        //                if (el.type == "0") {
+        //                    return row.otpr.pl[key].name_plat;
+        //                }
+        //            }.bind(this));
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_outgoing_cars_epd_pl_name_plat', App.Langs), width: "100px", orderable: true, searchable: true
+        //}, // Плательщик ОТПР
+        //{
+        //    field: 'outgoing_cars_epd_distance_way',
+        //    data: function (row, type, val, meta) {
+        //        if (row && row.otpr && row.otpr.distance_way) {
+        //            return row.otpr.distance_way;
+        //        }
+        //        return null;
+        //    },
+        //    className: 'dt-body-center',
+        //    title: langView('ttdr_field_outgoing_cars_epd_distance_way', App.Langs), width: "50px", orderable: true, searchable: true
+        //}, // Тар.расс. ОТПР
         // Груз по прибытию вагона
         {
             field: 'outgoing_cars_arrival_uz_vagon_cargo_name',
@@ -3168,7 +3169,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
-        collums.push({ field: 'incoming_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });    //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_outgoing_sostav_date_outgoing', title: null, class: null });
 
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_wagon_adm_name', title: null, class: null });
@@ -3271,11 +3272,11 @@
         collums.push({ field: 'incoming_cars_num', title: null, class: 'fixed-column' });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР
+        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_arrival_sostav_date_arrival', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_vid', title: null, class: null });     // дата раскредитования
+        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_vid', title: null, class: null });     // дата раскредитования //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_arrival_uz_document_name_consignee', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: null });
@@ -6093,7 +6094,7 @@
             case 'outgoing_common_detali': {
                 if (data) {
                     var sum_count_wagon = 0;
-                    var sum_vesg = 0;
+                    //var sum_vesg = 0;
                     var sum_vesg1 = 0;
                     var sum_idle_time = 0;
                     //var sum_idle_time_act = 0;
@@ -6102,9 +6103,9 @@
                     $.each(data, function (i, el) {
                         sum_vesg1 += el.outgoing_uz_vagon_vesg;
                         sum_count_wagon++;
-                        if (el && el.otpr && el.otpr.vagon && el.otpr.vagon.length > 0 && el.otpr.vagon[0].collect_v && el.otpr.vagon[0].collect_v.length > 0 && el.otpr.vagon[0].collect_v[0].vesg) {
-                            sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
-                        }
+                        //if (el && el.otpr && el.otpr.vagon && el.otpr.vagon.length > 0 && el.otpr.vagon[0].collect_v && el.otpr.vagon[0].collect_v.length > 0 && el.otpr.vagon[0].collect_v[0].vesg) {
+                        //    sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
+                        //}
                         sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
                         //sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
                         downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
@@ -6114,9 +6115,9 @@
                 this.obj_t_report.columns('.fl-outgoing_cars_num').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_epd_vagon_collect_v_vesg').every(function () {
-                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
-                });
+                //this.obj_t_report.columns('.fl-outgoing_cars_epd_vagon_collect_v_vesg').every(function () {
+                //    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                //});
                 this.obj_t_report.columns('.fl-outgoing_cars_outgoing_uz_vagon_vesg').every(function () {
                     $(this.footer()).html(sum_vesg1 ? Number(sum_vesg1 / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
