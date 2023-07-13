@@ -1,7 +1,7 @@
 	declare @start datetime = convert(datetime,'2023-06-10 20:01:00',120) 
 	declare @stop datetime = convert(datetime,'2023-06-11 20:00:00',120)
 
-select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
+    select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
 
 	select 
 		 arr_car.[id] as arrival_car_id
@@ -289,6 +289,11 @@ select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
 		,arr_doc_uz.[parent_id]  as arrival_uz_document_parent_id
 		-- добавил 10-05-2022
 		,arr_doc_uz.[manual] as arrival_uz_document_manual
+		,arr_doc_uz.[date_otpr] as arrival_uz_document_date_otpr
+		,arr_doc_uz.[srok_end] as arrival_uz_document_srok_end
+		,arr_doc_uz.[date_grpol] as arrival_uz_document_date_grpol
+		,arr_doc_uz.[date_pr] as arrival_uz_document_date_pr
+		,arr_doc_uz.[date_vid] as arrival_uz_document_date_vid
 		--,arr_doc_uz.[create]
 		--,arr_doc_uz.[create_user]
 		--,arr_doc_uz.[change]
