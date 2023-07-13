@@ -63,6 +63,12 @@
         // Получим данные по основному ЭПД
         if (main_otpr) {
             epd.nom_main_doc = main_otpr.nom_doc;
+            epd.date_otpr = main_otpr.date_otpr;
+            epd.srok_end = main_otpr.srok_end;
+            epd.date_grpol = main_otpr.date_grpol;
+            epd.date_pr = main_otpr.date_pr;
+            epd.date_vid = main_otpr.date_vid;
+
             epd.vagon = this.get_vagon_epd(main_otpr, num);
             epd.cont = this.get_vagon_cont_epd(main_otpr, num);
             // Тарифное расстояние
