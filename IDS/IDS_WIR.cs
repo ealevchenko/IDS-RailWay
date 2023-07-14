@@ -548,6 +548,11 @@ namespace IDS
         public List<Doc_Pay> doc_pays { get; set; }
         public List<Doc_Acts> doc_acts { get; set; }
         public List<Doc_Docs> doc_docs { get; set; }
+        public DateTime? date_otpr { get; set; }
+        public DateTime? srok_end { get; set; }
+        public DateTime? date_grpol { get; set; }
+        public DateTime? date_pr { get; set; }
+        public DateTime? date_vid { get; set; }
     }
     /// <summary>
     /// Класс описания документа тарифы по контейнерам
@@ -1257,6 +1262,11 @@ namespace IDS
                         change = null,
                         change_user = null,
                         manual = uz_doc_manual,
+                        date_otpr = arrival_doc.date_otpr,
+                        srok_end = arrival_doc.srok_end,
+                        date_grpol = arrival_doc.date_grpol,
+                        date_pr = arrival_doc.date_pr,
+                        date_vid = arrival_doc.date_vid,
                     };
                     res.mode = mode_obj.add;
                 }
@@ -1282,6 +1292,11 @@ namespace IDS
                         arr_uz_doc.change = DateTime.Now;
                         arr_uz_doc.change_user = user;
                         arr_uz_doc.manual = uz_doc_manual;
+                        arr_uz_doc.date_otpr = arrival_doc.date_otpr;
+                        arr_uz_doc.srok_end = arrival_doc.srok_end;
+                        arr_uz_doc.date_grpol = arrival_doc.date_grpol;
+                        arr_uz_doc.date_pr = arrival_doc.date_pr;
+                        arr_uz_doc.date_vid = arrival_doc.date_vid;
                         res.mode = mode_obj.update;
                     }
                 }

@@ -7058,8 +7058,13 @@
                             note: null,//this.elements.textarea_wagon_note.val(),
                             doc_pays: this.epd.main_doc_pay,
                             doc_acts: this.epd.main_doc_acts,
-                            doc_docs: this.epd.main_doc_docs
-                        };
+                            doc_docs: this.epd.main_doc_docs,
+                            date_otpr: this.epd.date_otpr,
+                            srok_end: this.epd.srok_end,
+                            date_grpol: this.epd.date_grpol,
+                            date_pr: this.epd.date_pr,
+                            date_vid: this.epd.date_vid,
+                        }; 
                         //
                         var id_cargo = this.ids_cargo_etsng && this.ids_cargo_etsng.id_cargo !== null ? this.ids_cargo_etsng.id_cargo : null;
                         var id_cargo_gng = this.ids_cargo_gng && this.ids_cargo_gng.id !== null ? this.ids_cargo_gng.id : null;
@@ -7144,7 +7149,13 @@
                                 note: this.elements.textarea_wagon_note.val(),
                                 doc_pays: this.epd.doc_pay,
                                 doc_acts: this.epd.doc_acts,
-                                doc_docs: this.epd.doc_docs
+                                doc_docs: this.epd.doc_docs,
+
+                                date_otpr: this.epd.date_otpr,
+                                srok_end: this.epd.srok_end,
+                                date_grpol: this.epd.date_grpol,
+                                date_pr: this.epd.date_pr,
+                                date_vid: this.epd.date_vid,
                             };
                             // Вагон, досылочный документ
                             arrival_vagon_doc = {
