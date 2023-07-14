@@ -546,7 +546,7 @@ namespace Test.TestModule
         /// </summary>
         public void IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC()
         {
-            string id_doc = "87549383";
+            string id_doc = "89108640";
 
             IDS_WIR ids = new IDS_WIR(service.Test);
             EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
@@ -561,6 +561,47 @@ namespace Test.TestModule
             if (upd_doc_uz == null) return;
             ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
             int res_ = context.SaveChanges();
+        }
+        public void IDS_WIR_Update_Arrival_UZ_Doc()
+        {
+            try
+            {
+                IDS_WIR ids = new IDS_WIR(service.Test);
+                EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                UZ.UZ_Convert convert = new UZ.UZ_Convert(service.Test);
+                EFUZ_DOC uz_doc = new EFUZ_DOC(context);
+
+                DateTime dt = new DateTime(2023, 1, 1, 0, 0, 0);
+                List<Arrival_UZ_Document> docs = ef_arr_uz_doc.Context.Where(d => d.id_doc_uz != null && d.create > dt && d.date_otpr == null).ToList();
+                int count = docs.Count();
+                foreach (Arrival_UZ_Document arr_uz_doc in docs)
+                {
+
+                    UZ_DOC doc = uz_doc.Context.Where(d => d.num_doc == arr_uz_doc.id_doc_uz).FirstOrDefault();
+                    if (doc != null)
+                    {
+                        string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                        UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        if (otpr != null)
+                        {
+                            arr_uz_doc.date_otpr = otpr.date_otpr;
+                            arr_uz_doc.srok_end = otpr.srok_end;
+                            arr_uz_doc.date_grpol = otpr.date_grpol;
+                            arr_uz_doc.date_pr = otpr.date_pr;
+                            arr_uz_doc.date_vid = otpr.date_vid;
+                            ef_arr_uz_doc.Update(arr_uz_doc);
+                            int res = context.SaveChanges();
+                            
+                            Console.WriteLine(String.Format("Doc - {0}, Result - {1}, Count - {2} ", arr_uz_doc.id_doc_uz, res, count--));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         /// <summary>
         /// Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
