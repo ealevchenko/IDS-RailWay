@@ -6535,7 +6535,7 @@ namespace IDS
                     // Да список получен, продолжим обработку.
                     uz_doc_ids_uncredited = list_uz_doc.Where(d => d.status == 8).ToList(); // выбрать раскредитованых
                     uz_doc_ids_open = list_uz_doc.Where(d => d.status != 8).ToList(); // выбрать не раскредитованые
-
+                    //uz_doc_ids_open = uz_doc_ids_open.Where(d => d.num_doc.Trim() == "35000000000533640749").ToList();
                     // Начнем обработку раскредитованых
                     if (uz_doc_ids_uncredited != null && uz_doc_ids_uncredited.Count() > 0)
                     {
