@@ -546,7 +546,7 @@ namespace Test.TestModule
         /// </summary>
         public void IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC()
         {
-            string id_doc = "89108640";
+            string id_doc = "35000000000533640749";
 
             IDS_WIR ids = new IDS_WIR(service.Test);
             EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();

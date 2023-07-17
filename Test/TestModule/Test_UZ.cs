@@ -84,7 +84,7 @@ namespace Test.TestModule
         public void UZ_SMS_GetDocument_of_id_doc()
         {
             UZ_SMS sms = new UZ_SMS();
-            string doc_id = "86854766";
+            string doc_id = "35000000000533640749";
             sms.Connection();
             byte[] doc = sms.GetUZ_Document_Of_doc_id(doc_id);
             File.WriteAllBytes(@"d:\" + doc_id + ".pdf", doc);
