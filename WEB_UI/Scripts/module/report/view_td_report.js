@@ -32,11 +32,13 @@
             'vtdr_link_title_report_7_1': 'Вагоны с корректировкой платы',
             'vtdr_link_title_report_8_1': 'История ставок',
             'vtdr_link_title_report_9_1': 'Плата за пользование (ИТОГ)',
+            'vtdr_link_title_report_10_1': 'Остаток вагонов (общий)',
 
             'vtdr_link_group_title_report_1': 'ОБЩИЕ:',
             'vtdr_link_group_title_report_2': 'ПРИБЫТИЕ:',
             'vtdr_link_group_title_report_3': 'ОТПРАВЛЕНИЕ:',
             'vtdr_link_group_title_report_4': 'ПЛАТА:',
+            'vtdr_link_group_title_report_5': 'ОСТАТОК:',
 
             'vtdr_title_report_1_1': 'Статистика {0}',
             'vtdr_title_report_2_1': 'Отчет по прибытию (общий) {0}',
@@ -47,6 +49,7 @@
             'vtdr_title_report_7_1': 'Вагоны с корректировкой платы {0}',
             'vtdr_title_report_8_1': 'История ставок {0}',
             'vtdr_title_report_9_1': 'Плата за пользование (ИТОГ) {0}',
+            'vtdr_title_report_10_1': 'Отчет остаток вагонов (общий) {0}',
 
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
@@ -107,6 +110,21 @@
             'vtdr_label_paid': 'Платные',
             'vtdr_label_shu': 'ШУ',
 
+            'vtdr_label_outer_cars': 'Внешние стороние вагоны',
+            'vtdr_label_amkr_outer_cars': 'Внешние вагоны АМКР',
+            'vtdr_label_amkr_cisterns': 'Цистерны арендованные',
+            'vtdr_label_curr_condition': 'Разметка текущая:',
+            'vtdr_title_curr_condition': 'Разметка текущая',
+            'vtdr_label_type_wagons': 'Тип вагона:',
+            'vtdr_title_type_wagons': 'Тип вагона',
+            'vtdr_label_arr_ext_station_to': 'Станция отправления:',
+            'vtdr_title_arr_ext_station_to': 'Станция отправления',
+            'vtdr_label_inp_division': 'Цех-получатель:',
+            'vtdr_title_inp_division': 'Цех-получатель',
+            'vtdr_label_curr_station_amkr': 'Станция нахождения вагона:',
+            'vtdr_title_curr_station_amkr': 'Станция нахождения вагона',
+
+
             'vtdr_label_wagon_nums': '№№ ваг:',
             'vtdr_title_wagon_nums': 'Введите номера вагонов',
             'vtdr_label_main_epd_docs': '№№ Основного ЭПД:',
@@ -165,8 +183,7 @@
             'vtdr_title_arr_cargo': 'Груз ПРИБ',
             'vtdr_label_arr_group_arrival': 'Группа ПРИБ.:',
             'vtdr_title_arr_group_arrival': 'Группа ПРИБ.',
-            'vtdr_label_arr_condition': 'Разметка по прибытию:',
-            'vtdr_title_arr_condition': 'Разметка по прибытию',
+
             'vtdr_label_payer_sender_name': 'Плательщик ОТПР:',
             'vtdr_title_payer_sender_name': 'Плательщик ОТПР',
             'vtdr_label_code_payer_sender': 'Код плат.ОТПР:',
@@ -519,6 +536,16 @@
                 }.bind(this),
             },
         ];
+        // Сылки на отчеты остаток
+        this.report_links_residue = [
+            {
+                text: langView('vtdr_link_title_report_10_1', App.Langs),
+                icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
+                click: function () {
+                    this.init_report_10_1();
+                }.bind(this),
+            },
+        ];
         // Очистим экран
         this.$panel.empty();
         // Построим основной экран
@@ -668,6 +695,32 @@
             $ul_outgoing.append($li);
         }.bind(this));
         div_p4.$div.append($ul_outgoing);
+        //--------------------------------------------
+        // Отчеты ОСТАТОК ВАГОНОВ
+        var $h6_residue = $('<h6></h6>', {
+            class: 'sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white',
+        });
+        var $sp_residue = $('<span>' + langView('vtdr_link_group_title_report_5', App.Langs) + '</span>');
+        div_p4.$div.append($h6_residue.append($sp_residue));
+        var $ul_residue = $('<ul class="list-unstyled components mb-2 text-left"></ul>');
+        $.each(this.report_links_residue, function (index, element) {
+            var $li = $('<li></li>');
+            var a_link = new this.fe_ui.a({
+                id: null,
+                class: null,
+                href: '#',
+                text: '<i class="' + element.icon + '" style="color:#ffff49"></i>' + element.text, //#44bef1
+                target: null,
+                title: null,
+            });
+            if (typeof element.click === 'function') {
+                a_link.$alink.on("click", element.click);
+            }
+            $li.append(a_link.$alink);
+            $ul_residue.append($li);
+        }.bind(this));
+        div_p4.$div.append($ul_residue);
+
         //--------------------------------------------
         // Подвал
         //<div class="footer">
@@ -1088,6 +1141,7 @@
             case 7: this.clear_report_7_1(); break;
             case 8: this.clear_report_8_1(); break;
             case 9: this.clear_report_9_1(); break;
+            case 10: this.clear_report_10_1(); break;
         }
         switch (this.type) {
             case 1: {
@@ -1154,6 +1208,7 @@
             case 7: this.$title_report.text(langView('vtdr_title_report_7_1', App.Langs).format(message_report)); break;
             case 8: this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(message_report)); break;
             case 9: this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(message_report)); break;
+            case 10: this.$title_report.text(langView('vtdr_title_report_10_1', App.Langs).format(message_report)); break;
         }
     };
     // Показать отчет
@@ -1193,6 +1248,10 @@
             };
             case 9: {
                 this.view_report_9_1(this.start, this.stop, this.type === 6 ? true : false);
+                break;
+            };
+            case 10: {
+                this.view_report_10_1(this.start, this.stop);
                 break;
             };
         }
@@ -10809,9 +10868,839 @@
         }
         LockScreenOff();
     };
+    //--------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Остаток (ОБЩИЙ)"
+    view_td_report.prototype.init_report_10_1 = function () {
+        //this.is_acts = false;
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 10; // номер отчета
+        $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_10_1', App.Langs).format(''));      // выведем название отчета
+        this.init_select_report();                                                              // Инициализация формы выбора периода отчетов
+        //
+        var fieldset_setup = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$setup_select = fieldset_setup.$fieldset;
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+        //
+        var row_common = new this.fe_ui.bs_row();
+        var col_setup = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 2,
+        });
+        col_setup.$col.append(this.$setup_select);
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 10,
+        });
+        col_view.$col.append(this.$table_view);
+        //
+        row_common.$row.append(col_setup.$col).append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+        // Формируем форму выбора
+        var form_residue_setup_select = new this.fe_ui.form({
+            class: null,
+            id: null,
+            novalidate: null
+        });
+        this.$form_out_setup_select = form_residue_setup_select.$form;
+        //-кнопка
+        var row_setup_bt = new this.fe_ui.bs_row();
+        var col_setup_bt = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        var bt_setup_clear = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: langView('vtdr_label_button_setup_clear', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_clear_select_report_5_1();
+            }.bind(this),
+        });
+        var bt_setup_select = new this.fe_ui.bs_button({
+            color: 'primary',
+            size: 'sm',
+            class: null,
+            id: null,
+            label: langView('vtdr_label_button_setup_select', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_select_report_5_1();
+            }.bind(this),
+        });
+        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
+        // Внешние стороние вагоны
+        var row_setup_sw1 = new this.fe_ui.bs_row();
+        var sw_outer_cars = new this.fe_ui.bs_switch({
+            id: 'outer_cars',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_outer_cars', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+            }.bind(this),
+        });
+        row_setup_sw1.$row.append(sw_outer_cars.$element);
+        this.switch_outer_cars = sw_outer_cars.element;
+        // Внешние вагоны АМКР
+        var row_setup_sw2 = new this.fe_ui.bs_row();
+        var sw_amkr_outer_cars = new this.fe_ui.bs_switch({
+            id: 'amkr_outer_cars',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_amkr_outer_cars', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+            }.bind(this),
+        });
+        row_setup_sw2.$row.append(sw_amkr_outer_cars.$element);
+        this.switch_amkr_outer_cars= sw_amkr_outer_cars.element;
+        // Цистерны арендованные
+        var row_setup_sw3 = new this.fe_ui.bs_row();
+        var sw_amkr_cisterns = new this.fe_ui.bs_switch({
+            id: 'amkr_cisterns',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_amkr_cisterns', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+            }.bind(this),
+        });
+        row_setup_sw3.$row.append(sw_amkr_cisterns.$element);
+        this.switch_amkr_cisterns = sw_amkr_cisterns.element;
+        // Платные
+        var row_setup_sw4 = new this.fe_ui.bs_row();
+        var sw_paid = new this.fe_ui.bs_switch({
+            id: 'paid',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_paid', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: null,
+            element_change: function (e) {
+            }.bind(this),
+        });
+        row_setup_sw4.$row.append(sw_paid.$element);
+        this.switch_paid = sw_paid.element;
+        // вагоны
+        var row_setup_1 = new this.fe_ui.bs_row();
+        var ta_wagon_nums = new this.fe_ui.bs_textarea({
+            id: 'wagon_nums',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_wagon_nums', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_wagon_nums', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_1.$row.append(ta_wagon_nums.$element);
+        this.textarea_wagon_nums = ta_wagon_nums.element;
+        // основн документы
+        var row_setup_2 = new this.fe_ui.bs_row();
+        var ta_main_epd_docs = new this.fe_ui.bs_textarea({
+            id: 'main_epd_docs',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_main_epd_docs', App.Langs),
+            label_class: 'mb-1',
+            textarea_size: 'sm',
+            textarea_rows: 2,
+            textarea_cols: null,
+            textarea_class: null,
+            textarea_title: langView('vtdr_title_main_epd_docs', App.Langs),
+            textarea_maxlength: null,
+            textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
+            textarea_required: null,
+            textarea_readonly: false,
+        });
+        row_setup_2.$row.append(ta_main_epd_docs.$element);
+        this.textarea_main_epd_docs = ta_main_epd_docs.element;
+        // Операторы АМКР
+        var row_setup_3 = new this.fe_ui.bs_row();
+        var select_operation_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'operation_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_operation_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_operation_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+                //if (value && Number(value) >= 0) {
+                //    this.elements.input_number_consignee_code.val(value);
+                //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
+                //} else {
+                //    this.elements.input_number_consignee_code.val("");
+                //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
+                //}
+            }.bind(this),
+        });
+        row_setup_3.$row.append(select_operation_amkr.$element);
+        this.select_operation_amkr = select_operation_amkr.element;
+        // Разметка текущая
+        var row_setup_4 = new this.fe_ui.bs_row();
+        var select_curr_condition = new this.fe_ui.bs_select_multiple({
+            id: 'curr_condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_4.$row.append(select_curr_condition.$element);
+        this.select_curr_condition = select_curr_condition.element;
+        // Род вагона
+        var row_setup_5 = new this.fe_ui.bs_row();
+        var select_genus = new this.fe_ui.bs_select_multiple({
+            id: 'genus',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_genus', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_genus', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_5.$row.append(select_genus.$element);
+        this.select_genus = select_genus.element;
+        // Тип вагона
+        var row_setup_6 = new this.fe_ui.bs_row();
+        var select_type_wagons = new this.fe_ui.bs_select_multiple({
+            id: 'type_wagons',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_type_wagons', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_type_wagons', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_6.$row.append(select_type_wagons.$element);
+        this.select_type_wagons = select_type_wagons.element;
+        // Груз ПРИБ
+        var row_setup_7 = new this.fe_ui.bs_row();
+        var select_arr_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'arr_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_arr_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_arr_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_7.$row.append(select_arr_cargo.$element);
+        this.select_arr_cargo = select_arr_cargo.element;
+        // Сертификатные данные
+        var row_setup_8 = new this.fe_ui.bs_row();
+        var select_certification_data = new this.fe_ui.bs_select_multiple({
+            id: 'certification_data',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_certification_data', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_certification_data', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_8.$row.append(select_certification_data.$element);
+        this.select_certification_data = select_certification_data.element;
+        // Станция отправления
+        var row_setup_9 = new this.fe_ui.bs_row();
+        var select_arr_ext_station_to = new this.fe_ui.bs_select_multiple({
+            id: 'arr_ext_station_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_arr_ext_station_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_arr_ext_station_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_9.$row.append(select_arr_ext_station_to.$element);
+        this.select_arr_ext_station_to = select_arr_ext_station_to.element;
+        // Цех получатель
+        var row_setup_10 = new this.fe_ui.bs_row();
+        var select_inp_division = new this.fe_ui.bs_select_multiple({
+            id: 'inp_division',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_inp_division', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_inp_division', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_10.$row.append(select_inp_division.$element);
+        this.select_inp_division = select_inp_division.element;
+        // Груз ОТПР SAP
+        var row_setup_11 = new this.fe_ui.bs_row();
+        var select_out_sap_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'out_sap_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_sap_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_sap_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_11.$row.append(select_out_sap_cargo.$element);
+        this.select_out_sap_cargo = select_out_sap_cargo.element;
 
 
+        // Груз ОТПР
+        var row_setup_14 = new this.fe_ui.bs_row();
+        var select_out_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'out_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
 
+            }.bind(this),
+        });
+        row_setup_14.$row.append(select_out_cargo.$element);
+        this.select_out_cargo = select_out_cargo.element;
+        // Станция назначения
+        var row_setup_15 = new this.fe_ui.bs_row();
+        var select_out_ext_station_to = new this.fe_ui.bs_select_multiple({
+            id: 'out_ext_station_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_ext_station_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_ext_station_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_15.$row.append(select_out_ext_station_to.$element);
+        this.select_out_ext_station_to = select_out_ext_station_to.element;
+        // Цех погрузки
+        var row_setup_16 = new this.fe_ui.bs_row();
+        var select_out_division = new this.fe_ui.bs_select_multiple({
+            id: 'out_division',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_out_division', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_out_division', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_16.$row.append(select_out_division.$element);
+        this.select_out_division = select_out_division.element;
+        // Станция нахождения вагона
+        var row_setup_17 = new this.fe_ui.bs_row();
+        var select_curr_station_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'curr_station_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_station_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_station_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                // var code = Number($(e.currentTarget).val());
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_17.$row.append(select_curr_station_amkr.$element);
+        this.select_curr_station_amkr = select_curr_station_amkr.element;
+
+        //// Дорога
+        //var row_setup_12 = new this.fe_ui.bs_row();
+        //var select_out_inlandrailway_to = new this.fe_ui.bs_select_multiple({
+        //    id: 'out_inlandrailway_to',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_out_inlandrailway_to', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_out_inlandrailway_to', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_12.$row.append(select_out_inlandrailway_to.$element);
+        //this.select_out_inlandrailway_to = select_out_inlandrailway_to.element;
+        //// Погран.переход
+        //var row_setup_13 = new this.fe_ui.bs_row();
+        //var select_out_border_checkpoint_to = new this.fe_ui.bs_select_multiple({
+        //    id: 'out_border_checkpoint_to',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_out_border_checkpoint_to', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_out_border_checkpoint_to', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_13.$row.append(select_out_border_checkpoint_to.$element);
+        //this.select_out_border_checkpoint_to = select_out_border_checkpoint_to.element;
+
+        //// Группа ПРИБ
+        //var row_setup_16 = new this.fe_ui.bs_row();
+        //var select_arr_group_arrival = new this.fe_ui.bs_select_multiple({
+        //    id: 'arr_group_arrival',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_arr_group_arrival', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_arr_group_arrival', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_16.$row.append(select_arr_group_arrival.$element);
+        //this.select_arr_group_arrival = select_arr_group_arrival.element;
+        //// Цех-получатель
+        //var row_setup_18 = new this.fe_ui.bs_row();
+        //var select_arr_division = new this.fe_ui.bs_select_multiple({
+        //    id: 'arr_division',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_arr_division', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_arr_division', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_18.$row.append(select_arr_division.$element);
+        //this.select_arr_division = select_arr_division.element;
+
+        //// Плательщик ОТПР
+        //var row_setup_20 = new this.fe_ui.bs_row();
+        //var select_payer_sender_name = new this.fe_ui.bs_select_multiple({
+        //    id: 'payer_sender_name',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_payer_sender_name', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_payer_sender_name', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_20.$row.append(select_payer_sender_name.$element);
+        //this.select_payer_sender_name = select_payer_sender_name.element;
+        //// Код плат.ОТПР
+        //var row_setup_21 = new this.fe_ui.bs_row();
+        //var select_code_payer_sender = new this.fe_ui.bs_select_multiple({
+        //    id: 'code_payer_sender',
+        //    form_group_size: 'xl',
+        //    form_group_col: 12,
+        //    form_group_class: 'text-left mb-0',
+        //    label: langView('vtdr_label_code_payer_sender', App.Langs),
+        //    label_class: 'mb-1',
+        //    input_size: 'sm',
+        //    input_class: null,
+        //    input_title: langView('vtdr_title_code_payer_sender', App.Langs),
+        //    input_placeholder: null,
+        //    input_required: null,
+        //    input_multiple: true,
+        //    input_group: true,
+        //    element_data: [],
+        //    element_default: null,
+        //    element_change: function (e) {
+        //        // var code = Number($(e.currentTarget).val());
+        //    }.bind(this),
+        //    element_check: function (value) {
+
+        //    }.bind(this),
+        //});
+        //row_setup_21.$row.append(select_code_payer_sender.$element);
+        //this.select_code_payer_sender = select_code_payer_sender.element;
+        //
+        this.$form_out_setup_select
+
+            .append(row_setup_bt.$row)
+            .append(row_setup_sw1.$row)
+            .append(row_setup_sw2.$row)
+            .append(row_setup_sw3.$row)
+            .append(row_setup_sw4.$row)
+            //.append(row_setup_sw5.$row)
+            .append(row_setup_1.$row)
+            .append(row_setup_2.$row)
+            .append(row_setup_3.$row)
+            .append(row_setup_4.$row)
+            .append(row_setup_5.$row)
+            .append(row_setup_6.$row)
+            .append(row_setup_7.$row)
+            .append(row_setup_8.$row)
+            .append(row_setup_9.$row)
+            .append(row_setup_10.$row)
+            .append(row_setup_11.$row)
+            //.append(row_setup_12.$row)
+            //.append(row_setup_13.$row)
+            .append(row_setup_14.$row)
+            .append(row_setup_15.$row)
+            .append(row_setup_16.$row)
+            .append(row_setup_17.$row)
+            //.append(row_setup_18.$row)
+            //.append(row_setup_19.$row)
+            //.append(row_setup_20.$row)
+            //.append(row_setup_21.$row)
+            ;
+        this.$setup_select.append(this.$form_out_setup_select);
+
+        // Запускаем 6 процесса инициализации (паралельно)
+        var process = 1;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    switch (event.target.id) {
+                        case 'out-common-group': {
+                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
+                            break;
+                        };
+                        case 'out-common-detali': {
+                            this.table_out_common_detali.obj_t_report.columns.adjust().draw();
+                            break;
+                        };
+                    };
+                    //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
+                }.bind(this));
+                LockScreenOff();
+            }
+        }.bind(this);
+        //
+        this.table_out_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
+        // Инициализация модуля "Таблица прибывающих составов"
+        this.table_out_common_detali.init({
+            alert: null,
+            detali_table: true,
+            type_report: 'outgoing_common_detali',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+
+        /*}.bind(this));*/
+    };
+
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_10_1 = function () {
+        //if (this.switch_laden) { this.switch_laden.val(false); }
+        //if (this.switch_accounting) { this.switch_accounting.val(false); }
+        //if (this.switch_client) { this.switch_client.val(false); }
+        //if (this.switch_not_client) { this.switch_not_client.val(false); }
+        //if (this.switch_paid) { this.switch_paid.val(false); }
+        //if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        //if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        //if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        //if (this.select_limiting) { this.select_limiting.val(-1); }
+        //if (this.select_owners) { this.select_owners.val(-1); }
+        //if (this.select_genus) { this.select_genus.val(-1); }
+        //if (this.select_out_division) { this.select_out_division.val(-1); }
+        //if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        //if (this.select_out_cargo_group) { this.select_out_cargo_group.val(-1); }
+        //if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
+        //if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        //if (this.select_out_inlandrailway_to) { this.select_out_inlandrailway_to.val(-1); }
+        //if (this.select_out_border_checkpoint_to) { this.select_out_border_checkpoint_to.val(-1); }
+        //if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        //if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        //if (this.select_arr_group_arrival) { this.select_arr_group_arrival.val(-1); }
+        //if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        //if (this.select_arr_division) { this.select_arr_division.val(-1); }
+        //if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
+        //if (this.select_payer_sender_name) { this.select_payer_sender_name.val(-1); }
+        //if (this.select_code_payer_sender) { this.select_code_payer_sender.val(-1); }
+        //if (this.table_out_common_detali) {
+        //    this.wagons_outgoing = [];
+        //    this.clone_wagons_outgoing = [];
+        //    this.process_data_view_report_5_1(this.clone_wagons_outgoing, null);
+        //    LockScreenOff();
+        //}
+    };
     //
     view_td_report.prototype.sort_text = function (list, name) {
         return list.sort(function (a, b) {
