@@ -9364,7 +9364,7 @@ namespace IDS
                     result.result = (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                     return result;
                 }
-                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); //  && p.num == 64019979
+                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); // && p.num == 74747239 
                 if (list_out_cars == null || list_out_cars.Count() == 0)
                 {
                     result.result = (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки

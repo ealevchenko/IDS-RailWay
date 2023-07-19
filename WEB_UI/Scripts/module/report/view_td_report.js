@@ -9153,39 +9153,6 @@
             );
         }
     };
-    // Выборка для Цех-грузоотправитель
-    //view_td_report.prototype.process_data_report_6_5 = function (data, callback) {
-    //    var list_result = [];
-    //    $.each(data, function (key, el_wag) {
-    //        // отберем группу черных металлов
-    //        if (el_wag.outgoing_uz_vagon_id_out_group === 1) {
-    //            var op = list_result.find(function (o) {
-    //                return o.id_group === el_wag.outgoing_uz_vagon_id_group &&
-    //                    o.id_division === el_wag.outgoing_uz_vagon_id_division
-    //            }.bind(this));
-    //            if (!op) {
-    //                // Не данных 
-    //                list_result.push({
-    //                    id_group: el_wag.outgoing_uz_vagon_id_group,
-    //                    group_name: el_wag['outgoing_uz_vagon_cargo_group_name_' + App.Lang],
-    //                    id_out_group: el_wag.outgoing_uz_vagon_id_out_group,
-    //                    cargo_out_group_name: el_wag['outgoing_uz_vagon_cargo_out_group_name_' + App.Lang],
-    //                    cargo_name: el_wag['outgoing_uz_vagon_cargo_name_' + App.Lang],
-    //                    id_division: el_wag.outgoing_uz_vagon_id_division,
-    //                    division_abbr: el_wag['outgoing_uz_vagon_division_abbr_' + App.Lang],
-    //                    count_wagon: 1,
-    //                    sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
-    //                });
-    //            } else {
-    //                op.count_wagon = op.count_wagon + 1;
-    //                op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
-    //            };
-    //        };
-    //    }.bind(this));
-    //    if (typeof callback === 'function') {
-    //        callback(list_result);
-    //    }
-    //};
     // ИТОГ оператор
     view_td_report.prototype.process_data_report_6_6_1 = function (data, callback) {
         var list_result = [];
@@ -10842,6 +10809,9 @@
         }
         LockScreenOff();
     };
+
+
+
     //
     view_td_report.prototype.sort_text = function (list, name) {
         return list.sort(function (a, b) {
