@@ -1,7 +1,149 @@
-use [KRR-PA-CNT-Railway]
+USE [KRR-PA-CNT-Railway]
+GO
 
-declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
+SET ANSI_NULLS ON
+GO
 
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE FUNCTION [IDS].[get_view_operating_balance_of_date]
+ (
+   @date datetime
+ )
+	RETURNS 
+	@operating_balance TABLE(
+		[id] [bigint] NULL,
+		[num] [int] NULL,
+		[arrival_car_id] [bigint] NULL,
+		[arrival_sostav_id] [bigint] NULL,
+		[arrival_uz_vagon_id] [bigint] NULL,
+		[arrival_uz_document_id] [bigint] NULL,
+		[cur_wio_id] [bigint] NULL,
+		[cur_wim_id] [bigint] NOT NULL,
+		[outgoing_car_id] [bigint] NULL,
+		[outgoing_sostav_id] [bigint] NULL,
+		[arrival_uz_document_nom_main_doc] [int] NULL,
+		[arrival_uz_document_nom_doc] [int] NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_id_operator] [int] NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operators_ru] [nvarchar](100) NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operators_en] [nvarchar](100) NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operator_abbr_ru] [nvarchar](20) NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operator_abbr_en] [nvarchar](20) NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_start] [datetime] NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_end] [datetime] NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operator_paid] [bit] NULL,
+		[arrival_uz_vagon_arrival_wagons_rent_operator_color] [nvarchar](10) NULL,
+		[arrival_uz_vagon_id_condition] [int] NULL,
+		[arrival_uz_vagon_condition_name_ru] [nvarchar](100) NULL,
+		[arrival_uz_vagon_condition_name_en] [nvarchar](100) NULL,
+		[arrival_uz_vagon_condition_abbr_ru] [nvarchar](20) NULL,
+		[arrival_uz_vagon_condition_abbr_en] [nvarchar](20) NULL,
+		[arrival_uz_vagon_condition_repairs] [bit] NULL,
+		[current_id_condition] [int] NULL,
+		[current_condition_name_ru] [nvarchar](100) NULL,
+		[current_condition_name_en] [nvarchar](100) NULL,
+		[current_condition_abbr_ru] [nvarchar](20) NULL,
+		[current_condition_abbr_en] [nvarchar](20) NULL,
+		[current_condition_repairs] [bit] NULL,
+		[arrival_uz_vagon_id_genus] [int] NULL,
+		[arrival_uz_vagon_rod] [int] NULL,
+		[arrival_uz_vagon_rod_name_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_rod_name_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_rod_abbr_ru] [nvarchar](5) NULL,
+		[arrival_uz_vagon_rod_abbr_en] [nvarchar](5) NULL,
+		[arrival_uz_vagon_id_type] [int] NULL,
+		[arrival_uz_vagon_type_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_type_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_gruzp] [float] NULL,
+		[arrival_uz_vagon_id_cargo] [int] NULL,
+		[arrival_uz_vagon_cargo_name_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_cargo_name_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_id_group] [int] NULL,
+		[arrival_uz_vagon_cargo_group_name_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_cargo_group_name_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_id_cargo_etsng] [int] NULL,
+		[arrival_uz_vagon_cargo_etsng_code] [int] NULL,
+		[arrival_uz_vagon_cargo_etsng_name_ru] [nvarchar](250) NULL,
+		[arrival_uz_vagon_cargo_etsng_name_en] [nvarchar](250) NULL,
+		[arrival_uz_vagon_id_cargo_gng] [int] NULL,
+		[arrival_uz_vagon_cargo_gng_code] [int] NULL,
+		[arrival_uz_vagon_cargo_gng_name_ru] [nvarchar](250) NULL,
+		[arrival_uz_vagon_cargo_gng_name_en] [nvarchar](250) NULL,
+		[arrival_uz_vagon_id_certification_data] [int] NULL,
+		[arrival_uz_vagon_sertification_data_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_sertification_data_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_id_commercial_condition] [int] NULL,
+		[arrival_uz_vagon_commercial_condition_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_commercial_condition_en] [nvarchar](50) NULL,
+		[arrival_uz_document_code_stn_from] [int] NULL,
+		[arrival_uz_document_station_from_name_ru] [nvarchar](50) NULL,
+		[arrival_uz_document_station_from_name_en] [nvarchar](50) NULL,
+		[arrival_uz_document_from_code_inlandrailway] [int] NULL,
+		[arrival_uz_document_from_inlandrailway_name_ru] [nvarchar](150) NULL,
+		[arrival_uz_document_from_inlandrailway_name_en] [nvarchar](150) NULL,
+		[arrival_uz_document_from_inlandrailway_abbr_ru] [nvarchar](20) NULL,
+		[arrival_uz_document_from_inlandrailway_abbr_en] [nvarchar](20) NULL,
+		[arrival_uz_document_from_code_railway] [int] NULL,
+		[arrival_uz_vagon_id_division_on_amkr] [int] NULL,
+		[arrival_uz_vagon_division_code] [nvarchar](5) NULL,
+		[arrival_uz_vagon_name_division_ru] [nvarchar](250) NULL,
+		[arrival_uz_vagon_name_division_en] [nvarchar](250) NULL,
+		[arrival_uz_vagon_division_abbr_ru] [nvarchar](50) NULL,
+		[arrival_uz_vagon_division_abbr_en] [nvarchar](50) NULL,
+		[arrival_uz_vagon_id_type_devision] [int] NULL,
+		[sap_outgoing_supply_num] [char](10) NULL,
+		[sap_outgoing_supply_date] [date] NULL,
+		[sap_outgoing_supply_cargo_name] [nvarchar](160) NULL,
+		[sap_outgoing_supply_cargo_code] [char](17) NULL,
+		[sap_outgoing_supply_shipper_name] [nvarchar](150) NULL,
+		[sap_outgoing_supply_shipper_code] [char](10) NULL,
+		[sap_outgoing_supply_destination_station_name] [nvarchar](30) NULL,
+		[sap_outgoing_supply_destination_station_code] [char](10) NULL,
+		[sap_outgoing_supply_border_checkpoint_name] [nvarchar](30) NULL,
+		[sap_outgoing_supply_border_checkpoint_code] [char](10) NULL,
+		[sap_outgoing_supply_netto] [float] NULL,
+		[sap_outgoing_supply_warehouse_code] [char](4) NULL,
+		[sap_outgoing_supply_warehouse_name] [nvarchar](20) NULL,
+		[sap_outgoing_supply_responsible_post] [nvarchar](50) NULL,
+		[sap_outgoing_supply_responsible_fio] [nvarchar](50) NULL,
+		[sap_outgoing_supply_payer_code] [char](15) NULL,
+		[sap_outgoing_supply_payer_name] [nvarchar](50) NULL,
+		[current_id_station_amkr] [int] NOT NULL,
+		[current_station_amkr_name_ru] [nvarchar](50) NULL,
+		[current_station_amkr_name_en] [nvarchar](50) NULL,
+		[current_station_amkr_abbr_ru] [nvarchar](50) NULL,
+		[current_station_amkr_abbr_en] [nvarchar](50) NULL,
+		[current_id_way] [int] NOT NULL,
+		[current_id_park] [int] NULL,
+		[current_way_num_ru] [nvarchar](20) NULL,
+		[current_way_num_en] [nvarchar](20) NULL,
+		[current_way_name_ru] [nvarchar](100) NULL,
+		[current_way_name_en] [nvarchar](100) NULL,
+		[current_way_abbr_ru] [nvarchar](50) NULL,
+		[current_way_abbr_en] [nvarchar](50) NULL,
+		[current_way_start] [datetime] NOT NULL,
+		[current_way_end] [datetime] NULL,
+		[current_wim_note] [nvarchar](250) NULL,
+		[current_id_outer_way] [int] NULL,
+		[current_outer_way_name_ru] [nvarchar](150) NULL,
+		[current_outer_way_name_en] [nvarchar](150) NULL,
+		[current_outer_way_start] [datetime] NULL,
+		[current_outer_way_end] [datetime] NULL,
+		[arrival_sostav_date_arrival] [datetime] NULL,
+		[arrival_sostav_date_adoption] [datetime] NULL,
+		[arrival_sostav_date_adoption_act] [datetime] NULL,
+		[instructional_letters_num] [nvarchar](20) NULL,
+		[instructional_letters_datetime] [datetime] NULL,
+		[instructional_letters_station_code] [int] NULL,
+		[instructional_letters_station_name] [nvarchar](50) NULL,
+		[instructional_letters_note] [nvarchar](500) NULL
+	)
+	AS
+	BEGIN
+	insert @operating_balance
 	select 
 		 wir.id
 		 --,out_sost.[date_outgoing]
@@ -17,7 +159,6 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		,arr_doc_uz.[nom_main_doc] as arrival_uz_document_nom_main_doc
 		,arr_doc_uz.[nom_doc]   as arrival_uz_document_nom_doc
 		--> ОПЕРАТОР ПО ПРИБЫТИЮ [IDS].[Directory_OperatorsWagons]
-		,dir_owg.[group] as arrival_uz_vagon_operators_wagons_group
 		,arr_wag_rent.[id_operator] as arrival_uz_vagon_arrival_wagons_rent_id_operator			-- id строки оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
 		,arr_dir_operator.[operators_ru] as arrival_uz_vagon_arrival_wagons_rent_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
 		,arr_dir_operator.[operators_en] as arrival_uz_vagon_arrival_wagons_rent_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
@@ -230,9 +371,6 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 	WHERE
 	-- Исключим КИРОВА
 		wim.id_station <> 10 
-		--and wir.id_outgoing_car is not null
-		--AND wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
-		--and dir_rod.rod_uz = 70
 		-- Исключим ЛОКОМОТИВЫ
 		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
 		AND 
@@ -241,3 +379,13 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		(wim.outer_way_start is not null AND ((wim.outer_way_start<=@date and wim.outer_way_end>=@date) OR (wim.outer_way_start<=@date and wim.outer_way_end is null))))
 		AND 
 		(out_sost.[date_outgoing] is null OR out_sost.[date_outgoing] > @date)
+  RETURN
+ END
+ 
+
+
+
+
+GO
+
+
