@@ -222,6 +222,230 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     #endregion
 
     #region ОТЧЕТ УЧЕТНЫЙ ОСТАТОК  (Обновленный АРМ)
+    public class view_operating_balance
+    {
+        public long? id { get; set; }
+
+        public int? num { get; set; }
+
+        public long? arrival_car_id { get; set; }
+
+        public long? arrival_sostav_id { get; set; }
+
+        public long? arrival_uz_vagon_id { get; set; }
+
+        public long? arrival_uz_document_id { get; set; }
+
+        public long? cur_wio_id { get; set; }
+
+        public long cur_wim_id { get; set; }
+
+        public long? outgoing_car_id { get; set; }
+
+        public long? outgoing_sostav_id { get; set; }
+
+        public int? arrival_uz_document_nom_main_doc { get; set; }
+
+        public int? arrival_uz_document_nom_doc { get; set; }
+
+        public string arrival_uz_vagon_operators_wagons_group { get; set; }
+        public int? arrival_uz_vagon_arrival_wagons_rent_id_operator { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operators_ru { get; set; }
+
+        public string arrival_uz_vagon_arrival_wagons_rent_operators_en { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_abbr_ru { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_abbr_en { get; set; }
+
+        public DateTime? arrival_uz_vagon_arrival_wagons_rent_start { get; set; }
+
+        public DateTime? arrival_uz_vagon_arrival_wagons_rent_end { get; set; }
+
+        public bool? arrival_uz_vagon_arrival_wagons_rent_operator_paid { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_color { get; set; }
+
+        public int? arrival_uz_vagon_id_condition { get; set; }
+        public string arrival_uz_vagon_condition_name_ru { get; set; }
+        public string arrival_uz_vagon_condition_name_en { get; set; }
+        public string arrival_uz_vagon_condition_abbr_ru { get; set; }
+        public string arrival_uz_vagon_condition_abbr_en { get; set; }
+
+        public bool? arrival_uz_vagon_condition_repairs { get; set; }
+
+        public int? current_id_condition { get; set; }
+        public string current_condition_name_ru { get; set; }
+
+        public string current_condition_name_en { get; set; }
+
+        public string current_condition_abbr_ru { get; set; }
+
+        public string current_condition_abbr_en { get; set; }
+
+        public bool? current_condition_repairs { get; set; }
+
+        public int? arrival_uz_vagon_id_genus { get; set; }
+
+        public int? arrival_uz_vagon_rod { get; set; }
+
+        public string arrival_uz_vagon_rod_name_ru { get; set; }
+        public string arrival_uz_vagon_rod_name_en { get; set; }
+
+        public string arrival_uz_vagon_rod_abbr_ru { get; set; }
+
+        public string arrival_uz_vagon_rod_abbr_en { get; set; }
+
+        public int? arrival_uz_vagon_id_type { get; set; }
+
+        public string arrival_uz_vagon_type_ru { get; set; }
+
+        public string arrival_uz_vagon_type_en { get; set; }
+
+        public double? arrival_uz_vagon_gruzp { get; set; }
+
+        public int? arrival_uz_vagon_id_cargo { get; set; }
+
+        public string arrival_uz_vagon_cargo_name_ru { get; set; }
+
+        public string arrival_uz_vagon_cargo_name_en { get; set; }
+
+        public int? arrival_uz_vagon_id_group { get; set; }
+
+        public string arrival_uz_vagon_cargo_group_name_ru { get; set; }
+
+        public string arrival_uz_vagon_cargo_group_name_en { get; set; }
+
+        public int? arrival_uz_vagon_id_cargo_etsng { get; set; }
+
+        public int? arrival_uz_vagon_cargo_etsng_code { get; set; }
+
+        public string arrival_uz_vagon_cargo_etsng_name_ru { get; set; }
+
+        public string arrival_uz_vagon_cargo_etsng_name_en { get; set; }
+
+        public int? arrival_uz_vagon_id_cargo_gng { get; set; }
+
+        public int? arrival_uz_vagon_cargo_gng_code { get; set; }
+
+        public string arrival_uz_vagon_cargo_gng_name_ru { get; set; }
+
+        public string arrival_uz_vagon_cargo_gng_name_en { get; set; }
+
+        public int? arrival_uz_vagon_id_certification_data { get; set; }
+
+        public string arrival_uz_vagon_sertification_data_ru { get; set; }
+
+        public string arrival_uz_vagon_sertification_data_en { get; set; }
+
+        public int? arrival_uz_vagon_id_commercial_condition { get; set; }
+
+        public string arrival_uz_vagon_commercial_condition_ru { get; set; }
+
+        public string arrival_uz_vagon_commercial_condition_en { get; set; }
+
+        public int? arrival_uz_document_code_stn_from { get; set; }
+
+        public string arrival_uz_document_station_from_name_ru { get; set; }
+
+        public string arrival_uz_document_station_from_name_en { get; set; }
+
+        public int? arrival_uz_document_from_code_inlandrailway { get; set; }
+
+        public string arrival_uz_document_from_inlandrailway_name_ru { get; set; }
+
+        public string arrival_uz_document_from_inlandrailway_name_en { get; set; }
+
+        public string arrival_uz_document_from_inlandrailway_abbr_ru { get; set; }
+
+        public string arrival_uz_document_from_inlandrailway_abbr_en { get; set; }
+
+        public int? arrival_uz_document_from_code_railway { get; set; }
+
+        public int? arrival_uz_vagon_id_division_on_amkr { get; set; }
+
+        public string arrival_uz_vagon_division_code { get; set; }
+
+        public string arrival_uz_vagon_name_division_ru { get; set; }
+
+        public string arrival_uz_vagon_name_division_en { get; set; }
+
+        public string arrival_uz_vagon_division_abbr_ru { get; set; }
+
+        public string arrival_uz_vagon_division_abbr_en { get; set; }
+
+        public int? arrival_uz_vagon_id_type_devision { get; set; }
+
+        public string sap_outgoing_supply_num { get; set; }
+
+        public DateTime? sap_outgoing_supply_date { get; set; }
+
+        public string sap_outgoing_supply_cargo_name { get; set; }
+
+        public string sap_outgoing_supply_cargo_code { get; set; }
+
+        public string sap_outgoing_supply_shipper_name { get; set; }
+
+        public string sap_outgoing_supply_shipper_code { get; set; }
+
+        public string sap_outgoing_supply_destination_station_name { get; set; }
+
+        public string sap_outgoing_supply_destination_station_code { get; set; }
+
+        public string sap_outgoing_supply_border_checkpoint_name { get; set; }
+
+        public string sap_outgoing_supply_border_checkpoint_code { get; set; }
+
+        public double? sap_outgoing_supply_netto { get; set; }
+
+        public string sap_outgoing_supply_warehouse_code { get; set; }
+
+        public string sap_outgoing_supply_warehouse_name { get; set; }
+
+        public string sap_outgoing_supply_responsible_post { get; set; }
+
+        public string sap_outgoing_supply_responsible_fio { get; set; }
+
+        public string sap_outgoing_supply_payer_code { get; set; }
+
+        public string sap_outgoing_supply_payer_name { get; set; }
+
+        public int current_id_station_amkr { get; set; }
+
+        public string current_station_amkr_name_ru { get; set; }
+
+         public string current_station_amkr_name_en { get; set; }
+
+        public string current_station_amkr_abbr_ru { get; set; }
+        public string current_station_amkr_abbr_en { get; set; }
+        public int current_id_way { get; set; }
+
+        public int? current_id_park { get; set; }
+        public string current_way_num_ru { get; set; }
+        public string current_way_num_en { get; set; }
+        public string current_way_name_ru { get; set; }
+        public string current_way_name_en { get; set; }
+        public string current_way_abbr_ru { get; set; }
+        public string current_way_abbr_en { get; set; }
+        public DateTime current_way_start { get; set; }
+        public DateTime? current_way_end { get; set; }
+        public string current_wim_note { get; set; }
+
+        public int? current_id_outer_way { get; set; }
+        public string current_outer_way_name_ru { get; set; }
+        public string current_outer_way_name_en { get; set; }
+        public DateTime? current_outer_way_start { get; set; }
+        public DateTime? current_outer_way_end { get; set; }
+        public DateTime? arrival_sostav_date_arrival { get; set; }
+
+        public DateTime? arrival_sostav_date_adoption { get; set; }
+
+        public DateTime? arrival_sostav_date_adoption_act { get; set; }
+        public string instructional_letters_num { get; set; }
+
+        public DateTime? instructional_letters_datetime { get; set; }
+
+        public int? instructional_letters_station_code { get; set; }
+        public string instructional_letters_station_name { get; set; }
+        public string instructional_letters_note { get; set; }
+    }
 
     public class view_total_balance
     {
@@ -1466,6 +1690,27 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         #endregion
 
         #region ОТЧЕТ УЧЕТНЫЙ ОСТАТОК  (Обновленный АРМ)
+        // GET: api/ids/rwt/wsd/view/operating_balance/date/2023-07-21T00:00:00
+        /// <summary>
+        /// Получить оперативный остаток на определенную дату
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/operating_balance/date/{date:datetime}")]
+        [ResponseType(typeof(view_operating_balance))]
+        public IHttpActionResult GetViewOperatingBalance(DateTime date)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_date = new System.Data.SqlClient.SqlParameter("@date", date);
+                string sql = "select * from [IDS].[get_view_operating_balance_of_date](@date)";
+                List<view_operating_balance> list = db.Database.SqlQuery<view_operating_balance>(sql,p_date).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // GET: api/ids/rwt/wsd/view/total_balance
         /// <summary>
         /// Получить расчет остатков по вагонам

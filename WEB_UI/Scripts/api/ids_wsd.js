@@ -2530,6 +2530,29 @@
             },
         });
     };
+    // Получить оперативный остаток на определенную дату
+    ids_wsd.prototype.getReportViewOperatingBalanceOfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/operating_balance/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOperatingBalanceOfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //=============================================================================================================
     //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
     //=============================================================================================================

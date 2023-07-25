@@ -138,6 +138,14 @@ table.dataTable.display td.arrival {
     background-color: #FCE4D6;
 }
 
+table.dataTable.display td.common {
+    background-color: #d6fce4;
+}
+
+table.dataTable.display td.letter {
+    background-color: #eed6fc;
+}
+
 td.details-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;

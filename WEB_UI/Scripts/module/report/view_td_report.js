@@ -74,8 +74,9 @@
 
             'vtdr_card_header_common': 'ВАГОН',
 
-            'vtdr_load_adoption_cars': 'Выполняю операцию выборка принятых вагонов ...',
-            'vtdr_load_outgoing_cars': 'Выполняю операцию выборка отправленных вагонов ...',
+            'vtdr_load_adoption_cars': 'Выполняю операцию выборки принятых вагонов ...',
+            'vtdr_load_outgoing_cars': 'Выполняю операцию выборки отправленных вагонов ...',
+            'vtdr_load_operating_balance': 'Выполняю операцию выборки оперативного остатка вагонов ...',
 
             'vtdr_load_select_cars': 'Выполняю операцию выборка вагонов ...',
 
@@ -123,7 +124,14 @@
             'vtdr_title_inp_division': 'Цех-получатель',
             'vtdr_label_curr_station_amkr': 'Станция нахождения вагона:',
             'vtdr_title_curr_station_amkr': 'Станция нахождения вагона',
-
+            'vtdr_label_curr_way': 'Ж.д. путь нахождения вагона:',
+            'vtdr_title_curr_way': 'Ж.д. путь нахождения вагона',
+            'vtdr_label_sap_destination_station': 'Станция назначения SAP:',
+            'vtdr_title_sap_destination_station': 'Станция назначения SAP',
+            'vtdr_label_sap_warehouse_name': 'Станция назначения SAP:',
+            'vtdr_title_sap_warehouse_name': 'Станция назначения SAP',
+            'vtdr_label_not_letters': 'Вагоны без ПИСЕМ',
+            'vtdr_label_OTC_ban': 'Запрет ОТК',
 
             'vtdr_label_wagon_nums': '№№ ваг:',
             'vtdr_title_wagon_nums': 'Введите номера вагонов',
@@ -7114,11 +7122,11 @@
             form_group_size: 'xl',
             form_group_col: 12,
             form_group_class: 'text-left mb-0',
-            label: langView('vtdr_label_arr_condition', App.Langs),
+            label: langView('vtdr_label_condition', App.Langs),
             label_class: 'mb-1',
             input_size: 'sm',
             input_class: null,
-            input_title: langView('vtdr_title_arr_condition', App.Langs),
+            input_title: langView('vtdr_title_condition', App.Langs),
             input_placeholder: null,
             input_required: null,
             input_multiple: true,
@@ -10878,6 +10886,7 @@
         $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_10_1', App.Langs).format(''));      // выведем название отчета
         this.init_select_report();                                                              // Инициализация формы выбора периода отчетов
+
         //
         var fieldset_setup = new this.fe_ui.fieldset({
             class: 'border-primary',
@@ -10890,6 +10899,8 @@
             legend: null,
             class_legend: 'border-primary',
         });
+        // Дабавим закладку на форму
+        fieldset_view.$fieldset.append('<div id="operation-balance" class="col-xl-12"></div>');
         this.$table_view = fieldset_view.$fieldset;
         //
         var row_common = new this.fe_ui.bs_row();
@@ -10931,7 +10942,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_clear_select_report_5_1();
+                this.action_clear_select_report_10_1();
             }.bind(this),
         });
         var bt_setup_select = new this.fe_ui.bs_button({
@@ -10945,7 +10956,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_select_report_5_1();
+                this.action_select_report_10_1();
             }.bind(this),
         });
         row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
@@ -10962,8 +10973,9 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: null,
+            element_default: true,
             element_change: function (e) {
+                this.action_select_report_10_1();
             }.bind(this),
         });
         row_setup_sw1.$row.append(sw_outer_cars.$element);
@@ -10981,12 +10993,13 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: null,
+            element_default: true,
             element_change: function (e) {
+                this.action_select_report_10_1();
             }.bind(this),
         });
         row_setup_sw2.$row.append(sw_amkr_outer_cars.$element);
-        this.switch_amkr_outer_cars= sw_amkr_outer_cars.element;
+        this.switch_amkr_outer_cars = sw_amkr_outer_cars.element;
         // Цистерны арендованные
         var row_setup_sw3 = new this.fe_ui.bs_row();
         var sw_amkr_cisterns = new this.fe_ui.bs_switch({
@@ -11000,8 +11013,9 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: null,
+            element_default: true,
             element_change: function (e) {
+                this.action_select_report_10_1();
             }.bind(this),
         });
         row_setup_sw3.$row.append(sw_amkr_cisterns.$element);
@@ -11019,8 +11033,9 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: null,
+            element_default: true,
             element_change: function (e) {
+                this.action_select_report_10_1();
             }.bind(this),
         });
         row_setup_sw4.$row.append(sw_paid.$element);
@@ -11086,20 +11101,41 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
-                //if (value && Number(value) >= 0) {
-                //    this.elements.input_number_consignee_code.val(value);
-                //    this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
-                //} else {
-                //    this.elements.input_number_consignee_code.val("");
-                //    this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
-                //}
+
             }.bind(this),
         });
         row_setup_3.$row.append(select_operation_amkr.$element);
         this.select_operation_amkr = select_operation_amkr.element;
+        // Разметка по прибытию
+        var row_setup_4_0 = new this.fe_ui.bs_row();
+        var select_arr_condition = new this.fe_ui.bs_select_multiple({
+            id: 'arr_condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_4_0.$row.append(select_arr_condition.$element);
+        this.select_arr_condition = select_arr_condition.element;
         // Разметка текущая
         var row_setup_4 = new this.fe_ui.bs_row();
         var select_curr_condition = new this.fe_ui.bs_select_multiple({
@@ -11119,6 +11155,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11145,7 +11182,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11172,7 +11209,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11199,7 +11236,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11226,7 +11263,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11253,7 +11290,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11280,7 +11317,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11307,7 +11344,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11315,8 +11352,58 @@
         });
         row_setup_11.$row.append(select_out_sap_cargo.$element);
         this.select_out_sap_cargo = select_out_sap_cargo.element;
-
-
+        // Склад погрузки SAP
+        var row_setup_12 = new this.fe_ui.bs_row();
+        var select_sap_warehouse_name = new this.fe_ui.bs_select_multiple({
+            id: 'sap_warehouse_name',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_sap_warehouse_name', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_sap_warehouse_name', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+            }.bind(this),
+        });
+        row_setup_12.$row.append(select_sap_warehouse_name.$element);
+        this.select_sap_warehouse_name = select_sap_warehouse_name.element;
+        // Станция назначения SAP
+        var row_setup_13 = new this.fe_ui.bs_row();
+        var select_sap_destination_station = new this.fe_ui.bs_select_multiple({
+            id: 'sap_destination_station',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_sap_destination_station', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_sap_destination_station', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+            }.bind(this),
+        });
+        row_setup_13.$row.append(select_sap_destination_station.$element);
+        this.select_sap_destination_station = select_sap_destination_station.element;
         // Груз ОТПР
         var row_setup_14 = new this.fe_ui.bs_row();
         var select_out_cargo = new this.fe_ui.bs_select_multiple({
@@ -11336,7 +11423,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11363,7 +11450,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11390,7 +11477,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11417,7 +11504,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                // var code = Number($(e.currentTarget).val());
+                this.action_select_report_10_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -11425,171 +11512,79 @@
         });
         row_setup_17.$row.append(select_curr_station_amkr.$element);
         this.select_curr_station_amkr = select_curr_station_amkr.element;
+        // Станция нахождения вагона
+        var row_setup_18 = new this.fe_ui.bs_row();
+        var select_curr_way = new this.fe_ui.bs_select_multiple({
+            id: 'curr_way',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_way', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_way', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
 
-        //// Дорога
-        //var row_setup_12 = new this.fe_ui.bs_row();
-        //var select_out_inlandrailway_to = new this.fe_ui.bs_select_multiple({
-        //    id: 'out_inlandrailway_to',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_out_inlandrailway_to', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_out_inlandrailway_to', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
+            }.bind(this),
+        });
+        row_setup_18.$row.append(select_curr_way.$element);
+        this.select_curr_way = select_curr_way.element;
 
-        //    }.bind(this),
-        //});
-        //row_setup_12.$row.append(select_out_inlandrailway_to.$element);
-        //this.select_out_inlandrailway_to = select_out_inlandrailway_to.element;
-        //// Погран.переход
-        //var row_setup_13 = new this.fe_ui.bs_row();
-        //var select_out_border_checkpoint_to = new this.fe_ui.bs_select_multiple({
-        //    id: 'out_border_checkpoint_to',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_out_border_checkpoint_to', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_out_border_checkpoint_to', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
+        //..........
+        // Операция с вагоном
+        // Состояние вагона
+        //............
 
-        //    }.bind(this),
-        //});
-        //row_setup_13.$row.append(select_out_border_checkpoint_to.$element);
-        //this.select_out_border_checkpoint_to = select_out_border_checkpoint_to.element;
-
-        //// Группа ПРИБ
-        //var row_setup_16 = new this.fe_ui.bs_row();
-        //var select_arr_group_arrival = new this.fe_ui.bs_select_multiple({
-        //    id: 'arr_group_arrival',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_arr_group_arrival', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_arr_group_arrival', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_16.$row.append(select_arr_group_arrival.$element);
-        //this.select_arr_group_arrival = select_arr_group_arrival.element;
-        //// Цех-получатель
-        //var row_setup_18 = new this.fe_ui.bs_row();
-        //var select_arr_division = new this.fe_ui.bs_select_multiple({
-        //    id: 'arr_division',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_arr_division', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_arr_division', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_18.$row.append(select_arr_division.$element);
-        //this.select_arr_division = select_arr_division.element;
-
-        //// Плательщик ОТПР
-        //var row_setup_20 = new this.fe_ui.bs_row();
-        //var select_payer_sender_name = new this.fe_ui.bs_select_multiple({
-        //    id: 'payer_sender_name',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_payer_sender_name', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_payer_sender_name', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_20.$row.append(select_payer_sender_name.$element);
-        //this.select_payer_sender_name = select_payer_sender_name.element;
-        //// Код плат.ОТПР
-        //var row_setup_21 = new this.fe_ui.bs_row();
-        //var select_code_payer_sender = new this.fe_ui.bs_select_multiple({
-        //    id: 'code_payer_sender',
-        //    form_group_size: 'xl',
-        //    form_group_col: 12,
-        //    form_group_class: 'text-left mb-0',
-        //    label: langView('vtdr_label_code_payer_sender', App.Langs),
-        //    label_class: 'mb-1',
-        //    input_size: 'sm',
-        //    input_class: null,
-        //    input_title: langView('vtdr_title_code_payer_sender', App.Langs),
-        //    input_placeholder: null,
-        //    input_required: null,
-        //    input_multiple: true,
-        //    input_group: true,
-        //    element_data: [],
-        //    element_default: null,
-        //    element_change: function (e) {
-        //        // var code = Number($(e.currentTarget).val());
-        //    }.bind(this),
-        //    element_check: function (value) {
-
-        //    }.bind(this),
-        //});
-        //row_setup_21.$row.append(select_code_payer_sender.$element);
-        //this.select_code_payer_sender = select_code_payer_sender.element;
+        // Вагоны без ПИСЕМ
+        var row_setup_sw5 = new this.fe_ui.bs_row();
+        var sw_not_letters = new this.fe_ui.bs_switch({
+            id: 'not_letters',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_not_letters', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_sw5.$row.append(sw_not_letters.$element);
+        this.switch_not_letters = sw_not_letters.element;
+        // Запрет ОТК
+        var row_setup_sw6 = new this.fe_ui.bs_row();
+        var sw_OTC_ban = new this.fe_ui.bs_switch({
+            id: 'OTC_ban',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_OTC_ban', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_sw6.$row.append(sw_OTC_ban.$element);
+        this.switch_OTC_ban = sw_OTC_ban.element;
         //
         this.$form_out_setup_select
 
@@ -11598,10 +11593,12 @@
             .append(row_setup_sw2.$row)
             .append(row_setup_sw3.$row)
             .append(row_setup_sw4.$row)
-            //.append(row_setup_sw5.$row)
+            .append(row_setup_sw5.$row)
+            .append(row_setup_sw6.$row)
             .append(row_setup_1.$row)
             .append(row_setup_2.$row)
             .append(row_setup_3.$row)
+            .append(row_setup_4_0.$row)
             .append(row_setup_4.$row)
             .append(row_setup_5.$row)
             .append(row_setup_6.$row)
@@ -11610,16 +11607,16 @@
             .append(row_setup_9.$row)
             .append(row_setup_10.$row)
             .append(row_setup_11.$row)
-            //.append(row_setup_12.$row)
-            //.append(row_setup_13.$row)
+            .append(row_setup_12.$row)
+            .append(row_setup_13.$row)
             .append(row_setup_14.$row)
             .append(row_setup_15.$row)
             .append(row_setup_16.$row)
             .append(row_setup_17.$row)
-            //.append(row_setup_18.$row)
+            .append(row_setup_18.$row)
             //.append(row_setup_19.$row)
             //.append(row_setup_20.$row)
-            //.append(row_setup_21.$row)
+
             ;
         this.$setup_select.append(this.$form_out_setup_select);
 
@@ -11628,29 +11625,16 @@
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
-                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
-                    switch (event.target.id) {
-                        case 'out-common-group': {
-                            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
-                            break;
-                        };
-                        case 'out-common-detali': {
-                            this.table_out_common_detali.obj_t_report.columns.adjust().draw();
-                            break;
-                        };
-                    };
-                    //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust(); // table.columns.adjust().draw();
-                }.bind(this));
                 LockScreenOff();
             }
         }.bind(this);
-        //
-        this.table_out_common_detali = new TTDR('div#out-common-report-detali');         // Создадим экземпляр
-        // Инициализация модуля "Таблица прибывающих составов"
-        this.table_out_common_detali.init({
+        // Оперативный остаток на АМКР
+        this.table_operation_balance = new TTDR('div#operation-balance');         // Создадим экземпляр
+        // Инициализация модуля "Оперативный остаток на АМКР"
+        this.table_operation_balance.init({
             alert: null,
             detali_table: true,
-            type_report: 'outgoing_common_detali',     //
+            type_report: 'operation_balance',     //
             link_num: false,
             ids_wsd: null,
             fn_init: function () {
@@ -11662,45 +11646,362 @@
 
             },
         });
-
         /*}.bind(this));*/
     };
+    // Показать отчет  "Остаток (ОБЩИЙ)"
+    view_td_report.prototype.view_report_10_1 = function (start, stop) {
+        //this.is_acts = is_acts;
+        // Запускаем 1 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                LockScreenOff();
+            }
+        }.bind(this);
+        LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+        // Загрузим данные
+        this.load_select_report_10_1(stop, function () {
+            process_load--;
+            out_load(process_load);
+        }.bind(this))
+    };
+    // Загрузить данные
+    view_td_report.prototype.load_select_report_10_1 = function (date, callback) {
+        this.ids_wsd.getReportViewOperatingBalanceOfDate(date, function (result_operating_balance) {
+            this.operating_balance = result_operating_balance;
+            this.clone_operating_balance = JSON.parse(JSON.stringify(this.operating_balance));
+            // Обработать и показать данные
+            this.process_data_view_report_10_1(this.operating_balance, function () {
+                // Выход
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }.bind(this));
 
+        }.bind(this));
+    };
+    // Обработать и показать данные
+    view_td_report.prototype.process_data_view_report_10_1 = function (operating_balance, callback) {
+        // Продолжим
+        this.report_operating_balance = [];
+        this.list_operation_amkr = [];
+        this.list_arrival_condition = [];
+        this.list_curr_condition = [];
+        this.list_genus = [];
+        this.list_type_wagons = [];
+        this.list_arr_cargo = [];
+        this.list_certification_data = [];
+        this.list_arr_ext_station_to = [];
+        this.list_inp_division = [];
+        this.list_out_sap_cargo = [];
+        this.list_sap_warehouse_name = [];
+        this.list_sap_destination_station = [];
+        this.list_out_cargo = [];
+        this.list_out_ext_station_to = [];
+        this.list_out_division = [];
+        this.list_curr_station_amkr = [];
+        this.list_curr_way = [];
+
+
+        var value_operation_amkr = this.select_operation_amkr.val();
+        var value_arr_condition = this.select_arr_condition.val();
+        var value_curr_condition = this.select_curr_condition.val();
+        var value_genus = this.select_genus.val();
+        var value_type_wagons = this.select_type_wagons.val();
+        var value_arr_cargo = this.select_arr_cargo.val();
+        var value_certification_data = this.select_certification_data.val();
+        var value_arr_ext_station_to = this.select_arr_ext_station_to.val();
+        var value_inp_division = this.select_inp_division.val();
+        var value_out_sap_cargo = this.select_out_sap_cargo.val();
+        var value_sap_warehouse_name = this.select_sap_warehouse_name.val();
+        var value_sap_destination_station = this.select_sap_destination_station.val();
+        var value_out_cargo = this.select_out_cargo.val();
+        var value_out_ext_station_to = this.select_out_ext_station_to.val();
+        var value_out_division = this.select_out_division.val();
+        var value_curr_station_amkr = this.select_curr_station_amkr.val();
+        var value_curr_way = this.select_curr_way.val();
+
+        $.each(operating_balance, function (key, value) {
+            var select = true;
+            if (select && this.switch_outer_cars.val() === true) {
+                if (value.arrival_uz_vagon_operators_wagons_group == 'amkr' || value.arrival_uz_vagon_operators_wagons_group == 'amkr_vz') {
+                    select = false;
+                }
+            }
+
+            if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
+                var res = value_operation_amkr.indexOf(String(value.arrival_uz_vagon_arrival_wagons_rent_id_operator));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_arr_condition || value_arr_condition.length > 0)) {
+                var res = value_arr_condition.indexOf(String(value.arrival_uz_vagon_id_condition));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_curr_condition || value_curr_condition.length > 0)) {
+                var res = value_curr_condition.indexOf(String(value.current_id_condition));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_genus || value_genus.length > 0)) {
+                var res = value_genus.indexOf(String(value.arrival_uz_vagon_id_genus));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_type_wagons || value_type_wagons.length > 0)) {
+                var res = value_type_wagons.indexOf(String(value.arrival_uz_vagon_id_type));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_arr_cargo || value_arr_cargo.length > 0)) {
+                var res = value_arr_cargo.indexOf(String(value.arrival_uz_vagon_id_cargo));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_certification_data || value_certification_data.length > 0)) {
+                var res = value_certification_data.indexOf(String(value.arrival_uz_vagon_id_certification_data));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_arr_ext_station_to || value_arr_ext_station_to.length > 0)) {
+                var res = value_arr_ext_station_to.indexOf(String(value.arrival_uz_document_code_stn_from));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_inp_division || value_inp_division.length > 0)) {
+                var res = value_inp_division.indexOf(String(value.arrival_uz_vagon_id_division_on_amkr));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_out_sap_cargo || value_out_sap_cargo.length > 0)) {
+                var res = value_out_sap_cargo.indexOf(String(value.sap_outgoing_supply_cargo_code));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_sap_warehouse_name || value_sap_warehouse_name.length > 0)) {
+                var res = value_sap_warehouse_name.indexOf(String(value.sap_outgoing_supply_warehouse_code));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_sap_destination_station || value_sap_destination_station.length > 0)) {
+                var res = value_sap_destination_station.indexOf(String(value.sap_outgoing_supply_destination_station_code));
+                if (res === -1) select = false;
+            }
+            // value_out_cargo
+            // value_out_ext_station_to
+            // value_out_division
+            if (select && (!value_curr_station_amkr || value_curr_station_amkr.length > 0)) {
+                var res = value_curr_station_amkr.indexOf(String(value.current_id_station_amkr));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_curr_way || value_curr_way.length > 0)) {
+                var res = value_curr_way.indexOf(String(value.current_id_way));
+                if (res === -1) select = false;
+            }
+            if (select) {
+                this.report_operating_balance.push(value);
+                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+                if (!oa) {
+                    this.list_operation_amkr.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                }
+                var ac = this.list_arrival_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
+                if (!ac) {
+                    this.list_arrival_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
+                }
+                var cc = this.list_curr_condition.find(function (o) { return o.value === value.current_id_condition }.bind(this));
+                if (!cc) {
+                    this.list_curr_condition.push({ value: value.current_id_condition, text: value['current_condition_abbr_' + App.Lang] });
+                }
+                var lg = this.list_genus.find(function (o) { return o.value === value.arrival_uz_vagon_id_genus }.bind(this));
+                if (!lg) {
+                    this.list_genus.push({ value: value.arrival_uz_vagon_id_genus, text: value['arrival_uz_vagon_rod_abbr_' + App.Lang] });
+                }
+                var tw = this.list_type_wagons.find(function (o) { return o.value === value.arrival_uz_vagon_id_type }.bind(this));
+                if (!tw) {
+                    this.list_type_wagons.push({ value: value.arrival_uz_vagon_id_type, text: value['arrival_uz_vagon_type_' + App.Lang] });
+                }
+                var acg = this.list_arr_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_cargo }.bind(this));
+                if (!acg) {
+                    this.list_arr_cargo.push({ value: value.arrival_uz_vagon_id_cargo, text: value['arrival_uz_vagon_cargo_name_' + App.Lang] });
+                }
+                var cd = this.list_certification_data.find(function (o) { return o.value === value.arrival_uz_vagon_id_certification_data }.bind(this));
+                if (!cd) {
+                    this.list_certification_data.push({ value: value.arrival_uz_vagon_id_certification_data, text: value['arrival_uz_vagon_sertification_data_' + App.Lang] });
+                }
+                var aest = this.list_arr_ext_station_to.find(function (o) { return o.value === value.arrival_uz_document_code_stn_from }.bind(this));
+                if (!aest) {
+                    this.list_arr_ext_station_to.push({ value: value.arrival_uz_document_code_stn_from, text: value['arrival_uz_document_station_from_name_' + App.Lang] });
+                }
+                var lid = this.list_inp_division.find(function (o) { return o.value === value.arrival_uz_vagon_id_division_on_amkr }.bind(this));
+                if (!lid) {
+                    this.list_inp_division.push({ value: value.arrival_uz_vagon_id_division_on_amkr, text: value['arrival_uz_vagon_division_abbr_' + App.Lang] });
+                }
+                var oscg = this.list_out_sap_cargo.find(function (o) { return o.value === value.sap_outgoing_supply_cargo_code }.bind(this));
+                if (!oscg) {
+                    this.list_out_sap_cargo.push({ value: value.sap_outgoing_supply_cargo_code, text: value.sap_outgoing_supply_cargo_name });
+                }
+                var swn = this.list_sap_warehouse_name.find(function (o) { return o.value === value.sap_outgoing_supply_warehouse_code }.bind(this));
+                if (!swn) {
+                    this.list_sap_warehouse_name.push({ value: value.sap_outgoing_supply_warehouse_code, text: value.sap_outgoing_supply_warehouse_name });
+                }
+                var sds = this.list_sap_destination_station.find(function (o) { return o.value === value.sap_outgoing_supply_destination_station_code }.bind(this));
+                if (!sds) {
+                    this.list_sap_destination_station.push({ value: value.sap_outgoing_supply_destination_station_code, text: value.sap_outgoing_supply_destination_station_name });
+                }
+                //this.list_out_cargo = [];
+                //this.list_out_ext_station_to = [];
+                //this.list_out_division = [];
+                var csa = this.list_curr_station_amkr.find(function (o) { return o.value === value.current_id_station_amkr }.bind(this));
+                if (!csa) {
+                    this.list_curr_station_amkr.push({ value: value.current_id_station_amkr, text: value['current_station_amkr_abbr_' + App.Lang] });
+                }
+                var csa = this.list_curr_way.find(function (o) { return o.value === value.current_id_way }.bind(this));
+                if (!csa) {
+                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_way_abbr_' + App.Lang] });
+                }
+            }
+
+
+        }.bind(this));
+        // вывод данных
+        this.table_operation_balance.view(this.report_operating_balance);
+        // обновление списков отчета
+        if (!value_operation_amkr || value_operation_amkr.length === 0) {
+            this.select_operation_amkr.update(this.sort_text(this.list_operation_amkr, "text"), -1);
+        }
+        if (!value_arr_condition || value_arr_condition.length === 0) {
+            this.select_arr_condition.update(this.sort_text(this.list_arrival_condition, "text"), -1);
+        }
+        if (!value_curr_condition || value_curr_condition.length === 0) {
+            this.select_curr_condition.update(this.sort_text(this.list_curr_condition, "text"), -1);
+        }
+        if (!value_genus || value_genus.length === 0) {
+            this.select_genus.update(this.sort_text(this.list_genus, "text"), -1);
+        }
+        if (!value_type_wagons || value_type_wagons.length === 0) {
+            this.select_type_wagons.update(this.sort_text(this.list_type_wagons, "text"), -1);
+        }
+        if (!value_arr_cargo || value_arr_cargo.length === 0) {
+            this.select_arr_cargo.update(this.sort_text(this.list_arr_cargo, "text"), -1);
+        }
+        if (!value_certification_data || value_certification_data.length === 0) {
+            this.select_certification_data.update(this.sort_text(this.list_certification_data, "text"), -1);
+        }
+        if (!value_arr_ext_station_to || value_arr_ext_station_to.length === 0) {
+            this.select_arr_ext_station_to.update(this.sort_text(this.list_arr_ext_station_to, "text"), -1);
+        }
+        if (!value_inp_division || value_inp_division.length === 0) {
+            this.select_inp_division.update(this.sort_text(this.list_inp_division, "text"), -1);
+        }
+        if (!value_out_sap_cargo || value_out_sap_cargo.length === 0) {
+            this.select_out_sap_cargo.update(this.sort_text(this.list_out_sap_cargo, "text"), -1);
+        }
+        if (!value_sap_warehouse_name || value_sap_warehouse_name.length === 0) {
+            this.select_sap_warehouse_name.update(this.sort_text(this.list_sap_warehouse_name, "text"), -1);
+        }
+        if (!value_sap_destination_station || value_sap_destination_station.length === 0) {
+            this.select_sap_destination_station.update(this.sort_text(this.list_sap_destination_station, "text"), -1);
+        }
+        if (!value_out_cargo || value_out_cargo.length === 0) {
+            this.select_out_cargo.update(this.sort_text(this.list_out_cargo, "text"), -1);
+        }
+        if (!value_out_ext_station_to || value_out_ext_station_to.length === 0) {
+            this.select_out_ext_station_to.update(this.sort_text(this.list_out_ext_station_to, "text"), -1);
+        }
+        if (!value_out_division || value_out_division.length === 0) {
+            this.select_out_division.update(this.sort_text(this.list_out_division, "text"), -1);
+        }
+        if (!value_curr_station_amkr || value_curr_station_amkr.length === 0) {
+            this.select_curr_station_amkr.update(this.sort_text(this.list_curr_station_amkr, "text"), -1);
+        }
+        if (!value_curr_way || value_curr_way.length === 0) {
+            this.select_curr_way.update(this.sort_text(this.list_curr_way, "text"), -1);
+        }
+        // Выход
+        if (typeof callback === 'function') {
+            callback();
+        }
+    };
+    // Действие кнопки обновим
+    view_td_report.prototype.action_select_report_10_1 = function () {
+        this.out_clear();
+        this.nums = null;
+        var list_nums = this.textarea_wagon_nums.val();
+        if (list_nums !== '') {
+            this.nums = is_valid_nums(list_nums, this.settings.alert, false, true);
+            if (!this.nums) return;
+        };
+        this.main_epd_docs = null;
+        var list_main_epd_docs = this.textarea_main_epd_docs.val();
+        if (list_main_epd_docs !== '') {
+            this.main_epd_docs = is_valid_docs(list_main_epd_docs, this.settings.alert, true);
+            if (!this.main_epd_docs) return;
+        };
+
+        LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+        this.process_data_view_report_10_1(this.operating_balance, function () {
+            LockScreenOff();
+        }.bind(this));
+    };
+    // Очистить выбор
+    view_td_report.prototype.action_clear_select_report_10_1 = function () {
+        if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+        if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+        if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        if (this.switch_paid) { this.switch_paid.val(true); }
+        if (this.switch_not_letters) { this.switch_not_letters.val(true); }
+        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(true); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_type_wagons) { this.select_type_wagons.val(-1); }
+        if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
+        if (this.select_inp_division) { this.select_inp_division.val(-1); }
+        if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
+        if (this.select_sap_warehouse_name) { this.select_sap_warehouse_name.val(-1); }
+        if (this.select_sap_destination_station) { this.select_sap_destination_station.val(-1); }
+        if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        if (this.select_out_division) { this.select_out_division.val(-1); }
+        if (this.select_curr_station_amkr) { this.select_curr_station_amkr.val(-1); }
+        if (this.select_curr_way) { this.select_curr_way.val(-1); }
+        // Обработать и показать данные
+        this.process_data_view_report_10_1(this.clone_operating_balance, function () {
+            LockScreenOff();
+        }.bind(this));
+    };
     // Очистить таблицы
     view_td_report.prototype.clear_report_10_1 = function () {
-        //if (this.switch_laden) { this.switch_laden.val(false); }
-        //if (this.switch_accounting) { this.switch_accounting.val(false); }
-        //if (this.switch_client) { this.switch_client.val(false); }
-        //if (this.switch_not_client) { this.switch_not_client.val(false); }
-        //if (this.switch_paid) { this.switch_paid.val(false); }
-        //if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
-        //if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
-        //if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
-        //if (this.select_limiting) { this.select_limiting.val(-1); }
-        //if (this.select_owners) { this.select_owners.val(-1); }
-        //if (this.select_genus) { this.select_genus.val(-1); }
-        //if (this.select_out_division) { this.select_out_division.val(-1); }
-        //if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
-        //if (this.select_out_cargo_group) { this.select_out_cargo_group.val(-1); }
-        //if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
-        //if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
-        //if (this.select_out_inlandrailway_to) { this.select_out_inlandrailway_to.val(-1); }
-        //if (this.select_out_border_checkpoint_to) { this.select_out_border_checkpoint_to.val(-1); }
-        //if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
-        //if (this.select_certification_data) { this.select_certification_data.val(-1); }
-        //if (this.select_arr_group_arrival) { this.select_arr_group_arrival.val(-1); }
-        //if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
-        //if (this.select_arr_division) { this.select_arr_division.val(-1); }
-        //if (this.select_station_amkr) { this.select_station_amkr.val(-1); }
-        //if (this.select_payer_sender_name) { this.select_payer_sender_name.val(-1); }
-        //if (this.select_code_payer_sender) { this.select_code_payer_sender.val(-1); }
-        //if (this.table_out_common_detali) {
-        //    this.wagons_outgoing = [];
-        //    this.clone_wagons_outgoing = [];
-        //    this.process_data_view_report_5_1(this.clone_wagons_outgoing, null);
-        //    LockScreenOff();
-        //}
+        if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+        if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+        if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        if (this.switch_paid) { this.switch_paid.val(true); }
+        if (this.switch_not_letters) { this.switch_not_letters.val(true); }
+        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(true); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_type_wagons) { this.select_type_wagons.val(-1); }
+        if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        if (this.select_certification_data) { this.select_certification_data.val(-1); }
+        if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
+        if (this.select_inp_division) { this.select_inp_division.val(-1); }
+        if (this.select_out_sap_cargo) { this.select_out_sap_cargo.val(-1); }
+        if (this.select_sap_warehouse_name) { this.select_sap_warehouse_name.val(-1); }
+        if (this.select_sap_destination_station) { this.select_sap_destination_station.val(-1); }
+        if (this.select_out_cargo) { this.select_out_cargo.val(-1); }
+        if (this.select_out_ext_station_to) { this.select_out_ext_station_to.val(-1); }
+        if (this.select_out_division) { this.select_out_division.val(-1); }
+        if (this.select_curr_station_amkr) { this.select_curr_station_amkr.val(-1); }
+        if (this.select_curr_way) { this.select_curr_way.val(-1); }
+        if (this.table_operation_balance) {
+            this.operating_balance = [];
+            this.clone_operating_balance = [];
+            this.process_data_view_report_10_1(this.clone_operating_balance, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
     };
+    //-----------------------------------------------------------------------------------------
     //
     view_td_report.prototype.sort_text = function (list, name) {
         return list.sort(function (a, b) {
