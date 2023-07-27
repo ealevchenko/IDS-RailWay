@@ -1425,6 +1425,7 @@ var outSAP_KOD_R_10 = function (s) {
     switch (s) {
         case '@5A@': return "Запрещена";
         case '@5B@': return "Разрешена";
+        case '@5C@': return "Запрещена";
         default: return s;
     }
 };

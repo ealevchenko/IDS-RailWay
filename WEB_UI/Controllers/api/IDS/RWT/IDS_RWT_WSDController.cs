@@ -372,7 +372,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string arrival_uz_vagon_division_abbr_en { get; set; }
 
         public int? arrival_uz_vagon_id_type_devision { get; set; }
-
+        public string sap_incoming_supply_kod_r_10 { get; set; }
         public string sap_outgoing_supply_num { get; set; }
 
         public DateTime? sap_outgoing_supply_date { get; set; }
@@ -434,14 +434,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime? current_outer_way_start { get; set; }
         public DateTime? current_outer_way_end { get; set; }
         public DateTime? arrival_sostav_date_arrival { get; set; }
-
         public DateTime? arrival_sostav_date_adoption { get; set; }
-
         public DateTime? arrival_sostav_date_adoption_act { get; set; }
+        public string wir_note { get; set; }
         public string instructional_letters_num { get; set; }
-
         public DateTime? instructional_letters_datetime { get; set; }
-
         public int? instructional_letters_station_code { get; set; }
         public string instructional_letters_station_name { get; set; }
         public string instructional_letters_note { get; set; }

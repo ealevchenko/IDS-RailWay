@@ -350,11 +350,11 @@
             'ttdr_field_instructional_letters_station_name': 'Станция назначения',
 
             'ttdr_field_genus_vagon': 'Род вагона',
+            'ttdr_field_sap_incoming_supply_kod_r_10': 'Запрет ОТК',
+            'ttdr_field_wir_note': 'Примечание',
 
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
-
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
-
             'ttdr_mess_view_report': 'Показать отчет ...',
 
             'ttdr_title_all': 'Все',
@@ -1084,7 +1084,7 @@
         {
             field: 'current_way_name',
             data: function (row, type, val, meta) {
-                return row.current_id_way !== null ? row['current_way_num_' + App.Lang] +'-'+ row['current_way_name_' + App.Lang] : '';
+                return row.current_id_way !== null ? row['current_way_num_' + App.Lang] + '-' + row['current_way_name_' + App.Lang] : '';
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_way_name', App.Langs), width: "100px", orderable: true, searchable: true
@@ -2931,6 +2931,24 @@
             className: 'dt-body-left shorten mw-50',
             title: langView('ttdr_field_instructional_letters_station_name', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'sap_incoming_supply_kod_r_10',
+            data: function (row, type, val, meta) {
+                return row.sap_incoming_supply_kod_r_10 != null ? outSAP_KOD_R_10(row.sap_incoming_supply_kod_r_10) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sap_incoming_supply_kod_r_10', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'wir_note',
+            data: function (row, type, val, meta) {
+                return row.wir_note;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3472,7 +3490,7 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
         //collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null }); 
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
@@ -3740,10 +3758,12 @@
         //....
         // Простой
         //....
+        collums.push({ field: 'sap_incoming_supply_kod_r_10', title: null, class: null });
+        collums.push({ field: 'wir_note', title: null, class: null });
         collums.push({ field: 'instructional_letters_num', title: null, class: 'letter' });
-        collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter'  });
-        collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter'  });
-        collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter'  });
+        collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
         return init_columns_detali(collums, list_collums);
     };
     //------------------------------- КНОПКИ ----------------------------------------------------

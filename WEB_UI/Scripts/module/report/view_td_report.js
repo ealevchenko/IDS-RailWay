@@ -11033,7 +11033,7 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: true,
+            element_default: false,
             element_change: function (e) {
                 this.action_select_report_10_1();
             }.bind(this),
@@ -11558,7 +11558,7 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: true,
+            element_default: false,
             element_change: function (e) {
                 this.action_select_report_10_1();
             }.bind(this),
@@ -11578,7 +11578,7 @@
             checkbox_title: null,
             checkbox_required: null,
             checkbox_readonly: false,
-            element_default: true,
+            element_default: false,
             element_change: function (e) {
                 this.action_select_report_10_1();
             }.bind(this),
@@ -11724,8 +11724,34 @@
 
         $.each(operating_balance, function (key, value) {
             var select = true;
-            if (select && this.switch_outer_cars.val() === true) {
-                if (value.arrival_uz_vagon_operators_wagons_group == 'amkr' || value.arrival_uz_vagon_operators_wagons_group == 'amkr_vz') {
+
+            if (select && this.switch_paid.val() === true) {
+                if (value.arrival_uz_vagon_arrival_wagons_rent_operator_paid) {
+                    select = false;
+                }
+            }
+            if (select && this.switch_not_letters.val() === true) {
+                if (value.instructional_letters_num !== null) {
+                    select = false;
+                }
+            }
+            if (select && this.switch_OTC_ban.val() === true) {
+                if (value.sap_incoming_supply_kod_r_10 !== '@5C@' && value.sap_incoming_supply_kod_r_10 !== '@5A@') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_amkr_outer_cars.val() === false) {
+                if (value.arrival_uz_vagon_operators_wagons_group === 'amkr') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_amkr_cisterns.val() === false) {
+                if (value.arrival_uz_vagon_operators_wagons_group === 'cisterns') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_outer_cars.val() === false) {
+                if (value.arrival_uz_vagon_operators_wagons_group !== 'amkr' && value.arrival_uz_vagon_operators_wagons_group !== 'cisterns') {
                     select = false;
                 }
             }
@@ -11939,9 +11965,9 @@
         if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
         if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
         if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
-        if (this.switch_paid) { this.switch_paid.val(true); }
-        if (this.switch_not_letters) { this.switch_not_letters.val(true); }
-        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(true); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.switch_not_letters) { this.switch_not_letters.val(false); }
+        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(false); }
         if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
         if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
         if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
@@ -11971,9 +11997,9 @@
         if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
         if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
         if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
-        if (this.switch_paid) { this.switch_paid.val(true); }
-        if (this.switch_not_letters) { this.switch_not_letters.val(true); }
-        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(true); }
+        if (this.switch_paid) { this.switch_paid.val(false); }
+        if (this.switch_not_letters) { this.switch_not_letters.val(false); }
+        if (this.switch_OTC_ban) { this.switch_OTC_ban.val(false); }
         if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
         if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
         if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
