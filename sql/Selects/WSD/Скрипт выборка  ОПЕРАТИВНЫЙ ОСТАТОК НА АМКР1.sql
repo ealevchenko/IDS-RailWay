@@ -98,6 +98,8 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		,arr_dir_divis_amkr.[division_abbr_ru] as arrival_uz_vagon_division_abbr_ru	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_divis_amkr.[division_abbr_en] as arrival_uz_vagon_division_abbr_en	-- Подразделение [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
 		,arr_dir_divis_amkr.[id_type_devision] as arrival_uz_vagon_id_type_devision	-- id типа подразделения [IDS].[Directory_Divisions] по отправке [IDS].[Outgoing_UZ_Vagon]
+		--=============== ВХОДЯЩАЯ ПОСТАВКА ==================	
+		,sap_is.[KOD_R_10] as sap_incoming_supply_kod_r_10
 		--=============== ИСХОДЯЩАЯ ПОСТАВКА ==================
 		,sap_os.[VBELN] as sap_outgoing_supply_num
 		,sap_os.[ERDAT] as sap_outgoing_supply_date
@@ -152,13 +154,14 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		--============================================================
 		--> Простой УЗ
 		--============================================================
+		,wir.note as wir_note
 		--> Инструктивные письма
 		,il.num as instructional_letters_num
 		,il.dt as instructional_letters_datetime
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
-		--into operating_balance
+		into operating_balance
 	FROM IDS.WagonInternalMovement as wim
 		--> Внутренее перемещение
 		Left JOIN [IDS].[WagonInternalRoutes] as wir ON wir.id = wim.id_wagon_internal_routes
@@ -172,6 +175,8 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON arr_car.id_arrival_uz_vagon = arr_doc_vag.id
 		 --> Документы на группу вагонов (состав) по принятию вагона на АМКР
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
+		--> Документы SAP Входящая поставка
+		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
 		--> Документы SAP Исходящая поставка
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
 	  	--==== ОТПРАВКА ВАГОНА =====================================================================
