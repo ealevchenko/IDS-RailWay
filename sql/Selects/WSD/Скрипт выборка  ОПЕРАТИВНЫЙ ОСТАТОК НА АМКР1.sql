@@ -161,7 +161,7 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
-		into operating_balance
+		--into operating_balance
 	FROM IDS.WagonInternalMovement as wim
 		--> Внутренее перемещение
 		Left JOIN [IDS].[WagonInternalRoutes] as wir ON wir.id = wim.id_wagon_internal_routes
