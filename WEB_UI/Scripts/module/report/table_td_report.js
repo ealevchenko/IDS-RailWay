@@ -93,14 +93,15 @@
             'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
             'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес ЭПД, тн.',
-            'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз',
+            'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_incoming_cars_uz_vagon_cargo_group_name': 'Группа груза',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_name': 'Следует на ст.АМКР',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_abbr': 'Следует на ст.АМКР',
             'ttdr_field_current_station_amkr_name': 'Текущая станция',
             'ttdr_field_current_station_amkr_abbr': 'Текущая станция',
-            'ttdr_field_current_way_name': 'Ж.д. путь',
-            'ttdr_field_current_way_abbr': 'Ж.д. путь',
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_current_outer_way_name': 'Перегон',
 
 
             'ttdr_field_incoming_cars_uz_vagon_division_code': 'Шифр Цеха',
@@ -1067,7 +1068,7 @@
         {
             field: 'current_station_amkr_name',
             data: function (row, type, val, meta) {
-                return row.current_id_station_amkr !== null ? row['current_station_amkr_name_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs);
+                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null  ?  row['current_station_amkr_name_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1075,27 +1076,37 @@
         {
             field: 'current_station_amkr_abbr',
             data: function (row, type, val, meta) {
-                return row.current_id_station_amkr !== null ? row['current_station_amkr_abbr_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs);
+                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null ? row['current_station_amkr_abbr_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Текущий путь        
         {
-            field: 'current_way_name',
+            field: 'current_way_and_outer_way_name',
             data: function (row, type, val, meta) {
-                return row.current_id_way !== null ? row['current_way_num_' + App.Lang] + '-' + row['current_way_name_' + App.Lang] : '';
+
+                return row.current_id_outer_way !== null ? row['current_outer_way_name_' + App.Lang] : row['current_way_num_' + App.Lang] + '-' + row['current_way_name_' + App.Lang];
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_current_way_name', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_current_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        //{
+        //    field: 'current_way_abbr',
+        //    data: function (row, type, val, meta) {
+        //        return row.current_id_way !== null ? row['current_way_abbr_' + App.Lang] : '';
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_current_way_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        //},
+        // Перегон      
         {
-            field: 'current_way_abbr',
+            field: 'current_outer_way_name',
             data: function (row, type, val, meta) {
-                return row.current_id_way !== null ? row['current_way_abbr_' + App.Lang] : '';
+                return row.current_id_outer_way !== null ? row['current_outer_way_name_' + App.Lang] + '-' + row['current_outer_way_name_' + App.Lang] : '';
             },
             className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_current_way_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+            title: langView('ttdr_field_current_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Цех получатель
         {
@@ -3732,7 +3743,8 @@
         collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'common' });
-        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_name', title: null, class: 'common' });
+        collums.push({ field: 'current_condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: 'common' });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_gruzp', title: null, class: 'common' });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: 'common' });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: 'arrival' });
@@ -3748,7 +3760,8 @@
         // Цех ПОГР
         //....
         collums.push({ field: 'current_station_amkr_abbr', title: null, class: null });
-        collums.push({ field: 'current_way_abbr', title: null, class: null });
+        collums.push({ field: 'current_way_and_outer_way_name', title: null, class: null });
+        //collums.push({ field: 'current_outer_way_name', title: null, class: null });
         //....
         // Операция с ваг.
         // Состояние ваг.

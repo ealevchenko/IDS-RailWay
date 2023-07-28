@@ -51,6 +51,7 @@
             'vtdr_title_report_9_1': 'Плата за пользование (ИТОГ) {0}',
             'vtdr_title_report_10_1': 'Отчет остаток вагонов (общий) {0}',
 
+            'vtdr_title_report_type_0': '«Текущая дата» :{0}',
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
             'vtdr_title_report_type_2': '«Календарные сутки» c:{0} по {1}',
             'vtdr_title_report_type_3': '«За месяц» c:{0} по {1}',
@@ -128,8 +129,8 @@
             'vtdr_title_curr_way': 'Ж.д. путь нахождения вагона',
             'vtdr_label_sap_destination_station': 'Станция назначения SAP:',
             'vtdr_title_sap_destination_station': 'Станция назначения SAP',
-            'vtdr_label_sap_warehouse_name': 'Станция назначения SAP:',
-            'vtdr_title_sap_warehouse_name': 'Станция назначения SAP',
+            'vtdr_label_sap_warehouse_name': 'Цех SAP:',
+            'vtdr_title_sap_warehouse_name': 'Цех SAP',
             'vtdr_label_not_letters': 'Вагоны без ПИСЕМ',
             'vtdr_label_OTC_ban': 'Запрет ОТК',
 
@@ -974,12 +975,12 @@
             prefix: 'sm',
             title: langView('vtdr_title_type_select', App.Langs),
             list: [
-                { value: 1, text: 'ЖД сутки' },
-                { value: 2, text: 'Календарные сутки' },
-                { value: 3, text: 'От начала месяца' },
-                { value: 4, text: 'Произвольный выбор' },
-                { value: 5, text: 'Отчетный период (продажа)' },
-                { value: 6, text: 'Отчетный период (плата)' },
+                //{ value: 1, text: 'ЖД сутки' },
+                //{ value: 2, text: 'Календарные сутки' },
+                //{ value: 3, text: 'От начала месяца' },
+                //{ value: 4, text: 'Произвольный выбор' },
+                //{ value: 5, text: 'Отчетный период (продажа)' },
+                //{ value: 6, text: 'Отчетный период (плата)' },
             ],
             default: this.type,
             select: function (event, ui) {
@@ -1126,6 +1127,16 @@
                     this.set_data_report(moment(), null);
                     break;
                 };
+            case 0:
+                {
+                    this.div_select_date.show();
+                    this.div_interval_date.hide();
+                    this.div_select_year.hide();
+                    this.div_select_month.hide();
+                    this.form_panel.set('select_date', moment());
+                    this.set_data_report(moment(), null);
+                    break;
+                };
             default: {
                 this.div_select_date.hide();
                 this.div_interval_date.hide();
@@ -1139,19 +1150,65 @@
     // Получить дату отчета
     view_td_report.prototype.set_data_report = function (date, interval) {
         var message_report = '';
+        var list = [
+            { value: 1, text: 'ЖД сутки' },
+            { value: 2, text: 'Календарные сутки' },
+            { value: 3, text: 'От начала месяца' },
+            { value: 4, text: 'Произвольный выбор' },
+            { value: 5, text: 'Отчетный период (продажа)' },
+            { value: 6, text: 'Отчетный период (плата)' },
+        ];
         switch (this.report) {
-            case 1: this.clear_report_1_1(); break;
-            case 2: this.clear_report_2_1(); break;
-            case 3: this.clear_report_3_1(); break;
-            case 4: this.clear_report_4_1(); break;
-            case 5: this.clear_report_5_1(); break;
-            case 6: this.clear_report_6_1(); break;
-            case 7: this.clear_report_7_1(); break;
-            case 8: this.clear_report_8_1(); break;
-            case 9: this.clear_report_9_1(); break;
-            case 10: this.clear_report_10_1(); break;
+            case 1:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_1_1(); break;
+            case 2:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_2_1(); break;
+            case 3:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_3_1(); break;
+            case 4:
+                this.form_panel.update('type_select', list, 4);
+                this.clear_report_4_1(); break;
+            case 5:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_5_1(); break;
+            case 6:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_6_1(); break;
+            case 7:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_7_1(); break;
+            case 8:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_8_1(); break;
+            case 9:
+                this.form_panel.update('type_select', list, 1);
+                this.clear_report_9_1(); break;
+            case 10:
+                var list = [
+                    { value: 0, text: 'Текущая дата' },
+                    { value: 1, text: 'ЖД сутки' },
+                    { value: 2, text: 'Календарные сутки' },
+                    //{ value: 3, text: 'От начала месяца' },
+                    //{ value: 4, text: 'Произвольный выбор' },
+                    //{ value: 5, text: 'Отчетный период (продажа)' },
+                    //{ value: 6, text: 'Отчетный период (плата)' },
+                ];
+                this.form_panel.update('type_select', list, 0);
+                this.clear_report_10_1();
+                break;
         }
         switch (this.type) {
+            case 0: {
+                if (date) {
+                    this.start = moment(date)._d;
+                    this.stop = moment(date)._d;
+                    message_report = langView('vtdr_title_report_type_0', App.Langs).format(moment(this.stop).format(format_datetime));
+                }
+                break;
+            };
             case 1: {
                 if (date) {
                     this.start = moment(date).subtract(1, 'd').set({ 'hour': 20, 'minute': 1, 'second': 0 })._d;
@@ -11703,7 +11760,6 @@
         this.list_curr_station_amkr = [];
         this.list_curr_way = [];
 
-
         var value_operation_amkr = this.select_operation_amkr.val();
         var value_arr_condition = this.select_arr_condition.val();
         var value_curr_condition = this.select_curr_condition.val();
@@ -11726,7 +11782,7 @@
             var select = true;
 
             if (select && this.switch_paid.val() === true) {
-                if (value.arrival_uz_vagon_arrival_wagons_rent_operator_paid) {
+                if (!value.arrival_uz_vagon_arrival_wagons_rent_operator_paid) {
                     select = false;
                 }
             }

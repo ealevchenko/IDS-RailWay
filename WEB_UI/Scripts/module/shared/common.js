@@ -1479,6 +1479,22 @@
             }
         }
     };
+
+    form_inline.prototype.update = function (id, list, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                switch (field.type) {
+                    case 'select': {
+                        field.element.update(list, value, null)
+                        break;
+                    };
+                }
+            }
+        }
+    };
     // Прочесть значение компонента
     form_inline.prototype.get = function (id) {
         if (this.settings.fields) {
