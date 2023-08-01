@@ -2,6 +2,8 @@ use [KRR-PA-CNT-Railway]
 
 declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 
+select * from ids.get_view_operating_balance_of_date(@date)
+
 	select 
 		 wir.id
 		 --,out_sost.[date_outgoing]
@@ -27,6 +29,17 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		,arr_wag_rent.[rent_end] as arrival_uz_vagon_arrival_wagons_rent_end						-- Конец аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Arrival_UZ_Vagon]
 		,arr_dir_operator.[paid] as arrival_uz_vagon_arrival_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
 		,arr_dir_operator.[color] as arrival_uz_vagon_arrival_wagons_rent_operator_color			-- Цвет оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		--> ОПЕРАТОР ТЕКУЩИЙ [IDS].[Directory_OperatorsWagons]
+		,dir_curr_owg.[group] as current_operators_wagons_group
+		,curr_wag_rent.[id_operator] as current_wagons_rent_id_operator			-- id строки оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[operators_ru] as current_wagons_rent_operators_ru	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[operators_en] as current_wagons_rent_operators_en	-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[abbr_ru] as current_wagons_rent_operator_abbr_ru		-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[abbr_en] as current_wagons_rent_operator_abbr_en		-- Оператор [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_wag_rent.[rent_start] as current_wagons_rent_start					-- Начало аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_wag_rent.[rent_end] as current_wagons_rent_end						-- Конец аренды оператора [IDS].[Directory_WagonsRent] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[paid] as current_wagons_rent_operator_paid			-- Признак платности оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
+		,curr_dir_operator.[color] as current_wagons_rent_operator_color			-- Цвет оператора [IDS].[Directory_OperatorsWagons] по прибытию [IDS].[Arrival_UZ_Vagon]
 		--> РАЗМЕТКА ПО ПРИБЫТИЮ [IDS].[Directory_ConditionArrival]
 		,arr_doc_vag.[id_condition] as arrival_uz_vagon_id_condition
 		,arr_dir_cond.condition_name_ru as arrival_uz_vagon_condition_name_ru			-- Готовность [IDS].[Directory_ConditionArrival] по прибытию [IDS].[Arrival_UZ_Vagon]
@@ -190,11 +203,14 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		--> Перечень писем
 		Left JOIN IDS.InstructionalLetters as il ON ilw.id_instructional_letters = il.id
 		--==== СПРАВОЧНИКИ ===================================================================================
-		--> Справочник аренд
-		--Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = arr_car.num and ((arr_sost.[date_adoption] is null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_arrival]) OR (arr_sost.[date_adoption] is not null and convert(datetime, convert(varchar(15), [rent_start], 102)) <=arr_sost.[date_adoption])) order by [id] desc)	
+		--> Справочник аренд текущих
+		Left JOIN [IDS].[Directory_WagonsRent] as curr_wag_rent ON curr_wag_rent.id = (SELECT top(1) [id] FROM [IDS].[Directory_WagonsRent] where [num] = wir.num and convert(datetime, convert(varchar(15), [rent_start], 102)) <=@date order by [id] desc)	
+		--> Справочник аренд по прибытию		
 		Left JOIN [IDS].[Directory_WagonsRent] as arr_wag_rent ON arr_wag_rent.id = arr_doc_vag.id_wagons_rent_arrival
 		--> Справочник Оператор вагона по прибытию
 		Left JOIN IDS.Directory_OperatorsWagons as arr_dir_operator ON arr_wag_rent.id_operator =  arr_dir_operator.id
+		--> Справочник Оператор вагона текущий
+		Left JOIN IDS.Directory_OperatorsWagons as curr_dir_operator ON curr_wag_rent.id_operator =  curr_dir_operator.id
 		--> Справочник Разметка по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition = arr_dir_cond.id
 		--> Справочник Текущая разметка
@@ -229,8 +245,10 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		Left JOIN IDS.Directory_OuterWays as outer_ways ON wim.id_outer_way = outer_ways.id 
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
-		--> Документы группа операторов		
+		--> Документы группа операторов	прибытие	
 		Left JOIN [IDS].[Directory_OperatorsWagonsGroup] as dir_owg ON arr_wag_rent.id_operator = dir_owg.[id_operator]
+		--> Документы группа операторов	текущая	
+		Left JOIN [IDS].[Directory_OperatorsWagonsGroup] as dir_curr_owg ON curr_wag_rent.id_operator = dir_curr_owg.[id_operator]
 
 	WHERE
 	-- Исключим КИРОВА
@@ -238,6 +256,7 @@ declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
 		--and wir.id_outgoing_car is not null
 		--AND wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 		--and dir_rod.rod_uz = 70
+		--and arr_wag_rent.[id_operator] <>  curr_wag_rent.[id_operator]
 		-- Исключим ЛОКОМОТИВЫ
 		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
 		AND 
