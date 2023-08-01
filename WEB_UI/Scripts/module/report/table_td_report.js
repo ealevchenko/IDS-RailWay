@@ -73,6 +73,9 @@
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. ПОГР',
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. ПОГР',
 
+            'ttdr_field_current_wagons_rent_operators': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_current_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+
             'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Разм. ПРИБ',
             'ttdr_field_incoming_cars_uz_vagon_condition_abbr': 'Разм. по приб.',
             'ttdr_field_current_condition_name': 'Разм текущ.',
@@ -843,6 +846,23 @@
             title: langView('ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
         },
         // field: 'operator_color'
+        // Оператор текущий
+        {
+            field: 'current_wagons_rent_operators',
+            data: function (row, type, val, meta) {
+                return row['current_wagons_rent_operators_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_current_wagons_rent_operators', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_current_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         //Ограничение
         {
             field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_id_limiting',
@@ -3742,6 +3762,7 @@
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'current_wagons_rent_operator_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'common' });
         collums.push({ field: 'current_condition_abbr', title: null, class: 'common' });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: 'common' });

@@ -263,6 +263,17 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? arrival_uz_vagon_arrival_wagons_rent_operator_paid { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_operator_color { get; set; }
 
+        public string current_operators_wagons_group { get; set; }
+        public int? current_wagons_rent_id_operator { get; set; }
+        public string current_wagons_rent_operators_ru { get; set; }
+        public string current_wagons_rent_operators_en { get; set; }
+        public string current_wagons_rent_operator_abbr_ru { get; set; }
+        public string current_wagons_rent_operator_abbr_en { get; set; }
+        public DateTime? current_wagons_rent_start { get; set; }
+        public DateTime? current_wagons_rent_end { get; set; }
+        public bool? current_wagons_rent_operator_paid { get; set; }
+        public string current_wagons_rent_operator_color { get; set; }
+
         public int? arrival_uz_vagon_id_condition { get; set; }
         public string arrival_uz_vagon_condition_name_ru { get; set; }
         public string arrival_uz_vagon_condition_name_en { get; set; }
