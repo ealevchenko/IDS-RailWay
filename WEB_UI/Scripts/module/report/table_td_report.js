@@ -356,6 +356,8 @@
             'ttdr_field_genus_vagon': 'Род вагона',
             'ttdr_field_sap_incoming_supply_kod_r_10': 'Запрет ОТК',
             'ttdr_field_wir_note': 'Примечание',
+            'ttdr_field_idle_time': 'Простой УЗ',
+            'ttdr_field_idle_time_act': 'Простой УЗ (акт)',
 
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
@@ -1088,7 +1090,7 @@
         {
             field: 'current_station_amkr_name',
             data: function (row, type, val, meta) {
-                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null  ?  row['current_station_amkr_name_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
+                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null ? row['current_station_amkr_name_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
@@ -2965,7 +2967,15 @@
         {
             field: 'sap_incoming_supply_kod_r_10',
             data: function (row, type, val, meta) {
-                return row.sap_incoming_supply_kod_r_10 != null ? outSAP_KOD_R_10(row.sap_incoming_supply_kod_r_10) : null;
+
+                switch (row.sap_incoming_supply_kod_r_10) {
+                    case '@5A@':
+                    case '@5C@': return "<i class='fas fa-ban' style='color:#ff4d4d;'></i>";
+                    case '@5B@': return "<i class='fas fa-check' style='color:#00ce00;'></i>";
+                    default: return null;
+                }
+
+                //return row.sap_incoming_supply_kod_r_10 != null ? outSAP_KOD_R_10(row.sap_incoming_supply_kod_r_10) : null;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_sap_incoming_supply_kod_r_10', App.Langs), width: "30px", orderable: true, searchable: false
@@ -2978,8 +2988,23 @@
             className: 'dt-body-left shorten mw-150',
             title: langView('ttdr_field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
         },
-
-
+        // Время простоя
+        {
+            field: 'idle_time',
+            data: function (row, type, val, meta) {
+                return row.idle_time !== null ? getTimeFromMins(row.idle_time) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'idle_time_act',
+            data: function (row, type, val, meta) {
+                return row.idle_time_act !== null ? getTimeFromMins(row.idle_time_act) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_idle_time_act', App.Langs), width: "50px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3790,7 +3815,8 @@
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
         //....
-        // Простой
+        collums.push({ field: 'idle_time', title: null, class: null });
+        collums.push({ field: 'idle_time_act', title: null, class: null });
         //....
         collums.push({ field: 'sap_incoming_supply_kod_r_10', title: null, class: null });
         collums.push({ field: 'wir_note', title: null, class: null });

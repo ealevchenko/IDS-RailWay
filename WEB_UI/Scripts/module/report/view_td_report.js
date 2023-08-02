@@ -1160,31 +1160,31 @@
         ];
         switch (this.report) {
             case 1:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_1_1(); break;
             case 2:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_2_1(); break;
             case 3:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_3_1(); break;
             case 4:
-                this.form_panel.update('type_select', list, 4);
+                this.form_panel.update('type_select', list, this.type);//4
                 this.clear_report_4_1(); break;
             case 5:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_5_1(); break;
             case 6:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_6_1(); break;
             case 7:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_7_1(); break;
             case 8:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_8_1(); break;
             case 9:
-                this.form_panel.update('type_select', list, 1);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_9_1(); break;
             case 10:
                 var list = [
@@ -1196,7 +1196,7 @@
                     //{ value: 5, text: 'Отчетный период (продажа)' },
                     //{ value: 6, text: 'Отчетный период (плата)' },
                 ];
-                this.form_panel.update('type_select', list, 0);
+                this.form_panel.update('type_select', list, this.type);
                 this.clear_report_10_1();
                 break;
         }
@@ -10957,6 +10957,9 @@
             class_legend: 'border-primary',
         });
         // Дабавим закладку на форму
+        var $tab_count = $('<table class="table table-bordered"><tbody><tr><th>Всего вагонов</th><td class="dt-centr" id="count_wagon"></td></tr></tbody></table>');
+        var $col_count = $('<div id="operation-balance-count" class="col-xl-2"></div>');
+        fieldset_view.$fieldset.append($col_count.append($tab_count));
         fieldset_view.$fieldset.append('<div id="operation-balance" class="col-xl-12"></div>');
         this.$table_view = fieldset_view.$fieldset;
         //
@@ -11782,7 +11785,7 @@
             var select = true;
 
             if (select && this.switch_paid.val() === true) {
-                if (!value.arrival_uz_vagon_arrival_wagons_rent_operator_paid) {
+                if (!value.current_wagons_rent_operator_paid) {
                     select = false;
                 }
             }
@@ -11797,23 +11800,24 @@
                 }
             }
             if (select && this.switch_amkr_outer_cars.val() === false) {
-                if (value.arrival_uz_vagon_operators_wagons_group === 'amkr') {
+                if (value.current_operators_wagons_group === 'amkr') {
                     select = false;
                 }
             }
             if (select && this.switch_amkr_cisterns.val() === false) {
-                if (value.arrival_uz_vagon_operators_wagons_group === 'cisterns') {
+                if (value.current_operators_wagons_group === 'cisterns') {
                     select = false;
                 }
             }
             if (select && this.switch_outer_cars.val() === false) {
-                if (value.arrival_uz_vagon_operators_wagons_group !== 'amkr' && value.arrival_uz_vagon_operators_wagons_group !== 'cisterns') {
+                if (value.current_operators_wagons_group !== 'amkr' && value.current_operators_wagons_group !== 'cisterns') {
                     select = false;
                 }
             }
 
             if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
-                var res = value_operation_amkr.indexOf(String(value.arrival_uz_vagon_arrival_wagons_rent_id_operator));
+                //var res = value_operation_amkr.indexOf(String(value.arrival_uz_vagon_arrival_wagons_rent_id_operator));
+                var res = value_operation_amkr.indexOf(value.current_wagons_rent_operator_abbr_ru);
                 if (res === -1) select = false;
             }
             if (select && (!value_arr_condition || value_arr_condition.length > 0)) {
@@ -11873,9 +11877,9 @@
             }
             if (select) {
                 this.report_operating_balance.push(value);
-                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.arrival_uz_vagon_arrival_wagons_rent_id_operator }.bind(this));
+                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.current_wagons_rent_operator_abbr_ru }.bind(this));
                 if (!oa) {
-                    this.list_operation_amkr.push({ value: value.arrival_uz_vagon_arrival_wagons_rent_id_operator, text: value['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] });
+                    this.list_operation_amkr.push({ value: value.current_wagons_rent_operator_abbr_ru, text: value['current_wagons_rent_operator_abbr_' + App.Lang] });
                 }
                 var ac = this.list_arrival_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
                 if (!ac) {
@@ -11936,6 +11940,7 @@
 
 
         }.bind(this));
+        $('td#count_wagon').text(this.report_operating_balance.length);
         // вывод данных
         this.table_operation_balance.view(this.report_operating_balance);
         // обновление списков отчета

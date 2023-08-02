@@ -447,12 +447,16 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime? arrival_sostav_date_arrival { get; set; }
         public DateTime? arrival_sostav_date_adoption { get; set; }
         public DateTime? arrival_sostav_date_adoption_act { get; set; }
+        public DateTime? arrival_sostav_old_date_adoption { get; set; }
+        public DateTime? arrival_sostav_old_date_adoption_act { get; set; }
         public string wir_note { get; set; }
         public string instructional_letters_num { get; set; }
         public DateTime? instructional_letters_datetime { get; set; }
         public int? instructional_letters_station_code { get; set; }
         public string instructional_letters_station_name { get; set; }
         public string instructional_letters_note { get; set; }
+        public int? idle_time { get; set; }
+        public int? idle_time_act { get; set; }
     }
 
     public class view_total_balance
