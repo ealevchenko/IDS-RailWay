@@ -12,7 +12,7 @@
 
     var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
     var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
-    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko'];               // Список админов для правки
+    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки
 
     // Массив текстовых сообщений 
     $.Text_View =
