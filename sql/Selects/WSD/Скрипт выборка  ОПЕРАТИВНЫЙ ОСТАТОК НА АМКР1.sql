@@ -1,8 +1,8 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime = convert(datetime,'2023-07-19 10:30:00',120)
+declare @date datetime = convert(datetime,'2023-07-26 20:00:00',120)
 
-select * from ids.get_view_operating_balance_of_date(@date)
+--select * from ids.get_view_operating_balance_of_date(@date)
 
 	select 
 		 wir.id
@@ -164,6 +164,9 @@ select * from ids.get_view_operating_balance_of_date(@date)
 		,arr_sost.[date_arrival] as arrival_sostav_date_arrival
 		,arr_sost.[date_adoption] as arrival_sostav_date_adoption
 		,arr_sost.[date_adoption_act] as arrival_sostav_date_adoption_act
+		-- Показать дату приема с учетом возврата
+		,arrival_sostav_old_date_adoption = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN arr_sost_old.[date_adoption] ELSE arr_sost.[date_adoption] END
+		,arrival_sostav_old_date_adoption_act = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN arr_sost_old.[date_adoption_act] ELSE arr_sost.[date_adoption_act] END
 		--============================================================
 		--> Простой УЗ
 		--============================================================
@@ -174,6 +177,10 @@ select * from ids.get_view_operating_balance_of_date(@date)
 		,il.destination_station as instructional_letters_station_code
 		,let_station_uz.station as instructional_letters_station_name
 		,il.[note] as instructional_letters_note
+		-- Общий простой  , час
+		,idle_time = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, arr_sost_old.[date_adoption] , @date)) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption], @date)) END 
+		-- Общий простой Акт, час
+		,idle_time_act = CASE  WHEN arr_doc_vag.[cargo_returns] = 1 THEN (DATEDIFF(minute, arr_sost_old.[date_adoption_act] , @date)) ELSE ( DATEDIFF(minute, arr_sost.[date_adoption_act], @date)) END 
 		--into operating_balance
 	FROM IDS.WagonInternalMovement as wim
 		--> Внутренее перемещение
@@ -184,6 +191,8 @@ select * from ids.get_view_operating_balance_of_date(@date)
 		Left JOIN IDS.ArrivalCars as arr_car ON wir.id_arrival_car = arr_car.id
 		--> Прибытие состава
 		Left JOIN IDS.ArrivalSostav as arr_sost ON arr_car.id_arrival = arr_sost.id
+		--> Предыдущее Прибытие состава c учетом возврата
+		Left JOIN IDS.ArrivalSostav as arr_sost_old ON arr_sost_old.id = [IDS].[get_old_id_arrival_of_wir_parent_id](wir.parent_id)
 		--> Документы на вагон по принятию вагона на АМКР
 		Left JOIN IDS.Arrival_UZ_Vagon as arr_doc_vag ON arr_car.id_arrival_uz_vagon = arr_doc_vag.id
 		 --> Документы на группу вагонов (состав) по принятию вагона на АМКР
@@ -257,8 +266,10 @@ select * from ids.get_view_operating_balance_of_date(@date)
 		--AND wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 		--and dir_rod.rod_uz = 70
 		--and arr_wag_rent.[id_operator] <>  curr_wag_rent.[id_operator]
+		--and wir.num = 97179022
+		--and curr_dir_operator.[abbr_ru] = N'ЦТЛ'
 		-- Исключим ЛОКОМОТИВЫ
-		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
+		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_curr_owg.[group] in ('amkr_vz') OR dir_curr_owg.[group] is null)
 		AND 
 		((wim.outer_way_start is null AND ((wim.[way_start]<=@date and wim.way_end>=@date) OR (wim.[way_start]<=@date and wim.way_end is null)))
 		OR
