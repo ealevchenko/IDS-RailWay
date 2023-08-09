@@ -138,13 +138,13 @@ namespace Test.TestModule
 
         }
 
-        public void IDSDirectory_IsCorrectNumCar()
-        {
+        //public void IDSDirectory_IsCorrectNumCar()
+        //{
 
-            IDSDirectory ids = new IDSDirectory(service.Test);
-            bool res = ids.IsCorrectNumCar(12345678);
+        //    IDSDirectory ids = new IDSDirectory(service.Test);
+        //    bool res = ids.IsCorrectNumCar(12345678);
 
-        }
+        //}
 
         public void IDSDirectory_OperationAutoPositionWayOfPark()
         {
@@ -226,6 +226,13 @@ namespace Test.TestModule
             ResultUpdateWagon result = ids.CorrectDateTime_Of_Directory_WagonsRenf(@"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result.result);
         }
+        public void IDS_Directory_UpdateArrivalRentWagon()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int result = ids.UpdateArrivalRentWagon(64066186, new DateTime(2023,8,4,0,0,0), @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
+        }
+
 
         #endregion
 

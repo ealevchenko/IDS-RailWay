@@ -339,44 +339,44 @@ namespace IDS
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public bool IsCorrectNumCar(int num)
-        {
-            try
-            {
-                if (num < 10000000) return false;
-                if (num > 99999999) return false;
+        //public bool IsCorrectNumCar(int num)
+        //{
+        //    try
+        //    {
+        //        if (num < 10000000) return false;
+        //        if (num > 99999999) return false;
 
-                string number = num.ToString().Remove(num.ToString().Length - 1);
-                int cs = int.Parse(num.ToString().Remove(0, num.ToString().Length - 1));
-                char[] array = number.ToCharArray();
-                int[] kof = new int[7] { 2, 1, 2, 1, 2, 1, 2 };
-                int result = 0;
-                int index = 0;
-                foreach (char n in array)
-                {
-                    int n_i = int.Parse(n.ToString());
-                    int res_i = n_i * kof[index];
-                    index++;
-                    // скорректируем
-                    if (res_i > 9)
-                    {
-                        string res_kor_i = res_i.ToString();
-                        res_i = int.Parse(res_kor_i[0].ToString()) + int.Parse(res_kor_i[1].ToString());
-                    }
-                    result += res_i;
-                }
+        //        string number = num.ToString().Remove(num.ToString().Length - 1);
+        //        int cs = int.Parse(num.ToString().Remove(0, num.ToString().Length - 1));
+        //        char[] array = number.ToCharArray();
+        //        int[] kof = new int[7] { 2, 1, 2, 1, 2, 1, 2 };
+        //        int result = 0;
+        //        int index = 0;
+        //        foreach (char n in array)
+        //        {
+        //            int n_i = int.Parse(n.ToString());
+        //            int res_i = n_i * kof[index];
+        //            index++;
+        //            // скорректируем
+        //            if (res_i > 9)
+        //            {
+        //                string res_kor_i = res_i.ToString();
+        //                res_i = int.Parse(res_kor_i[0].ToString()) + int.Parse(res_kor_i[1].ToString());
+        //            }
+        //            result += res_i;
+        //        }
 
-                result = result + cs;
+        //        result = result + cs;
 
-                double ost = result % 10.0;
-                return ost == 0.0 ? true : false;
-            }
-            catch (Exception e)
-            {
-                e.ExceptionMethodLog(String.Format("IsCorrectNumCar(num={0})", num), servece_owner, eventID);
-                return false;
-            }
-        }
+        //        double ost = result % 10.0;
+        //        return ost == 0.0 ? true : false;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        e.ExceptionMethodLog(String.Format("IsCorrectNumCar(num={0})", num), servece_owner, eventID);
+        //        return false;
+        //    }
+        //}
         /// <summary>
         /// Операция обновления вагона (с обязателным обновлением основной информации из справочника УЗ) в справочнике ИДС 
         /// (если вагона нет создаст вагон и первую аренду по входным данным и данным УЗ, МОРС)
@@ -924,7 +924,15 @@ namespace IDS
                 // Если нет ошибок тогда обновим базу
                 if (result.error == 0)
                 {
-                    result.SetResult(context.SaveChanges());
+                    int res_upd = context.SaveChanges();
+                    if (res_upd > 0) {
+                        // Обновить информацию по прибытию этих вагонов
+                        IDS_Directory ids_dir = new IDS_Directory(servece_owner);
+                        foreach (int num in list_nums) {
+                            ids_dir.UpdateArrivalRentWagon(num, (DateTime)start_rent, user);
+                        }
+                    }
+                    result.SetResult(res_upd);
                 }
                 else
                 {

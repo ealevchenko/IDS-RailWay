@@ -1625,9 +1625,44 @@ namespace IDS
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("CorrectDateTime_Of_Directory_WagonsRenf(user={1})", user), servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("CorrectDateTime_Of_Directory_WagonsRenf(user={0})", user), servece_owner, eventID);
                 result.SetResult((int)errors_base.global);
                 return result;
+            }
+        }
+
+        public int UpdateArrivalRentWagon(int num, DateTime data_rent, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                EFArrivalCars ef_wag = new EFArrivalCars(context);
+                EFArrival_UZ_Vagon ef_doc_vag = new EFArrival_UZ_Vagon(context);
+                EFDirectory_WagonsRent ef_dir_wag_rent = new EFDirectory_WagonsRent(context);
+                List<ArrivalCars> cars = ef_wag.Context.Where(w => w.num == num && w.ArrivalSostav.date_arrival >= data_rent).ToList();
+                foreach (ArrivalCars car in cars)
+                {
+                    Arrival_UZ_Vagon doc_vag = ef_doc_vag.Context.Where(v => v.id == car.id_arrival_uz_vagon).FirstOrDefault();
+                    Directory_WagonsRent dir_wag_rent = ef_dir_wag_rent.Context.Where(r => r.num == num && r.rent_start <= data_rent).OrderByDescending(c => c.rent_start).FirstOrDefault();
+                    if (doc_vag != null && dir_wag_rent != null) {
+                        doc_vag.id_wagons_rent_arrival = dir_wag_rent.id;
+                        doc_vag.change = DateTime.Now;
+                        doc_vag.change_user = user;
+                        ef_doc_vag.Update(doc_vag);
+                    }
+                }
+                int result = context.SaveChanges();
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrivalRentWagon(num={0}, data_rent={1}, user={2})", num, data_rent, user), servece_owner, eventID);
+                return (int)errors_base.global;
             }
         }
 

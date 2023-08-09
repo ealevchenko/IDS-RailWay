@@ -199,6 +199,8 @@ namespace Test
 
             //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();        // Админ. коррекция даты аренды по номеру вагона()
             //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();        // Админ. коррекция даты аренды  по всему спраочнику()
+            tids.IDS_Directory_UpdateArrivalRentWagon();                                // Тест обновления входящей аренды после изменения операторов
+
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -262,7 +264,7 @@ namespace Test
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
             //tids.IDS_WIR_GetExchangeRate();
             //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
-            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 
