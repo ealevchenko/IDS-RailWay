@@ -1648,7 +1648,7 @@ namespace IDS
                 foreach (ArrivalCars car in cars)
                 {
                     Arrival_UZ_Vagon doc_vag = ef_doc_vag.Context.Where(v => v.id == car.id_arrival_uz_vagon).FirstOrDefault();
-                    Directory_WagonsRent dir_wag_rent = ef_dir_wag_rent.Context.Where(r => r.num == num && r.rent_start <= data_rent).OrderByDescending(c => c.rent_start).FirstOrDefault();
+                    Directory_WagonsRent dir_wag_rent = ef_dir_wag_rent.Context.Where(r => r.num == num && r.rent_start <= car.ArrivalSostav.date_adoption).OrderByDescending(c => c.rent_start).FirstOrDefault();
                     if (doc_vag != null && dir_wag_rent != null) {
                         doc_vag.id_wagons_rent_arrival = dir_wag_rent.id;
                         doc_vag.change = DateTime.Now;
@@ -1665,7 +1665,28 @@ namespace IDS
                 return (int)errors_base.global;
             }
         }
-
+        public int UpdateArrivalRentWagons(List<int> nums, DateTime data_rent, string user)
+        {
+            try
+            {
+                int result = 0;
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                foreach (int num in nums)
+                {
+                    result+= UpdateArrivalRentWagon(num, data_rent, user);
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("UpdateArrivalRentWagons(nums={0}, data_rent={1}, user={2})", nums, data_rent, user), servece_owner, eventID);
+                return (int)errors_base.global;
+            }
+        }
         #endregion
     }
 }

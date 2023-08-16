@@ -229,10 +229,17 @@ namespace Test.TestModule
         public void IDS_Directory_UpdateArrivalRentWagon()
         {
             IDS_Directory ids = new IDS_Directory(service.Test);
-            int result = ids.UpdateArrivalRentWagon(64066186, new DateTime(2023,8,4,0,0,0), @"EUROPE\ealevchenko");
+            int result = ids.UpdateArrivalRentWagon(52291986, new DateTime(2023,8,4,0,0,0), @"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result);
         }
 
+        public void IDS_Directory_UpdateArrivalRentWagons()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            List<int> nums = new List<int>() { 56868052 };
+            int result = ids.UpdateArrivalRentWagons(nums, new DateTime(2023,3,11,0,0,0), @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
+        }
 
         #endregion
 
@@ -403,7 +410,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 702443, 702444, 702450, 702449, 702451, 702452, 702453, 702454, 702174, 702175, 702177, 702178, 702179, 702180, 702181, 409712, 409714, 409694 };
+            List<int> list = new List<int>() {725386, 725597, 725598, 725599, 725618};
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>

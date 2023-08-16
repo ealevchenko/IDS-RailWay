@@ -197,10 +197,10 @@ namespace Test
             //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();        // Тест обновления владельцев в карточке вагона по данным БД УЗ
             //tids.IDS_GetDirectory_ChangeNumWagon();                     // Тест перенумерации вагона
 
-            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();        // Админ. коррекция даты аренды по номеру вагона()
-            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();        // Админ. коррекция даты аренды  по всему спраочнику()
-            tids.IDS_Directory_UpdateArrivalRentWagon();                                // Тест обновления входящей аренды после изменения операторов
-
+            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();      // Админ. коррекция даты аренды по номеру вагона()
+            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();  // Админ. коррекция даты аренды  по всему спраочнику()
+            //tids.IDS_Directory_UpdateArrivalRentWagon();                            // Тест обновления входящей аренды после изменения операторов
+            tids.IDS_Directory_UpdateArrivalRentWagons();                           // Тест обновления входящей аренды после изменения операторов на несколько вагонов
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
