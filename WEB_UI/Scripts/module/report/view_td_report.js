@@ -33,6 +33,7 @@
             'vtdr_link_title_report_8_1': 'История ставок',
             'vtdr_link_title_report_9_1': 'Плата за пользование (ИТОГ)',
             'vtdr_link_title_report_10_1': 'Остаток вагонов (общий)',
+            'vtdr_link_title_report_11_1': 'Остаток ИТОГ',
 
             'vtdr_link_group_title_report_1': 'ОБЩИЕ:',
             'vtdr_link_group_title_report_2': 'ПРИБЫТИЕ:',
@@ -50,6 +51,8 @@
             'vtdr_title_report_8_1': 'История ставок {0}',
             'vtdr_title_report_9_1': 'Плата за пользование (ИТОГ) {0}',
             'vtdr_title_report_10_1': 'Отчет остаток вагонов (общий) {0}',
+            'vtdr_title_report_11_1': 'Отчет остаток (ИТОГ) {0}',
+
 
             'vtdr_title_report_type_0': '«Текущая дата» :{0}',
             'vtdr_title_report_type_1': '«Ж.д. сутки» c:{0} по {1}',
@@ -102,6 +105,14 @@
             'vtdr_label_tab_usage_fee_operator_amkr': 'Оператор',
             'vtdr_label_tab_usage_fee_operator_amkr_derailment': 'Сход',
             'vtdr_label_tab_usage_fee_cargo_not_derailment': 'Груз ПРИБ (без схода)',
+
+            'vtdr_label_tab_residue_total_operators': 'Оператор',
+            'vtdr_label_tab_residue_total_common': 'Итоги',
+            'vtdr_label_tab_residue_total_markup': 'Разметка',
+            'vtdr_label_tab_residue_total_genus': 'Род вагона',
+            'vtdr_label_tab_residue_total_station_out': ' Станция отправления',
+            'vtdr_label_tab_residue_total_cargo_arr': 'Груз ПРИБ',
+            'vtdr_label_tab_residue_total_operation': 'Операции',
 
             'vtdr_label_button_setup_clear': 'СБРОСИТЬ',
             'vtdr_label_button_setup_select': 'ВЫБРАТЬ',
@@ -552,6 +563,13 @@
                 icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
                 click: function () {
                     this.init_report_10_1();
+                }.bind(this),
+            },
+            {
+                text: langView('vtdr_link_title_report_11_1', App.Langs),
+                icon: 'fa-solid fa-arrow-right-to-bracket mr-1',
+                click: function () {
+                    this.init_report_11_1();
                 }.bind(this),
             },
         ];
@@ -1199,6 +1217,19 @@
                 this.form_panel.update('type_select', list, this.type);
                 this.clear_report_10_1();
                 break;
+            case 11:
+                var list = [
+                    { value: 0, text: 'Текущая дата' },
+                    { value: 1, text: 'ЖД сутки' },
+                    { value: 2, text: 'Календарные сутки' },
+                    { value: 3, text: 'От начала месяца' },
+                    { value: 4, text: 'Произвольный выбор' },
+                    //{ value: 5, text: 'Отчетный период (продажа)' },
+                    //{ value: 6, text: 'Отчетный период (плата)' },
+                ];
+                this.form_panel.update('type_select', list, this.type);
+                this.clear_report_11_1();
+                break;
         }
         switch (this.type) {
             case 0: {
@@ -1274,6 +1305,7 @@
             case 8: this.$title_report.text(langView('vtdr_title_report_8_1', App.Langs).format(message_report)); break;
             case 9: this.$title_report.text(langView('vtdr_title_report_9_1', App.Langs).format(message_report)); break;
             case 10: this.$title_report.text(langView('vtdr_title_report_10_1', App.Langs).format(message_report)); break;
+            case 11: this.$title_report.text(langView('vtdr_title_report_11_1', App.Langs).format(message_report)); break;
         }
     };
     // Показать отчет
@@ -1317,6 +1349,10 @@
             };
             case 10: {
                 this.view_report_10_1(this.start, this.stop);
+                break;
+            };
+            case 11: {
+                this.view_report_11_1(this.start, this.stop);
                 break;
             };
         }
@@ -10984,7 +11020,7 @@
             id: null,
             novalidate: null
         });
-        this.$form_out_setup_select = form_residue_setup_select.$form;
+        this.$form_residue_setup_select = form_residue_setup_select.$form;
         //-кнопка
         var row_setup_bt = new this.fe_ui.bs_row();
         var col_setup_bt = new this.fe_ui.bs_col({
@@ -11599,7 +11635,6 @@
         });
         row_setup_18.$row.append(select_curr_way.$element);
         this.select_curr_way = select_curr_way.element;
-
         //..........
         // Операция с вагоном
         // Состояние вагона
@@ -11646,8 +11681,7 @@
         row_setup_sw6.$row.append(sw_OTC_ban.$element);
         this.switch_OTC_ban = sw_OTC_ban.element;
         //
-        this.$form_out_setup_select
-
+        this.$form_residue_setup_select
             .append(row_setup_bt.$row)
             .append(row_setup_sw1.$row)
             .append(row_setup_sw2.$row)
@@ -11673,12 +11707,8 @@
             .append(row_setup_15.$row)
             .append(row_setup_16.$row)
             .append(row_setup_17.$row)
-            .append(row_setup_18.$row)
-            //.append(row_setup_19.$row)
-            //.append(row_setup_20.$row)
-
-            ;
-        this.$setup_select.append(this.$form_out_setup_select);
+            .append(row_setup_18.$row);
+        this.$setup_select.append(this.$form_residue_setup_select);
 
         // Запускаем 6 процесса инициализации (паралельно)
         var process = 1;
@@ -12087,6 +12117,570 @@
                 LockScreenOff();
             }.bind(this));
         }
+    };
+    //--------------------------------------------------------------------------------------------------
+    // Инициализировать отчет "Остаток (ИТОГ)"
+    view_td_report.prototype.init_report_11_1 = function () {
+        // очистим основное окно отчета
+        this.$main_report.empty();
+        this.report = 11;        // номер отчета
+        this.report_panel = 0;  // номер под-отчета
+        this.chart_data_total_ = [];
+
+        $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
+        this.$title_report.text(langView('vtdr_title_report_11_1', App.Langs).format(''));      // выведем название отчета
+        this.init_select_report();                                                              // Инициализация формы выбора периода отчетов
+        //------
+        var fieldset_setup = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$setup_select = fieldset_setup.$fieldset;
+        var fieldset_view = new this.fe_ui.fieldset({
+            class: 'border-primary',
+            legend: null,
+            class_legend: 'border-primary',
+        });
+        this.$table_view = fieldset_view.$fieldset;
+        var row_common = new this.fe_ui.bs_row();
+        var col_setup = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 2,
+        });
+        col_setup.$col.append(this.$setup_select);
+        var col_view = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 10,
+        });
+        col_view.$col.append(this.$table_view);
+        //--------------------------------------------------------------------
+        // Формируем форму выбора
+        var form_residue_setup_select = new this.fe_ui.form({
+            class: null,
+            id: null,
+            novalidate: null
+        });
+        this.$form_residue_setup_select = form_residue_setup_select.$form;
+        //-кнопка
+        var row_setup_bt = new this.fe_ui.bs_row();
+        var col_setup_bt = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        var bt_setup_clear = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: langView('vtdr_label_button_setup_clear', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_clear_select_report_10_1();
+            }.bind(this),
+        });
+        var bt_setup_select = new this.fe_ui.bs_button({
+            color: 'primary',
+            size: 'sm',
+            class: null,
+            id: null,
+            label: langView('vtdr_label_button_setup_select', App.Langs),
+            title: null,
+            icon_left: null,
+            icon_right: null,
+            click: function (event) {
+                event.preventDefault();
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
+        // Внешние стороние вагоны
+        var row_setup_sw1 = new this.fe_ui.bs_row();
+        var sw_outer_cars = new this.fe_ui.bs_switch({
+            id: 'outer_cars',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_outer_cars', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_sw1.$row.append(sw_outer_cars.$element);
+        this.switch_outer_cars = sw_outer_cars.element;
+        // Внешние вагоны АМКР
+        var row_setup_sw2 = new this.fe_ui.bs_row();
+        var sw_amkr_outer_cars = new this.fe_ui.bs_switch({
+            id: 'amkr_outer_cars',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_amkr_outer_cars', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_sw2.$row.append(sw_amkr_outer_cars.$element);
+        this.switch_amkr_outer_cars = sw_amkr_outer_cars.element;
+        // Цистерны арендованные
+        var row_setup_sw3 = new this.fe_ui.bs_row();
+        var sw_amkr_cisterns = new this.fe_ui.bs_switch({
+            id: 'amkr_cisterns',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left',
+            label: langView('vtdr_label_amkr_cisterns', App.Langs),
+            label_class: 'mb-1',
+            checkbox_class: null,
+            checkbox_title: null,
+            checkbox_required: null,
+            checkbox_readonly: false,
+            element_default: true,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
+        row_setup_sw3.$row.append(sw_amkr_cisterns.$element);
+        this.switch_amkr_cisterns = sw_amkr_cisterns.element;
+        // Операторы АМКР
+        var row_setup_3 = new this.fe_ui.bs_row();
+        var select_operation_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'operation_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_operation_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_operation_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_3.$row.append(select_operation_amkr.$element);
+        this.select_operation_amkr = select_operation_amkr.element;
+        // Разметка по прибытию
+        var row_setup_4_0 = new this.fe_ui.bs_row();
+        var select_arr_condition = new this.fe_ui.bs_select_multiple({
+            id: 'arr_condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_4_0.$row.append(select_arr_condition.$element);
+        this.select_arr_condition = select_arr_condition.element;
+        // Разметка текущая
+        var row_setup_4 = new this.fe_ui.bs_row();
+        var select_curr_condition = new this.fe_ui.bs_select_multiple({
+            id: 'curr_condition',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_condition', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_condition', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_4.$row.append(select_curr_condition.$element);
+        this.select_curr_condition = select_curr_condition.element;
+        // Род вагона
+        var row_setup_5 = new this.fe_ui.bs_row();
+        var select_genus = new this.fe_ui.bs_select_multiple({
+            id: 'genus',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_genus', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_genus', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_5.$row.append(select_genus.$element);
+        this.select_genus = select_genus.element;
+        // Груз ПРИБ
+        var row_setup_7 = new this.fe_ui.bs_row();
+        var select_arr_cargo = new this.fe_ui.bs_select_multiple({
+            id: 'arr_cargo',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_arr_cargo', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_arr_cargo', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_7.$row.append(select_arr_cargo.$element);
+        this.select_arr_cargo = select_arr_cargo.element;
+        // Станция отправления
+        var row_setup_9 = new this.fe_ui.bs_row();
+        var select_arr_ext_station_to = new this.fe_ui.bs_select_multiple({
+            id: 'arr_ext_station_to',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_arr_ext_station_to', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_arr_ext_station_to', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_9.$row.append(select_arr_ext_station_to.$element);
+        this.select_arr_ext_station_to = select_arr_ext_station_to.element;
+        // Станция нахождения вагона
+        var row_setup_17 = new this.fe_ui.bs_row();
+        var select_curr_station_amkr = new this.fe_ui.bs_select_multiple({
+            id: 'curr_station_amkr',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_station_amkr', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_station_amkr', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_17.$row.append(select_curr_station_amkr.$element);
+        this.select_curr_station_amkr = select_curr_station_amkr.element;
+        // Путь нахождения вагона
+        var row_setup_18 = new this.fe_ui.bs_row();
+        var select_curr_way = new this.fe_ui.bs_select_multiple({
+            id: 'curr_way',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_curr_way', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_curr_way', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_18.$row.append(select_curr_way.$element);
+        this.select_curr_way = select_curr_way.element;
+        //..........
+        // Операция с вагоном
+        // Состояние вагона
+        //............
+        this.$form_residue_setup_select
+            .append(row_setup_bt.$row)
+            .append(row_setup_sw1.$row)
+            .append(row_setup_sw2.$row)
+            .append(row_setup_sw3.$row)
+            .append(row_setup_3.$row)
+            .append(row_setup_4_0.$row)
+            .append(row_setup_4.$row)
+            .append(row_setup_5.$row)
+            .append(row_setup_7.$row)
+            .append(row_setup_9.$row)
+            .append(row_setup_17.$row)
+            .append(row_setup_18.$row);
+        this.$setup_select.append(this.$form_residue_setup_select);
+        //----------------------------------------------------------------
+        // Создадим панель выбора отчета
+        this.nav_tabs_residue_total = new this.fe_ui.bs_nav_tabs({
+            id_nav: 'tab-residue-total',
+            class_nav: null,
+            id_content: 'tab-residue-total-conntent',
+            class_content: null,
+            list_link: [
+                {
+                    id: 'residue-total-operators',
+                    aria_controls: 'residue-total-operators-tab',
+                    label: langView('vtdr_label_tab_residue_total_operators', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-common',
+                    aria_controls: 'residue-total-common-tab',
+                    label: langView('vtdr_label_tab_residue_total_common', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-markup',
+                    aria_controls: 'residue-total-markup-tab',
+                    label: langView('vtdr_label_tab_residue_total_markup', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-genus',
+                    aria_controls: 'residue-total-genus-tab',
+                    label: langView('vtdr_label_tab_residue_total_genus', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-station-out',
+                    aria_controls: 'residue-total-station-out-tab',
+                    label: langView('vtdr_label_tab_residue_total_station_out', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-cargo-arr',
+                    aria_controls: 'residue-total-cargo-arr-tab',
+                    label: langView('vtdr_label_tab_residue_total_cargo_arr', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+                {
+                    id: 'residue-total-operation',
+                    aria_controls: 'residue-total-operation-tab',
+                    label: langView('vtdr_label_tab_residue_total_operation', App.Langs),
+                    disable: false,
+                    click: null,
+                },
+            ],
+        });
+        // Переключатели панелей таблиц отчета
+        //----------------------------------------
+        // Закладка "Оператор"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 6, 6);
+        // Закладка "ИТОГ"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 6, 6);
+        // Закладка "Разметка"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-markup-tab', 'residue-total-markup', 6, 6);
+        // Закладка "Род вагона"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-genus-tab', 'residue-total-genus', 6, 6);
+        // Закладка "Станция отправления"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-station-out-tab', 'residue-total-station', 6, 6);
+        // Закладка "Груз ПРИБ"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-cargo-arr-tab', 'residue-total-cargo-arr', 6, 6);
+        // Закладка "Операции"
+        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operation-tab', 'residue-total-operation', 6, 6);
+        //this.init_panel_vertical_report(this.nav_tabs_residue_total, 'out-total-cargo-tab', 'outgoing-cargo-operator');
+        //this.init_panel_horizontal_char2_report(this.nav_tabs_residue_total, 'out-total-division-amkr-tab', 'outgoing-total-division-cargo', 6, 6);
+        //-------------------------------------------
+        // Дабавим закладку на форму
+        this.$table_view.append(this.nav_tabs_residue_total.$ul).append(this.nav_tabs_residue_total.$content);
+        //-----------------------------------------------------------------
+        row_common.$row.append(col_setup.$col).append(col_view.$col)
+        this.$main_report.append(row_common.$row);
+        //--------------------------------------------------------------------
+
+        // ------------------------------------------------
+        // Запускаем ... процесса инициализации (паралельно)
+        var process = 0;
+        // Выход из инициализации
+        var out_init = function (process) {
+            if (process === 0) {
+                this.report_panel = 0;
+                //this.view_setup_detali_report_6_1(this.report_panel);
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    switch (event.target.id) {
+                        case 'residue-total-operators': {
+                            this.report_panel = 0;
+                            //this.view_chart_total_outgoing_cargo_operator();
+                            break;
+                        };
+                        case 'residue-total-common': {
+                            this.report_panel = 1;
+                            //this.view_chart_total_operator_amkr();
+                            break;
+                        };
+                        case 'residue-total-markup': {
+                            this.report_panel = 2;
+                            //this.view_chart_total_division_metals();
+                            //this.view_chart_total_division_cargo();
+                            break;
+                        };
+                        case 'residue-total-genus': {
+                            this.report_panel = 3;
+                            //this.view_chart_total_ext_station();
+                            break;
+                        };
+                        case 'residue-total-station-out': {
+                            this.report_panel = 4;
+                            //this.view_chart_total_cargo_metall()
+                            break;
+                        };
+                        case 'residue-total-cargo-arr': {
+                            this.report_panel = 5;
+                            //this.view_chart_total_operators();
+                            break;
+                        };
+                        case 'residue-total-operation': {
+                            this.report_panel = 6;
+                            //this.view_chart_total_operators();
+                            break;
+                        };
+                    };
+                }.bind(this));
+                LockScreenOff();
+            }
+        }.bind(this);
+        //-----------------------------------------------
+        // Таблица-Груз по Оператору АМКР
+        //this.table_total_outgoing_cargo_operator = new TTDR('div#outgoing-cargo-operator');         // Создадим экземпляр
+        //this.table_total_outgoing_cargo_operator.init({
+        //    alert: null,
+        //    detali_table: false,
+        //    type_report: 'outgoing_cargo_operator',     //
+        //    link_num: false,
+        //    ids_wsd: null,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //    fn_action_view_detali: function (rows) {
+
+        //    },
+        //});
+        //// Инициализация модуля графиков тип: pie_exploding_pie_chart
+        //this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
+        //this.chart_total_outgoing_cargo_operator.init({
+        //    alert: null,
+        //    type_chart: 'stacked_column_chart_percent',     //pie_exploding_pie_chart   stacked_column_chart_percent
+        //    list_name: this.ids_dir.list_cargo_out_group,
+        //    fn_init: function () {
+        //        // На проверку окончания инициализации
+        //        process--;
+        //        out_init(process);
+        //    },
+        //});
+    };
+
+
+    // Очистить таблицы
+    view_td_report.prototype.clear_report_11_1 = function () {
+        if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+        if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+        if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
+        if (this.select_genus) { this.select_genus.val(-1); }
+        if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
+        if (this.select_curr_station_amkr) { this.select_curr_station_amkr.val(-1); }
+        if (this.select_curr_way) { this.select_curr_way.val(-1); }
+        //if (this.table_operation_balance) {
+        //    this.operating_balance = [];
+        //    this.clone_operating_balance = [];
+        //    this.process_data_view_report_10_1(this.clone_operating_balance, function () {
+        //        LockScreenOff();
+        //    }.bind(this));
+        //}
     };
     //-----------------------------------------------------------------------------------------
     //
