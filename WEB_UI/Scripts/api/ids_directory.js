@@ -1099,7 +1099,7 @@ IDS_DIRECTORY.prototype.postOperationUpdateWagon = function (operation_wagon, ca
         },
     });
 };
-
+//TODO: Убрать старая
 IDS_DIRECTORY.prototype.getWagonOfNumSpecification = function (num, specification, callback) {
     $.ajax({
         type: 'POST',

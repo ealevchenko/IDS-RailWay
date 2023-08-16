@@ -1433,7 +1433,7 @@
             // Активация кнопки ок
             button_ok: function (active) {
                 var buttons = pn_add_edit.obj.dialog("option", "buttons");
-                buttons[0].disabled = !active;
+                buttons[0].disabled =  !active;
                 pn_add_edit.obj.dialog("option", "buttons", buttons);
             },
             // Сделать не активными все элементы
