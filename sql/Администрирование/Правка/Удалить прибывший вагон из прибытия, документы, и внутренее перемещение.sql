@@ -1,5 +1,5 @@
 
-declare @id_car int = 1374399
+declare @id_car int = 1629865
 declare @id_sostav int = (select [id_arrival]   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where id = @id_car)
 declare @id_wir int = (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where [id_arrival_car] = @id_car)
 declare @id_vagon int = (select [id_arrival_uz_vagon]   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where id = @id_car)
