@@ -6288,7 +6288,7 @@ namespace IDS
                         UZ.UZ_DOC upd_doc_uz = getUpdate_UZ_DOC(doc.num_doc, doc.num_uz.ToString());
                         if (upd_doc_uz != null)
                         {
-                            if (((int)upd_doc_uz.status) >= 8) // 
+                            if (((int)upd_doc_uz.status) == 8) // 
                             {
                                 // Достигли конца обновления
 
@@ -6328,7 +6328,7 @@ namespace IDS
                                 if (sms_doc_uz != null)
                                 {
                                     // ЭПД найден на УЗ
-                                    if (((int)sms_doc_uz.status) >= 8)
+                                    if (((int)sms_doc_uz.status) == 8)
                                     {
                                         // Достигли конца обновления
                                         ResultUpdateID res_upd_arr = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user); // обновим документ прибытия в БД ИДС

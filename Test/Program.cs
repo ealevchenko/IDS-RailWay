@@ -200,7 +200,7 @@ namespace Test
             //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();      // Админ. коррекция даты аренды по номеру вагона()
             //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();  // Админ. коррекция даты аренды  по всему спраочнику()
             //tids.IDS_Directory_UpdateArrivalRentWagon();                            // Тест обновления входящей аренды после изменения операторов
-            tids.IDS_Directory_UpdateArrivalRentWagons();                           // Тест обновления входящей аренды после изменения операторов на несколько вагонов
+            //tids.IDS_Directory_UpdateArrivalRentWagons();                           // Тест обновления входящей аренды после изменения операторов на несколько вагонов
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -234,7 +234,7 @@ namespace Test
             //tids.IDS_WIR_GetWagonsOperationOfSend();                  // Тест формирования отчета операции отправки (вагоны)
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
 
-            //tids.IDS_WIR_UpdateArrivalEPD();                          // Тест функции сервиса обновления входящих документов
+            tids.IDS_WIR_UpdateArrivalEPD();                          // Тест функции сервиса обновления входящих документов
             //tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                    // Тест переноса вагона в левую сторону
