@@ -1713,9 +1713,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
+                db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter p_date = new System.Data.SqlClient.SqlParameter("@date", date);
                 string sql = "select * from [IDS].[get_view_operating_balance_of_date](@date)";
                 List<view_operating_balance> list = db.Database.SqlQuery<view_operating_balance>(sql,p_date).ToList();
+                this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
@@ -1756,7 +1758,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                db.Database.CommandTimeout = 300;
+                this.db.Database.CommandTimeout = 300;
                 string sql = "select * from [IDS].[get_view_wagons_of_balance]()";
                 var list = db.Database.SqlQuery<view_wagons>(sql).ToList();
                 this.db.Database.CommandTimeout = null;
