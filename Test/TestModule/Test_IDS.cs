@@ -674,7 +674,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(221314, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(221501, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
