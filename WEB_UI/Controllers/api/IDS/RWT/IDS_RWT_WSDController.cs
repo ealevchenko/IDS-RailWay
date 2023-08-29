@@ -458,6 +458,17 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? idle_time { get; set; }
         public int? idle_time_act { get; set; }
     }
+    public class view_operator_ob
+    {
+        public string type { get; set; }
+        public int? num { get; set; }
+        public string group { get; set; }
+        public int? id_operator { get; set; }
+        public string current_wagons_rent_operators_ru { get; set; }
+        public string current_wagons_rent_operators_en { get; set; }
+        public string current_wagons_rent_operator_abbr_ru { get; set; }
+        public string current_wagons_rent_operator_abbr_en { get; set; }
+    }
 
     public class view_total_balance
     {
@@ -1725,6 +1736,32 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/wsd/view/operators/operating_balance/start/2023-07-21T00:00:00/stop/2023-07-22T00:00:00
+        /// <summary>
+        /// Получить остаток по операторам за период 
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/operators/operating_balance/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(view_operator_ob))]
+        public IHttpActionResult GetViewOperators_OB_OfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                db.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_view_operator_ob_of_period](@start, @stop)";
+                List<view_operator_ob> list = db.Database.SqlQuery<view_operator_ob>(sql, p_start, p_stop).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         // GET: api/ids/rwt/wsd/view/total_balance
         /// <summary>
         /// Получить расчет остатков по вагонам

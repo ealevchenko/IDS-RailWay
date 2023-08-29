@@ -12125,7 +12125,9 @@
         this.$main_report.empty();
         this.report = 11;        // номер отчета
         this.report_panel = 0;  // номер под-отчета
-        this.chart_data_total_ = [];
+        this.list_operator_ob = []; // список для отчета "Оператор"
+        this.clone_list_operator_ob = []; // список для отчета "Оператор"
+        //this.chart_data_total_ = [];
 
         $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_11_1', App.Langs).format(''));      // выведем название отчета
@@ -12578,7 +12580,7 @@
 
         // ------------------------------------------------
         // Запускаем ... процесса инициализации (паралельно)
-        var process = 0;
+        var process = 1;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -12630,22 +12632,22 @@
         }.bind(this);
         //-----------------------------------------------
         // Таблица-Груз по Оператору АМКР
-        //this.table_total_outgoing_cargo_operator = new TTDR('div#outgoing-cargo-operator');         // Создадим экземпляр
-        //this.table_total_outgoing_cargo_operator.init({
-        //    alert: null,
-        //    detali_table: false,
-        //    type_report: 'outgoing_cargo_operator',     //
-        //    link_num: false,
-        //    ids_wsd: null,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //    fn_action_view_detali: function (rows) {
+        this.table_residue_total_operators = new TTDR('div#residue-total-operators');         // Создадим экземпляр
+        this.table_residue_total_operators.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'residue_total_operators',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
 
-        //    },
-        //});
+            },
+        });
         //// Инициализация модуля графиков тип: pie_exploding_pie_chart
         //this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
         //this.chart_total_outgoing_cargo_operator.init({
@@ -12659,8 +12661,103 @@
         //    },
         //});
     };
+    // Показать отчет  "Остаток (ИТОГ)"
+    view_td_report.prototype.view_report_11_1 = function (start, stop) {
+        // Запускаем 1 процесса инициализации (паралельно)
+        var process_load = 1;
+        // Выход из загрузки
+        var out_load = function (process_load) {
+            if (process_load === 0) {
+                LockScreenOff();
+            }
+        }.bind(this);
+        LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+        // Загрузим данные
+        this.load_select_report_11_1_1(start, stop, function () {
+            process_load--;
+            out_load(process_load);
+        }.bind(this))
+    };
+    // Загрузить данные отчета "Оператор"
+    view_td_report.prototype.load_select_report_11_1_1 = function (start, stop, callback) {
+        this.ids_wsd.getReportViewOperators_OB_OfPeriod(start, stop, function (result_operator_ob) {
+            this.list_operator_ob = result_operator_ob;
+            this.clone_list_operator_ob = JSON.parse(JSON.stringify(this.list_operator_ob));
+            // Обработать и показать данные
+            this.process_data_view_report_11_1_1(this.list_operator_ob, function () {
+                // Выход
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }.bind(this));
 
+        }.bind(this));
+    };
+    // Обработать и показать данные отчета "Оператор"
+    view_td_report.prototype.process_data_view_report_11_1_1 = function (list_operator_ob, callback) {
+        // Продолжим
+        this.report_operator_ob = [];
+        this.list_operation_amkr = [];
 
+        var value_operation_amkr = this.select_operation_amkr.val();
+
+        $.each(list_operator_ob, function (key, value) {
+            var select = true;
+
+            if (select && this.switch_amkr_outer_cars.val() === false) {
+                if (value.current_operators_wagons_group === 'amkr') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_amkr_cisterns.val() === false) {
+                if (value.current_operators_wagons_group === 'cisterns') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_outer_cars.val() === false) {
+                if (value.current_operators_wagons_group !== 'amkr' && value.current_operators_wagons_group !== 'cisterns') {
+                    select = false;
+                }
+            }
+            if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
+                var res = value_operation_amkr.indexOf(value.current_wagons_rent_operator_abbr_ru);
+                if (res === -1) select = false;
+            }
+            if (select) {
+                //this.report_operator_ob.push(value);
+                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.current_wagons_rent_operator_abbr_ru }.bind(this));
+                if (!oa) {
+                    this.report_operator_ob.push({
+                        operator: value['current_wagons_rent_operator_abbr_' + App.Lang],
+                        start: value.type === 'start' ? 1 : 0,
+                        arrival: value.type === 'arrival' ? 1 : 0,
+                        outgoing: value.type === 'outgoing' ? 1 : 0,
+                        stop: value.type === 'stop' ? 1 : 0
+                    });
+                    this.list_operation_amkr.push({ value: value.current_wagons_rent_operator_abbr_ru, text: value['current_wagons_rent_operator_abbr_' + App.Lang] });
+                } else {
+                    var operator = this.report_operator_ob.find(function (o) { return o.operator === value['current_wagons_rent_operator_abbr_' + App.Lang] }.bind(this));
+                    if (operator) {
+                        operator.start += (value.type === 'start' ? 1 : 0);
+                        operator.arrival += (value.type === 'arrival' ? 1 : 0);
+                        operator.outgoing += (value.type === 'outgoing' ? 1 : 0);
+                        operator.stop += (value.type === 'stop' ? 1 : 0);
+                    }
+                }
+            }
+
+        }.bind(this));
+        // вывод данных
+        this.table_residue_total_operators.view(this.report_operator_ob);
+        // обновление списков отчета
+        if (!value_operation_amkr || value_operation_amkr.length === 0) {
+            this.select_operation_amkr.update(this.sort_text(this.list_operation_amkr, "text"), -1);
+        }
+        // Выход
+        if (typeof callback === 'function') {
+            callback();
+        }
+    };
     // Очистить таблицы
     view_td_report.prototype.clear_report_11_1 = function () {
         if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
