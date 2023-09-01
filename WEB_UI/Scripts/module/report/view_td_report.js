@@ -12181,7 +12181,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_clear_select_report_10_1();
+                this.action_clear_select_report_11_1();
             }.bind(this),
         });
         var bt_setup_select = new this.fe_ui.bs_button({
@@ -12195,7 +12195,7 @@
             icon_right: null,
             click: function (event) {
                 event.preventDefault();
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
         });
         row_setup_bt.$row.append(col_setup_bt.$col.append(bt_setup_clear.$button).append(bt_setup_select.$button));
@@ -12214,7 +12214,7 @@
             checkbox_readonly: false,
             element_default: true,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
         });
         row_setup_sw1.$row.append(sw_outer_cars.$element);
@@ -12234,7 +12234,7 @@
             checkbox_readonly: false,
             element_default: true,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
         });
         row_setup_sw2.$row.append(sw_amkr_outer_cars.$element);
@@ -12254,7 +12254,7 @@
             checkbox_readonly: false,
             element_default: true,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
         });
         row_setup_sw3.$row.append(sw_amkr_cisterns.$element);
@@ -12278,7 +12278,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12305,7 +12305,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12332,7 +12332,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12359,7 +12359,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12386,7 +12386,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12413,7 +12413,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12440,7 +12440,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12467,7 +12467,7 @@
             element_data: [],
             element_default: null,
             element_change: function (e) {
-                this.action_select_report_10_1();
+                this.action_select_report_11_1();
             }.bind(this),
             element_check: function (value) {
 
@@ -12588,6 +12588,7 @@
                 //this.view_setup_detali_report_6_1(this.report_panel);
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+                    this.active_tabs_report_11(event.target.id, event.relatedTarget.id);
                     switch (event.target.id) {
                         case 'residue-total-operators': {
                             this.report_panel = 0;
@@ -12698,24 +12699,21 @@
         // Продолжим
         this.report_operator_ob = [];
         this.list_operation_amkr = [];
-
         var value_operation_amkr = this.select_operation_amkr.val();
-
         $.each(list_operator_ob, function (key, value) {
             var select = true;
-
             if (select && this.switch_amkr_outer_cars.val() === false) {
-                if (value.current_operators_wagons_group === 'amkr') {
+                if (value.group === 'amkr') {
                     select = false;
                 }
             }
             if (select && this.switch_amkr_cisterns.val() === false) {
-                if (value.current_operators_wagons_group === 'cisterns') {
+                if (value.group === 'cisterns') {
                     select = false;
                 }
             }
             if (select && this.switch_outer_cars.val() === false) {
-                if (value.current_operators_wagons_group !== 'amkr' && value.current_operators_wagons_group !== 'cisterns') {
+                if (value.group !== 'amkr' && value.group !== 'cisterns') {
                     select = false;
                 }
             }
@@ -12758,11 +12756,166 @@
             callback();
         }
     };
+    // Действие кнопки обновим
+    view_td_report.prototype.action_select_report_11_1 = function () {
+        this.out_clear();
+        // Показать в зависимости от закладки
+
+        if (this.report_panel === 0) {
+            LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+            this.process_data_view_report_11_1_1(this.list_operator_ob, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
+
+    };
+
+    view_td_report.prototype.active_tabs_report_11 = function (new_id, old_id) {
+        // Запомнить предыдущее состояние
+        switch (old_id) {
+            case 'residue-total-operators': {
+                this.buffer_amkr_outer_cars_1 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_1 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_1 = this.switch_outer_cars.val();
+                this.buffer_operation_amkr_1 = JSON.parse(JSON.stringify(this.list_operation_amkr));
+                this.buffer_operation_amkr_value_1 = this.select_operation_amkr.val();
+                break;
+            };
+            case 'residue-total-common': {
+                this.buffer_amkr_outer_cars_2 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_2 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_2 = this.switch_outer_cars.val();
+                break;
+            };
+            case 'residue-total-markup': {
+                this.buffer_amkr_outer_cars_3 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_3 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_3 = this.switch_outer_cars.val();
+                break;
+            };
+            case 'residue-total-genus': {
+                this.buffer_amkr_outer_cars_4 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_4 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_4 = this.switch_outer_cars.val();
+                break;
+            };
+            case 'residue-total-station-out': {
+                this.buffer_amkr_outer_cars_5 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_5 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_5 = this.switch_outer_cars.val();
+                break;
+            };
+            case 'residue-total-cargo-arr': {
+                this.buffer_amkr_outer_cars_6 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_6 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_6 = this.switch_outer_cars.val();
+                break;
+            };
+            case 'residue-total-operation': {
+                this.buffer_amkr_outer_cars_7 = this.switch_amkr_outer_cars.val();
+                this.buffer_amkr_cisterns_7 = this.switch_amkr_cisterns.val();
+                this.buffer_outer_cars_7 = this.switch_outer_cars.val();
+                break;
+            };
+        }
+        // Определим текущее состояние
+        switch (new_id) {
+            case 'residue-total-operators': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_1);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_1);
+                this.switch_outer_cars.val(this.buffer_outer_cars_1);
+                this.select_operation_amkr.enable();
+                this.select_operation_amkr.update(this.sort_text(this.buffer_operation_amkr_1, "text"), this.buffer_operation_amkr_value_1);
+                this.select_arr_condition.disable(true);
+                this.select_curr_condition.disable(true);
+                this.select_genus.disable(true);
+                this.select_arr_cargo.disable(true);
+                this.select_arr_ext_station_to.disable(true);
+                this.select_curr_station_amkr.disable(true);
+                this.select_curr_way.disable(true);
+                break;
+            };
+            case 'residue-total-common': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_2);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_2);
+                this.switch_outer_cars.val(this.buffer_outer_cars_2);
+                this.select_operation_amkr.disable(true);
+                this.select_arr_condition.disable(true);
+                this.select_curr_condition.disable(true);
+                this.select_genus.disable(true);
+                this.select_arr_cargo.disable(true);
+                this.select_arr_ext_station_to.disable(true);
+                this.select_curr_station_amkr.disable(true);
+                this.select_curr_way.disable(true);
+                break;
+            };
+            case 'residue-total-markup': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_3);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_3);
+                this.switch_outer_cars.val(this.buffer_outer_cars_3);
+                break;
+            };
+            case 'residue-total-genus': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_4);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_4);
+                this.switch_outer_cars.val(this.buffer_outer_cars_4);
+                break;
+            };
+            case 'residue-total-station-out': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_5);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_5);
+                this.switch_outer_cars.val(this.buffer_outer_cars_5);
+                break;
+            };
+            case 'residue-total-cargo-arr': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_6);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_6);
+                this.switch_outer_cars.val(this.buffer_outer_cars_6);
+                break;
+            };
+            case 'residue-total-operation': {
+                this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_7);
+                this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_7);
+                this.switch_outer_cars.val(this.buffer_outer_cars_7);
+                break;
+            };
+        }
+    }
     // Очистить таблицы
     view_td_report.prototype.clear_report_11_1 = function () {
-        if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
-        if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
-        if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        this.buffer_outer_cars_1 = true;
+        this.buffer_outer_cars_2 = true;
+        this.buffer_outer_cars_3 = true;
+        this.buffer_outer_cars_4 = true;
+        this.buffer_outer_cars_5 = true;
+        this.buffer_outer_cars_6 = true;
+        this.buffer_outer_cars_7 = true;
+        //
+        this.buffer_amkr_outer_cars_1 = true;
+        this.buffer_amkr_outer_cars_2 = true;
+        this.buffer_amkr_outer_cars_3 = true;
+        this.buffer_amkr_outer_cars_4 = true;
+        this.buffer_amkr_outer_cars_5 = true;
+        this.buffer_amkr_outer_cars_6 = true;
+        this.buffer_amkr_outer_cars_7 = true;
+        //
+        this.buffer_amkr_cisterns_1 = true;
+        this.buffer_amkr_cisterns_2 = true;
+        this.buffer_amkr_cisterns_3 = true;
+        this.buffer_amkr_cisterns_4 = true;
+        this.buffer_amkr_cisterns_5 = true;
+        this.buffer_amkr_cisterns_6 = true;
+        this.buffer_amkr_cisterns_7 = true;
+
+        if (this.switch_outer_cars) {
+            this.switch_outer_cars.val(true);
+        }
+        if (this.switch_amkr_outer_cars) {
+            this.switch_amkr_outer_cars.val(true);
+        }
+        if (this.switch_amkr_cisterns) {
+            this.switch_amkr_cisterns.val(true);
+        }
         if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
         if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
         if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
