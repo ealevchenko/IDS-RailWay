@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime = convert(datetime,'2023-08-10 20:00:00',120)
+declare @date datetime = convert(datetime,'2023-08-31 20:00:00',120)
 
 --select * from ids.get_view_operating_balance_of_date(@date)
 
@@ -185,7 +185,8 @@ declare @date datetime = convert(datetime,'2023-08-10 20:00:00',120)
 	FROM IDS.[WagonInternalRoutes] as wir
 		--> Внутренее перемещение
 		Left JOIN [IDS].[WagonInternalMovement] as wim ON wim.id = (SELECT top(1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes]=wir.id and ((outer_way_start is null  and (([way_start]<=@date and way_end>=@date) OR ([way_start]<=@date and way_end is null))) or outer_way_start is not null and ((outer_way_start<=@date and outer_way_end>=@date) or (outer_way_start<=@date and outer_way_end is null))) order by [way_end])
-		Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id)
+		--Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id)		
+		Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id AND [operation_end] <= @date order by [operation_end] desc)
 	  	--==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
 		--> Прибытие вагона
 		Left JOIN IDS.ArrivalCars as arr_car ON wir.id_arrival_car = arr_car.id
@@ -267,7 +268,7 @@ declare @date datetime = convert(datetime,'2023-08-10 20:00:00',120)
 		--AND wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 		--and dir_rod.rod_uz = 70
 		--and arr_wag_rent.[id_operator] <>  curr_wag_rent.[id_operator]
-		--and wir.num = 55573984
+		--and wir.num = 56857873
 		--and curr_dir_operator.[abbr_ru] = N'ЦТЛ'
 		-- Исключим ЛОКОМОТИВЫ
 		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_curr_owg.[group] in ('amkr_vz') OR dir_curr_owg.[group] is null)
