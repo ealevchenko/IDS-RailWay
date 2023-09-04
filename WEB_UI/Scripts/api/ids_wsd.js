@@ -2553,6 +2553,30 @@
             },
         });
     };
+    // Получить остаток по операторам за период 
+    ids_wsd.prototype.getReportViewOperators_OB_OfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/operators/operating_balance/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOperators_OB_OfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     //=============================================================================================================
     //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
     //=============================================================================================================

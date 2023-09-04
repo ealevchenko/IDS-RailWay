@@ -359,6 +359,12 @@
             'ttdr_field_idle_time': 'Простой УЗ',
             'ttdr_field_idle_time_act': 'Простой УЗ (акт)',
 
+            'ttdr_field_residue_total_operators_operator': 'Оператор',
+            'ttdr_field_residue_total_operators_start': 'Было',
+            'ttdr_field_residue_total_operators_arrival': 'Прибыло',
+            'ttdr_field_residue_total_operators_outgoing': 'Убыло',
+            'ttdr_field_residue_total_operators_stop': 'Остаток',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
             'ttdr_mess_view_report': 'Показать отчет ...',
@@ -2088,7 +2094,6 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
         },
-
         //----------------------------------------------------
         {
             field: 'incoming_outgoing_car_wir_note',
@@ -3005,6 +3010,47 @@
             className: 'dt-body-right',
             title: langView('ttdr_field_idle_time_act', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        // остатки Операторы за период
+        {
+            field: 'residue_total_operators_operator',
+            data: function (row, type, val, meta) {
+                return row.operator;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_residue_total_operators_operator', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'residue_total_operators_start',
+            data: function (row, type, val, meta) {
+                return row.start;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_start', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_arrival',
+            data: function (row, type, val, meta) {
+                return row.arrival;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_arrival', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_outgoing', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_stop',
+            data: function (row, type, val, meta) {
+                return row.stop;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_stop', App.Langs), width: "30px", orderable: true, searchable: false
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3826,6 +3872,16 @@
         collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_td_report.prototype.init_columns_residue_total_operators = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_operators_operator', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_start', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_arrival', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_outgoing', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_stop', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -4373,6 +4429,21 @@
             }.bind(this)
         });
         buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_residue_total_operators = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -5614,6 +5685,26 @@
                 this.autoWidth = false;
                 this.table_columns = this.init_columns_operation_balance();
                 this.table_buttons = this.init_button_operation_balance();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_operators': {
+                //this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_operators();
+                this.table_buttons = this.init_button_residue_total_operators();
                 this.dom = 'Bfrtip';
                 break;
             };

@@ -2601,6 +2601,7 @@
             this.$el.multiselect('enable');
         };
         this.disable = function (clear) {
+            if (clear) this.$el.multiselect('deselectAll', false);
             this.$el.multiselect('disable');
         };
         this.destroy = function () {
