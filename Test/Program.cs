@@ -264,7 +264,7 @@ namespace Test
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
             //tids.IDS_WIR_GetExchangeRate();
             //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
-            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 
@@ -315,7 +315,7 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
