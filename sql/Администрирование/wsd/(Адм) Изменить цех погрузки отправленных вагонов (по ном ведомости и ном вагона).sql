@@ -1,13 +1,15 @@
-declare @num_doc int =  143 
+declare @num_doc int =  404 
 
 SELECT id,[id_division] 
   FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon]
-  where id in (select out_car.id_outgoing_uz_vagon FROM [IDS].[OutgoingSostav] as out_sost Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing where out_sost.[num_doc]=@num_doc  and  out_car.num in (63662704))
+  where id in (select out_car.id_outgoing_uz_vagon 
+  FROM [IDS].[OutgoingSostav] as out_sost Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing 
+  where out_sost.[num_doc]=@num_doc  and  out_car.num in (29210762 ))
 
  -- UPDATE [IDS].[Outgoing_UZ_Vagon]
  --  SET [id_division] = 36
 
- --WHERE id in (545690)
+ --WHERE id in (594637,596044)
 GO
 
 SELECT TOP (1000) [id]
