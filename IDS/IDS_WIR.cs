@@ -8336,7 +8336,7 @@ namespace IDS
 
                 EFIDS.Concrete.EFDbContext context_ids = new EFIDS.Concrete.EFDbContext();
                 // Выполним запрос и получим все ЭПД с признапком не закрыт
-                string sql = "select * from [IDS].[get_view_uz_doc_sending]() where status_sostav >=2 and  [position_outgoing] is not null and ([num_doc] is null or [status]<8)";
+                string sql = "select * from [IDS].[get_view_uz_doc_sending]() where status_sostav >=2 and  [position_outgoing] is not null and ([num_doc] is null or [status]<>8)";
                 List<UZ_DOC_Sending> list_uz_doc_all = context_ids.Database.SqlQuery<UZ_DOC_Sending>(sql).ToList();
                 List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.dt >= date_exceeded).ToList();
                 // Сгруппируем по id сотава для отправки
