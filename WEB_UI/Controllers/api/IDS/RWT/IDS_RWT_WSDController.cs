@@ -468,6 +468,8 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string current_wagons_rent_operators_en { get; set; }
         public string current_wagons_rent_operator_abbr_ru { get; set; }
         public string current_wagons_rent_operator_abbr_en { get; set; }
+        public bool current_wagons_rent_operator_paid { get; set; }
+
     }
 
     public class view_total_balance

@@ -5867,6 +5867,9 @@
         if (this.settings.type_report === 'usage_fee_operator_amkr_derailment') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right" colspan="2">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
+        if (this.settings.type_report === 'residue_total_operators') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"><td class="dt-centr"></td></tr></tfoot>'));
+        }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
         // Инициализируем таблицу
@@ -6846,6 +6849,34 @@
                 });
                 this.obj_t_report.columns('.fl-usage_fee_wagon_persent_derailment_fee_amount').every(function () {
                     $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'residue_total_operators': {
+                if (data) {
+                    var sum_start = 0;
+                    var sum_arrival = 0;
+                    var sum_outgoing = 0;
+                    var sum_stop = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_start += el.start;
+                        sum_arrival += el.arrival;
+                        sum_outgoing += el.outgoing;
+                        sum_stop += el.stop;
+                    });
+                }
+                this.obj_t_report.columns('.fl-residue_total_operators_start').every(function () {
+                    $(this.footer()).html(sum_start);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_arrival').every(function () {
+                    $(this.footer()).html(sum_arrival);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_outgoing').every(function () {
+                    $(this.footer()).html(sum_outgoing);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_stop').every(function () {
+                    $(this.footer()).html(sum_stop);
                 });
                 break;
             };

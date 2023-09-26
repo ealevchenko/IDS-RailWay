@@ -818,6 +818,30 @@
         $panel.append(row_table.$row);
     };
     // Инициализация панели c вертикальным расположением карточек
+    view_td_report.prototype.init_panel_report = function (tabs, name_panel, name_div) {
+        // Груз по Оператору АМКР
+        var card_table = new this.fe_ui.bs_card({
+            id: null,
+            class_card: 'border-primary mb-1',
+            header: true,
+            class_header: 'text-center text-white bg-primary',
+            class_body: 'text-center',
+            title_header: langView('vtdr_card_header_table', App.Langs),
+        });
+        card_table.$body.append($('<div>', {
+            id: name_div,
+        }))
+        var row_table = new this.fe_ui.bs_row();
+        var col_table = new this.fe_ui.bs_col({
+            size: 'xl',
+            col: 12,
+        });
+        row_table.$row.append(col_table.$col.append(card_table.$card));
+        // Добавим в панель
+        var $panel = tabs.$content.find('div#' + name_panel); // Панель
+        $panel.append(row_table.$row);
+    };
+    // Инициализация панели c вертикальным расположением карточек
     view_td_report.prototype.init_panel_vertical_report = function (tabs, name_panel, name_div) {
         // Груз по Оператору АМКР
         var card_chart = new this.fe_ui.bs_card({
@@ -12555,7 +12579,8 @@
         // Переключатели панелей таблиц отчета
         //----------------------------------------
         // Закладка "Оператор"
-        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 6, 6);
+        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators');
+        //this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 6, 6);
         // Закладка "ИТОГ"
         this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 6, 6);
         // Закладка "Разметка"
@@ -12665,7 +12690,7 @@
     // Показать отчет  "Остаток (ИТОГ)"
     view_td_report.prototype.view_report_11_1 = function (start, stop) {
         // Запускаем 1 процесса инициализации (паралельно)
-        var process_load = 1;
+        var process_load = 2;
         // Выход из загрузки
         var out_load = function (process_load) {
             if (process_load === 0) {
@@ -12675,6 +12700,10 @@
         LockScreen(langView('vtdr_load_operating_balance', App.Langs));
         // Загрузим данные
         this.load_select_report_11_1_1(start, stop, function () {
+            process_load--;
+            out_load(process_load);
+        }.bind(this))
+        this.load_select_report_11_1_2(start, stop, function () {
             process_load--;
             out_load(process_load);
         }.bind(this))
@@ -12693,6 +12722,29 @@
             }.bind(this));
 
         }.bind(this));
+    };
+    // Загрузить данные отчета "ИТОГ"
+    view_td_report.prototype.load_select_report_11_1_2 = function (start, stop, callback) {
+
+        var date = moment(start).set({ 'hour': 20, 'minute': 0, 'second': 0 })._d;
+        var date_stop = moment(stop).set({ 'hour': 20, 'minute': 0, 'second': 0 })._d;
+        var process_load_1 = 0;
+        while (date <= date_stop) {
+            process_load_1++;
+
+
+            date = moment(date).add('days', 1)._d;
+        }
+
+
+
+        // Выход
+        if (typeof callback === 'function') {
+            callback();
+        }
+
+
+
     };
     // Обработать и показать данные отчета "Оператор"
     view_td_report.prototype.process_data_view_report_11_1_1 = function (list_operator_ob, callback) {
