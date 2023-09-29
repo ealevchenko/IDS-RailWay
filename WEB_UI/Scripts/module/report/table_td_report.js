@@ -5972,6 +5972,9 @@
         if (this.settings.type_report === 'residue_total_operators') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"><td class="dt-centr"></td></tr></tfoot>'));
         }
+        if (this.settings.type_report === 'residue_total_common') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">Ср. остаток:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
         // Инициализируем таблицу
@@ -6979,6 +6982,41 @@
                 });
                 this.obj_t_report.columns('.fl-residue_total_operators_stop').every(function () {
                     $(this.footer()).html(sum_stop);
+                });
+                break;
+            };
+            case 'residue_total_common': {
+                if (data) {
+                    var sum_total = 0;
+                    var sum_external = 0;
+                    var sum_paid = 0;
+                    var sum_accounting = 0;
+                    var sum_amkr = 0;
+                    var count = 0
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_total += el.total;
+                        sum_external += el.external;
+                        sum_paid += el.paid;
+                        sum_accounting += el.accounting;
+                        sum_amkr += el.amkr;
+                        count++;
+                    });
+                }
+                this.obj_t_report.columns('.fl-residue_total_common_total').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_total / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_external').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_external / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_paid').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_paid / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_accounting').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_accounting / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_amkr').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_amkr / count).toFixed(0) : 0);
                 });
                 break;
             };
