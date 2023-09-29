@@ -1,3 +1,4 @@
+use [KRR-PA-CNT-Railway]
 declare @start datetime = convert(datetime,'2023-09-01 20:00:00',120)
 declare @stop datetime = convert(datetime,'2023-09-30 20:00:00',120)
 --declare @date datetime = convert(datetime,'2023-09-01 20:00:00',120)
@@ -44,4 +45,4 @@ CREATE TABLE #operating_balance(
  --       SET @date = DATEADD(day,1,@date)
  --   END;
 
-	--select * from #operating_balance
+		select * from [IDS].[get_view_cur_ob_of_date](@date)
