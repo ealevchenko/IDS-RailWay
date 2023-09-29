@@ -12581,7 +12581,7 @@
         // Переключатели панелей таблиц отчета
         //----------------------------------------
         // Закладка "Оператор"
-        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators',7);
+        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 7);
         //this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 6, 6);
         // Закладка "ИТОГ"
         this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 7);
@@ -12613,6 +12613,7 @@
         var out_init = function (process) {
             if (process === 0) {
                 this.report_panel = 0;
+                this.active_tabs_report_11('residue-total-operators', '');
                 //this.view_setup_detali_report_6_1(this.report_panel);
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
@@ -12769,13 +12770,7 @@
         while (date <= date_stop) {
             process_load_1++;
             this.ids_wsd.getReportViewCurrent_OB_OfDate(date, function (result_curr_ob, date) {
-                // формируем посуточно
-                var total = result_curr_ob.length;
-                var external = result_curr_ob.filter(function (i) { return i.current_wagons_rent_operator_paid || (i.group === null && !i.current_wagons_rent_operator_paid) }.bind(this)).length;
-                var paid = result_curr_ob.filter(function (i) { return i.current_wagons_rent_operator_paid }.bind(this)).length;
-                var accounting = result_curr_ob.filter(function (i) {return i.group === null && !i.current_wagons_rent_operator_paid }.bind(this)).length;
-                var amkr = result_curr_ob.filter(function (i) { return i.group === 'amkr' || i.group === 'cisterns' }.bind(this)).length;
-                this.list_total_ob.push({date:date, total: total, external: external, paid: paid, accounting: accounting, amkr: amkr});
+                this.list_total_ob.push({ date: date, result: result_curr_ob });
                 process_load_1--;
                 out_load_report_11_1_2(process_load_1);
             }.bind(this));
@@ -12846,8 +12841,40 @@
     };
     // Обработать и показать данные отчета "Итог"
     view_td_report.prototype.process_data_view_report_11_1_2 = function (list_total_ob, callback) {
+        this.report_total_ob = [];
         // вывод данных
-        this.table_residue_total_common.view(list_total_ob);
+        $.each(list_total_ob, function (key, val_date) {
+            this.report_date_total_ob = [];
+            $.each(val_date.result, function (key, value) {
+                var select = true;
+                if (select && this.switch_amkr_outer_cars.val() === false) {
+                    if (value.group === 'amkr') {
+                        select = false;
+                    }
+                }
+                if (select && this.switch_amkr_cisterns.val() === false) {
+                    if (value.group === 'cisterns') {
+                        select = false;
+                    }
+                }
+                if (select && this.switch_outer_cars.val() === false) {
+                    if (value.group !== 'amkr' && value.group !== 'cisterns') {
+                        select = false;
+                    }
+                }
+                if (select) {
+                    this.report_date_total_ob.push(value);
+                }
+            }.bind(this));
+            //формируем посуточно
+            var total = this.report_date_total_ob.length;
+            var external = this.report_date_total_ob.filter(function (i) { return i.current_wagons_rent_operator_paid || (i.group === null && !i.current_wagons_rent_operator_paid) }.bind(this)).length;
+            var paid = this.report_date_total_ob.filter(function (i) { return i.current_wagons_rent_operator_paid }.bind(this)).length;
+            var accounting = this.report_date_total_ob.filter(function (i) { return i.group === null && !i.current_wagons_rent_operator_paid }.bind(this)).length;
+            var amkr = this.report_date_total_ob.filter(function (i) { return i.group === 'amkr' || i.group === 'cisterns' }.bind(this)).length;
+            this.report_total_ob.push({ date: val_date.date, total: total, external: external, paid: paid, accounting: accounting, amkr: amkr });
+        }.bind(this));
+        this.table_residue_total_common.view(this.report_total_ob);
         // Выход
         if (typeof callback === 'function') {
             callback();
@@ -12858,16 +12885,99 @@
     view_td_report.prototype.action_select_report_11_1 = function () {
         this.out_clear();
         // Показать в зависимости от закладки
-
         if (this.report_panel === 0) {
             LockScreen(langView('vtdr_load_operating_balance', App.Langs));
             this.process_data_view_report_11_1_1(this.list_operator_ob, function () {
                 LockScreenOff();
             }.bind(this));
         }
-
+        if (this.report_panel === 1) {
+            LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+            this.process_data_view_report_11_1_2(this.list_total_ob, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
     };
+    // Очистить выбор
+    view_td_report.prototype.action_clear_select_report_11_1 = function () {
+        if (this.report_panel === 0) {
+            this.buffer_outer_cars_1 = true;
+            this.buffer_amkr_outer_cars_1 = true;
+            this.buffer_amkr_cisterns_1 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+            if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+            // Обработать и показать данные
+            this.process_data_view_report_11_1_1(this.list_operator_ob, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
+        if (this.report_panel === 1) {
+            this.buffer_outer_cars_2 = true;
+            this.buffer_amkr_outer_cars_2 = true;
+            this.buffer_amkr_cisterns_2 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+            this.process_data_view_report_11_1_2(this.list_total_ob, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
+        if (this.report_panel === 2) {
+            this.buffer_outer_cars_3 = true;
+            this.buffer_amkr_outer_cars_3 = true;
+            this.buffer_amkr_cisterns_3 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        }
+        if (this.report_panel === 3) {
+            this.buffer_outer_cars_4 = true;
+            this.buffer_amkr_outer_cars_4 = true;
+            this.buffer_amkr_cisterns_4 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        }
+        if (this.report_panel === 4) {
+            this.buffer_outer_cars_5 = true;
+            this.buffer_amkr_outer_cars_5 = true;
+            this.buffer_amkr_cisterns_5 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        }
+        if (this.report_panel === 5) {
+            this.buffer_outer_cars_6 = true;
+            this.buffer_amkr_outer_cars_6 = true;
+            this.buffer_amkr_cisterns_6 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        }
+        if (this.report_panel === 6) {
+            this.buffer_outer_cars_7 = true;
+            this.buffer_amkr_outer_cars_7 = true;
+            this.buffer_amkr_cisterns_7 = true;
+            if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+            if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+            if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+        }
+        //if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
+        //if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
+        //if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
 
+        //if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+        //if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
+        //if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
+        //if (this.select_genus) { this.select_genus.val(-1); }
+        //if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+        //if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
+        //if (this.select_curr_station_amkr) { this.select_curr_station_amkr.val(-1); }
+        //if (this.select_curr_way) { this.select_curr_way.val(-1); }
+    };
+    //
     view_td_report.prototype.active_tabs_report_11 = function (new_id, old_id) {
         // Запомнить предыдущее состояние
         switch (old_id) {
@@ -13004,6 +13114,9 @@
         this.buffer_amkr_cisterns_5 = true;
         this.buffer_amkr_cisterns_6 = true;
         this.buffer_amkr_cisterns_7 = true;
+
+        this.buffer_operation_amkr_1 = [];
+        this.buffer_operation_amkr_value_1 = -1;
 
         if (this.switch_outer_cars) {
             this.switch_outer_cars.val(true);
