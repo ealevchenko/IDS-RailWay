@@ -40,7 +40,7 @@
     //=============================================================================================================
     //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
     // Вернуть строки внутренего перемещения указанного вагона
-    ids_wsd.prototype.getWagonInternalRoutesOfNum= function (num, callback) {
+    ids_wsd.prototype.getWagonInternalRoutesOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/wir/wagon/num/' + num,
@@ -63,7 +63,7 @@
         });
     };
     // Вернуть открытую последнюю строку внутреннего перемещения вагона
-    ids_wsd.prototype.getOpenWagonInternalRoutesOfNum= function (num, callback) {
+    ids_wsd.prototype.getOpenWagonInternalRoutesOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/wir/open/wagon/num/' + num,
@@ -1468,7 +1468,7 @@
                 AJAXBeforeSend();
             },
             success: function (data) {
-                
+
                 if (typeof callback === 'function') {
                     callback(data);
                 }
@@ -2488,7 +2488,7 @@
     ids_wsd.prototype.getReportViewOutgoingCarsOfPeriod = function (start, stop, is_acts, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString() + '/is_acts/'+ is_acts,
+            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString() + '/is_acts/' + is_acts,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -2508,7 +2508,7 @@
         });
     };
     //Получить отправленные вагоны по номеру вагона (для отчетов)
-    ids_wsd.prototype.getViewOutgoingCarsOfNum= function (num, callback) {
+    ids_wsd.prototype.getViewOutgoingCarsOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/outgoing_cars/view/num/' + num,
@@ -2576,6 +2576,29 @@
             },
         });
     };
+    // Получить текущий оперативный остаток на указанную дату
+    ids_wsd.prototype.getReportViewCurrent_OB_OfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/current/operating_balance/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data, date);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewCurrent_OB_OfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     //=============================================================================================================
     //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
@@ -2607,7 +2630,7 @@
     ids_wsd.prototype.getUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/usage_fee/period/operator/' + id_operator +'/genus/'+id_genus,
+            url: '../../api/ids/rwt/usage_fee/period/operator/' + id_operator + '/genus/' + id_genus,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -2630,7 +2653,7 @@
     ids_wsd.prototype.getLastUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/usage_fee/period/last/operator/' + id_operator +'/genus/'+id_genus,
+            url: '../../api/ids/rwt/usage_fee/period/last/operator/' + id_operator + '/genus/' + id_genus,
             async: true,
             dataType: 'json',
             beforeSend: function () {

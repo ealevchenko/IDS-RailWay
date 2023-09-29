@@ -365,6 +365,13 @@
             'ttdr_field_residue_total_operators_outgoing': 'Убыло',
             'ttdr_field_residue_total_operators_stop': 'Остаток',
 
+            'ttdr_field_residue_total_common_date': 'Дата',
+            'ttdr_field_residue_total_common_total': 'Остаток общий',
+            'ttdr_field_residue_total_common_external': 'Внешние вагоны',
+            'ttdr_field_residue_total_common_paid': 'Оплатные',
+            'ttdr_field_residue_total_common_accounting': 'Учетные вагоны',
+            'ttdr_field_residue_total_common_amkr': 'Вагоны и цистерны АМКР + цистерны аренда АМКР',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
             'ttdr_mess_view_report': 'Показать отчет ...',
@@ -3051,6 +3058,55 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_residue_total_operators_stop', App.Langs), width: "30px", orderable: true, searchable: false
         },
+        // остаток посуточно
+        {
+            field: 'residue_total_common_date',
+            data: function (row, type, val, meta) {
+                return row.date !== null ? moment(row.date).format(format_date) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_date', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_total',
+            data: function (row, type, val, meta) {
+                return row.total;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_total', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_external',
+            data: function (row, type, val, meta) {
+                return row.external;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_external', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_paid',
+            data: function (row, type, val, meta) {
+                return row.paid;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_paid', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_accounting',
+            data: function (row, type, val, meta) {
+                return row.accounting;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_accounting', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_amkr',
+            data: function (row, type, val, meta) {
+                return row.amkr;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_amkr', App.Langs), width: "50px", orderable: true, searchable: false
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3882,6 +3938,17 @@
         collums.push({ field: 'residue_total_operators_stop', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_td_report.prototype.init_columns_residue_total_common = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_common_date', title: null, class: null });
+        collums.push({ field: 'residue_total_common_total', title: null, class: null });
+        collums.push({ field: 'residue_total_common_external', title: null, class: null });
+        collums.push({ field: 'residue_total_common_paid', title: null, class: null });
+        collums.push({ field: 'residue_total_common_accounting', title: null, class: null });
+        collums.push({ field: 'residue_total_common_amkr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
@@ -4446,6 +4513,21 @@
         //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    //
+    table_td_report.prototype.init_button_residue_total_common = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_td_report.prototype.init_type_report = function () {
@@ -5705,6 +5787,26 @@
                 this.autoWidth = false;
                 this.table_columns = this.init_columns_residue_total_operators();
                 this.table_buttons = this.init_button_residue_total_operators();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_common': {
+                //this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_common();
+                this.table_buttons = this.init_button_residue_total_common();
                 this.dom = 'Bfrtip';
                 break;
             };

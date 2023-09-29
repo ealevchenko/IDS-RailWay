@@ -818,7 +818,7 @@
         $panel.append(row_table.$row);
     };
     // Инициализация панели c вертикальным расположением карточек
-    view_td_report.prototype.init_panel_report = function (tabs, name_panel, name_div) {
+    view_td_report.prototype.init_panel_report = function (tabs, name_panel, name_div, col) {
         // Груз по Оператору АМКР
         var card_table = new this.fe_ui.bs_card({
             id: null,
@@ -834,7 +834,7 @@
         var row_table = new this.fe_ui.bs_row();
         var col_table = new this.fe_ui.bs_col({
             size: 'xl',
-            col: 12,
+            col: col,
         });
         row_table.$row.append(col_table.$col.append(card_table.$card));
         // Добавим в панель
@@ -12150,7 +12150,9 @@
         this.report = 11;        // номер отчета
         this.report_panel = 0;  // номер под-отчета
         this.list_operator_ob = []; // список для отчета "Оператор"
+        this.list_total_ob = []; // список для отчета "ИТОГ"
         this.clone_list_operator_ob = []; // список для отчета "Оператор"
+        this.clone_list_total_ob = []; // список для отчета "ИТОГ"
         //this.chart_data_total_ = [];
 
         $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
@@ -12579,10 +12581,11 @@
         // Переключатели панелей таблиц отчета
         //----------------------------------------
         // Закладка "Оператор"
-        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators');
+        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators',7);
         //this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-operators-tab', 'residue-total-operators', 6, 6);
         // Закладка "ИТОГ"
-        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 6, 6);
+        this.init_panel_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 7);
+        //this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-common-tab', 'residue-total-common', 6, 6);
         // Закладка "Разметка"
         this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-markup-tab', 'residue-total-markup', 6, 6);
         // Закладка "Род вагона"
@@ -12605,7 +12608,7 @@
 
         // ------------------------------------------------
         // Запускаем ... процесса инициализации (паралельно)
-        var process = 1;
+        var process = 2;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -12657,12 +12660,30 @@
             }
         }.bind(this);
         //-----------------------------------------------
-        // Таблица-Груз по Оператору АМКР
+        // Таблица-Оперативный остаток по Оператору АМКР
         this.table_residue_total_operators = new TTDR('div#residue-total-operators');         // Создадим экземпляр
         this.table_residue_total_operators.init({
             alert: null,
             detali_table: false,
             type_report: 'residue_total_operators',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        //-----------------------------------------------
+        // Таблица-Оперативный остаток по суточно
+        this.table_residue_total_common = new TTDR('div#residue-total-common');         // Создадим экземпляр
+        this.table_residue_total_common.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'residue_total_common',     //
             link_num: false,
             ids_wsd: null,
             fn_init: function () {
@@ -12725,26 +12746,41 @@
     };
     // Загрузить данные отчета "ИТОГ"
     view_td_report.prototype.load_select_report_11_1_2 = function (start, stop, callback) {
-
         var date = moment(start).set({ 'hour': 20, 'minute': 0, 'second': 0 })._d;
         var date_stop = moment(stop).set({ 'hour': 20, 'minute': 0, 'second': 0 })._d;
         var process_load_1 = 0;
+        this.list_total_ob = [];
+        // Выход из загрузки
+        var out_load_report_11_1_2 = function (process_load) {
+            if (process_load === 0) {
+                // Выход
+                if (typeof callback === 'function') {
+                    this.clone_list_total_ob = this.list_total_ob;
+                    // Обработать и показать данные
+                    this.process_data_view_report_11_1_2(this.list_total_ob, function () {
+                        // Выход
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+                    }.bind(this));
+                }
+            }
+        }.bind(this);
         while (date <= date_stop) {
             process_load_1++;
-
-
+            this.ids_wsd.getReportViewCurrent_OB_OfDate(date, function (result_curr_ob, date) {
+                // формируем посуточно
+                var total = result_curr_ob.length;
+                var external = result_curr_ob.filter(function (i) { return i.current_wagons_rent_operator_paid || (i.group === null && !i.current_wagons_rent_operator_paid) }.bind(this)).length;
+                var paid = result_curr_ob.filter(function (i) { return i.current_wagons_rent_operator_paid }.bind(this)).length;
+                var accounting = result_curr_ob.filter(function (i) {return i.group === null && !i.current_wagons_rent_operator_paid }.bind(this)).length;
+                var amkr = result_curr_ob.filter(function (i) { return i.group === 'amkr' || i.group === 'cisterns' }.bind(this)).length;
+                this.list_total_ob.push({date:date, total: total, external: external, paid: paid, accounting: accounting, amkr: amkr});
+                process_load_1--;
+                out_load_report_11_1_2(process_load_1);
+            }.bind(this));
             date = moment(date).add('days', 1)._d;
         }
-
-
-
-        // Выход
-        if (typeof callback === 'function') {
-            callback();
-        }
-
-
-
     };
     // Обработать и показать данные отчета "Оператор"
     view_td_report.prototype.process_data_view_report_11_1_1 = function (list_operator_ob, callback) {
@@ -12808,6 +12844,16 @@
             callback();
         }
     };
+    // Обработать и показать данные отчета "Итог"
+    view_td_report.prototype.process_data_view_report_11_1_2 = function (list_total_ob, callback) {
+        // вывод данных
+        this.table_residue_total_common.view(list_total_ob);
+        // Выход
+        if (typeof callback === 'function') {
+            callback();
+        }
+    };
+
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_11_1 = function () {
         this.out_clear();

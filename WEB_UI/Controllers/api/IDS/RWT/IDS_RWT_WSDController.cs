@@ -468,10 +468,19 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string current_wagons_rent_operators_en { get; set; }
         public string current_wagons_rent_operator_abbr_ru { get; set; }
         public string current_wagons_rent_operator_abbr_en { get; set; }
-        public bool current_wagons_rent_operator_paid { get; set; }
-
+        public bool? current_wagons_rent_operator_paid { get; set; }
     }
-
+    public class view_current_ob
+    {
+        public int? num { get; set; }
+        public string group { get; set; }
+        public int? id_operator { get; set; }
+        public string current_wagons_rent_operators_ru { get; set; }
+        public string current_wagons_rent_operators_en { get; set; }
+        public string current_wagons_rent_operator_abbr_ru { get; set; }
+        public string current_wagons_rent_operator_abbr_en { get; set; }
+        public bool? current_wagons_rent_operator_paid { get; set; }
+    }
     public class view_total_balance
     {
         public int id { get; set; }
@@ -1755,6 +1764,30 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 string sql = "select * from [IDS].[get_view_operator_ob_of_period](@start, @stop)";
                 List<view_operator_ob> list = db.Database.SqlQuery<view_operator_ob>(sql, p_start, p_stop).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // GET: api/ids/rwt/wsd/view/current/operating_balance/date/2023-07-21T00:00:00
+        /// <summary>
+        /// Получить текущий оперативный остаток на указанную дату 
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/current/operating_balance/date/{date:datetime}")]
+        [ResponseType(typeof(view_current_ob))]
+        public IHttpActionResult GetViewCurrent_OB_OfDate(DateTime date)
+        {
+            try
+            {
+                db.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter p_date = new System.Data.SqlClient.SqlParameter("@date", date);
+                string sql = "select * from [IDS].[get_view_cur_ob_of_date](@date)";
+                List<view_current_ob> list = db.Database.SqlQuery<view_current_ob>(sql, p_date).ToList();
                 this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
