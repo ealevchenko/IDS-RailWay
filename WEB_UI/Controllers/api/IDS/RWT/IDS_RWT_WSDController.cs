@@ -481,6 +481,36 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string current_wagons_rent_operator_abbr_en { get; set; }
         public bool? current_wagons_rent_operator_paid { get; set; }
     }
+    public partial class view_report_ob
+    {
+        public int num { get; set; }
+        public DateTime? date_adoption { get; set; }
+        public string group { get; set; }
+        public int? id_operator { get; set; }
+        public string current_wagons_rent_operators_ru { get; set; }
+        public string current_wagons_rent_operators_en { get; set; }
+        public string current_wagons_rent_operator_abbr_ru { get; set; }
+        public string current_wagons_rent_operator_abbr_en { get; set; }
+        public bool? current_wagons_rent_operator_paid { get; set; }
+        public int? arrival_uz_vagon_id_genus { get; set; }
+        public int? arrival_uz_vagon_rod { get; set; }
+        public string arrival_uz_vagon_rod_name_ru { get; set; }
+        public string arrival_uz_vagon_rod_name_en { get; set; }
+        public string arrival_uz_vagon_rod_abbr_ru { get; set; }
+        public string arrival_uz_vagon_rod_abbr_en { get; set; }
+        public int? arrival_uz_vagon_id_condition { get; set; }
+        public string arrival_uz_vagon_condition_name_ru { get; set; }
+        public string arrival_uz_vagon_condition_name_en { get; set; }
+        public string arrival_uz_vagon_condition_abbr_ru { get; set; }
+        public string arrival_uz_vagon_condition_abbr_en { get; set; }
+        public bool? arrival_uz_vagon_condition_repairs { get; set; }
+        public int? current_id_condition { get; set; }
+        public string current_condition_name_ru { get; set; }
+        public string current_condition_name_en { get; set; }
+        public string current_condition_abbr_ru { get; set; }
+        public string current_condition_abbr_en { get; set; }
+        public bool? current_condition_repairs { get; set; }
+    }
     public class view_total_balance
     {
         public int id { get; set; }
@@ -1625,9 +1655,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
+                db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_arrival_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, id).ToList();
+                this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
@@ -1648,9 +1680,11 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
+                db.Database.CommandTimeout = 300;                
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_send_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, id).ToList();
+                this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
@@ -1666,10 +1700,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
+                db.Database.CommandTimeout = 300;                   
                 System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
                 System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 string sql = "select * from [IDS].[get_view_sostav_of_period_operation_send](@start, @stop) order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, d_start, d_stop).ToList();
+                this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
@@ -1797,6 +1833,29 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             }
         }
 
+        // GET: api/ids/rwt/wsd/view/report/operating_balance/date/2023-07-21T00:00:00
+        /// <summary>
+        /// Получить текущий оперативный остаток на указанную дату 
+        /// </summary>
+        /// <returns></returns>
+        [Route("view/report/operating_balance/date/{date:datetime}")]
+        [ResponseType(typeof(view_report_ob))]
+        public IHttpActionResult GetViewReport_OB_OfDate(DateTime date)
+        {
+            try
+            {
+                db.Database.CommandTimeout = 300;
+                System.Data.SqlClient.SqlParameter p_date = new System.Data.SqlClient.SqlParameter("@date", date);
+                string sql = "select * from [IDS].[get_view_report_ob_of_date](@date)";
+                List<view_report_ob> list = db.Database.SqlQuery<view_report_ob>(sql, p_date).ToList();
+                this.db.Database.CommandTimeout = null;
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // GET: api/ids/rwt/wsd/view/total_balance
         /// <summary>
         /// Получить расчет остатков по вагонам
