@@ -1,3 +1,4 @@
+use [KRR-PA-CNT-Railway]
 declare @date datetime = convert(datetime,'2023-09-01 20:00:00',120)
 
 if OBJECT_ID(N'TempDB..#operating_balance', N'U')  IS NOT NULL
