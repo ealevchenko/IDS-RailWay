@@ -375,6 +375,8 @@
             'ttdr_field_residue_total_arrival_condition_abbr': 'Разметка по прибытию',
             'ttdr_field_residue_total_current_condition_abbr': 'Разметка текущая',
             'ttdr_field_total_group_name_condition': 'Группа разметка',
+            'ttdr_field_total_group_name_genus': 'Группа род вагона',
+            'ttdr_field_total_station_amkr_abbr': 'Станция',
 
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
@@ -3130,6 +3132,14 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_residue_total_current_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        {
+            field: 'total_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row.station_amkr_abbr;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_total_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3980,6 +3990,7 @@
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
         return init_columns_detali(collums, list_collums);
     };
+    // инициализация полей residue_total_markup_curr
     table_td_report.prototype.init_columns_residue_total_markup_curr = function () {
         var collums = [];
         collums.push({ field: 'residue_total_current_condition_abbr', title: null, class: null });
@@ -3992,6 +4003,23 @@
         var collums = [];
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_condition', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_genus
+    table_td_report.prototype.init_columns_residue_total_genus = function () {
+        var collums = [];
+        collums.push({ field: 'total_rod_abbr', title: langView('ttdr_field_genus_vagon', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_genus_station_amkr
+    table_td_report.prototype.init_columns_residue_total_genus_station_amkr = function () {
+        var collums = [];
+        collums.push({ field: 'total_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_genus', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
         return init_columns_detali(collums, list_collums);
@@ -4607,6 +4635,36 @@
     }
     //
     table_td_report.prototype.init_button_residue_total_markup_arr_operator = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_genus = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_genus_station_amkr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'print', action: null });
@@ -6001,6 +6059,84 @@
                 };
                 break;
             };
+            case 'residue_total_genus': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_genus();
+                this.table_buttons = this.init_button_residue_total_genus();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_genus_station_amkr': {
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_residue_total_genus_station_amkr();
+                this.table_buttons = this.init_button_residue_total_genus_station_amkr();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_persent = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="4">' + group.group_name + '</td></tr>');
+                                last = group.group_name;
+                                count = group.count_wagon;
+                                sum_persent = group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_persent += group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                    };
+                };
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -6170,6 +6306,9 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'residue_total_markup_curr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_genus') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         this.$table_report = table_report.$table;
@@ -7217,29 +7356,48 @@
                 });
                 break;
             };
-            case 'residue_total_markup_arr': {
+            //case 'residue_total_markup_arr': {
+            //    if (data) {
+            //        var sum_count_wagon = 0;
+            //        var sum_perent_wagon = 0;
+            //        //var sum_count_account_balance = 0;
+            //        $.each(data, function (i, el) {
+            //            sum_count_wagon += el.count_wagon;
+            //            sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+            //        });
+            //    }
+            //    this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+            //        $(this.footer()).html(sum_count_wagon);
+            //    });
+            //    this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+            //        $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+            //    });
+            //    break;
+            //};
+            //case 'residue_total_markup_curr': {
+            //    if (data) {
+            //        var sum_count_wagon = 0;
+            //        var sum_perent_wagon = 0;
+            //        //var sum_count_account_balance = 0;
+            //        $.each(data, function (i, el) {
+            //            sum_count_wagon += el.count_wagon;
+            //            sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+            //        });
+            //    }
+            //    this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+            //        $(this.footer()).html(sum_count_wagon);
+            //    });
+            //    this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+            //        $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+            //    });
+            //    break;
+            //};
+            case 'residue_total_markup_arr':
+            case 'residue_total_markup_curr':
+            case 'residue_total_genus': {
                 if (data) {
                     var sum_count_wagon = 0;
                     var sum_perent_wagon = 0;
-                    //var sum_count_account_balance = 0;
-                    $.each(data, function (i, el) {
-                        sum_count_wagon += el.count_wagon;
-                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
-                    });
-                }
-                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
-                    $(this.footer()).html(sum_count_wagon);
-                });
-                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
-                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
-                });
-                break;
-            };
-            case 'residue_total_markup_curr': {
-                if (data) {
-                    var sum_count_wagon = 0;
-                    var sum_perent_wagon = 0;
-                    //var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
                         sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);

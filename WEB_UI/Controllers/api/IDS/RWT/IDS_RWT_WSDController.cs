@@ -510,6 +510,20 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string current_condition_abbr_ru { get; set; }
         public string current_condition_abbr_en { get; set; }
         public bool? current_condition_repairs { get; set; }
+        public int current_id_station_amkr { get; set; }
+        public string current_station_amkr_name_ru { get; set; }
+        public string current_station_amkr_name_en { get; set; }
+        public string current_station_amkr_abbr_ru { get; set; }
+        public string current_station_amkr_abbr_en { get; set; }
+        public int? arrival_uz_vagon_id_cargo { get; set; }
+        public string arrival_uz_vagon_cargo_name_ru { get; set; }
+        public string arrival_uz_vagon_cargo_name_en { get; set; }
+        public int? arrival_uz_vagon_id_group { get; set; }
+        public string arrival_uz_vagon_cargo_group_name_ru { get; set; }
+        public string arrival_uz_vagon_cargo_group_name_en { get; set; }
+        public int? arrival_uz_document_code_stn_from { get; set; }
+        public string arrival_uz_document_station_from_name_ru { get; set; }
+        public string arrival_uz_document_station_from_name_en { get; set; }
     }
     public class view_total_balance
     {
