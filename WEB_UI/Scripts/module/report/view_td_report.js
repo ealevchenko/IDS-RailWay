@@ -328,77 +328,6 @@
     var FIL = App.form_inline;
     var TTDR = App.table_td_report;
     var CAM = App.chart_amcharts;
-    //// асинхронно добавим распарсеный ЭПД
-    //var wagons_get_epd_async = function (row, callback) {
-    //    var base = this;
-    //    var len = row.length;
-    //    if (len === 0) {
-    //        if (typeof callback === 'function') {
-    //            callback();
-    //        }
-    //        return 0;
-    //    }
-    //    function GetEPDWagonsAsync(i) {
-    //        if (i < len) {
-    //            // Поместим следующий вызов функции в цикл событий.
-    //            setTimeout(function () {
-    //                this.ids_wsd.getOTPR_UZ_DOCOfNum(row[i].arrival_car_num_doc, function (doc_uz_sms) {
-    //                    row[i].otpr = null;
-    //                    if (doc_uz_sms !== null) {
-    //                        // Получим дату отправки
-    //                        row[i].otpr = doc_uz_sms;
-    //                    };
-    //                    GetEPDWagonsAsync.call(this, i + 1);
-    //                }.bind(this));
-    //            }.bind(this), 0);
-    //        } else {
-    //            // Так как достигнут конец массива, мы вызываем коллбэк
-    //            if (typeof callback === 'function') {
-    //                callback();
-    //            } else return 0;
-    //        }
-    //    }
-    //    GetEPDWagonsAsync.call(this, 0);
-    //};
-    // асинхронно добавим распарсеный ЭПД
-    //var wagons_get_out_epd_async = function (row, callback) {
-    //    var base = this;
-    //    var len = row.length;
-    //    if (len === 0) {
-    //        if (typeof callback === 'function') {
-    //            callback();
-    //        }
-    //        return 0;
-    //    }
-    //    function GetEPDWagonsAsync(i) {
-    //        if (i < len) {
-    //            // Поместим следующий вызов функции в цикл событий.
-    //            setTimeout(function () {
-    //                this.ids_wsd.getOTPR_UZ_DOC_OUTOfNum(row[i].outgoing_uz_document_id_doc_uz, function (doc_uz_sms) {
-    //                    row[i].otpr = null;
-    //                    row[i].vagon = null;
-    //                    if (doc_uz_sms !== null) {
-    //                        // Получим дату отправки
-    //                        row[i].otpr = doc_uz_sms;
-    //                        if (doc_uz_sms && doc_uz_sms.vagon && doc_uz_sms.vagon.length > 0) {
-    //                            for (var iv = 0; iv < doc_uz_sms.vagon.length; iv++) {
-    //                                if (Number(doc_uz_sms.vagon[iv].nomer) === row[i].num)
-    //                                    row[i].vagon = doc_uz_sms.vagon[iv];
-    //                            }
-    //                        }
-    //                    };
-    //                    GetEPDWagonsAsync.call(this, i + 1);
-    //                }.bind(this));
-    //            }.bind(this), 0);
-    //        } else {
-    //            // Так как достигнут конец массива, мы вызываем коллбэк
-    //            if (typeof callback === 'function') {
-    //                callback();
-    //            } else return 0;
-    //        }
-    //    }
-    //    GetEPDWagonsAsync.call(this, 0);
-    //};
     //-----------------------------------------------------------------------------------------
     // Конструктор
     function view_td_report(selector) {
@@ -8639,7 +8568,7 @@
         this.chart_total_outgoing_cargo_operator.init({
             alert: null,
             type_chart: 'stacked_column_chart_percent',     //pie_exploding_pie_chart   stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -8663,12 +8592,12 @@
 
             },
         });
-        // Инициализация модуля графиков тип: pie_exploding_pie_chart
+        // Инициализация модуля графиков тип: partitioned_bar_chart
         this.chart_total_operator_amkr = new CAM('div#outgoing-operator-amkr-chart');         // Создадим экземпляр
         this.chart_total_operator_amkr.init({
             alert: null,
             type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -8794,7 +8723,7 @@
         this.chart_total_cargo_metall.init({
             alert: null,
             type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -10657,7 +10586,7 @@
         this.chart_usage_fee_cargo.init({
             alert: null,
             type_chart: 'donut_with_radial_gradient',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -10686,7 +10615,7 @@
         this.chart_usage_fee_operator_amkr.init({
             alert: null,
             type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -10715,7 +10644,7 @@
         this.chart_usage_fee_operator_amkr_derailment.init({
             alert: null,
             type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -10744,7 +10673,7 @@
         this.chart_usage_fee_cargo_not_derailment.init({
             alert: null,
             type_chart: 'donut_with_radial_gradient',     //stacked_column_chart_percent
-            list_name: this.ids_dir.list_cargo_out_group,
+            list_name: null,
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -12194,9 +12123,8 @@
         this.clone_list_report_ob = []; // список для отчетов "Разметка, Род вагона, Станция отправления, Груз прибытия"
 
 
-        this.chart_data_residue_total_genus = []
-
-        //this.chart_data_total_ = [];
+        this.chart_data_residue_total_genus = [];
+        this.chart_data_residue_total_genus_station_amkr = [];
 
         $('#sidebar').toggleClass('active');                                                    // Скрыть список отчетов
         this.$title_report.text(langView('vtdr_title_report_11_1', App.Langs).format(''));      // выведем название отчета
@@ -12651,7 +12579,7 @@
 
         // ------------------------------------------------
         // Запускаем ... процесса инициализации (паралельно)
-        var process = 9;
+        var process = 10;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -12664,23 +12592,20 @@
                     switch (event.target.id) {
                         case 'residue-total-operators': {
                             this.report_panel = 0;
-                            //this.view_chart_total_outgoing_cargo_operator();
                             break;
                         };
                         case 'residue-total-common': {
                             this.report_panel = 1;
-                            //this.view_chart_total_operator_amkr();
                             break;
                         };
                         case 'residue-total-markup': {
                             this.report_panel = 2;
-                            //this.view_chart_total_division_metals();
-                            //this.view_chart_total_division_cargo();
                             break;
                         };
                         case 'residue-total-genus': {
                             this.report_panel = 3;
                             this.view_chart_residue_total_genus();
+                            this.view_chart_residue_total_genus_station_amkr();
                             break;
                         };
                         case 'residue-total-station-out': {
@@ -12858,20 +12783,18 @@
 
             },
         });
-
-
-        //// Инициализация модуля графиков тип: pie_exploding_pie_chart
-        //this.chart_total_outgoing_cargo_operator = new CAM('div#outgoing-cargo-operator-chart');         // Создадим экземпляр
-        //this.chart_total_outgoing_cargo_operator.init({
-        //    alert: null,
-        //    type_chart: 'stacked_column_chart_percent',     //pie_exploding_pie_chart   stacked_column_chart_percent
-        //    list_name: this.ids_dir.list_cargo_out_group,
-        //    fn_init: function () {
-        //        // На проверку окончания инициализации
-        //        process--;
-        //        out_init(process);
-        //    },
-        //});
+        // Инициализация модуля графиков тип: partitioned_bar_chart
+        this.chart_residue_total_genus_station_amkr = new CAM('div#residue-total-genus-station-amkr-chart');         // Создадим экземпляр
+        this.chart_residue_total_genus_station_amkr.init({
+            alert: null,
+            type_chart: 'partitioned_bar_chart',     //stacked_column_chart_percent
+            list_name: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
     };
     // Показать отчет  "Остаток (ИТОГ)"
     view_td_report.prototype.view_report_11_1 = function (start, stop) {
@@ -13206,13 +13129,10 @@
         this.persent_table(this.report_condition_arrival_operator_ob, 'count_wagon', 'perent_wagon', count_wagon);
         this.persent_table(this.report_condition_current_operator_ob, 'count_wagon', 'perent_wagon', count_wagon);
         // вывод данных
-        this.table_residue_total_markup_arr.view(this.report_condition_arrival_ob);
-        this.table_residue_total_markup_curr.view(this.report_condition_current_ob);
-
-        this.sort_table(this.report_condition_arrival_operator_ob, 'id_condition', 'operator_abbr', true);
-        this.sort_table(this.report_condition_current_operator_ob, 'id_condition', 'operator_abbr', true);
-        this.table_residue_total_markup_arr_operator.view(this.report_condition_arrival_operator_ob);
-        this.table_residue_total_markup_curr_operator.view(this.report_condition_current_operator_ob);
+        this.table_residue_total_markup_arr.view(this.sort_table(this.report_condition_arrival_ob, 'id_condition', 'count_wagon', true));
+        this.table_residue_total_markup_curr.view(this.sort_table(this.report_condition_current_ob, 'id_condition', 'count_wagon', true));
+        this.table_residue_total_markup_arr_operator.view(this.sort_table(this.report_condition_arrival_operator_ob, 'id_condition', 'count_wagon', true));
+        this.table_residue_total_markup_curr_operator.view(this.sort_table(this.report_condition_current_operator_ob, 'id_condition', 'count_wagon', true));
 
         // обновление списков отчета
         if (!value_operation_amkr || value_operation_amkr.length === 0) {
@@ -13326,9 +13246,8 @@
         this.persent_table(this.report_genus_ob, 'count_wagon', 'perent_wagon', count_wagon);
         this.persent_table(this.report_genus_curr_station_amkr_ob, 'count_wagon', 'perent_wagon', count_wagon);
         // вывод данных
-        this.table_residue_total_genus.view(this.report_genus_ob);
-        this.sort_table(this.report_genus_curr_station_amkr_ob, 'id_genus', 'station_amkr_abbr', true);
-        this.table_residue_total_genus_station_amkr.view(this.report_genus_curr_station_amkr_ob);
+        this.table_residue_total_genus.view(this.sort_table(this.report_genus_ob, 'id_genus', 'count_wagon', true));
+        this.table_residue_total_genus_station_amkr.view(this.sort_table(this.report_genus_curr_station_amkr_ob, 'id_genus', 'count_wagon', true));
 
         // обновление списков отчета
         if (!value_operation_amkr || value_operation_amkr.length === 0) {
@@ -13345,10 +13264,8 @@
             if (this.report_panel === 3) this.select_curr_station_amkr.update(this.sort_text(this.list_curr_station_amkr, "text"), -1);
         }
 
-        var data = [
-
-        ];
-
+        var data = [];
+        var data1 = [];
         $.each(this.report_genus_ob, function (key, element) {
             var gn = data.find(function (o) { return o.name === element.rod_abbr; });
             if (gn === undefined) {
@@ -13357,9 +13274,14 @@
                 gn.value += element.count_wagon;
             }
         }.bind(this));
+        $.each(this.sort_table(this.report_genus_curr_station_amkr_ob, 'id_genus', 'count_wagon', false), function (key, element) {
+            data1.push({ "group": element.group_name, "name": element.station_amkr_abbr + "-" + element.count_wagon + "ваг.", "value": Number(element.count_wagon) });
+        }.bind(this));
 
         this.chart_data_residue_total_genus = data;
+        this.chart_data_residue_total_genus_station_amkr = data1;
         this.view_chart_residue_total_genus();
+        this.view_chart_residue_total_genus_station_amkr();
 
         // Выход
         if (typeof callback === 'function') {
@@ -13370,6 +13292,12 @@
     view_td_report.prototype.view_chart_residue_total_genus = function () {
         if (this.report_panel === 3 && this.chart_data_residue_total_genus) {
             this.chart_residue_total_genus.view(this.chart_data_residue_total_genus);
+        }
+    };
+    // Вывести данные по диаграмме "Остаток по роду вагона на текущих станциях"
+    view_td_report.prototype.view_chart_residue_total_genus_station_amkr = function () {
+        if (this.report_panel === 3 && this.chart_data_residue_total_genus_station_amkr) {
+            this.chart_residue_total_genus_station_amkr.view(this.chart_data_residue_total_genus_station_amkr);
         }
     };
     // Действие кнопки обновим

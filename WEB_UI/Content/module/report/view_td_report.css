@@ -11768,7 +11768,8 @@ fieldset {
 #outgoing-operator-amkr-chart,
 #outgoing-total-cargo-metall-chart,
 #usage-fee-operator-amkr-chart,
-#usage-fee-operator-amkr-derailment-chart {
+#usage-fee-operator-amkr-derailment-chart,
+#residue-total-genus-station-amkr-chart {
     width: 100%;
     height: 1000px;
 }
