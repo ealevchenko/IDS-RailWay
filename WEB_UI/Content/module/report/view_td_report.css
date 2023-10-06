@@ -11758,8 +11758,8 @@ fieldset {
 #outgoing-total-ext-station-exp-chart,
 #usage-fee-cargo-not-derailment-chart,
 #usage-fee-cargo-chart,
-#residue-total-genus-chart
-{
+#residue-total-genus-chart,
+#residue-total-station-out-chart {
     width: 100%;
     height: 500px;
 }

@@ -5464,7 +5464,7 @@
             LockScreenOff();
         }
     };
-    // Вывести данные по диаграмме "Груз ПРИБ SAP"
+    // Вывести данные по диаграмме "Станция ПРИБ"
     view_td_report.prototype.view_chart_total_station_from = function () {
         if (this.report_panel === 6 && this.chart_data) {
             this.chart_total_station_to_arr.view(this.chart_data[6]);
@@ -5615,287 +5615,6 @@
             LockScreenOff();
         }
     };
-    //view_td_report.prototype.chart_3_1 = function () {
-    //    am5.ready(function () {
-
-    //        // Create root element
-    //        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    //        var root = am5.Root.new("adoption-operator-to-arr-chart");
-
-
-    //        // Set themes
-    //        // https://www.amcharts.com/docs/v5/concepts/themes/
-    //        root.setThemes([
-    //            am5themes_Animated.new(root)
-    //        ]);
-
-
-    //        // Create chart
-    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/
-    //        var chart = root.container.children.push(am5xy.XYChart.new(root, {
-    //            panX: true,
-    //            panY: true,
-    //            wheelX: "panX",
-    //            wheelY: "zoomX",
-    //            pinchZoomX: true
-    //        }));
-
-    //        // Add cursor
-    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
-    //        var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    //        cursor.lineY.set("visible", false);
-
-
-    //        // Create axes
-    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-    //        var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
-    //        xRenderer.labels.template.setAll({
-    //            rotation: -90,
-    //            centerY: am5.p50,
-    //            centerX: am5.p100,
-    //            paddingRight: 15
-    //        });
-
-    //        var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-    //            maxDeviation: 0.3,
-    //            categoryField: "country",
-    //            renderer: xRenderer,
-    //            tooltip: am5.Tooltip.new(root, {})
-    //        }));
-
-    //        var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-    //            maxDeviation: 0.3,
-    //            renderer: am5xy.AxisRendererY.new(root, {})
-    //        }));
-
-
-    //        // Create series
-    //        // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-    //        var series = chart.series.push(am5xy.ColumnSeries.new(root, {
-    //            name: "Series 1",
-    //            xAxis: xAxis,
-    //            yAxis: yAxis,
-    //            valueYField: "value",
-    //            sequencedInterpolation: true,
-    //            categoryXField: "country",
-    //            tooltip: am5.Tooltip.new(root, {
-    //                labelText: "{valueY}"
-    //            })
-    //        }));
-
-    //        series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
-    //        series.columns.template.adapters.add("fill", function (fill, target) {
-    //            return chart.get("colors").getIndex(series.columns.indexOf(target));
-    //        });
-
-    //        series.columns.template.adapters.add("stroke", function (stroke, target) {
-    //            return chart.get("colors").getIndex(series.columns.indexOf(target));
-    //        });
-
-
-    //        // Set data
-    //        var data = [{
-    //            country: "USA",
-    //            value: 2025
-    //        }, {
-    //            country: "China",
-    //            value: 1882
-    //        }, {
-    //            country: "Japan",
-    //            value: 1809
-    //        }, {
-    //            country: "Germany",
-    //            value: 1322
-    //        }, {
-    //            country: "UK",
-    //            value: 1122
-    //        }, {
-    //            country: "France",
-    //            value: 1114
-    //        }, {
-    //            country: "India",
-    //            value: 984
-    //        }, {
-    //            country: "Spain",
-    //            value: 711
-    //        }, {
-    //            country: "Netherlands",
-    //            value: 665
-    //        }, {
-    //            country: "South Korea",
-    //            value: 443
-    //        }, {
-    //            country: "Canada",
-    //            value: 441
-    //        }];
-
-    //        xAxis.data.setAll(data);
-    //        series.data.setAll(data);
-
-
-    //        // Make stuff animate on load
-    //        // https://www.amcharts.com/docs/v5/concepts/animations/
-    //        series.appear(1000);
-    //        chart.appear(1000, 100);
-
-    //    }); // end am5.ready()
-    //};
-    //view_td_report.prototype.chart_3_2 = function () {
-    //    am5.ready(function () {
-
-    //        // Create root element
-    //        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    //        var root = am5.Root.new("adoption-operator-to-arr-chart");
-
-    //        // Set themes
-    //        // https://www.amcharts.com/docs/v5/concepts/themes/
-    //        root.setThemes([
-    //            am5themes_Animated.new(root)
-    //        ]);
-
-    //        // Create wrapper container
-    //        var container = root.container.children.push(
-    //            am5.Container.new(root, {
-    //                width: am5.percent(100),
-    //                height: am5.percent(100),
-    //                layout: root.verticalLayout
-    //            })
-    //        );
-
-    //        // Create series
-    //        // https://www.amcharts.com/docs/v5/charts/hierarchy/#Adding
-    //        var series = container.children.push(
-    //            am5hierarchy.Treemap.new(root, {
-    //                singleBranchOnly: false,
-    //                downDepth: 1,
-    //                upDepth: -1,
-    //                initialDepth: 2,
-    //                valueField: "value",
-    //                categoryField: "name",
-    //                childDataField: "children",
-    //                nodePaddingOuter: 0,
-    //                nodePaddingInner: 0
-    //            })
-    //        );
-
-    //        series.rectangles.template.setAll({
-    //            strokeWidth: 2
-    //        });
-
-    //        // Generate and set data
-    //        // https://www.amcharts.com/docs/v5/charts/hierarchy/#Setting_data
-    //        var maxLevels = 2;
-    //        var maxNodes = 10;
-    //        var maxValue = 100;
-
-    //        var data = {
-    //            name: "Root",
-    //            children: [
-    //                {
-    //                    name: "First",
-    //                    children: [
-    //                        {
-    //                            name: "A1",
-    //                            value: 100
-    //                        },
-    //                        //{
-    //                        //    name: "A2",
-    //                        //    value: 60
-    //                        //},
-    //                        //{
-    //                        //    name: "A3",
-    //                        //    value: 30
-    //                        //}
-    //                    ]
-    //                },
-    //                {
-    //                    name: "Second",
-    //                    children: [
-    //                        {
-    //                            name: "B1",
-    //                            value: 135
-    //                        },
-    //                        //{
-    //                        //    name: "B2",
-    //                        //    value: 98
-    //                        //},
-    //                        //{
-    //                        //    name: "B3",
-    //                        //    value: 56
-    //                        //}
-    //                    ]
-    //                },
-    //                {
-    //                    name: "Third",
-    //                    children: [
-    //                        {
-    //                            name: "C1",
-    //                            value: 335
-    //                        },
-    //                        //{
-    //                        //    name: "C2",
-    //                        //    value: 148
-    //                        //},
-    //                        //{
-    //                        //    name: "C3",
-    //                        //    value: 126
-    //                        //},
-    //                        //{
-    //                        //    name: "C4",
-    //                        //    value: 26
-    //                        //}
-    //                    ]
-    //                },
-    //                {
-    //                    name: "Fourth",
-    //                    children: [
-    //                        {
-    //                            name: "D1",
-    //                            value: 415
-    //                        },
-    //                        //{
-    //                        //    name: "D2",
-    //                        //    value: 148
-    //                        //},
-    //                        //{
-    //                        //    name: "D3",
-    //                        //    value: 89
-    //                        //},
-    //                        //{
-    //                        //    name: "D4",
-    //                        //    value: 64
-    //                        //},
-    //                        //{
-    //                        //    name: "D5",
-    //                        //    value: 16
-    //                        //}
-    //                    ]
-    //                },
-    //                {
-    //                    name: "Fifth",
-    //                    children: [
-    //                        {
-    //                            name: "E1",
-    //                            value: 687
-    //                        },
-    //                        //{
-    //                        //    name: "E2",
-    //                        //    value: 148
-    //                        //}
-    //                    ]
-    //                }
-    //            ]
-    //        };
-
-    //        series.data.setAll([data]);
-    //        series.set("selectedDataItem", series.dataItems[0]);
-
-    //        // Make stuff animate on load
-    //        series.appear(1000, 100);
-
-    //    }); // end am5.ready()
-    //};
-
     // обновим выбор детально
     view_td_report.prototype.view_setup_detali_report_3_1 = function (rep) {
         this.row_setup_detali_operation_amkr.hide();
@@ -12562,7 +12281,7 @@
         this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-genus-tab', 'residue-total-genus', 6, 6);
         this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-genus-tab', 'residue-total-genus-station-amkr', 6, 6);
         // Закладка "Станция отправления"
-        this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-station-out-tab', 'residue-total-station', 6, 6);
+        this.init_panel_vertical_report(this.nav_tabs_residue_total, 'residue-total-station-out-tab', 'residue-total-station-out');
         // Закладка "Груз ПРИБ"
         this.init_panel_horizontal_report(this.nav_tabs_residue_total, 'residue-total-cargo-arr-tab', 'residue-total-cargo-arr', 6, 6);
         // Закладка "Операции"
@@ -12579,7 +12298,7 @@
 
         // ------------------------------------------------
         // Запускаем ... процесса инициализации (паралельно)
-        var process = 10;
+        var process = 12;
         // Выход из инициализации
         var out_init = function (process) {
             if (process === 0) {
@@ -12610,7 +12329,7 @@
                         };
                         case 'residue-total-station-out': {
                             this.report_panel = 4;
-                            //this.view_chart_total_cargo_metall()
+                            this.view_chart_residue_total_station_out()
                             break;
                         };
                         case 'residue-total-cargo-arr': {
@@ -12758,7 +12477,7 @@
         this.chart_residue_total_genus = new CAM('div#residue-total-genus-chart');         // Создадим экземпляр
         this.chart_residue_total_genus.init({
             alert: null,
-            type_chart: 'donut_with_radial_gradient',     
+            type_chart: 'donut_with_radial_gradient',
             fn_init: function () {
                 // На проверку окончания инициализации
                 process--;
@@ -12795,6 +12514,37 @@
                 out_init(process);
             },
         });
+        //-----------------------------------------------
+        // Таблица-Станция отправления по роду груза
+        this.table_residue_total_station_out = new TTDR('div#residue-total-station-out');         // Создадим экземпляр
+        this.table_residue_total_station_out.init({
+            alert: null,
+            detali_table: false,
+            type_report: 'residue_total_station_out',     //
+            link_num: false,
+            ids_wsd: null,
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+            fn_action_view_detali: function (rows) {
+
+            },
+        });
+        // Инициализация модуля графиков тип: Столбец с повернутыми меткам
+        this.chart_residue_total_station_out = new CAM('div#residue-total-station-out-chart');         // Создадим экземпляр
+        this.chart_residue_total_station_out.init({
+            alert: null,
+            type_chart: 'column_with_rotated_labels',     //
+            fn_init: function () {
+                // На проверку окончания инициализации
+                process--;
+                out_init(process);
+            },
+        });
+        //-----------------------------------------------
+        //.....
     };
     // Показать отчет  "Остаток (ИТОГ)"
     view_td_report.prototype.view_report_11_1 = function (start, stop) {
@@ -12874,7 +12624,7 @@
             this.list_report_ob = result_report_ob;
             this.clone_list_report_ob = JSON.parse(JSON.stringify(this.list_report_ob));
 
-            var process_view = 2;
+            var process_view = 3;
             // Выход из загрузки
             var out_view = function (process_load) {
                 if (process_view === 0) {
@@ -12894,7 +12644,10 @@
                 process_view--;
                 out_view(process_view);
             }.bind(this))
-
+            this.process_data_view_report_11_1_5(this.list_report_ob, function () {
+                process_view--;
+                out_view(process_view);
+            }.bind(this))
         }.bind(this));
     };
     // Обработать и показать данные отчета "Оператор"
@@ -13153,7 +12906,7 @@
             callback();
         }
     };
-    //
+    // Обработать и показать данные отчета "Род вагона"
     view_td_report.prototype.process_data_view_report_11_1_4 = function (list_report_ob, callback) {
         // Продолжим
         this.report_genus_ob = [];
@@ -13288,6 +13041,120 @@
             callback();
         }
     };
+    // Обработать и показать данные отчета "Станция отправления"
+    view_td_report.prototype.process_data_view_report_11_1_5 = function (list_report_ob, callback) {
+        // Продолжим
+        this.report_ext_station_ob = [];
+
+        this.list_operation_amkr = [];
+        this.list_arr_cargo = [];
+        this.list_arr_ext_station_to = [];
+
+        var value_operation_amkr = this.select_operation_amkr.val();
+        var value_arr_cargo = this.select_arr_cargo.val();
+        var value_arr_ext_station_to = this.select_arr_ext_station_to.val();
+
+        var count_wagon = 0;
+        $.each(list_report_ob, function (key, value) {
+            var select = true;
+            if (select && this.switch_amkr_outer_cars.val() === false) {
+                if (value.group === 'amkr') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_amkr_cisterns.val() === false) {
+                if (value.group === 'cisterns') {
+                    select = false;
+                }
+            }
+            if (select && this.switch_outer_cars.val() === false) {
+                if (value.group !== 'amkr' && value.group !== 'cisterns') {
+                    select = false;
+                }
+            }
+            if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
+                var res = value_operation_amkr.indexOf(value.current_wagons_rent_operator_abbr_ru);
+                if (res === -1) select = false;
+            }
+            if (select && (!value_arr_cargo || value_arr_cargo.length > 0)) {
+                var res = value_arr_cargo.indexOf(String(value.arrival_uz_vagon_id_group));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_arr_ext_station_to || value_arr_ext_station_to.length > 0)) {
+                var res = value_arr_ext_station_to.indexOf(String(value.arrival_uz_document_code_stn_from));
+                if (res === -1) select = false;
+            }
+            if (select) {
+                count_wagon++;
+                // Формируем список операторов
+                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.current_wagons_rent_operator_abbr_ru }.bind(this));
+                if (!oa) {
+                    this.list_operation_amkr.push({ value: value.current_wagons_rent_operator_abbr_ru, text: value['current_wagons_rent_operator_abbr_' + App.Lang] });
+                }
+                // Формируем список грузов
+                var ac = this.list_arr_cargo.find(function (o) { return o.value === value.arrival_uz_vagon_id_group }.bind(this));
+                if (!ac) {
+                    this.list_arr_cargo.push({ value: value.arrival_uz_vagon_id_group, text: value['arrival_uz_vagon_cargo_group_name_' + App.Lang] });
+                }
+                // Формируем список станций отправления
+                var aest = this.list_arr_ext_station_to.find(function (o) { return o.value === value.arrival_uz_document_code_stn_from }.bind(this));
+                if (!aest) {
+                    this.list_arr_ext_station_to.push({ value: value.arrival_uz_document_code_stn_from, text: value['arrival_uz_document_station_from_name_' + App.Lang] });
+                }
+                // Формируем данные таблицы "Станция отправления-род груза"
+                var es = this.report_ext_station_ob.find(function (o) { return o.id_group === value.arrival_uz_vagon_id_group && o.code_stn_from === value.arrival_uz_document_code_stn_from }.bind(this));
+                if (!es) {
+                    this.report_ext_station_ob.push({
+                        code_stn_from: value.arrival_uz_document_code_stn_from,
+                        group_name: value['arrival_uz_document_station_from_name_' + App.Lang],
+                        id_group: value.arrival_uz_vagon_id_group,
+                        cargo_group_name: value['arrival_uz_vagon_cargo_group_name_' + App.Lang],
+                        count_wagon: 1,
+                        perent_wagon: 0,
+                    });
+                } else {
+                    es.count_wagon++;
+                }
+            }
+        }.bind(this));
+        this.persent_table(this.report_ext_station_ob, 'count_wagon', 'perent_wagon', count_wagon);
+        // вывод данных
+        this.table_residue_total_station_out.view(this.sort_table(this.report_ext_station_ob, 'code_stn_from', 'count_wagon', true));
+
+        // обновление списков отчета
+        if (!value_operation_amkr || value_operation_amkr.length === 0) {
+            this.buffer_operation_amkr_5 = JSON.parse(JSON.stringify(this.list_operation_amkr));
+            if (this.report_panel === 4) this.select_operation_amkr.update(this.sort_text(this.list_operation_amkr, "text"), -1);
+        }
+        if (!value_arr_cargo || value_arr_cargo.length === 0) {
+            this.buffer_arr_cargo_5 = JSON.parse(JSON.stringify(this.list_arr_cargo));
+            if (this.report_panel === 4) this.select_arr_cargo.update(this.sort_text(this.list_arr_cargo, "text"), -1);
+        }
+        if (!value_arr_ext_station_to || value_arr_ext_station_to.length === 0) {
+            this.buffer_arr_ext_station_to_5 = JSON.parse(JSON.stringify(this.list_arr_ext_station_to));
+            if (this.report_panel === 4) this.select_arr_ext_station_to.update(this.sort_text(this.list_arr_ext_station_to, "text"), -1);
+        }
+        var data = [];
+        $.each(this.report_ext_station_ob, function (key, element) {
+            var gn = data.find(function (o) { return o.name === element.group_name; });
+            if (gn === undefined) {
+                data.push({ "name": element.group_name, "value": element.count_wagon });
+            } else {
+                gn.value += element.count_wagon;
+            }
+        }.bind(this));
+        this.chart_data_residue_total_station_out = data;
+        this.view_chart_residue_total_station_out();
+
+        // Выход
+        if (typeof callback === 'function') {
+            callback();
+        }
+    };
+    //
+    //.....view_td_report.prototype.process_data_view_report_11_1_6
+    //.....view_td_report.prototype.process_data_view_report_11_1_7
+    //
     // Вывести данные по диаграмме "Остаток по роду вагона"
     view_td_report.prototype.view_chart_residue_total_genus = function () {
         if (this.report_panel === 3 && this.chart_data_residue_total_genus) {
@@ -13300,6 +13167,13 @@
             this.chart_residue_total_genus_station_amkr.view(this.chart_data_residue_total_genus_station_amkr);
         }
     };
+    // Вывести данные по диаграмме "Остаток по роду вагона на текущих станциях"
+    view_td_report.prototype.view_chart_residue_total_station_out = function () {
+        if (this.report_panel === 4 && this.chart_data_residue_total_station_out) {
+            this.chart_residue_total_station_out.view(this.chart_data_residue_total_station_out);
+        }
+    };
+
     // Действие кнопки обновим
     view_td_report.prototype.action_select_report_11_1 = function () {
         this.out_clear();
@@ -13325,6 +13199,12 @@
         if (this.report_panel === 3) {
             LockScreen(langView('vtdr_load_operating_balance', App.Langs));
             this.process_data_view_report_11_1_4(this.list_report_ob, function () {
+                LockScreenOff();
+            }.bind(this));
+        }
+        if (this.report_panel === 4) {
+            LockScreen(langView('vtdr_load_operating_balance', App.Langs));
+            this.process_data_view_report_11_1_5(this.list_report_ob, function () {
                 LockScreenOff();
             }.bind(this));
         }
@@ -13390,6 +13270,12 @@
             if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
             if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
             if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
+            if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
+            if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
+            if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
+            this.process_data_view_report_11_1_5(this.list_report_ob, function () {
+                LockScreenOff();
+            }.bind(this));
         }
         if (this.report_panel === 5) {
             this.buffer_outer_cars_6 = true;
@@ -13407,18 +13293,6 @@
             if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
             if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
         }
-        //if (this.switch_outer_cars) { this.switch_outer_cars.val(true); }
-        //if (this.switch_amkr_outer_cars) { this.switch_amkr_outer_cars.val(true); }
-        //if (this.switch_amkr_cisterns) { this.switch_amkr_cisterns.val(true); }
-
-        //if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
-        //if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
-        //if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
-        //if (this.select_genus) { this.select_genus.val(-1); }
-        //if (this.select_arr_cargo) { this.select_arr_cargo.val(-1); }
-        //if (this.select_arr_ext_station_to) { this.select_arr_ext_station_to.val(-1); }
-        //if (this.select_curr_station_amkr) { this.select_curr_station_amkr.val(-1); }
-        //if (this.select_curr_way) { this.select_curr_way.val(-1); }
     };
     //
     view_td_report.prototype.active_tabs_report_11 = function (new_id, old_id) {
@@ -13463,6 +13337,9 @@
                 this.buffer_amkr_outer_cars_5 = this.switch_amkr_outer_cars.val();
                 this.buffer_amkr_cisterns_5 = this.switch_amkr_cisterns.val();
                 this.buffer_outer_cars_5 = this.switch_outer_cars.val();
+                this.buffer_operation_amkr_value_5 = this.select_operation_amkr.val();
+                this.buffer_arr_cargo_value_5 = this.select_arr_cargo.val();
+                this.buffer_arr_ext_station_to_value_5 = this.select_arr_ext_station_to.val();
                 break;
             };
             case 'residue-total-cargo-arr': {
@@ -13547,6 +13424,17 @@
                 this.switch_amkr_outer_cars.val(this.buffer_amkr_outer_cars_5);
                 this.switch_amkr_cisterns.val(this.buffer_amkr_cisterns_5);
                 this.switch_outer_cars.val(this.buffer_outer_cars_5);
+                this.select_operation_amkr.enable();
+                this.select_operation_amkr.update(this.sort_text(this.buffer_operation_amkr_5, "text"), this.buffer_operation_amkr_value_5);
+                this.select_arr_condition.disable(true);
+                this.select_curr_condition.disable(true);
+                this.select_genus.disable(true);
+                this.select_arr_cargo.enable();
+                this.select_arr_cargo.update(this.sort_text(this.buffer_arr_cargo_5, "text"), this.buffer_arr_cargo_value_5);
+                this.select_arr_ext_station_to.enable();
+                this.select_arr_ext_station_to.update(this.sort_text(this.buffer_arr_ext_station_to_5, "text"), this.buffer_arr_ext_station_to_value_5);
+                this.select_curr_station_amkr.disable(true);
+                this.select_curr_way.disable(true);
                 break;
             };
             case 'residue-total-cargo-arr': {
@@ -13603,6 +13491,12 @@
         this.buffer_genus_value_4 = -1;
         this.buffer_curr_station_amkr_4 = [];
         this.buffer_curr_station_amkr_value_4 = -1;
+        this.buffer_operation_amkr_5 = [];
+        this.buffer_operation_amkr_value_5 = -1;
+        this.buffer_arr_cargo_5 = [];
+        this.buffer_arr_cargo_value_5 = -1;
+        this.buffer_arr_ext_station_to_5 = [];
+        this.buffer_arr_ext_station_to_value_5 = -1;
 
         this.list_operation_amkr = [];
         this.list_condition_arrival = [];
