@@ -1,11 +1,12 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime = convert(datetime,'2023-08-31 20:00:00',120)
+declare @date datetime = convert(datetime,'2023-08-30 20:00:00',120)
 
 --select * from ids.get_view_operating_balance_of_date(@date)
 
 	select 
 		 wir.id
+		 --,arr_doc_uz.[klient]
 		 --,out_sost.[date_outgoing]
 		,wir.num
 		,arr_car.[id] as arrival_car_id
@@ -268,7 +269,7 @@ declare @date datetime = convert(datetime,'2023-08-31 20:00:00',120)
 		--AND wim.id_way in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Ways] where [way_delete] is null and id_station in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].Directory_Station where station_delete is null))
 		--and dir_rod.rod_uz = 70
 		--and arr_wag_rent.[id_operator] <>  curr_wag_rent.[id_operator]
-		--and wir.num = 56857873
+		--and wir.num = 57311508
 		--and curr_dir_operator.[abbr_ru] = N'÷“À'
 		-- »ÒÍÎ˛˜ËÏ ÀŒ ŒÃŒ“»¬€
 		AND (dir_rod.rod_uz <> 90 or dir_rod.rod_uz is null) AND NOT arr_doc_uz.[klient] = 1 AND (NOT dir_curr_owg.[group] in ('amkr_vz') OR dir_curr_owg.[group] is null)
