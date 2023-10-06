@@ -93,7 +93,7 @@ select * from [IDS].[get_view_report_ob_of_date](@date)
 	--	--> Справочник Внешних станций (по прибытию from)
 	--	Left JOIN [IDS].[Directory_ExternalStation] as arr_ext_station_from ON arr_doc_uz.[code_stn_from] = arr_ext_station_from.code
 	--where 
-	--	wim.id in (SELECT max(ID) FROM IDS.WagonInternalMovement 
+	--	wim.id in (SELECT max(ID) FROM IDS.WagonInternalMovement
 	--		where  id_station <> 10 AND 
 	--			((outer_way_start is null AND (([way_start]<=@date and way_end>=@date) OR ([way_start]<=@date and way_end is null))) OR
 	--			(outer_way_start is not null AND ((outer_way_start<=@date and outer_way_end>=@date) OR (outer_way_start<=@date and outer_way_end is null))))
