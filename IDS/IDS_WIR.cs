@@ -9364,7 +9364,7 @@ namespace IDS
                     result.result = (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                     return result;
                 }
-                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); // && p.num == 74747239 
+                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); //59323980 && p.num == 97265573
                 if (list_out_cars == null || list_out_cars.Count() == 0)
                 {
                     result.result = (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки
@@ -9541,7 +9541,7 @@ namespace IDS
                             }
                             else
                             {
-                                tm_period = (DateTime)wufp.stop.AddSeconds(1) - (DateTime)wufp.date_adoption; // за первый период
+                                tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1) - (DateTime)wufp.date_adoption; // за первый период
                                 stage = 1;
                             }
                             // определим льготный период
@@ -9558,12 +9558,12 @@ namespace IDS
                         {
                             if (wufp.date_outgoing != null)
                             {
-                                tm_period = (DateTime)wufp.date_outgoing - (DateTime)wufp.start; // за последний период
+                                tm_period = ((DateTime)wufp.date_outgoing).AddMinutes(-1) - (DateTime)wufp.start; // за последний период
                                 stage = 3;
                             }
                             else
                             {
-                                tm_period = (DateTime)wufp.stop.AddSeconds(1) - (DateTime)wufp.start; // за промежуточный период период
+                                tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1)  - (DateTime)wufp.start; // за промежуточный период период
                                 stage = 2;
                             }
                         }
@@ -9574,6 +9574,7 @@ namespace IDS
                         if (wufp.hour_after_30 != null && wufp.hour_after_30 == true)
                         {
                             uz_wagon = true;
+                            rounding = false; //!!! Всегда
                             if (remaining_minutes_period >= 30 && !rounding)
                             {
                                 hour_period++;
