@@ -1726,6 +1726,7 @@
     <Content Include="Content\fontawesome-free\svgs\solid\z.svg" />
     <Content Include="Content\module\cblist_station.css" />
     <Content Include="Content\module\directory\edit_dir_operators_wagons.css" />
+    <Content Include="Content\module\directory\form_edit_wagon_addressing.css" />
     <Content Include="Content\module\directory\table_dir_operators_wagons.css" />
     <Content Include="Content\module\directory\table_dir_park_station.css" />
     <Content Include="Content\module\directory\table_dir_park_ways.css" />
@@ -1938,6 +1939,7 @@
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\module\directory\edit_dir_operators_wagons.js" />
+    <Content Include="Scripts\module\directory\form_edit_wagon_addressing.js" />
     <Content Include="Scripts\module\directory\table_directory.js" />
     <Content Include="Scripts\module\directory\table_dir_operators_wagons.js" />
     <Content Include="Scripts\module\directory\table_dir_park_ways.js" />
@@ -2139,6 +2141,7 @@
     <Content Include="Scripts\amcharts5\themes\Responsive.js.map" />
     <Content Include="Scripts\amcharts5\themes\Spirited.js.map" />
     <Content Include="Areas\Directory\Views\Home\UsageFee.cshtml" />
+    <Content Include="Areas\Directory\Views\Home\WagonAddressing.cshtml" />
     <None Include="_app_offline.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -2645,6 +2648,7 @@
     <Content Include="Scripts\view\directory\cargo_group.js" />
     <Content Include="Scripts\view\directory\cars.js" />
     <Content Include="Scripts\view\directory\countrys.js" />
+    <Content Include="Scripts\view\directory\main_wagon_addressing.js" />
     <Content Include="Scripts\view\directory\main_usage_fee.js" />
     <Content Include="Scripts\view\directory\main_park.js" />
     <Content Include="Scripts\view\directory\main_operators_wagons.js" />

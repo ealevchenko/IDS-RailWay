@@ -1,0 +1,77 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.wagon_addressing_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+
+
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/usage_fee.css">
+    <!-- модули -->
+    <link href="~/Content/module/directory/form_edit_wagon_addressing.css" rel="stylesheet" />
+    <link href="~/Content/module/wsd/table_incoming_cars.css" rel="stylesheet" />
+    <link href="~/Content/module/directory/table_directory.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/module/report/table_td_report.css" rel="stylesheet" />
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script>                 <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>   <!-- Форма сообщений подтверждения -->
+    <script src="~/Scripts/api/shared.js"></script>                     <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_server.js"></script>                     <!-- Работа с сервером библиотека методов API -->
+    <script src="~/Scripts/api/ids_direct.js"></script>
+    <script src="~/Scripts/api/ids_wsd.js"></script>
+
+    <script src="~/Scripts/module/directory/form_edit_wagon_addressing.js"></script>
+    <script src="~/Scripts/module/wsd/table_incoming_cars.js"></script>
+    <script src="~/Scripts/module/directory/table_directory.js"></script>
+    <script src="~/Scripts/module/report/table_td_report.js"></script>
+
+    <script src="~/Scripts/view/directory/main_wagon_addressing.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nb-incoming" aria-controls="nb-incoming" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-light" id="nb-wagon-addressing">
+
+        </div>
+        <div>
+            <label class="text-warning">@User.Identity.Name</label><br />
+            <label class="text-warning" id="curent_date"></label>
+        </div>
+        <div class="ml-1">
+            <a href="#" id="client_count" class="badge badge-primary">0</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row mt-1">
+        <div class="col-sm-12">
+            <div class="card border-dark mb-3">
+                <div class="card-header bg-secondary text-white" id="header-card-title">
+                    ИНДЕКС СОСТАВА:
+                </div>
+                <div class="card-body text-dark pl-3 pr-3 table-directory">
+                    <div class="row mt-1">
+                        <div class="col-sm-12" id="list-cars"> </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-dark">&copy; @DateTime.Now.Year ДАТП & ТД</div>
+            </div>
+
+        </div>
+    </div>
+</div>

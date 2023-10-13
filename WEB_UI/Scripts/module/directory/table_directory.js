@@ -52,6 +52,19 @@
             'ttdir_field_usage_fee_period_change': 'Время правки',
             'ttdir_field_usage_fee_period_change_user': 'Правил',
 
+            'tldir_field_num': '№ вагона',
+            'tldir_field_rod_abbr': 'Род.',
+            'tldir_field_arrival_operator_abbr': 'Оператор по отправке',
+            'tldir_field_station_from_abbr': 'Станция отправления',
+            'tldir_field_arrival_cargo_name': 'Груз прибытия',
+            'tldir_field_arrival_station_on': 'Следует на ст АМКР',
+            'tldir_field_arrival_name_division': 'Цех получатель',
+            'tldir_field_commercial_condition': 'Ком состояние',
+            'tldir_field_sertification_data': 'Серт. данные',
+            'tldir_field_arrival_uz_vagon_change': 'Дата правки',
+            'tldir_field_arrival_uz_vagon_change_user': 'правил',
+            'tldir_field_arrival_station_from_name': 'Станция отправления',
+
             'ttdir_title_yes': 'Да',
             'tldir_title_all': 'Все',
             'tldir_title_not_epd': 'Без ЭПД',
@@ -72,6 +85,7 @@
             'tldir_title_button_show_selection': 'Только выбранные',
             'tldir_title_button_select_all': 'Выбрать все',
             'tldir_title_button_select_none': 'Убрать все',
+            'tldir_title_edit_wagon': 'Править',
         },
         'en':  //default language: English
         {
@@ -339,6 +353,106 @@
             className: 'dt-body-center',
             title: langView('ttdir_field_usage_fee_period_change_user', App.Langs), width: "100px", orderable: false, searchable: false
         },
+        // arrival_cars
+        {
+            field: 'num',
+            data: function (row, type, val, meta) {
+                return row.num;
+            },
+            className: 'dt-body-left mw-50',
+            title: langView('tldir_field_num', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'rod_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_rod_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('tldir_field_rod_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('tldir_field_arrival_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'station_from_abbr',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_from_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('tldir_field_station_from_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_arrival_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_station_on',
+            data: function (row, type, val, meta) {
+                return row['arrival_sostav_station_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_arrival_station_on', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_name_division',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_name_division_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('tldir_field_arrival_name_division', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Ком состояние
+        {
+            field: 'commercial_condition',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_commercial_condition_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_commercial_condition', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Ком сертиыикационные данные
+        {
+            field: 'sertification_data',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_sertification_data_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_sertification_data', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // изменена
+        {
+            field: 'arrival_uz_vagon_change',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_change ? moment(row.arrival_uz_vagon_change).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tldir_field_arrival_uz_vagon_change', App.Langs), width: "100px", orderable: true, searchable: true,
+        },
+        {
+            field: 'arrival_uz_vagon_change_user',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_vagon_change_user;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('tldir_field_arrival_uz_vagon_change_user', App.Langs), width: "100px", orderable: true, searchable: true,
+        },
+        {
+            field: 'arrival_station_from_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_document_station_from_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('tldir_field_arrival_station_from_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -409,6 +523,11 @@
             extend: 'selectNone',
             text: langView('tldir_title_button_select_none', App.Langs),
         },
+        {
+            button: 'edit_wagon',
+            text: langView('tldir_title_edit_wagon', App.Langs),
+            enabled: true
+        },
     ];
 
     var pageTotal = 0;
@@ -475,6 +594,23 @@
 
         return init_columns_detali(collums, list_collums);
     };
+
+    table_directory.prototype.init_columns_arrival_cars = function () {
+        var collums = [];
+        collums.push({ field: 'numeration', title: null, class: null });
+        collums.push({ field: 'num', title: null, class: null });
+        collums.push({ field: 'rod_abbr', title: null, class: null });
+        collums.push({ field: 'arrival_operator_abbr', title: null, class: null });
+        collums.push({ field: 'arrival_station_from_name', title: null, class: null });
+        collums.push({ field: 'arrival_cargo_name', title: null, class: null });
+        collums.push({ field: 'arrival_station_on', title: null, class: null });
+        collums.push({ field: 'arrival_name_division', title: null, class: null });
+        collums.push({ field: 'commercial_condition', title: null, class: null });
+        collums.push({ field: 'sertification_data', title: null, class: null });
+        collums.push({ field: 'arrival_uz_vagon_change', title: null, class: null });
+        collums.push({ field: 'arrival_uz_vagon_change_user', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_directory.prototype.init_button_detali = function () {
@@ -533,6 +669,32 @@
         buttons.push({ name: 'show_selection', action: null });
         buttons.push({ name: 'select_all', action: null });
         buttons.push({ name: 'select_none', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+
+    table_directory.prototype.init_button_arrival_cars = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        buttons.push({ name: 'show_selection', action: null });
+        buttons.push({ name: 'select_all', action: null });
+        buttons.push({ name: 'select_none', action: null });
+        buttons.push({
+            name: 'edit_wagon',
+            action: function (e, dt, node, config) {
+                if (typeof this.settings.fn_action_edit_wagon === 'function') {
+                    this.settings.fn_action_edit_wagon(this.selected_rows);
+                }
+
+            }.bind(this)
+        });
         return init_buttons(buttons, list_buttons);
     };
     //-------------------------------------------------------------------------------------------
@@ -600,15 +762,38 @@
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 2; // Выбирать одну
                 this.table_select = {
                     style: 'multi ',
                 };
                 this.autoWidth = true;
-                this.scrollX = true,
+                this.scrollX = true;
                 this.table_columns = this.init_columns_usage_fee_period();
                 this.table_buttons = this.init_button_usage_fee_period();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'arrival_cars': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('tldir_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 2; // Выбирать одну
+                this.table_select = {
+                    style: 'multi ',
+                };
+                this.autoWidth = true;
+                this.scrollX = true;
+                this.table_columns = this.init_columns_arrival_cars();
+                this.table_buttons = this.init_button_arrival_cars();
                 this.dom = 'Bfrtip';
                 break;
             };
@@ -640,6 +825,7 @@
             fn_init: null,
             fn_select_rows: null,
             fn_action_view_wagons: null,
+            fn_action_edit_wagon: null,
         }, options);
         //
         //this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
@@ -765,6 +951,17 @@
                 }.bind(this));
                 break;
             };
+            case 'arrival_cars': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
         };
         // На проверку окончания инициализации
         //----------------------------------
@@ -819,6 +1016,13 @@
         this.select_rows();
         this.enable_button();
         //LockScreenOff();
+    };
+    //
+    table_directory.prototype.clear = function () {
+        if (this.obj_t_report) {
+            this.obj_t_report.clear();
+            this.obj_t_report.draw();
+        };
     };
     //
     table_directory.prototype.view_footer = function (data) {
