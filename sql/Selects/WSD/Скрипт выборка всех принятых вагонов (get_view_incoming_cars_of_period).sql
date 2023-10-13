@@ -1,7 +1,8 @@
+	use [KRR-PA-CNT-Railway]
 	declare @start datetime = convert(datetime,'2023-06-10 20:01:00',120) 
 	declare @stop datetime = convert(datetime,'2023-06-11 20:00:00',120)
 
-    select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
+    --select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
 
 	select 
 		 arr_car.[id] as arrival_car_id
