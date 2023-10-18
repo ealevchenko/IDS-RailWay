@@ -38,65 +38,26 @@
             'fewa_title_placeholder_sertification_data': 'Серт.данные.',
             //'fewa_title_form_add': 'Добавить состав',
             'fewa_title_form_edit': 'Заадресовка вагонов',
-
-
-
-            'fewa_title_form_arrival': 'Принять состав',
+            'fewa_mess_error_edit': 'Ошибка выполнения операции "Заадресовка вагонов", код ошибки = ',
             'fewa_mess_init_module': 'Инициализация модуля(form_edit_wagon_addressing)...',
             'fewa_mess_operation_run': 'Выполняю операцию...',
-            'fewa_error_date_arrival': 'Укажите правильно дату и время',
-            'fewa_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
-            'fewa_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
-            'fewa_error_date_arrival_not_deff_date_adoption': 'Дата и время прибытия должны быть не меньше {0} мин. и не равно {1} времени приема',
-            'fewa_error_date_arrival_not_deff_date_adoption_act': 'Дата и время прибытия по акту должны быть не меньше {0} мин. или больше {1} мин. от времени приема.',
-            'fewa_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
-            'fewa_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
-            'fewa_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
+
+            //'fewa_title_form_arrival': 'Принять состав',
+
+
+            //'fewa_error_date_arrival': 'Укажите правильно дату и время',
+            //'fewa_error_date_arrival_not_deff_date_curent': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
+            //'fewa_error_date_arrival_not_deff_date_curent_arrival': 'Дата и время прибытия должны быть не меньше {0} мин. или больше {1} мин. от прошлой даты прибытия {2}',
+            //'fewa_error_date_arrival_not_deff_date_adoption': 'Дата и время прибытия должны быть не меньше {0} мин. и не равно {1} времени приема',
+            //'fewa_error_date_arrival_not_deff_date_adoption_act': 'Дата и время прибытия по акту должны быть не меньше {0} мин. или больше {1} мин. от времени приема.',
+            //'fewa_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
+            //'fewa_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
+            //'fewa_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
 
         },
         'en':  //default language: English
         {
-            'fewa_title_edit': 'OK',
-            'fewa_title_cancel': 'Cancel',
 
-            'fewa_title_label_num_doc': 'Document#:',
-            'fewa_title_placeholder_num_doc': 'Document#',
-            'fewa_title_label_train': 'Train #:',
-            'fewa_title_placeholder_train': 'Train#',
-            'fewa_title_label_composition_index': 'Train index',
-            'fewa_title_placeholder_composition_index': 'Train Index',
-            'fewa_title_label_date_arrival': 'Date and time of arrival:',
-            'fewa_title_placeholder_date_arrival': 'Arrival Time',
-            'fewa_title_label_date_adoption': 'Date and time of admission:',
-            'fewa_title_placeholder_date_adoption': 'Adoption Time',
-            'fewa_title_label_date_adoption_act': 'Date and time of admission (act):',
-            'fewa_title_placeholder_date_adoption_act': 'Adoption time (act)',
-            'fewa_title_label_station_from': 'Arrived from station:',
-            'fewa_title_placeholder_station_from': 'Arrival Station:',
-            'fewa_title_label_station_on': 'Accept to station:',
-            'fewa_title_placeholder_station_on': 'Accept to station:',
-            'fewa_title_label_way': 'Take to path:',
-            'fewa_title_placeholder_way': 'Take to path:',
-            'fewa_title_label_numeration': 'Numbering starts from:',
-            'fewa_title_placeholder_numeration': 'Accept on path:',
-            'fewa_title_head': 'Head',
-            'fewa_title_tail': 'Tail',
-
-            'fewa_title_label_note': 'Note:',
-            'fewa_title_placeholder_note': 'Note',
-            'fewa_title_form_add': 'Add Form',
-            'fewa_title_form_edit': 'Edit Composition',
-            'fewa_title_form_arrival': 'Accept composition',
-            'fewa_mess_init_module': 'Module initialization(form_edit_wagon_addressing)...',
-            'fewa_mess_operation_run': 'Performing an operation...',
-            'fewa_error_date_arrival': 'Please enter the correct date and time',
-            'fewa_error_date_arrival_not_deff_date_current': 'Date and time of arrival must be at least {0} min. or more {1} min. from current time',
-            'fewa_error_date_arrival_not_deff_date_current_arrival': 'Date and time of arrival must be at least {0} min. or more {1} min. from last arrival date {2}',
-            'fewa_error_date_arrival_not_deff_date_adoption': 'Date and time of arrival must be at least {0} min. and not equal to {1} reception time',
-            'fewa_error_date_arrival_not_deff_date_adoption_act': 'The date and time of arrival according to the act must be at least {0} min. or more {1} min. from the time of admission.',
-            'fewa_mess_error_add_sostav': 'Error performing "Create arrival composition" operation, error code = ',
-            'fewa_mess_error_edit_sostav': 'Error performing "Update arrival composition" operation, error code = ',
-            'fewa_mess_error_operation_arrival_sostav': 'Error performing operation "ACCEPT COMPOSITION TO AMCR", error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -200,7 +161,7 @@
                 maxlength: null,
                 required: true,
                 control: null,
-                list: this.list_division,
+                list: this.sort_text(this.list_division, 'text'),
                 select: function (e, ui) {
                     e.preventDefault();
                     // Обработать выбор
@@ -228,9 +189,9 @@
                 label: langView('fewa_title_label_commercial_condition', App.Langs),
                 placeholder: langView('fewa_title_placeholder_commercial_condition', App.Langs),
                 maxlength: null,
-                required: true,
+                required: false,
                 control: null,
-                list: this.list_commercial_condition,
+                list: this.sort_text(this.list_commercial_condition, 'text'),
                 select: function (e, ui) {
                     e.preventDefault();
                     // Обработать выбор
@@ -258,9 +219,9 @@
                 label: langView('fewa_title_label_sertification_data', App.Langs),
                 placeholder: langView('fewa_title_placeholder_sertification_data', App.Langs),
                 maxlength: null,
-                required: true,
+                required: false,
                 control: null,
-                list: this.list_sertification_data,
+                list: this.sort_text(this.list_sertification_data, 'text'),
                 select: function (e, ui) {
                     e.preventDefault();
                     // Обработать выбор
@@ -290,7 +251,7 @@
                 maxlength: null,
                 required: true,
                 control: null,
-                list: this.list_station_from,
+                list: this.sort_text(this.list_station_from, 'text'),
                 select: function (e, ui) {
                     e.preventDefault();
                     // Обработать выбор
@@ -325,8 +286,15 @@
                 fn_init: function (init) {
                     // Окончание инициализации
                     // Добавим в мондальное окно форму правки
-                    if (this.form && this.form.$form_add && this.form.$form_edit) {
-                        this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
+                    //if (this.form && this.form.$form_add && this.form.$form_edit) {
+                    //    this.mf_edit.$body.append(this.form.$form_add).append(this.form.$form_edit);
+                    //}
+                    //this.form.$form_edit.find('select option[value=-1]').remove();
+                    this.form.$form_edit.find('select option[value=-1]').after('<option value="9999999">НЕ ПРАВИТЬ!</option>');
+                    //;
+
+                    if (this.form && this.form.$form_edit) {
+                        this.mf_edit.$body.append(this.form.$form_edit);
                     }
                     if (typeof this.settings.fn_init === 'function') {
                         this.settings.fn_init(this.init);
@@ -349,66 +317,8 @@
     // Уточняющая валидация данных 
     form_edit_wagon_addressing.prototype.validation = function (result) {
         var valid = true;
-        //var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
-        //if (user_adm) return valid;
-        ////// Сдесь можно проверить дополнительно
-        //var current = moment();
-        //var current_date_arrival = result.old && result.old.date_arrival ? moment(result.old.date_arrival) : null;
-        //var date_arrival = moment(result.new.date_arrival);
-        //var date_adoption = result.new.date_adoption ? moment(result.new.date_adoption) : null;
-        //var date_adoption_act = result.new.date_adoption_act ? moment(result.new.date_adoption_act) : null;
-
-        //if (date_arrival.isValid) {
-        //    // Если это операция добавить, проверим на время
-        //    if (result.old === null) {
-        //        // Проверим временной период предъявления - будущее + Прошлое
-        //        var minute_arrival = current.diff(date_arrival, 'minute');
-        //        //- зашло в будущее + зашло в прошлое
-        //        if (minute_arrival >= max_err_date_arrival || minute_arrival <= min_err_date_arrival) {
-        //            if (this.settings.mode === 0) {
-        //                this.form.set_object_error('date_arrival', langView('fewa_error_date_arrival_not_deff_date_curent', App.Langs).format(min_err_date_arrival, max_err_date_arrival));
-        //            } else {
-        //                this.form.set_object_error('date_adoption', langView('fewa_error_date_arrival_not_deff_date_curent', App.Langs).format(min_err_date_arrival, max_err_date_arrival));
-        //            }
-        //            valid = valid & false;
-        //        }
-        //    } else {
-        //        // Форма правим, проверим чтобы дата прибытия была меньше даты принятия на определенное время
-        //        if (date_adoption !== null && date_adoption.isValid) {
-        //            // Есть дата приема, тогда пляшем вокруг ее
-        //            // Проверим временной период предъявления - будущее + Прошлое
-        //            var minute_adoption = date_adoption.diff(date_arrival, 'minute');
-        //            //- зашло в будущее + зашло в прошлое
-        //            if (minute_adoption >= max_err_date_adoption || minute_adoption < 0) {
-        //                this.form.set_object_error('date_arrival', langView('fewa_error_date_arrival_not_deff_date_adoption', App.Langs).format(max_err_date_adoption, date_adoption.format(format_datetime)));
-        //                valid = valid & false;
-        //            }
-        //            // Проверим дату приема по акту
-        //            if (date_adoption_act !== null && date_adoption_act.isValid) {
-        //                var minute_adoption = date_adoption_act.diff(date_adoption, 'minute');
-        //                //- зашло в будущее + зашло в прошлое
-        //                if (minute_adoption >= max_err_date_arrival_act || minute_adoption < min_err_date_adoption_act) {
-        //                    this.form.set_object_error('date_adoption_act', langView('fewa_error_date_arrival_not_deff_date_adoption_act', App.Langs).format(max_err_date_arrival_act, min_err_date_adoption_act));
-        //                    valid = valid & false;
-        //                }
-        //            }
-        //        } else {
-        //            // Нет дата приема, тогда пляшем вокруг старой даты прибытия
-        //            if (current_date_arrival.isValid) {
-        //                // Проверим временной период предъявления - будущее + Прошлое
-        //                var minute_arrival = current_date_arrival.diff(date_arrival, 'minute');
-        //                //- зашло в будущее + зашло в прошлое
-        //                if (minute_arrival >= max_err_date_arrival || minute_arrival <= min_err_date_arrival) {
-        //                    this.form.set_object_error('date_arrival', langView('fewa_error_date_arrival_not_deff_date_curent_arrival', App.Langs).format(min_err_date_arrival, max_err_date_arrival, current_date_arrival.format(format_datetime)));
-        //                    valid = valid & false;
-        //                }
-        //            }
-        //        }
-        //    }
-        //} else {
-        //    this.form.set_object_error('date_arrival', langView('fewa_error_date_arrival', App.Langs));
-        //    valid = valid & false;
-        //}
+        var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        if (user_adm) return valid;
         return valid;
     };
     // Открыть форму добавить
@@ -434,7 +344,7 @@
         }.bind(this));
         this.form.set('id_division', id_division_on_amkr);
         this.form.set('id_commercial_condition', id_commercial_condition);
-        this.form.set('id_certification_data', id_certification_data);
+        this.form.set('id_sertification_data', id_certification_data);
         this.form.set('code_stn_from', code_stn_from);
     };
     // Сохранить объект
@@ -445,73 +355,34 @@
     // Изменить объект
     form_edit_wagon_addressing.prototype.update = function (data) {
         LockScreen(langView('fewa_mess_operation_run', App.Langs));
-        // Добавить или править состав
-        if (this.settings.mode === 0) {
-            if (data.old === null) {
-                data.new.create = moment().format("YYYY-MM-DDThh:mm:ss");
-                data.new.create_user = App.User_Name;
-                // Добавить
-                this.ids_wsd.postIncomingSostav(data.new, function (result) {
-                    if (result > 0) {
-                        this.mf_edit.close(); // закроем форму
-                        if (typeof this.settings.fn_edit === 'function') {
-                            this.settings.fn_edit({ data: data, result: result });
-                        }
-                        LockScreenOff();
-                    } else {
-                        LockScreenOff();
-                        this.mf_edit.out_error(langView('fewa_mess_error_add_sostav', App.Langs) + result);
-                    }
-                }.bind(this));
-            } else {
-                // Править
-                data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
-                data.new.change_user = App.User_Name;
-                this.ids_wsd.putIncomingSostav(data.new, function (result) {
-                    if (result > 0) {
-                        this.mf_edit.close(); // закроем форму
-                        if (typeof this.settings.fn_edit === 'function') {
-                            this.settings.fn_edit({ data: data, result: result });
-                        }
-                        LockScreenOff();
-                    } else {
-                        LockScreenOff();
-                        this.mf_edit.out_error(langView('fewa_mess_error_edit_sostav', App.Langs) + result);
-                    }
-                }.bind(this));
-            }
+        var list_arrival_uz_vagon_id = [];
+        $.each(data.old, function (i, el) {
+            list_arrival_uz_vagon_id.push(el.arrival_uz_vagon_id);
+        }.bind(this));
+        var id_division_on_amkr = this.form.val('id_division');
+        var id_commercial_condition = this.form.val('id_commercial_condition');
+        var id_certification_data = this.form.val('id_sertification_data');
+        var code_stn_from = this.form.val('code_stn_from');
+        var operation = {
+            id_division_on_amkr: id_division_on_amkr === "9999999" ? -1 : id_division_on_amkr,
+            id_commercial_condition: id_commercial_condition === "9999999" ? -1 : (id_commercial_condition === "-1" ? null : id_commercial_condition),
+            id_certification_data: id_certification_data === "9999999" ? -1 : (id_certification_data === "-1" ? null : id_certification_data),
+            code_stn_from: code_stn_from === "9999999" ? -1 : code_stn_from,
+            list_arrival_uz_vagon_id: list_arrival_uz_vagon_id,
+            user: App.User_Name,
         }
-        // Принять состав на АМКР
-        if (this.settings.mode === 1) {
-            var operation = {
-                id_arrival_sostav: data.new.id,
-                num_doc: Number(data.new.num_doc),
-                train: data.new.train,
-                composition_index: data.new.composition_index,
-                date_arrival: data.new.date_arrival,
-                date_adoption: data.new.date_adoption,
-                date_adoption_act: data.new.date_adoption_act,
-                id_station_from: data.new.id_station_from,
-                id_station_on: data.new.id_station_on,
-                id_way: data.new.id_way,
-                numeration: data.new.numeration === 1 ? true : false,
-                count: data.new.count,
-                user: App.User_Name,
-            }
-            // Выполним операцию "Принять состав на АМКР"
-            this.ids_wsd.postOperationIncomingSostav(operation, function (result) {
-                if (result > 0) {
-                    this.mf_edit.close(); // закроем форму
-                    if (typeof this.settings.fn_edit === 'function') {
-                        this.settings.fn_edit({ data: data, result: result });
-                    }
-                    //LockScreenOff();
-                } else {
-                    LockScreenOff();
-                    this.mf_edit.out_error(langView('fewa_mess_error_operation_arrival_sostav', App.Langs) + result);
+        this.ids_wsd.postChangeWagonAddressing(operation, function (result) {
+            if (result > 0) {
+                this.mf_edit.close(); // закроем форму
+                if (typeof this.settings.fn_edit === 'function') {
+                    this.settings.fn_edit({ data: data, result: result });
                 }
-            }.bind(this));
-        }
+                LockScreenOff();
+            } else {
+                LockScreenOff();
+                this.mf_edit.out_error(langView('fewa_mess_error_edit', App.Langs) + result);
+            }
+        }.bind(this));
     };
     // Очистить сообщения
     form_edit_wagon_addressing.prototype.out_clear = function () {
@@ -552,6 +423,18 @@
             this.form = null;
         }
     };
+
+    form_edit_wagon_addressing.prototype.sort_text = function (list, name) {
+        return list.sort(function (a, b) {
+            var nameA = a[name] !== null ? a[name].toLowerCase() : '',
+                nameB = b[name] !== null ? b[name].toLowerCase() : ''
+            if (nameA < nameB) //сортируем строки по возрастанию
+                return -1
+            if (nameA > nameB)
+                return 1
+            return 0 // Никакой сортировки
+        });
+    }
 
     App.form_edit_wagon_addressing = form_edit_wagon_addressing;
 

@@ -9110,6 +9110,54 @@ namespace IDS
         }
         #endregion
 
+        #region Сервис "Заадресовка вагонов"
+        public int ServiceChangeWagonAddressing(int id_division_on_amkr, int? id_commercial_condition, int? id_certification_data, int code_stn_from, List<int> list_arrival_uz_vagon_id, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDbContext context = new EFDbContext();
+                if (list_arrival_uz_vagon_id == null || list_arrival_uz_vagon_id.Count() == 0) return (int)errors_base.not_input_list_wagons;  // Не указан список вагонов
+                EFArrival_UZ_Vagon ef_arr_uz_vag = new EFArrival_UZ_Vagon(context);
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                foreach (int id in list_arrival_uz_vagon_id)
+                {
+                    Arrival_UZ_Vagon arr_uz_vag = ef_arr_uz_vag.Context.Where(v => v.id == id).FirstOrDefault();
+                    if (arr_uz_vag == null) return (int)errors_base.not_inp_uz_vag_db;  // В базе данных нет записи документа на вагон.
+                    Arrival_UZ_Document arr_uz_doc = ef_arr_uz_doc.Context.Where(v => v.id == arr_uz_vag.id_document).FirstOrDefault();
+                    if (arr_uz_doc == null) return (int)errors_base.not_inp_uz_doc_db;  // В базе данных нет записи документа на состав.
+                    arr_uz_vag.id_division_on_amkr = id_division_on_amkr != -1 ? id_division_on_amkr : arr_uz_vag.id_division_on_amkr;
+                    arr_uz_vag.id_commercial_condition = id_commercial_condition != -1 ? id_commercial_condition : arr_uz_vag.id_commercial_condition;
+                    arr_uz_vag.id_certification_data = id_certification_data != -1 ? id_certification_data : arr_uz_vag.id_certification_data;
+                    if (id_division_on_amkr != -1 && id_commercial_condition != -1 && id_certification_data != -1)
+                    {
+                        arr_uz_vag.change = DateTime.Now;
+                        arr_uz_vag.change_user = user;
+                    }
+                    ef_arr_uz_vag.Update(arr_uz_vag);
+                    arr_uz_doc.code_stn_from = code_stn_from != -1 ? code_stn_from : arr_uz_doc.code_stn_from;
+                    if (code_stn_from != -1)
+                    {
+                        arr_uz_doc.change = DateTime.Now;
+                        arr_uz_doc.change_user = user;
+                    }
+                    ef_arr_uz_doc.Update(arr_uz_doc);
+                }
+                return context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ServiceChangeWagonAddressing(id_division_on_amkr={0}, id_commercial_condition={1}, id_certification_data={2}, code_stn_from={3}, list_arrival_uz_vagon_id={4}, user={5})",
+                    id_division_on_amkr, id_commercial_condition, id_certification_data, code_stn_from, list_arrival_uz_vagon_id, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        #endregion
+
         #region Сервис "Расчет платы за пользование"
         /// <summary>
         /// Класс данных периоды ставок по вагону
@@ -9563,7 +9611,7 @@ namespace IDS
                             }
                             else
                             {
-                                tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1)  - (DateTime)wufp.start; // за промежуточный период период
+                                tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1) - (DateTime)wufp.start; // за промежуточный период период
                                 stage = 2;
                             }
                         }

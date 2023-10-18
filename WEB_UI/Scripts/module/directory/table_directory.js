@@ -679,7 +679,7 @@
         buttons.push({
             name: 'refresh',
             action: function (e, dt, node, config) {
-                //this.action_refresh();
+               this.action_refresh();
             }.bind(this)
         });
         buttons.push({ name: 'page_length', action: null });
@@ -823,9 +823,11 @@
             link_num: false,
             ids_dir: null,
             fn_init: null,
+            fn_refresh: null,
             fn_select_rows: null,
             fn_action_view_wagons: null,
             fn_action_edit_wagon: null,
+
         }, options);
         //
         //this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
@@ -1115,6 +1117,13 @@
             }
         }.bind(this));
         this.tables_detali = {};
+    };
+    // Выполнить операцию обновить
+    table_directory.prototype.action_refresh = function () {
+        this.out_clear();
+        if (typeof this.settings.fn_refresh === 'function') {
+            this.settings.fn_refresh();
+        }
     };
     //
     App.table_directory = table_directory;

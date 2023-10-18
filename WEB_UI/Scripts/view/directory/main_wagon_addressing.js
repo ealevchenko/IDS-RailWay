@@ -23,6 +23,8 @@
             'mwa_card_header_detali_sostav': 'СОСТАВ [№ поезда:{0}, индекс поезда:{1}, дата прибытия :{2}, дата приема :{3}]',
 
             'mwa_mess_not_id_sostav': 'Состав не выбран, не определен id',
+            'mwa_mess_ok_operation': 'Операция "ЗААДРЕСОВКА ВАГОНОВ" - Выполнена',
+            'mwa_mess_error_operation': 'Ошибка выполнения операции "ЗААДРЕСОВКА ВАГОНОВ", код ошибки :',
 
         },
         'en':  //default language: English
@@ -95,7 +97,6 @@
             $('a#client_count').text(count);
         });
     }
-
 
     var $form_select = $('div#nb-wagon-addressing');
     var $header_card_tittle = $('div#header-card-title');
@@ -195,6 +196,16 @@
         }
     };
 
+    // Выполнить операцию обновить
+    var action_refresh = function (cb_refresh) {
+        out_clear();
+        update(function () {
+            if (typeof cb_refresh === 'function') {
+                cb_refresh();
+            }
+        }.bind(this));
+    };
+
     // Показать ошибки
     var out_error = function (message) {
         if (alert) {
@@ -271,8 +282,10 @@
                 title: null,
                 icon: 'fas fa-retweet',
                 select: function (e, ui) {
-                    event.preventDefault();
-                    this.update();
+                    e.preventDefault();
+                    update(function () {
+                        LockScreenOff();
+                    }.bind(this));
                 }.bind(this),
             };
             var fields = [];
@@ -287,7 +300,6 @@
             $form_select.append(form_panel.$form);
 
             // Форма править состав по приему ===============================================================================
-
             fewa.init({
                 mode: 0,
                 alert: alert,
@@ -301,24 +313,18 @@
                     //----------------------------------
                 }.bind(this),
                 fn_add: function (result) {
-                    //this.out_clear();
-                    //this.action_refresh(function () {
-                    //    if (result && result.result > 0) {
-                    //        this.out_info(langView('tis_mess_ok_operation_add_sostav', App.Langs));
-                    //    } else {
-                    //        this.out_info(langView('tis_mess_error_operation_add_sostav', App.Langs));
-                    //    }
-                    //}.bind(this));
+
                 }.bind(this),
                 fn_edit: function (result) {
-                    //this.out_clear();
-                    //this.action_refresh(function () {
-                    //    if (result && result.result > 0) {
-                    //        this.out_info(langView('tis_mess_ok_operation_edit_sostav', App.Langs));
-                    //    } else {
-                    //        this.out_info(langView('tis_mess_error_operation_edit_sostav', App.Langs));
-                    //    }
-                    //}.bind(this));
+                    out_clear();
+                    action_refresh(function () {
+                        if (result && result.result > 0) {
+                            out_info(langView('mwa_mess_ok_operation', App.Langs));
+                        } else {
+                            out_info(langView('mwa_mess_error_operation', App.Langs));
+                        }
+                        LockScreenOff();
+                    }.bind(this));
                 }.bind(this),
             });
             // Инициализация модуля "Таблица операторов вагонов"
@@ -331,6 +337,11 @@
                 fn_init: function () {
 
                 },
+                fn_refresh: function () {
+                    action_refresh(function () {
+                        LockScreenOff();
+                    }.bind(this));
+                },
                 fn_action_view_detali: function (rows) {
 
                 },
@@ -339,11 +350,11 @@
                 }.bind(this),
                 fn_action_edit_wagon: function (rows) {
                     out_clear();
-                    fewa.edit(rows);
+                    if (rows !== null && rows.length > 0) {
+                        fewa.edit(rows);
+                    }
                 },
-
             });
-
             //
             load_default();
 

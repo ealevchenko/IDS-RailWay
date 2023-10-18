@@ -422,7 +422,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         public string current_station_amkr_name_ru { get; set; }
 
-         public string current_station_amkr_name_en { get; set; }
+        public string current_station_amkr_name_en { get; set; }
 
         public string current_station_amkr_abbr_ru { get; set; }
         public string current_station_amkr_abbr_en { get; set; }
@@ -1211,6 +1211,18 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     }
     #endregion
 
+    #region СЕРВИС Заадресовка вагонов
+    public class OperationWagonAddressing
+    {
+        public int id_division_on_amkr { get; set; }
+        public int? id_commercial_condition { get; set; }
+        public int? id_certification_data { get; set; }
+        public int code_stn_from { get; set; }
+        public List<int> list_arrival_uz_vagon_id { get; set; }
+        public string user { get; set; }
+    }
+    #endregion
+
     #region СЕРВИС Плата за пользование
     public class OperationChangeUsageFeePeriod
     {
@@ -1694,7 +1706,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                db.Database.CommandTimeout = 300;                
+                db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_station", id_station);
                 string sql = "select * from [IDS].[get_view_send_sostav_of_outer_ways](@id_station) order by from_operation_end desc";
                 List<view_outer_way_sostav> list = db.Database.SqlQuery<view_outer_way_sostav>(sql, id).ToList();
@@ -1714,7 +1726,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         {
             try
             {
-                db.Database.CommandTimeout = 300;                   
+                db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter d_start = new System.Data.SqlClient.SqlParameter("@start", start);
                 System.Data.SqlClient.SqlParameter d_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 string sql = "select * from [IDS].[get_view_sostav_of_period_operation_send](@start, @stop) order by from_operation_end desc";
@@ -1788,7 +1800,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter p_date = new System.Data.SqlClient.SqlParameter("@date", date);
                 string sql = "select * from [IDS].[get_view_operating_balance_of_date](@date)";
-                List<view_operating_balance> list = db.Database.SqlQuery<view_operating_balance>(sql,p_date).ToList();
+                List<view_operating_balance> list = db.Database.SqlQuery<view_operating_balance>(sql, p_date).ToList();
                 this.db.Database.CommandTimeout = null;
                 return Ok(list);
             }
@@ -2315,6 +2327,26 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.ServiceChangeCommercialCondition(value.id_wir, value.id_condition_arrival, value.note, value.distinguish, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        #endregion
+
+        #region СЕРВИС Заадресовка вагонов
+        // POST api/ids/rwt/wsd/service/operation/wagon_addressing
+        [HttpPost]
+        [Route("service/operation/wagon_addressing")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostServiceChangeWagonAddressing([FromBody] OperationWagonAddressing value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.ServiceChangeWagonAddressing(value.id_division_on_amkr, value.id_commercial_condition, value.id_certification_data, value.code_stn_from, value.list_arrival_uz_vagon_id, value.user);
                 return Ok(result);
             }
             catch (Exception e)
