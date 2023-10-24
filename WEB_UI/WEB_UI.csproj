@@ -2663,7 +2663,6 @@
     <Content Include="Scripts\view\directory\park_state.js" />
     <Content Include="Scripts\view\directory\present_wagon_marking.js" />
     <Content Include="Scripts\view\directory\wagon_marking.js" />
-    <Content Include="Scripts\view\directory\search_wagon.js" />
     <Content Include="Scripts\view\idsmors\electronic_cards.js" />
     <Content Include="Scripts\view\idsmors\report_wagons.js" />
     <Content Include="Scripts\view\idsmors\park_wagons.js" />
