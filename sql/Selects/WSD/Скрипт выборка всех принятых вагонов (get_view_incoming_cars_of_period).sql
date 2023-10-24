@@ -1,6 +1,6 @@
 	use [KRR-PA-CNT-Railway]
-	declare @start datetime = convert(datetime,'2023-06-10 20:01:00',120) 
-	declare @stop datetime = convert(datetime,'2023-06-11 20:00:00',120)
+declare @start datetime = Convert(datetime, '2023-10-08 22:01:00', 120)
+declare @stop datetime = Convert(datetime, '2023-10-09 20:00:00', 120)
 
     --select * from [IDS].[get_view_incoming_cars_of_period](@start, @stop)
 
@@ -347,7 +347,8 @@
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Äîêóìåíòû SAP Âõîäÿùàÿ ïîñòàâêà
 		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
-		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON arr_car.id = sap_is.id_arrival_car
+		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON arr_car.id = sap_is.id_arrival_car
+		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON sap_is.id = (SELECT TOP (1) id FROM [IDS].[SAPIncomingSupply] where [id_arrival_car] = arr_car.id order by [close] desc)
 		 --==== ÈÍÑÒÐÓÊÒÈÂÍÛÅ ÏÈÑÜÌÀ =====================================================================
 		--> Ïåðå÷åíü âàãîíîâ ïî ïèñüìà
 		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
@@ -436,3 +437,4 @@
 
 	(arr_wag_rent.[id_operator] not in (188, 1237, 1238) or arr_wag_rent.[id_operator] is null) and
 	arr_car.arrival is not null and arr_sost.[date_adoption]>= @start and arr_sost.[date_adoption]<=@stop
+	--and arr_car.num =60414182
