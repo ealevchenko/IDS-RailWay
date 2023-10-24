@@ -1684,7 +1684,7 @@
         {
             field: 'adoption_wagon_not_operation_nom_main_doc',
             data: function (row, type, val, meta) {
-                return row.nom_main_doc;
+                return row.nom_main_doc < 0 ? langView('ttdr_title_not_epd', App.Langs) : row.nom_main_doc;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_adoption_wagon_not_operation_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
