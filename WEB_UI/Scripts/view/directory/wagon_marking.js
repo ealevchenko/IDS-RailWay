@@ -207,7 +207,7 @@
                 // Получить инфу по составу
                 ids_inc.getArrivalSostavOfID(id_sostav, function (sostav) {
                     // Вывести информацию о составе
-                    var info = 'Индекс состава : ' + (sostav ? sostav.composition_index : '') + ', прибыл : ' + (sostav ? sostav.date_arrival : '');
+                    var info = 'Индекс состава : ' + (sostav ? sostav.composition_index : '') + ', прибыл : ' + (sostav ? getReplaceTOfDT(sostav.date_arrival) : '') + ', принят : ' + (sostav ? getReplaceTOfDT(sostav.date_adoption) : '');
                     pn_select.sostav_info.text(info);
                     if (sostav && sostav.ArrivalCars) {
                         var list_wagon_sort = sostav.ArrivalCars.filter(function (i) {
@@ -290,7 +290,7 @@
                             //data: "operator",
                             data: function (row, type, val, meta) {
                                 var current_rent = row.Arrival_UZ_Vagon && row.Arrival_UZ_Vagon.Directory_Wagons && row.Arrival_UZ_Vagon.Directory_Wagons ? ids_inc.ids_dir.getCurrentRentOfWagon(row.Arrival_UZ_Vagon.Directory_Wagons) : null;
-                                return current_rent && current_rent.Directory_OperatorsWagons ? current_rent.Directory_OperatorsWagons["operators_" + lang] : null;
+                                return current_rent && current_rent.Directory_OperatorsWagons ? current_rent.Directory_OperatorsWagons["abbr_" + lang] : null;
                             },
                             title: langView('field_operator', langs), width: "100px", orderable: true, searchable: true
                         },
