@@ -230,7 +230,6 @@
             alert.clear_message()
         }
     }
-
     // После загрузки документа
     $(document).ready(function ($) {
         LockScreen(langView('mwa_init_main', App.Langs));
