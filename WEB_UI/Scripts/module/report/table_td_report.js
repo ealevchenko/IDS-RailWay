@@ -6689,7 +6689,7 @@
                         sum_count_wagon_all += el.count_wagon;
                         sum_count_account_balance_all += el.count_account_balance;
                         sum_count_not_operator_all += el.count_not_operator;
-                        sum_count_return_wagon += el.count_return_wagon;
+                        sum_count_return_wagon_all += el.count_return_wagon;
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
