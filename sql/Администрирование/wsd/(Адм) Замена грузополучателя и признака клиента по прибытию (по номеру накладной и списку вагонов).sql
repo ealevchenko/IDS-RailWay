@@ -1,4 +1,4 @@
-declare @num_doc int =  1023 
+declare @num_doc int =  1239  
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[id_arrived]
@@ -44,7 +44,8 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(60716784,56596760,56528821,56567605,56591209,56030885,62976832,55080352)
+  and [position_arrival] is not null
+  and num in(74735440,73949554,73950081,74965328,57273286,74962283)
 
   SELECT TOP (1000) [id]
       ,[id_document]
@@ -96,7 +97,10 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(60716784,56596760,56528821,56567605,56591209,56030885,62976832,55080352))
+  and [position_arrival] is not null
+  and num in(74735440,73949554,73950081,74965328,57273286,74962283)
+  
+  )
 
   /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
@@ -130,11 +134,13 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(60716784,56596760,56528821,56567605,56591209,56030885,62976832,55080352)))
+  and [position_arrival] is not null
+  and num in(74735440,73949554,73950081,74965328,57273286,74962283)
+  ))
 
   
---UPDATE [IDS].[Arrival_UZ_Document]
---   SET [code_consignee] = 9200
---      ,[klient] = 1
--- WHERE id IN (606426,606427,606499,606500,606501,606502,606531,606532)
---GO
+--UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+--   SET [code_consignee] = 7932
+--      ,[klient] = null
+-- WHERE id IN (614823,614825,614826,614827,614828,614829,614830,614831,614832,614834,614835,614836,614837,614838,614839,614840,614841,614843,614846,614847,614848,614849,614850,614851,614852,614853,614854,614855,614856,614857,614858,614859,614860,614861,614862,614863,614864,614865,614866,614867,614868,614869,614870,614871,614872,614873,614874,614875,614876)
+GO
