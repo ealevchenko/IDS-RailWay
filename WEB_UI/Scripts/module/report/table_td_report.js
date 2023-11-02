@@ -43,6 +43,7 @@
             'ttdr_field_outgoing_sostav_detali_count_account_balance': 'Уч. ваг.',
 
             'ttdr_field_incoming_cars_id': 'id вагона',
+            'ttdr_field_incoming_cars_arrival_sostav_num_doc': '№ ведомости прибытия',
             'ttdr_field_incoming_cars_position_arrival': '№ поз.',
             'ttdr_field_num': '№ вагона',
             'ttdr_field_incoming_cars_uz_document_nom_doc': '№ дос. накл.',
@@ -296,6 +297,8 @@
             'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
             'ttdr_field_total_station_inlandrailway': 'Станция назначения/Дорога',
             'ttdr_field_total_note': 'Примечание',
+            'ttdr_field_total_sum_idle_time': 'Общий простой, час',
+            'ttdr_field_total_wagon_idle_time': 'На 1 вагон, час',
 
             'ttdr_field_usage_fee_sum_calc_time': 'Общий простой, час',
             'ttdr_field_usage_fee_wagon_calc_time': 'На 1 вагон, час.',
@@ -1715,6 +1718,15 @@
         },
         //----------------------------------------------------
         // ПРИБЫТИЕ ДЕТАЛЬНО
+        //
+        {
+            field: 'incoming_cars_arrival_sostav_num_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_num_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_cars_arrival_sostav_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         {
             field: 'incoming_cars_arrival_sostav_date_arrival',
             data: function (row, type, val, meta) {
@@ -1804,8 +1816,8 @@
             data: function (row, type, val, meta) {
                 return row.sap_incoming_supply_cargo_name;
             },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_incoming_cars_sap_incoming_supply_cargo_name', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_incoming_cars_sap_incoming_supply_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         // Платильщик
         {
@@ -2063,6 +2075,23 @@
             },
             className: 'dt-body-center mw-100',
             title: langView('ttdr_field_total_note', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Общий простой
+        {
+            field: 'total_sum_idle_time',
+            data: function (row, type, val, meta) {
+                return row.sum_idle_time !== null ? getTimeFromMins(row.sum_idle_time) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_total_sum_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_wagon_idle_time',
+            data: function (row, type, val, meta) {
+                return row.sum_idle_time !== null ? getTimeFromMins(Number(Number(row.sum_idle_time / row.count_wagon).toFixed(0))) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_total_wagon_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
         },
         //----------------------------------------------------
         // ОТПРАВКА ДЕТАЛЬНО
@@ -3414,6 +3443,7 @@
     table_td_report.prototype.init_columns_adoption_common_detali = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        collums.push({ field: 'incoming_cars_arrival_sostav_num_doc', title: null, class: 'fixed-column' }); // +
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
@@ -3440,6 +3470,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_document_cross_time', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_code_stn_to', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_station_to_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_etsng_code', title: null, class: null }); // +
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: null });
         collums.push({ field: 'incoming_cars_sap_incoming_supply_cargo_code', title: null, class: null });
@@ -3566,12 +3597,11 @@
         //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
-
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_operator_to_ar
@@ -3589,8 +3619,8 @@
     table_td_report.prototype.init_columns_adoption_cargo_to_arr = function () {
         var collums = [];
         //collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_group_name', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name', App.Langs), class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3638,7 +3668,7 @@
         var collums = [];
         //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_station_from_name', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
@@ -3650,7 +3680,7 @@
         var collums = [];
         //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3662,7 +3692,7 @@
     table_td_report.prototype.init_columns_adoption_to_gs = function () {
         var collums = [];
         //collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_station_on_name', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3739,6 +3769,8 @@
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        collums.push({ field: 'total_sum_idle_time', title: null, class: null });
+        collums.push({ field: 'total_wagon_idle_time', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей _outgoing_total_operators_cargo
@@ -4865,7 +4897,7 @@
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = true;            // вкл. фикс. заголовка
-                this.leftColumns = 2;
+                this.leftColumns = 3;
                 this.columnDefs = null;
                 this.order_column = [0, 'asc'];
                 this.type_select_rows = 0;          // Выбирать одну
@@ -4946,7 +4978,7 @@
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
-                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.columnDefs = [{ visible: false, targets: 0 }];
                 this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
@@ -6306,9 +6338,9 @@
         }
         if (this.settings.type_report === 'adoption_common_detali') {
             this.$table_report = table_report.$table.append($('<tfoot>' +
-                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
-                //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="12" class="dt-right">СТАТ.НАГРУЗКА:</th><td id="avg_vesg" class="dt-centr"></td><th colspan="2" class="dt-right">:</th><td id="avg_gruzp" class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
-                '</tfoot > '));
+                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="16" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="26"></td></tr>' +
+                //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
+                '</tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_common_detali') {
             this.$table_report = table_report.$table.append($('<tfoot>' +
@@ -6368,7 +6400,7 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th class="dt-right">ЧЕРНЫЕ МЕТАЛЛЫ:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_operators') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_operators_cargo') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
@@ -7179,11 +7211,13 @@
                     var sum_count_wagon = 0;
                     var sum_vesg = 0;
                     var sum_perent_wagon = 0;
+                    var sum_idle_time = 0;
                     //var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
                         sum_vesg += el.sum_vesg;
                         sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+                        sum_idle_time += (el.sum_idle_time ? Number(el.sum_idle_time) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
@@ -7194,6 +7228,12 @@
                 });
                 this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
                     $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-total_sum_idle_time').every(function () {
+                    $(this.footer()).html(getTimeFromMins(sum_idle_time));
+                });
+                this.obj_t_report.columns('.fl-total_wagon_idle_time').every(function () {
+                    $(this.footer()).html(getTimeFromMins(Number(Number(sum_idle_time / sum_count_wagon).toFixed(0))));
                 });
                 break;
             };

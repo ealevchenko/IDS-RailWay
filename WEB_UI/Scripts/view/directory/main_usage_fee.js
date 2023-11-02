@@ -414,7 +414,7 @@
             // Выход из инициализации
             var out_init = function (process) {
                 if (process === 0) {
-                    this.table_operators_wagons.view(ids_dir.list_operators_wagons);
+                    this.table_operators_wagons.view(ids_dir.list_operators_wagons.filter(function (i) { return i.parent_id === null }.bind(this)));
                     LockScreenOff();
                 }
             }.bind(this);

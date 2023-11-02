@@ -5166,7 +5166,7 @@
             this.chart_total_operation_to_arr.view(this.chart_data[1]);
         };
     };
-    // Выполнить фильтрацию и вывести данные по отчету "Оператор по ПРИБ"
+    // Выполнить фильтрацию и вывести данные по отчету "Груз ПРИБ"
     view_td_report.prototype.view_filter_report_total_cargo = function () {
         if (this.total_cargo) {
             this.value_cargo = Number(this.select_detali_cargo.val());
@@ -5198,46 +5198,11 @@
                 }
             }.bind(this));
             this.chart_data[2] = data;
-            // Set data
-            //var data = [{
-            //    country: "USA",
-            //    value: 2025
-            //}, {
-            //    country: "China",
-            //    value: 1882
-            //}, {
-            //    country: "Japan",
-            //    value: 1809
-            //}, {
-            //    country: "Germany",
-            //    value: 1322
-            //}, {
-            //    country: "UK",
-            //    value: 1122
-            //}, {
-            //    country: "France",
-            //    value: 1114
-            //}, {
-            //    country: "India",
-            //    value: 984
-            //}, {
-            //    country: "Spain",
-            //    value: 711
-            //}, {
-            //    country: "Netherlands",
-            //    value: 665
-            //}, {
-            //    country: "South Korea",
-            //    value: 443
-            //}, {
-            //    country: "Canada",
-            //    value: 441
-            //}];
             this.view_chart_total_cargo();
             LockScreenOff();
         }
     };
-    // Вывести данные по диаграмме "Оператор по ПРИБ"
+    // Вывести данные по диаграмме "Груз ПРИБ"
     view_td_report.prototype.view_chart_total_cargo = function () {
         if (this.report_panel === 2 && this.chart_data) {
             this.chart_total_cargo_to_arr.view(this.chart_data[2]);
@@ -9030,6 +8995,7 @@
             var op = list_result.find(function (o) {
                 return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator
             }.bind(this));
+            var idle_time = Number(el_wag.idle_time_act !== null ? el_wag.idle_time_act : (el_wag.idle_time !== null ? el_wag.idle_time : 0));
             if (!op) {
                 // Не данных 
                 list_result.push({
@@ -9039,11 +9005,13 @@
                     count_wagon: 1,
                     sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
                     perent_wagon: Number(100 / sum_count).toFixed(2),
+                    sum_idle_time: idle_time,
                 });
             } else {
                 op.count_wagon = op.count_wagon + 1;
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
                 op.perent_wagon = Number((op.count_wagon * 100) / sum_count).toFixed(2);
+                op.sum_idle_time += idle_time;
             };
         }.bind(this));
         if (typeof callback === 'function') {
@@ -9062,6 +9030,7 @@
             sum_count = data.filter(function (i) {
                 return i.outgoing_uz_vagon_id_group === el_wag.outgoing_uz_vagon_id_group
             }.bind(this)).length;
+            var idle_time = Number(el_wag.idle_time_act !== null ? el_wag.idle_time_act : (el_wag.idle_time !== null ? el_wag.idle_time : 0));
             if (!op) {
                 // Не данных 
                 list_result.push({
@@ -9074,11 +9043,13 @@
                     count_wagon: 1,
                     sum_vesg: el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg : 0,
                     perent_wagon: Number(100 / sum_count).toFixed(2),
+                    sum_idle_time: idle_time,
                 });
             } else {
                 op.count_wagon = op.count_wagon + 1;
                 op.sum_vesg = el_wag.outgoing_uz_vagon_vesg ? el_wag.outgoing_uz_vagon_vesg + op.sum_vesg : op.sum_vesg;
                 op.perent_wagon = Number((op.count_wagon * 100) / sum_count).toFixed(2);
+                op.sum_idle_time += idle_time;
             };
 
         }.bind(this));
@@ -11673,7 +11644,7 @@
                 }
                 var csa = this.list_curr_way.find(function (o) { return o.value === value.current_id_way }.bind(this));
                 if (!csa) {
-                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_way_abbr_' + App.Lang] });
+                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_station_amkr_abbr_' + App.Lang] + ' : ' + value['current_way_num_' + App.Lang]+'-'+ value['current_way_abbr_' + App.Lang] });
                 }
             }
 

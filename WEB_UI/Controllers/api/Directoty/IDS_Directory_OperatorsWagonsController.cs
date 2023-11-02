@@ -13,7 +13,8 @@ namespace WEB_UI.Controllers.api
 {
     public class OperatorsAndGenus
     {
-        public int? id_operator { get; set; }
+        public int id_operator { get; set; }
+        public int? parent_id  { get; set; }
         public int? id_genus { get; set; }
         public string operators_ru { get; set; }
         public string operators_en{ get; set; }
