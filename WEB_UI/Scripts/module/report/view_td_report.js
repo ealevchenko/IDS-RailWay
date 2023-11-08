@@ -10066,9 +10066,11 @@
                 this.list_rod = [];
                 $.each(this.usage_fee_period, function (key, value) {
                     // выборка для списков отчета
-                    var lop = this.list_operators.find(function (o) { return o.value === value.usage_fee_period_id_operator }.bind(this));
+                    //var lop = this.list_operators.find(function (o) { return o.value === value.usage_fee_period_id_operator }.bind(this));
+                    var lop = this.list_operators.find(function (o) { return o.value === value['usage_fee_period_operator_abbr_' + App.Lang] }.bind(this));
                     if (!lop) {
-                        this.list_operators.push({ value: value.usage_fee_period_id_operator, text: value['usage_fee_period_operator_abbr_' + App.Lang] });
+                        //this.list_operators.push({ value: value.usage_fee_period_id_operator, text: value['usage_fee_period_operator_abbr_' + App.Lang] });
+                        this.list_operators.push({ value: value['usage_fee_period_operator_abbr_' + App.Lang], text: value['usage_fee_period_operator_abbr_' + App.Lang] });
                     }
                     var lrod = this.list_rod.find(function (o) { return o.value === value.usage_fee_period_id_genus }.bind(this));
                     if (!lrod) {
@@ -10098,11 +10100,13 @@
         if (this.usage_fee_period) {
             // сделаем копию данных
             var list_view = JSON.parse(JSON.stringify(this.usage_fee_period));
-            var id_operator = Number(this.select_operations.val());
+            //var id_operator = Number(this.select_operations.val());
+            var operator = this.select_operations.val();
             var id_genus = Number(this.select_rod.val());
-            if (id_operator >= 0) {
+            if (operator !== '-1') {
                 list_view = list_view.filter(function (i) {
-                    return i.usage_fee_period_id_operator === id_operator
+                    //return i.usage_fee_period_id_operator === id_operator
+                    return i['usage_fee_period_operator_abbr_' + App.Lang] === operator
                 }.bind(this));
             }
             if (id_genus >= 0) {
@@ -11644,7 +11648,7 @@
                 }
                 var csa = this.list_curr_way.find(function (o) { return o.value === value.current_id_way }.bind(this));
                 if (!csa) {
-                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_station_amkr_abbr_' + App.Lang] + ' : ' + value['current_way_num_' + App.Lang]+'-'+ value['current_way_abbr_' + App.Lang] });
+                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_station_amkr_abbr_' + App.Lang] + ' : ' + value['current_way_num_' + App.Lang] + '-' + value['current_way_abbr_' + App.Lang] });
                 }
             }
 

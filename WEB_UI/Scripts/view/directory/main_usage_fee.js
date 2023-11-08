@@ -442,7 +442,7 @@
                         ids_dir.getOperatorsWagonsOfGenus(function (operators_genus) {
                             $.each(rows, function (key, el) {
                                 var genus = operators_genus.filter(function (i) {
-                                    return i.id_operator == el.id;
+                                    return (i.parent_id === null && i.id_operator === el.id) || (i.parent_id !== null && i.parent_id === el.id); //
                                 }.bind(this));
                                 list_operators_genus = list_operators_genus.concat(genus);
                             }.bind(this));
