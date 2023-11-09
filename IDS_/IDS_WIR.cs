@@ -201,10 +201,11 @@ namespace IDS_
                 EFOutgoingUzVagon ef_out_vag = new EFOutgoingUzVagon(context);
                 List<DirectoryWagonsRent> list = ef_wag_rent.Context.Where(r => r.ParentId != null).ToList();
                 List<IGrouping<int?, DirectoryWagonsRent>> grents = list.GroupBy(r => r.ParentId).ToList().Where(c => c.Count() > 1).OrderBy(k => k.Key).ToList();
+                _logger.LogInformation("Определено {0} задублированных аренд вагонов", grents.Count());
                 foreach (IGrouping<int?, DirectoryWagonsRent> gr_wr in grents.ToList())
                 {
+                    _logger.LogInformation("Обрабатываю вагон № {0}", gr_wr.Min(c=>c.Num));
                     List<DirectoryWagonsRent> list_gr = gr_wr.Where(r => r.RentEnd == null).ToList();
-
                     DirectoryWagonsRent cur_wr = null; // Получим строку аренды которую оставим
                     if (list_gr.Count == gr_wr.Count())
                     {
@@ -221,9 +222,37 @@ namespace IDS_
                     // Получим список для удаления
                     List<DirectoryWagonsRent> del_wr = gr_wr.Where(r => r.Id != cur_wr.Id).ToList();
                     // переводим на аренду которую оставили
-                    foreach (DirectoryWagonsRent rent in del_wr) {
-                        //ArrivalUzVagon arr_vag = ef_arr_vag.Context.Where(a=>a.id)
+                    foreach (DirectoryWagonsRent rent in del_wr)
+                    {
+                        List<ArrivalUzVagon> list_arr_vag = ef_arr_vag.Context.Where(a => a.IdWagonsRentArrival == rent.Id).ToList();
+                        foreach (ArrivalUzVagon arr_vag in list_arr_vag)
+                        {
+                            arr_vag.IdWagonsRentArrival = cur_wr.Id;
+                            ef_arr_vag.Update(arr_vag);
+                        }
+                        List<OutgoingUzVagon> list_out_vag_rent_arr = ef_out_vag.Context.Where(a => a.IdWagonsRentArrival == rent.Id).ToList();
+                        List<OutgoingUzVagon> list_out_vag_rent_out = ef_out_vag.Context.Where(a => a.IdWagonsRentOutgoing == rent.Id).ToList();
+                        foreach (OutgoingUzVagon out_vag in list_out_vag_rent_arr)
+                        {
+                            out_vag.IdWagonsRentArrival = cur_wr.Id;
+                            ef_out_vag.Update(out_vag);
+                        }
+                        foreach (OutgoingUzVagon out_vag in list_out_vag_rent_out)
+                        {
+                            out_vag.IdWagonsRentOutgoing = cur_wr.Id;
+                            ef_out_vag.Update(out_vag);
+                        }
+                        ef_wag_rent.Delete(rent.Id);
+
                     }
+
+                    DirectoryWagonsRent parent_wr = ef_wag_rent.Context.Where(r => r.Id == cur_wr.ParentId).FirstOrDefault();
+                    if (parent_wr != null && parent_wr.RentEnd != null)
+                    {
+                        cur_wr.RentStart = parent_wr.RentEnd;
+                        ef_wag_rent.Update(cur_wr);
+                    }
+
                 }
                 //EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 ////OutgoingSostav sostav = ef_out_sostav.Get(210619);               
