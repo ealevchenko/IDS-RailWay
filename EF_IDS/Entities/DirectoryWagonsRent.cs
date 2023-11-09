@@ -47,6 +47,9 @@ public partial class DirectoryWagonsRent
     [Column("parent_id")]
     public int? ParentId { get; set; }
 
+    [InverseProperty("IdWagonsRentArrivalNavigation")]
+    public virtual ICollection<ArrivalUzVagon> ArrivalUzVagons { get; } = new List<ArrivalUzVagon>();
+
     [ForeignKey("IdLimiting")]
     [InverseProperty("DirectoryWagonsRents")]
     public virtual DirectoryLimitingLoading? IdLimitingNavigation { get; set; }

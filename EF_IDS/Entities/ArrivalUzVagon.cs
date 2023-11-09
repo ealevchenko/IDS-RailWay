@@ -157,6 +157,9 @@ public partial class ArrivalUzVagon
     [Column("pay_summa")]
     public int? PaySumma { get; set; }
 
+    [Column("id_wagons_rent_arrival")]
+    public int? IdWagonsRentArrival { get; set; }
+
     [InverseProperty("IdArrivalUzVagonNavigation")]
     public virtual ICollection<ArrivalCar> ArrivalCars { get; } = new List<ArrivalCar>();
 
@@ -228,6 +231,10 @@ public partial class ArrivalUzVagon
     [ForeignKey("IdTypeOwnership")]
     [InverseProperty("ArrivalUzVagons")]
     public virtual DirectoryTypeOwnerShip? IdTypeOwnershipNavigation { get; set; }
+
+    [ForeignKey("IdWagonsRentArrival")]
+    [InverseProperty("ArrivalUzVagons")]
+    public virtual DirectoryWagonsRent? IdWagonsRentArrivalNavigation { get; set; }
 
     [ForeignKey("Num")]
     [InverseProperty("ArrivalUzVagons")]

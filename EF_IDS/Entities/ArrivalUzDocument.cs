@@ -79,6 +79,21 @@ public partial class ArrivalUzDocument
     [Column("manual")]
     public bool? Manual { get; set; }
 
+    [Column("date_otpr", TypeName = "datetime")]
+    public DateTime? DateOtpr { get; set; }
+
+    [Column("srok_end", TypeName = "datetime")]
+    public DateTime? SrokEnd { get; set; }
+
+    [Column("date_grpol", TypeName = "datetime")]
+    public DateTime? DateGrpol { get; set; }
+
+    [Column("date_pr", TypeName = "datetime")]
+    public DateTime? DatePr { get; set; }
+
+    [Column("date_vid", TypeName = "datetime")]
+    public DateTime? DateVid { get; set; }
+
     [InverseProperty("IdDocumentNavigation")]
     public virtual ICollection<ArrivalUzDocumentAct> ArrivalUzDocumentActs { get; } = new List<ArrivalUzDocumentAct>();
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EF_IDS.Entities;
 
 [Table("WagonInternalOperation", Schema = "IDS")]
+[Index("IdWagonInternalRoutes", "OperationEnd", Name = "CNI_wio_wirid_end")]
 [Index("IdWagonInternalRoutes", Name = "NCI_wio_wir_id")]
 public partial class WagonInternalOperation
 {

@@ -11,6 +11,7 @@ namespace EF_IDS.Entities;
 [Index("IdOuterWay", Name = "NCI_id_outer_way")]
 [Index("IdWay", "WayEnd", Name = "NCI_id_way_way_end")]
 [Index("IdStation", "OuterWayEnd", "WayEnd", "OuterWayStart", Name = "NCI_station_way")]
+[Index("IdStation", Name = "NCI_station_wim")]
 [Index("IdStation", Name = "NCI_ststion")]
 [Index("WayEnd", Name = "NCI_way_end")]
 [Index("IdWagonInternalRoutes", Name = "NonClusteredIndex-20211021-130747")]
