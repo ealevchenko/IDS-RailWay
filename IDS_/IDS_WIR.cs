@@ -1,6 +1,7 @@
 ﻿using EF_IDS.Concrete;
 using EF_IDS.Concrete.Directory;
 using EF_IDS.Concrete.Outgoing;
+using EF_IDS.Concrete.Arrival;
 using EF_IDS.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -181,6 +182,68 @@ namespace IDS_
                 _logger.LogError(e, "UpdateOperationOutgoingSostav");
                 rt.SetResult((int)errors_base.global);
                 return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
+        public int ClearDoubling_Directory_WagonsRent(string user)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext(this.options);
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFDirectoryWagonsRent ef_wag_rent = new EFDirectoryWagonsRent(context);
+                EFArrivalUzVagon ef_arr_vag = new EFArrivalUzVagon(context);
+                EFOutgoingUzVagon ef_out_vag = new EFOutgoingUzVagon(context);
+                List<DirectoryWagonsRent> list = ef_wag_rent.Context.Where(r => r.ParentId != null).ToList();
+                List<IGrouping<int?, DirectoryWagonsRent>> grents = list.GroupBy(r => r.ParentId).ToList().Where(c => c.Count() > 1).OrderBy(k => k.Key).ToList();
+                foreach (IGrouping<int?, DirectoryWagonsRent> gr_wr in grents.ToList())
+                {
+                    List<DirectoryWagonsRent> list_gr = gr_wr.Where(r => r.RentEnd == null).ToList();
+
+                    DirectoryWagonsRent cur_wr = null; // Получим строку аренды которую оставим
+                    if (list_gr.Count == gr_wr.Count())
+                    {
+                        // нет закрытий
+                        // Получим строку аренды которую оставим
+                        cur_wr = gr_wr.OrderByDescending(c => c.Id).FirstOrDefault();
+                    }
+                    else
+                    {
+                        // Получим строку аренды которую оставим
+                        cur_wr = gr_wr.Where(r => r.RentEnd != null).OrderByDescending(c => c.Id).FirstOrDefault();
+
+                    }
+                    // Получим список для удаления
+                    List<DirectoryWagonsRent> del_wr = gr_wr.Where(r => r.Id != cur_wr.Id).ToList();
+                    // переводим на аренду которую оставили
+                    foreach (DirectoryWagonsRent rent in del_wr) {
+                        //ArrivalUzVagon arr_vag = ef_arr_vag.Context.Where(a=>a.id)
+                    }
+                }
+                //EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                ////OutgoingSostav sostav = ef_out_sostav.Get(210619);               
+                //List<OutgoingSostav> list_sostav = ef_out_sostav.Context.Where(s => s.DateOutgoing >= date_outgoing).ToList();
+                //foreach (OutgoingSostav sost in list_sostav)
+                //{
+                //    ResultUpdateWagon rt_st = UpdateOperationOutgoingSostav(sost.Id, user);
+                //    rt.SetResultOperation(rt_st.result, sost.Id);
+                //}
+                //_logger.LogInformation("Выполнение завершено, определено {0} составов, код выполнения {1}", rt.listResult.Count(), rt.result);
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                //e.ExceptionMethodLog(String.Format("UpdateOperationOutgoingSostav(date_outgoing={0}, user={1})",
+                //    date_outgoing, user), servece_owner, eventID);
+                _logger.LogError(e, "ClearDoubling_Directory_WagonsRent");
+                //rt.SetResult((int)errors_base.global);
+                return (int)errors_base.global;// Возвращаем id=-1 , Ошибка
             }
         }
 
