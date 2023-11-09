@@ -1,39 +1,4 @@
-
-declare @old_num int =67304
-declare @new_num int =25125
-
-select @old_num,@new_num
-
-SELECT TOP (1000) [num]
-      ,[id_countrys]
-      ,[id_genus]
-      ,[id_owner]
-      ,[id_operator]
-      ,[change_operator]
-      ,[gruzp]
-      ,[tara]
-      ,[kol_os]
-      ,[usl_tip]
-      ,[date_rem_uz]
-      ,[date_rem_vag]
-      ,[id_type_ownership]
-      ,[sign]
-      ,[factory_number]
-      ,[inventory_number]
-      ,[year_built]
-      ,[exit_ban]
-      ,[note]
-      ,[sobstv_kis]
-      ,[bit_warning]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-      ,[closed_route]
-      ,[new_construction]
-  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons]
-  where num in (@old_num,@new_num)
-  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+/****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[num]
       ,[id_operator]
@@ -46,71 +11,23 @@ SELECT TOP (1000) [id]
       ,[change_user]
       ,[parent_id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent]
-    where num in (@old_num,@new_num)
+  --where [parent_id]=215808
+  where [num]=56618176
+  order by id desc
 
-	/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
+  /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
-      ,[id_arrival]
       ,[num]
-      ,[position]
-      ,[position_arrival]
-      ,[consignee]
-      ,[num_doc]
-      ,[id_transfer]
-      ,[note]
-      ,[date_adoption_act]
-      ,[arrival]
-      ,[arrival_user]
+      ,[id_operator]
+      ,[id_limiting]
+      ,[rent_start]
+      ,[rent_end]
       ,[create]
       ,[create_user]
       ,[change]
       ,[change_user]
-      ,[id_arrival_uz_vagon]
-  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
-  where num in (@old_num,@new_num)
-
-  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
-SELECT TOP (1000) [id]
-      ,[num]
-      ,[id_arrival_car]
-      ,[id_sap_incoming_supply]
-      ,[doc_outgoing_car]
-      ,[id_outgoing_car]
-      ,[id_sap_outbound_supply]
-      ,[note]
-      ,[create]
-      ,[create_user]
-      ,[close]
-      ,[close_user]
       ,[parent_id]
-      ,[highlight_color]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
-  where num in (@old_num,@new_num)
-
-  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
-SELECT TOP (1000) [id]
-      ,[id_outgoing]
-      ,[num]
-      ,[position]
-      ,[position_outgoing]
-      ,[num_doc]
-      ,[note]
-      ,[date_outgoing_act]
-      ,[outgoing]
-      ,[outgoing_user]
-      ,[id_outgoing_uz_vagon]
-      ,[id_outgoing_detention]
-      ,[id_reason_discrepancy_amkr]
-      ,[id_reason_discrepancy_uz]
-      ,[id_outgoing_return_start]
-      ,[id_outgoing_return_stop]
-      ,[parent_wir_id]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-      ,[note_vagonnik]
-      ,[vagonnik]
-      ,[vagonnik_user]
-  FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars]
-    where num in (@old_num,@new_num)
+  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent]
+  --where [parent_id]=25795
+  where [num]=60242609
+  order by id desc
