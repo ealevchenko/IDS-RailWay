@@ -10,6 +10,9 @@ using System.Diagnostics.Metrics;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using IDS_;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace HelloApp
 {
@@ -54,11 +57,32 @@ namespace HelloApp
         //    public string exchangedate { get; set; }
         //}
 
-
+        //
         public static void Main(string[] args)
         {
             try
             {
+                IConfiguration Configuration = new ConfigurationBuilder()
+                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                  .AddEnvironmentVariables()
+                  .AddCommandLine(args)
+                  .Build();
+
+                var loggerFactory = LoggerFactory.Create(builder =>
+                {
+                    builder.AddConsole();
+                });
+                ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
+
+                logger.LogInformation("Start {Description}.", "fun");
+                IDS_WIR ids_wir = new IDS_WIR(logger, Configuration);
+
+                ids_wir.ClearDoubling_Directory_WagonsRent(null);
+
+                Console.WriteLine("Hello, World!");
+
+
+
                 //Person tom = new Person("Tom", 37);
                 //string json = JsonSerializer.Serialize(tom);
                 //Console.WriteLine(json);

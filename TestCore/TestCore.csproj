@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,10 +29,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />	 
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="7.0.0" />	 	  
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />	 
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />		  
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />		
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />		  
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EF_IDS\EF_IDS.csproj" />
+    <ProjectReference Include="..\IDS_\IDS_.csproj" />
   </ItemGroup>
 
 </Project>
