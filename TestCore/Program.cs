@@ -11,11 +11,29 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using IDS_;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
 
 namespace HelloApp
 {
+    public class Runner
+    {
+        private readonly ILogger<Runner> _logger;
+
+        public Runner(ILogger<Runner> logger)
+        {
+            _logger = logger;
+        }
+
+        public void DoAction(string name)
+        {
+            _logger.LogDebug(20, "Doing hard work! {Action}", name);
+        }
+    }
+
     public class Program
     {
         //public class ApplicationContext : DbContext
@@ -60,26 +78,47 @@ namespace HelloApp
         //
         public static void Main(string[] args)
         {
+            //NLog.ILogger logger = LogManager.GetCurrentClassLogger();
+
+            ILogger<Program> logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
             try
             {
-                IConfiguration Configuration = new ConfigurationBuilder()
-                  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                  .AddEnvironmentVariables()
-                  .AddCommandLine(args)
-                  .Build();
+                //IConfiguration Configuration = new ConfigurationBuilder()
+                //  .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                //  .AddEnvironmentVariables()
+                //  .AddCommandLine(args)
+                //  .Build();
 
-                var loggerFactory = LoggerFactory.Create(builder =>
-                {
-                    builder.AddConsole();
-                });
-                ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
+                //var loggerFactory = LoggerFactory.Create(builder =>
+                //{
+                //    builder.AddConsole();
+                //});
+                //ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
 
-                logger.LogInformation("Start {Description}.", "fun");
-                IDS_WIR ids_wir = new IDS_WIR(logger, Configuration);
+                //logger.LogInformation("Start {Description}.", "fun");
 
+                var config = new ConfigurationBuilder()
+                    .SetBasePath(System.IO.Directory.GetCurrentDirectory()) //From NuGet Package Microsoft.Extensions.Configuration.Json
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build();
+
+                //using var servicesProvider = new ServiceCollection()
+                //    .AddTransient<Runner>() // Runner is the custom class
+                //    .AddLogging(loggingBuilder =>
+                //    {
+                //        // configure Logging with NLog
+                //        loggingBuilder.ClearProviders();
+                //        loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                //        loggingBuilder.AddNLog(config);
+                //    }).BuildServiceProvider();
+
+                //var runner = servicesProvider.GetRequiredService<Runner>();
+                //runner.DoAction("Action1");
+
+                IDS_WIR ids_wir = new IDS_WIR(logger, config);
                 ids_wir.ClearDoubling_Directory_WagonsRent(null);
 
-                Console.WriteLine("Hello, World!");
+                //Console.WriteLine("Hello, World!");
 
 
 
@@ -146,11 +185,20 @@ namespace HelloApp
                 //}
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                // NLog: catch any exception and log it.
+                //logger.Error(ex, "Stopped program because of exception");
+                logger.LogError(ex, "Stopped program because of exception");
+                throw;
             }
-            Console.Read();
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                LogManager.Shutdown();
+            }
+            Console.WriteLine("Press ANY key to exit");
+            Console.ReadKey();
         }
     }
 }
