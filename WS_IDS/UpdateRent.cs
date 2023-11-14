@@ -3,6 +3,7 @@ using IDS_;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,26 +18,34 @@ namespace WS_IDS
         //private int executionCount = 0;
         private readonly ILogger<UpdateRent> _logger;
         private readonly IConfiguration _configuration;
+        EventId _eventId = new EventId(0);
         private int interval = 1000;                                // Интервал выполнения таймера
         private int control_period = 10;                            // Период контроля отправленных составов (дней)
+        Stopwatch stopWatch = new Stopwatch();
 
         private Timer? _timer = null;
         private IDS_WIR ids_wir = null;
+
+
+        private string GetElapsedTime(TimeSpan ts)
+        {
+            return String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+        }
 
         public UpdateRent(ILogger<UpdateRent> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            _eventId = int.Parse(_configuration["EventID:UpdateRent"]);
             interval = int.Parse(configuration["Interval:UpdateRent"]);
             control_period = int.Parse(configuration["Control:UpdateRent"]);
-
-            this.ids_wir = new IDS_WIR(logger, configuration);
+            this.ids_wir = new IDS_WIR(logger, configuration, _eventId);
 
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Start UpdateRent, interval{0}", interval);
+            _logger.LogWarning(_eventId, "UpdateRent - start, interval{0}", interval);
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
             return Task.CompletedTask;
         }
@@ -45,7 +54,7 @@ namespace WS_IDS
         {
             if (run)
             {
-                _logger.LogWarning("UpdateRent - is run, skip work!", run);
+                _logger.LogWarning(_eventId, "UpdateRent - is run, skip work!", run);
                 return;
             }
             lock (locker_test)
@@ -54,7 +63,15 @@ namespace WS_IDS
             }
             //var count = Interlocked.Increment(ref executionCount);
             //_logger.LogInformation("Таймер. Count: {Count}", count);
-            this.ids_wir.UpdateOperationOutgoingSostav(DateTime.Now.AddDays(-10), null);
+            _logger.LogWarning(_eventId, "UpdateRent - run");
+            stopWatch.Start();
+            ResultUpdateWagon res_cl = ids_wir.ClearDoubling_Directory_WagonsRent(null);
+            stopWatch.Stop();
+            _logger.LogWarning(_eventId, "UpdateRent:ClearDoubling - runing, result = {0}, runtime = {1}", res_cl.result, GetElapsedTime(stopWatch.Elapsed));
+            stopWatch.Start();
+            OperationResultID res_out = this.ids_wir.UpdateOperationOutgoingSostav(DateTime.Now.AddDays(-10), null);
+            stopWatch.Stop();
+            _logger.LogWarning(_eventId, "UpdateRent:OperationOutgoing - runing, result = {0}, runtime = {1}", res_out.result, GetElapsedTime(stopWatch.Elapsed));
             lock (locker_test)
             {
                 run = false;
@@ -63,7 +80,7 @@ namespace WS_IDS
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Stop UpdateRent");
+            _logger.LogWarning(_eventId, "UpdateRent - stop");
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }

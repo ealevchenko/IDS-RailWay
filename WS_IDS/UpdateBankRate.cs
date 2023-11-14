@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace WS_IDS
         protected bool run = false;
         private readonly ILogger<UpdateBankRate> _logger;
         private readonly IConfiguration _configuration;
+        EventId _eventId = new EventId(0);
         private int interval = 1000 * 60 * 60;                                // Интервал выполнения таймера
         private List<int> list_r030;
 
@@ -29,10 +31,14 @@ namespace WS_IDS
         private Timer? _timer = null;
         private ClientBank cl_bank = null;
 
+        Stopwatch stopWatch = new Stopwatch();
+
         public UpdateBankRate(ILogger<UpdateBankRate> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
+            _eventId = int.Parse(_configuration["EventID:UpdateBankRate"]);
+
             interval = int.Parse(_configuration["Interval:UpdateBankRate"]);
             list_r030 = _configuration.GetSection("Control:list_r030").Value.Split(',').Select(s => int.Parse(s)).ToList();
             cl_bank = new ClientBank(logger, configuration);
@@ -43,7 +49,7 @@ namespace WS_IDS
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Start UpdateBankRate, interval{0}", interval);
+            _logger.LogWarning(_eventId, "UpdateBankRate -start, interval{0}", interval);
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
             return Task.CompletedTask;
         }
@@ -52,7 +58,7 @@ namespace WS_IDS
         {
             if (run)
             {
-                _logger.LogWarning("UpdateBankRate - is run, skip work! - {0}", run);
+                _logger.LogWarning(_eventId, "UpdateBankRate - is run, skip work! - {0}", run);
                 return;
             }
             lock (locker_test)
@@ -60,12 +66,14 @@ namespace WS_IDS
                 run = true;
             }
             //var count = Interlocked.Increment(ref executionCount);
-            _logger.LogInformation("UpdateBankRate -run");
+            _logger.LogWarning(_eventId, "UpdateBankRate - run");
+
             EFDbContext context = new EFDbContext(this.options);
             EFDirectoryBankRate ef_dir_br = new EFDirectoryBankRate(context);
             List<DirectoryBankRate> list_dir_br = ef_dir_br.Context.Where(b => b.Date == DateTime.Now.Date).ToList();
             if (list_dir_br.Count() < list_r030.Count())
             {
+                stopWatch.Start();
                 // Удалим старое
                 if (list_dir_br.Count() > 0)
                 {
@@ -89,12 +97,16 @@ namespace WS_IDS
                     }
                 }
                 int result = context.SaveChanges();
-                _logger.LogWarning("UpdateBankRate - runing, result={0}", result);
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                _logger.LogWarning(_eventId, "UpdateBankRate - runing, result={0}, runtime = {1}", result, elapsedTime);
             }
             else
             {
-                _logger.LogInformation("UpdateBankRate -skiping");
+                _logger.LogWarning(_eventId, "UpdateBankRate - skiping");
             }
+
 
             lock (locker_test)
             {
@@ -104,7 +116,7 @@ namespace WS_IDS
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Stop UpdateBankRate");
+            _logger.LogWarning(_eventId, "UpdateBankRate - stop");
             _timer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }

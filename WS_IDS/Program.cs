@@ -1,7 +1,10 @@
 using System.Reflection;
 using WS_IDS;
+using NLog;
+using NLog.Extensions.Logging;
 
 System.Environment.CurrentDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+ILogger<Program> logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
 
 try
 {
@@ -14,19 +17,24 @@ try
         }).ConfigureLogging(logging =>
         {
             logging.ClearProviders();
-            logging.AddConsole();
-            logging.AddDebug();
-            //logging.AddLog4Net();
+            //logging.AddConsole();
+            //logging.AddDebug();
+            logging.AddNLog();
         })
         .Build();
 
     await host.RunAsync();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    Console.Write(e.Message);
+    logger.LogError(0, ex, "Error WS_IDS");
+    throw;
 }
-
+finally
+{
+    // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+    LogManager.Shutdown();
+}
 
 
 
