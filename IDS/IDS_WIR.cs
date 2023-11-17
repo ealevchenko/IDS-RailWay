@@ -14,6 +14,9 @@ using System.Globalization;
 using EFIDS.Helper;
 using IDS;
 using System.Threading;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Remoting.Contexts;
 
 namespace IDS
 {
@@ -6960,6 +6963,7 @@ namespace IDS
         /// <param name="start_date"></param>
         /// <param name="update_sms"></param>
         /// <returns></returns>
+        // TODO: !!! Убрать переделать на 2 даты
         public UZ.UZ_DOC GetSendingEPD(OutgoingCars car, DateTime? start_date, bool update_sms)
         {
             try
@@ -7002,6 +7006,49 @@ namespace IDS
 
             }
         }
+        public UZ.UZ_DOC GetSendingEPD(OutgoingCars car, DateTime arr_date, DateTime? out_date, bool update_sms)
+        {
+            try
+            {
+                UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
+                // Проверим вагон
+                if (car == null) return null;
+                if (String.IsNullOrWhiteSpace(car.num_doc))
+                {
+                    // документ не определен
+                    UZ.UZ_DOC uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, arr_date, out_date);
+                    if (uz_doc == null && update_sms)
+                    {
+                        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
+                    }
+                    return uz_doc;
+                }
+                else
+                {
+                    // документ определен обновим его
+                    EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
+                    UZ_DOC_OUT uz_doc_old = ef_uzdoc.Get(car.num_doc);
+                    UZ.UZ_DOC uz_doc_new = uz_sms.GetDocumentOfDB_NumDoc(car.num_doc);
+                    if ((uz_doc_new != null && uz_doc_old != null && uz_doc_old.revision < uz_doc_new.revision) || (uz_doc_new != null && uz_doc_old == null))
+                    {
+                        return uz_doc_new;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetSendingEPD(car={0}, start_date={1}, out_date={2}, update_sms={3})",
+                    car, arr_date, out_date, update_sms), servece_owner, eventID);
+                return null;
+
+
+            }
+        }
+
 
         #region ДОКУМЕНТ Outgoing_UZ_Vagon_Pay
         /// <summary>
@@ -8119,7 +8166,7 @@ namespace IDS
                             // Обновим документы 
                             foreach (OutgoingCars car in list_out_car)
                             {
-                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, sostav.date_readiness_amkr, false);
+                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, sostav.date_readiness_amkr, true);
                                 if (new_uz_doc != null)
                                 {
                                     EPDOutgoingCar new_update_epd = new EPDOutgoingCar()
@@ -8189,6 +8236,137 @@ namespace IDS
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        public OperationResultID OperationUpdateEPDSendingSostav2(ref EFDbContext context, long id_outgoing_sostav, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFIDS.Concrete.EFDbContext();
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
+                EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFArrivalCars ef_arr_car = new EFArrivalCars(context);
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+
+                OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
+                if (sostav != null)
+                {
+                    // Состав определен (сдан или отправлен)
+                    if (sostav.status >= 2 && sostav.status <= 3)
+                    {
+                        List<int> skip_num = new List<int>();
+                        List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList(); //  && c.num == 61284964
+                        if (list_out_car != null && list_out_car.Count() > 0)
+                        {
+                            skip_num.Clear();
+                            List<EPDOutgoingCar> list_update_epd = new List<EPDOutgoingCar>(); // Список для обновления
+                            List<long> list_num = new List<long>();
+                            // Обновим документы 
+                            foreach (OutgoingCars car in list_out_car)
+                            {
+                                int skip = list_num.IndexOf(car.id);
+                                if (skip == -1)
+                                {
+                                    WagonInternalRoutes wir = ef_wir.Context.Where(n => n.id_outgoing_car == car.id).FirstOrDefault();
+                                    if (wir != null)
+                                    {
+                                        ArrivalCars arr_car = ef_arr_car.Context.Where(a => a.id == wir.id_arrival_car).FirstOrDefault();
+                                        if (arr_car != null)
+                                        {
+                                            ArrivalSostav arr_sostav = ef_arr_sostav.Context.Where(s => s.id == arr_car.id_arrival).FirstOrDefault();
+                                            if (arr_sostav != null)
+                                            {
+                                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, sostav.date_readiness_amkr, true);
+                                                if (new_uz_doc != null)
+                                                {
+                                                    if (new_uz_doc.otpr != null && new_uz_doc.otpr.vagon != null && new_uz_doc.otpr.vagon.Length > 0)
+                                                    {
+                                                        foreach (VAGON vag in new_uz_doc.otpr.vagon)
+                                                        {
+                                                            OutgoingCars out_car = list_out_car.Where(v => v.num.ToString() == vag.nomer).FirstOrDefault();
+                                                            if (out_car == null)
+                                                            {
+                                                                continue;
+                                                            }
+                                                            EPDOutgoingCar new_update_epd = new EPDOutgoingCar()
+                                                            {
+                                                                id_outgoing_car = out_car.id,
+                                                                epd = new_uz_doc
+                                                            };
+                                                            list_update_epd.Add(new_update_epd); // добавим  в список обновления
+                                                            list_num.Add(out_car.id); // Добавим в исключение
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Сгруппируем документы по id_doc уз
+                            List<IGrouping<string, EPDOutgoingCar>> group_outgoing_car = list_update_epd.ToList().GroupBy(d => d.epd.id_doc).ToList();
+                            // Пройдемся по документам
+                            foreach (IGrouping<string, EPDOutgoingCar> out_cars in group_outgoing_car)
+                            {
+                                List<EPDOutgoingCar> list_cars = out_cars.ToList();
+                                // Выполним обновление всего пула документов
+                                int result = UpdateOutgoing_UZ_Document(ref context, out_cars.Key, list_cars, user);
+                                // Запомним результат
+                                foreach (EPDOutgoingCar car in list_cars)
+                                {
+                                    rt.SetResultOperation(result, car.id_outgoing_car);
+                                }
+                            }
+                            // Проверка на ошибку
+                            if (rt.error == 0)
+                            {
+                                //sostav.change = DateTime.Now;
+                                //sostav.change_user = user;
+                                //ef_out_sostav.Update(sostav);
+                                if (rt.listResult.Count() > 0)
+                                {
+                                    rt.SetResult(context.SaveChanges());
+                                }
+                            }
+                            else
+                            {
+                                rt.SetResult((int)errors_base.error_save_changes); // Были ошибки по ходу выполнения всей операций
+                            }
+                        }
+                        else
+                        {
+                            rt.SetResult((int)errors_base.not_outgoing_cars_db); // В базе данных нет записи по вагонам для отпправки
+                        }
+                    }
+                    else
+                    {
+                        rt.SetResult((int)errors_base.error_status_outgoing_sostav); // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                    }
+                }
+                else
+                {
+                    rt.SetResult((int)errors_base.not_outgoing_sostav_db); //В базе данных нет записи состава для оправки
+                }
+                return rt;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("OperationUpdateEPDSendingSostav(context={0}, id_outgoing_sostav={1}, user={2})",
+                    context, id_outgoing_sostav, user), servece_owner, eventID);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+
         /// <summary>
         /// Операция обновить документы ЭПД по составу
         /// </summary>
@@ -8206,7 +8384,7 @@ namespace IDS
                 {
                     user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
                 }
-                return OperationUpdateEPDSendingSostav(ref context, id_outgoing_sostav, user);
+                return OperationUpdateEPDSendingSostav2(ref context, id_outgoing_sostav, user);
             }
             catch (Exception e)
             {
@@ -8338,7 +8516,7 @@ namespace IDS
                 // Выполним запрос и получим все ЭПД с признапком не закрыт
                 string sql = "select * from [IDS].[get_view_uz_doc_sending]() where status_sostav >=2 and  [position_outgoing] is not null and ([num_doc] is null or [status]<>8)";
                 List<UZ_DOC_Sending> list_uz_doc_all = context_ids.Database.SqlQuery<UZ_DOC_Sending>(sql).ToList();
-                List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.dt >= date_exceeded).ToList();
+                List<UZ_DOC_Sending> list_uz_doc = list_uz_doc_all.Where(d => d.date_outgoing >= date_exceeded).ToList();
                 // Сгруппируем по id сотава для отправки
                 List<IGrouping<long, UZ_DOC_Sending>> group_uz_doc = list_uz_doc.ToList().GroupBy(d => d.id_sostav).ToList();
                 int count = group_uz_doc != null ? group_uz_doc.Count() : 0;
@@ -8350,16 +8528,21 @@ namespace IDS
                     List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
                     all_cars += list_cars != null ? list_cars.Count() : 0; // Добавим общее количество вагонов
                                                                            // Выполним обновление всего пула документов
-                    OperationResultID result = OperationUpdateEPDSendingSostav(ref context_ids, uz_doc_sostav.Key, user);
-                    if (result.result > 0)
+                    DateTime dt = new DateTime(2023, 11, 2, 0, 0, 0);
+                    if (uz_doc_sostav.ToList()[0].date_outgoing >= dt)
                     {
-                        upd_cars += result.result; // Добавим добавленное количество вагонов
+                        Console.WriteLine(String.Format("Обрабатываю id={0}, num_doc={1} data={2}", uz_doc_sostav.Key, uz_doc_sostav.ToList()[0].num_doc, uz_doc_sostav.ToList()[0].date_outgoing));
+                        OperationResultID result = OperationUpdateEPDSendingSostav2(ref context_ids, uz_doc_sostav.Key, user);
+                        if (result.result > 0)
+                        {
+                            upd_cars += result.result; // Добавим добавленное количество вагонов
+                        }
+                        // Запомним результат
+                        res.SetResultOperation(result.result, uz_doc_sostav.Key);
+                        string mess_update = String.Format("ID состава {0}, определено вагонов {1}, обновлено {2} ошибок {3}, осталось составов {4}", uz_doc_sostav.Key, (list_cars != null ? list_cars.Count() : 0), result.result, result.error, --count);
+
+                        mess_update.WarningLog(servece_owner, eventID);
                     }
-                    // Запомним результат
-                    res.SetResultOperation(result.result, uz_doc_sostav.Key);
-                    string mess_update = String.Format("ID состава {0}, определено вагонов {1}, обновлено {2} ошибок {3}, осталось составов {4}", uz_doc_sostav.Key, (list_cars != null ? list_cars.Count() : 0), result.result, result.error, --count);
-                    Console.WriteLine(mess_update);
-                    mess_update.WarningLog(servece_owner, eventID);
                 }
                 res.SetResult(upd_cars);
                 //
