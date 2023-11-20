@@ -26,7 +26,7 @@ SELECT [id]
       ,[vagonnik_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav]
   --WHERE id=231973
-  where [num_doc]= 1135--1139--1145--1142--1136--1133--1131--1126--1127--1124 --503--492--512--511--519--517--518--516--515--513--510--509--507--508--1165--507--
+  where [num_doc]= 1170--1164--1163--525--522--523--524--521--520--1165--1160 --1161--1151--1158--1148--1156--1155--1149--1135--1139--1145--1142--1136--1133--1131--1126--1127--1124 --503--492--512--511--519--517--518--516--515--513--510--509--507--508--1165--507--
   order by 1 desc
 
   --SELECT TOP (1000) [id]
@@ -60,21 +60,21 @@ SELECT [id]
 
  -- UPDATE [IDS].[Outgoing_UZ_Vagon]
  -- SET [id_document] = null
-	--WHERE id in (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231928 and num in (61120911,61211041))
+	--WHERE id in (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231994 and num in (52342276,60717139,62975545,64097181,64097488))
 
  --UPDATE [IDS].[OutgoingCars]
  --  SET [num_doc] = null
- --WHERE id in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231928 and num in (61120911,61211041))
+ --WHERE id in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231994 and num in (52342276,60717139,62975545,64097181,64097488))
 
  -- UPDATE [IDS].[Outgoing_UZ_Vagon]
  -- SET [id_document] = null
-	--WHERE id in (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231944)
+	--WHERE id in (SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=232006)
 
  --UPDATE [IDS].[OutgoingCars]
  --  SET [num_doc] = null
- --WHERE id in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231944)
+ --WHERE id in (SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=232006)
 
-
+--231969
   SELECT [id] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231989 and num in (52876398,55119218,56032337,56108079,56626815,60454170,60561735,60790987,61489373,61489472,61508123,63565550,67198010)
   SELECT [id_outgoing_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[OutgoingCars] where [id_outgoing]=231989 and num in (52876398,55119218,56032337,56108079,56626815,60454170,60561735,60790987,61489373,61489472,61508123,63565550,67198010)
 
