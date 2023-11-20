@@ -391,7 +391,12 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(231944, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(232006, @"EUROPE\ealevchenko"); //231984
+        }
+        public void IDS_WIR_OperationUpdateEPDSendingCar()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(777387, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
