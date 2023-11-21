@@ -485,7 +485,7 @@ namespace UZ
                 return null;
             }
         }
-        public UZ_DOC GetDocumentOfSMS_NumShipper(int num, string sender_code, DateTime lower_date, DateTime? start_date)
+        public UZ_DOC GetDocumentOfSMS_NumShipper(int num, string sender_code, DateTime lower_date, DateTime upper_date)
         {
             try
             {
@@ -496,7 +496,7 @@ namespace UZ
 
                 List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
 
-                list = list.ToList().Where(d => d.sender_code == sender_code && (d.dt == null || d.dt > lower_date) && d.otpr.date_otpr > start_date).OrderBy(c => c.otpr.date_otpr).ToList();
+                list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr >= lower_date && d.otpr.date_otpr <= upper_date).OrderBy(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
                 if (list == null || list.Count() == 0) return doc;
                 doc = new UZ_DOC()
@@ -515,7 +515,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetDocumentOfSMS_NumShipper(num={0}, shipper={1}, start_date={2})", num, sender_code, start_date), this.servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetDocumentOfSMS_NumShipper(num={0}, sender_code={1}, lower_date={2}, upper_date={3})", num, sender_code, lower_date, upper_date), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -732,35 +732,36 @@ namespace UZ
                 return null;
             }
         }
-        public UZ_DOC GetDocumentOfDB_NumShipper(int num, int[] shipper, DateTime lower_date, DateTime? start_date)
+        public UZ_DOC GetDocumentOfDB_NumShipper(int num, int[] shipper, DateTime lower_date, DateTime upper_date)
         {
             try
             {
 
                 UZ_DOC doc = null;
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
-                DateTime new_dt = ((DateTime)start_date).AddHours(0);
+                DateTime new_dt = ((DateTime)upper_date).AddHours(0);
 
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
                     "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
                     "and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
                     "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))    )) order by [dt] "; //desc
                 List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
-                List<UZ_Data> list_uzd_uncredited = list_uzd.Where(u => u.doc_Status == "Uncredited").ToList();
-                List<UZ_Data> list_uzd_not_uncredited = list_uzd.Where(u => u.doc_Status != "Uncredited").ToList();
-                if (list_uzd_not_uncredited != null && list_uzd_not_uncredited.Count() > 0)
-                {
-                    doc = GetDocumentOfList_UZ_Data(num, list_uzd_not_uncredited, lower_date);
-                }
-                if (doc == null && list_uzd_uncredited != null && list_uzd_uncredited.Count() > 0)
-                {
-                    doc = GetDocumentOfList_UZ_Data(num, list_uzd_uncredited, lower_date);
-                }
+                //List<UZ_Data> list_uzd_uncredited = list_uzd.Where(u => u.doc_Status == "Uncredited").ToList();
+                //List<UZ_Data> list_uzd_not_uncredited = list_uzd.Where(u => u.doc_Status != "Uncredited").ToList();
+                doc = GetDocumentOfList_UZ_Data(num, list_uzd, lower_date, upper_date);
+                //if (list_uzd_not_uncredited != null && list_uzd_not_uncredited.Count() > 0)
+                //{
+                //    doc = GetDocumentOfList_UZ_Data(num, list_uzd_not_uncredited, lower_date);
+                //}
+                //if (doc == null && list_uzd_uncredited != null && list_uzd_uncredited.Count() > 0)
+                //{
+                //    doc = GetDocumentOfList_UZ_Data(num, list_uzd_uncredited, lower_date);
+                //}
                 return doc;
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumShipper(num={0}, shipper={1}, start_date={2})", num, shipper, start_date), this.servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumShipper(num={0}, shipper={1}, upper_date={2})", num, shipper, upper_date), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -769,8 +770,10 @@ namespace UZ
         /// </summary>
         /// <param name="num"></param>
         /// <param name="list_uzd"></param>
+        /// <param name="lower_date"></param>
+        /// <param name="upper_date"></param>
         /// <returns></returns>
-        public UZ_DOC GetDocumentOfList_UZ_Data(int num, List<UZ_Data> list_uzd, DateTime lower_date)
+        public UZ_DOC GetDocumentOfList_UZ_Data(int num, List<UZ_Data> list_uzd, DateTime lower_date, DateTime upper_date)
         {
             try
             {
@@ -783,7 +786,7 @@ namespace UZ
                     {
                         string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
-                        if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0 && otpr.date_otpr > lower_date)
+                        if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0 && otpr.date_otpr >= lower_date && otpr.date_otpr <= upper_date)
                         {
                             // Проверим вагон пренадлежит документу
                             UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
@@ -813,7 +816,7 @@ namespace UZ
             }
             catch (Exception e)
             {
-                e.ExceptionMethodLog(String.Format("GetDocumentOfList_UZ_Data(num={0}, list_uzd={1})", num, list_uzd), this.servece_owner, eventID);
+                e.ExceptionMethodLog(String.Format("GetDocumentOfList_UZ_Data(num={0}, list_uzd={1}, lower_date={2}, upper_date={3})", num, list_uzd, lower_date, upper_date), this.servece_owner, eventID);
                 return null;
             }
         }
