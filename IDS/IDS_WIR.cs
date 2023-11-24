@@ -8525,7 +8525,7 @@ namespace IDS
                             if (arr_sostav != null)
                             {
 
-                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, car.OutgoingSostav.date_departure_amkr != null ? (DateTime)car.OutgoingSostav.date_departure_amkr : (car.OutgoingSostav.date_outgoing != null ? (DateTime)car.OutgoingSostav.date_outgoing : car.OutgoingSostav.date_readiness_amkr), 2);
+                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, car.OutgoingSostav.date_departure_amkr != null ? (DateTime)car.OutgoingSostav.date_departure_amkr : (car.OutgoingSostav.date_outgoing != null ? (DateTime)car.OutgoingSostav.date_outgoing : car.OutgoingSostav.date_readiness_amkr), 1);
                                 if (new_uz_doc != null)
                                 {
                                     List<EPDOutgoingCar> list_cars = new List<EPDOutgoingCar>();

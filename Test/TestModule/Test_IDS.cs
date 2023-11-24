@@ -32,7 +32,8 @@ namespace Test.TestModule
         {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(64566136, null);
+            DateTime dt_arrival = new DateTime(2023, 11, 14, 16, 10, 0);
+            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(61337481, dt_arrival);
             Console.WriteLine("num_doc = {0}", res);
         }
         /// <summary>
@@ -401,7 +402,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingCar(777387, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(777121, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
@@ -514,11 +515,11 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> consignees = new List<int>() { 7932, 6302, 659 };
             List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
-            DateTime? dt_arrival = new DateTime(2022, 5, 26, 10, 33, 00);
+            DateTime? dt_arrival = new DateTime(2023, 11, 14, 16, 00, 00);
             //2021-12-03 11:42:05.133
             //52830882
             // 2022-05-06 06:40:00
-            ids.OperationUpdateUZ_DOC(56460728, consignees, stations, dt_arrival, -36, true, true);
+            ids.OperationUpdateUZ_DOC(61337481, consignees, stations, dt_arrival, -36, true, true);
         }
         /// <summary>
         /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени

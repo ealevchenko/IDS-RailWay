@@ -239,7 +239,7 @@ namespace Test
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
 
             //tids.IDS_WIR_UpdateArrivalEPD();                          // Тест функции сервиса обновления входящих документов
-            tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
+            //tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                    // Тест переноса вагона в левую сторону
             //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
@@ -312,7 +312,7 @@ namespace Test
             //tuz.UZ_SMS_GetOutgoingDocumentOfDB_NumShipper(); //Получить ЭПД из промежуточной базы на вагон который отправили
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
-
+            tuz.UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date();
             //tuz.UZ_SMS_GetDocument_of_id_doc();
             //tuz.UZ_SMS_GetDocument_of_db_id_doc();
             #endregion

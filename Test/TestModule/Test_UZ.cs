@@ -148,7 +148,15 @@ namespace Test.TestModule
             UZ_SMS sms = new UZ_SMS();
             DateTime? ве = sms.GetLastDT_UZ_DOC();
         }
-
+        public void UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            List<int> consignees = new List<int>() { 7932, 6302, 659 };
+            List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
+            DateTime dt_adoption = new DateTime(2023, 11, 14, 16, 00, 00);
+            DateTime? dt_old_outgoing = new DateTime(2023, 11, 8, 22, 25, 00);
+            sms.Get_UZ_DOC_SDB_Of_Num_Date(61337481, consignees, stations, dt_old_outgoing, dt_adoption, -36);
+        }
 
         #endregion
     }
