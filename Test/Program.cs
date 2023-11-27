@@ -245,6 +245,7 @@ namespace Test
             //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
             //tids.IDS_WIR_OperationUpdateUZ_DOC2();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+            //tids.IDS_WIR_OperationUpdateUZ_DOC_Adp_Out();               // Тест поиска документа по номеру вагона грузополучателям , станциям и предыдущей отправки и приема
             //tids.IDS_WIR_OperationManualSearchIncomingWagon();        // Тест поиска вагонов введенных в ручную
 
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();             // Тест поиска вагонов прошедших погран переход
@@ -312,7 +313,7 @@ namespace Test
             //tuz.UZ_SMS_GetOutgoingDocumentOfDB_NumShipper(); //Получить ЭПД из промежуточной базы на вагон который отправили
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
-            tuz.UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date();
+            //tuz.UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date();
             //tuz.UZ_SMS_GetDocument_of_id_doc();
             //tuz.UZ_SMS_GetDocument_of_db_id_doc();
             #endregion
@@ -324,6 +325,7 @@ namespace Test
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
             //tids.IDS_Directory_ClearDirectory_Cargo();    // Административной функции очистить от дублей справочник грузов
+            tids.IDS_WIR_OperationUpdateEPDIncomingWagon();             // Административная функция исправить документ по прибытию
             #endregion
 
             Console.WriteLine("Press any key to exit...");

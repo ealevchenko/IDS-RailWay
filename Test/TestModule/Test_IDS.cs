@@ -449,6 +449,14 @@ namespace Test.TestModule
             }
         }
         /// <summary>
+        /// Административная функция исправить документ по прибытию
+        /// </summary>
+        public void IDS_WIR_OperationUpdateEPDIncomingWagon()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            ids.OperationUpdateEPDIncomingWagon(1666409, @"EUROPE\ealevchenko");
+        }
+        /// <summary>
         ///  Поставить вагон в систему ИДС
         /// </summary>
         //public void IDS_WIR_IncomingWagon()
@@ -532,6 +540,14 @@ namespace Test.TestModule
             //52830882
             // 2022-05-06 06:40:00
             ids.OperationUpdateUZ_DOC(52926623, dt_arrival, true, true);
+        }
+        public void IDS_WIR_OperationUpdateUZ_DOC_Adp_Out()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime? dt_old_outgoing = new DateTime(2023, 11, 8, 22, 25, 00);
+            DateTime dt_adoption = new DateTime(2023, 11, 14, 16, 00, 00);
+            int num = 61507802; //61337481
+            ids.OperationUpdateUZ_DOC(num, dt_old_outgoing, dt_adoption, true, true);
         }
 
         public void IDS_WIR_OperationManualSearchIncomingWagon()
