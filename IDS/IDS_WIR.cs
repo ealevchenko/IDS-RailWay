@@ -3144,6 +3144,8 @@ namespace IDS
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
 
+                EFDirectory_Cargo ef_dir_cargo = new EFDirectory_Cargo(context);
+
                 ArrivalCars car = ef_arr_car.Context.Where(c => c.id == id_arrival_car).FirstOrDefault();
                 if (car == null) return (int)errors_base.not_arrival_cars_db;   // Ошибка, нет записи вагона по прибытию  
                 if (car.arrival == null) return (int)errors_base.not_arrival_cars_arrival;  // Запрет операции вагон еще не принят  
@@ -3210,7 +3212,10 @@ namespace IDS
                 int? u_tara = null;
                 int? ves_tary_arc = null;
                 int? kol_pac = null;
+                string pac = null;
+                string nom_zpu = null;
 
+                Directory_Cargo dir_cargo = null;
                 List<Doc_Vagon_Cont> list_conts = new List<Doc_Vagon_Cont>();
                 List<Doc_Vagon_Pay> list_pays = new List<Doc_Vagon_Pay>();
                 List<Doc_Vagon_Acts> list_acts = new List<Doc_Vagon_Acts>();
@@ -3359,10 +3364,17 @@ namespace IDS
                     {
                         vesg = vagon.collect_v[0].vesg;
                         kol_pac = vagon.collect_v[0].kol_pac;
+                        pac = vagon.collect_v[0].pac;
                         int? kod_etsng = vagon.collect_v[0].kod_etsng != null ? (int?)int.Parse(vagon.collect_v[0].kod_etsng) : null;
                         string name_etsng = vagon.collect_v[0].name_etsng;
+                        if (vagon.zpu_v != null && vagon.zpu_v.Count() >0) {
+                            nom_zpu = vagon.zpu_v[0].nom_zpu;
+                        }
+
                         Directory_CargoETSNG dir_cargo_etsng = ids_dir.GetDirectory_CargoETSNG(ref context, (int)kod_etsng, name_etsng, true, user);
 
+                        dir_cargo = ef_dir_cargo.Context.Where(c => c.id_cargo_etsng == dir_cargo_etsng.id).FirstOrDefault();
+                        if (dir_cargo==null) return (int)errors_base.not_dir_cargo_of_db;   // В базе данных нет записи указаного груза
                     }
                 }
 
@@ -3405,15 +3417,15 @@ namespace IDS
                     ves_tary_arc = ves_tary_arc != null ? ves_tary_arc * 1000 : null,
                     route = arr_uz_vag.route,
                     note_vagon = arr_uz_vag.note_vagon,
-                    id_cargo = null,
+                    id_cargo = dir_cargo.id,
                     id_cargo_gng = null,
-                    id_certification_data = null,
-                    id_commercial_condition = null,
+                    id_certification_data = arr_uz_vag.id_certification_data,
+                    id_commercial_condition = arr_uz_vag.id_commercial_condition,
                     kol_pac = kol_pac,
-                    pac = null,
+                    pac = pac,
                     vesg = vesg != null ? vesg * 1000 : null,
                     vesg_reweighing = null,
-                    nom_zpu = null,
+                    nom_zpu = nom_zpu,
                     danger = null,
                     danger_kod = null,
                     cargo_returns = null,

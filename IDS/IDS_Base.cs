@@ -155,6 +155,8 @@ namespace IDS
         // Directory_OuterWays -1500..
         not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
+        // Directory_Cargo -1600..
+        not_dir_cargo_of_db = -1601,                    // В базе данных нет записи указаного груза
 
     }
     public class ChangeID
