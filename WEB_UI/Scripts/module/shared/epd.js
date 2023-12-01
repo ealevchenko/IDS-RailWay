@@ -311,7 +311,7 @@
                     var cont = conts[i];
                     var collect = cont.collect_k ? cont.collect_k : null;
                     var zpu = cont.zpu_k && cont.zpu_k.length > 0 ? cont.zpu_k[0] : null;
-                    var pay = cont.pay_k && cont.pay_k.length > 0 ? cont.zpu_k : [];
+                    var pay = cont.pay_k && cont.pay_k.length > 0 ? cont.pay_k : [];
                     var pays = [];
                     for (var p = 0; p < pay.length; p++) {
                         pays.push({

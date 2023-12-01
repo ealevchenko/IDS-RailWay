@@ -3214,6 +3214,10 @@ namespace IDS
                 int? kol_pac = null;
                 string pac = null;
                 string nom_zpu = null;
+                string danger = null;
+                string danger_kod = null;
+                string zayava = null;
+                int? pay_summa = null;
 
                 Directory_Cargo dir_cargo = null;
                 List<Doc_Vagon_Cont> list_conts = new List<Doc_Vagon_Cont>();
@@ -3333,6 +3337,22 @@ namespace IDS
                             };
                             list_doc_acts.Add(da);
                         }
+                        else
+                        {
+                            Doc_Vagon_Acts dva = new Doc_Vagon_Acts()
+                            {
+                                date_akt = act.date_akt,
+                                date_dved = act.date_akt,
+                                nom_akt = act.nom_akt,
+                                nom_dved = act.nom_dved,
+                                prichina_akt = act.prichina_akt,
+                                stn_akt = act.stn_akt != null ? (int?)int.Parse(act.stn_akt) : null,
+                                stn_name_akt = act.stn_name_akt,
+                                type = act.type != null ? (int?)int.Parse(act.type) : null,
+                                vagon_nom = car.num
+                            };
+                            list_acts.Add(dva);
+                        }
                     }
                 }
 
@@ -3357,26 +3377,105 @@ namespace IDS
                 if (otpr.vagon != null && otpr.vagon.Count() > 0)
                 {
                     VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == car.num.ToString()).FirstOrDefault();
-                    gruzp = vagon.gruzp;
-                    u_tara = vagon.u_tara;
-                    ves_tary_arc = vagon.ves_tary_arc;
-                    if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                    if (vagon != null)
                     {
-                        vesg = vagon.collect_v[0].vesg;
-                        kol_pac = vagon.collect_v[0].kol_pac;
-                        pac = vagon.collect_v[0].pac;
-                        int? kod_etsng = vagon.collect_v[0].kod_etsng != null ? (int?)int.Parse(vagon.collect_v[0].kod_etsng) : null;
-                        string name_etsng = vagon.collect_v[0].name_etsng;
-                        if (vagon.zpu_v != null && vagon.zpu_v.Count() >0) {
+                        gruzp = vagon.gruzp;
+                        u_tara = vagon.u_tara;
+                        ves_tary_arc = vagon.ves_tary_arc;
+                        //
+                        if (vagon.zpu_v != null && vagon.zpu_v.Count() > 0)
+                        {
                             nom_zpu = vagon.zpu_v[0].nom_zpu;
                         }
+                        //
+                        if (vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                        {
+                            vesg = vagon.collect_v[0].vesg;
+                            kol_pac = vagon.collect_v[0].kol_pac;
+                            pac = vagon.collect_v[0].pac;
+                            int? kod_etsng = vagon.collect_v[0].kod_etsng != null ? (int?)int.Parse(vagon.collect_v[0].kod_etsng) : null;
+                            string name_etsng = vagon.collect_v[0].name_etsng;
+                            danger = vagon.collect_v[0].danger; // класс опасности
+                            danger_kod = vagon.collect_v[0].danger_kod; // код опасности
+                            Directory_CargoETSNG dir_cargo_etsng = ids_dir.GetDirectory_CargoETSNG(ref context, (int)kod_etsng, name_etsng, true, user);
+                            dir_cargo = ef_dir_cargo.Context.Where(c => c.id_cargo_etsng == dir_cargo_etsng.id).FirstOrDefault();
+                            if (dir_cargo == null) return (int)errors_base.not_dir_cargo_of_db;   // В базе данных нет записи указаного груза
+                        }
 
-                        Directory_CargoETSNG dir_cargo_etsng = ids_dir.GetDirectory_CargoETSNG(ref context, (int)kod_etsng, name_etsng, true, user);
+                        // Раздел VAGON/PAY_V
+                        if (vagon.pay_v != null && vagon.pay_v.Count() > 0)
+                        {
+                            //Тариф при выдачи
+                            pay_summa = 0;
+                            for (int i = 0; i < vagon.pay_v.Count(); i++)
+                            {
+                                if (vagon.pay_v[i].kod == "001" || vagon.pay_v[i].kod == "021")
+                                {
+                                    pay_summa += vagon.pay_v[i].summa != null ? vagon.pay_v[i].summa : 0;
+                                }
+                            }
+                        };
 
-                        dir_cargo = ef_dir_cargo.Context.Where(c => c.id_cargo_etsng == dir_cargo_etsng.id).FirstOrDefault();
-                        if (dir_cargo==null) return (int)errors_base.not_dir_cargo_of_db;   // В базе данных нет записи указаного груза
+                        if (vagon.nomer != null && vagon.pay_v != null && vagon.pay_v.Count() > 0)
+                        {
+                            for (int p = 0; p < vagon.pay_v.Count(); p++)
+                            {
+                                PAY_V pay = vagon.pay_v[p];
+                                Doc_Vagon_Pay dvp = new Doc_Vagon_Pay()
+                                {
+                                    kod = pay.kod,
+                                    summa = pay.summa != null ? (long)pay.summa : 0,
+                                };
+                                list_pays.Add(dvp);
+                            }
+                        }
                     }
                 }
+                if (otpr.cont != null && otpr.cont.Count() > 0)
+                {
+                    list_conts.Clear();
+                    CONT[] conts = otpr.cont.Where(c => c.nom_vag == car.num).ToArray();
+                    if (conts != null)
+                    {
+                        for (int i = 0; i < conts.Count(); i++)
+                        {
+                            CONT cont = conts[i];
+                            COLLECT_K collect = cont.collect_k != null ? cont.collect_k : null;
+                            ZPU_K zpu = cont.zpu_k != null && cont.zpu_k.Count() > 0 ? cont.zpu_k[0] : null;
+                            PAY_K[] pay = cont.pay_k != null && cont.pay_k.Count() > 0 ? cont.pay_k : new PAY_K[0];
+                            List<Doc_Cont_Pay> pays = new List<Doc_Cont_Pay>();
+                            for (int p = 0; p < pay.Count(); p++)
+                            {
+                                Doc_Cont_Pay dcp = new Doc_Cont_Pay()
+                                {
+                                    kod = pay[p].kod,
+                                    summa = pay[p].summa != null ? (long)pay[p].summa : 0
+                                };
+                                pays.Add(dcp);
+                            }
+
+                            Doc_Vagon_Cont dvc = new Doc_Vagon_Cont()
+                            {
+                                nom_cont = cont.nom_cont,
+                                kod_tiporazmer = cont.kod_tiporazmer,
+                                gruzp = cont.gruzp,
+                                ves_tary_arc = cont.ves_tary_arc,
+                                id_cargo = null,
+                                id_cargo_gng = null,
+                                kol_pac = collect != null ? collect.kol_pac : null,
+                                pac = collect != null ? collect.pac : null,
+                                vesg = collect != null ? collect.vesg : null,
+                                vesg_reweighing = null,
+                                nom_zpu = zpu != null ? zpu.nom_zpu : null,
+                                pays = pays,
+                            };
+                            list_conts.Add(dvc);
+                        }
+                    }
+                }
+                // Раздел TEXT станции отправки и прибытия и коды администрации отпр и прибытия
+                if (otpr.text != null)
+                    zayava = otpr.text.zayava;
 
                 Arrival_Doc arrival_main_doc = new Arrival_Doc()
                 {
@@ -3414,7 +3513,7 @@ namespace IDS
                     id_type = arr_uz_vag.id_type,
                     gruzp = gruzp,
                     u_tara = u_tara != null ? u_tara * 1000 : null,
-                    ves_tary_arc = ves_tary_arc != null ? ves_tary_arc * 1000 : null,
+                    ves_tary_arc = ves_tary_arc != null ? ves_tary_arc : null,
                     route = arr_uz_vag.route,
                     note_vagon = arr_uz_vag.note_vagon,
                     id_cargo = dir_cargo.id,
@@ -3426,29 +3525,29 @@ namespace IDS
                     vesg = vesg != null ? vesg * 1000 : null,
                     vesg_reweighing = null,
                     nom_zpu = nom_zpu,
-                    danger = null,
-                    danger_kod = null,
-                    cargo_returns = null,
-                    id_station_on_amkr = null,
-                    id_division_on_amkr = null,
-                    empty_car = null,
+                    danger = danger,
+                    danger_kod = danger_kod,
+                    cargo_returns = arr_uz_vag.cargo_returns, // ?
+                    id_station_on_amkr = arr_uz_vag.id_station_on_amkr,
+                    id_division_on_amkr = arr_uz_vag.id_division_on_amkr,
+                    empty_car = arr_uz_vag.empty_car,
                     kol_conductor = null,
-                    id_owner = null,
-                    id_countrys = null,
-                    id_genus = null,
-                    kol_os = null,
-                    usl_tip = null,
+                    id_owner = arr_uz_vag.id_owner,
+                    id_countrys = arr_uz_vag.id_countrys,
+                    id_genus = arr_uz_vag.id_genus,
+                    kol_os = arr_uz_vag.kol_os,
+                    usl_tip = arr_uz_vag.usl_tip,
                     date_rem_uz = arr_uz_vag.date_rem_uz,
-                    date_rem_vag = null,
-                    id_type_ownership = null,
+                    date_rem_vag = arr_uz_vag.date_rem_vag,
+                    id_type_ownership = arr_uz_vag.id_type_ownership,
                     gruzp_uz = arr_uz_vag.gruzp_uz,
                     tara_uz = arr_uz_vag.tara_uz,
-                    zayava = null,
-                    pay_summa = null,
+                    zayava = zayava,
+                    pay_summa = pay_summa,
                     conts = list_conts,
                     pays = list_pays,
                     acts = list_acts,
-                    id_wagons_rent_arrival = null,
+                    id_wagons_rent_arrival = arr_uz_vag.id_wagons_rent_arrival,
                 };
 
                 ResultObject res_arr_main_uz_doc = UpdateArrival_UZ_Document(ref context, uz_doc, null, arrival_main_doc, null, true, true, user);

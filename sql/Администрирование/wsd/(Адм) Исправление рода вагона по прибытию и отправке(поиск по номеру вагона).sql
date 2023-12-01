@@ -1,4 +1,4 @@
-declare @num int = 64930571  
+declare @num int = 68023266  
 SELECT TOP (1000) [num]
       ,[id_countrys]
       ,[id_genus]
@@ -86,7 +86,7 @@ SELECT TOP (1000) [id]
       --,[id_condition]
       --,[id_wagons_rent_arrival]
       --,[id_wagons_rent_outgoing]
-      --,[id_countrys]
+      ,[id_countrys]
       ,[id_genus]
       --,[id_owner]
       --,[gruzp_uz]
