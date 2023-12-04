@@ -451,11 +451,11 @@ namespace Test.TestModule
         /// <summary>
         /// Административная функция исправить документ по прибытию
         /// </summary>
-        public void IDS_WIR_OperationUpdateEPDIncomingWagon()
-        {
-            IDS_WIR ids = new IDS_WIR(service.Test);
-            ids.OperationUpdateEPDIncomingWagon(1666409, @"EUROPE\ealevchenko");
-        }
+        //public void IDS_WIR_OperationUpdateEPDIncomingWagon()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    ids.OperationUpdateEPDIncomingWagon(1666409, @"EUROPE\ealevchenko");
+        //}
         /// <summary>
         ///  Поставить вагон в систему ИДС
         /// </summary>
@@ -701,7 +701,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(231681, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(231935, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
