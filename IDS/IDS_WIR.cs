@@ -10510,7 +10510,7 @@ namespace IDS
                     }
                     bool inp_cargo = list_groups_cargo.Find(x => x == arr_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по прибытию
                     bool out_cargo = list_groups_cargo.Find(x => x == out_uz_vag.Directory_Cargo.id_group) == 0;    // Груз по отправке
-                    bool? route = arr_uz_vag.route;                                                                 // Маршрут
+                    bool? route = car.OutgoingSostav.route_sign;                                                                 // Маршрут
                     int num = car.num;                                                                              // Номер вагона
                     int id_genus = out_uz_vag.id_genus;                                                             // Род вагона
                     bool derailment = wio != null ? true : false;                                                   // Сход
