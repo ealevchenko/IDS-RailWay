@@ -7319,14 +7319,14 @@ namespace IDS
                         {
                             foreach (UZ_DOC_FULL docf in list_doc)
                             {
-                                //DateTime? end_date = docf.otpr != null ? docf.otpr.srok_end : null;
-                                //DateTime? date_otpr = docf.otpr != null ? docf.otpr.date_otpr : null;
-                                //if (dt_arrival != null && end_date != null && dt_arrival <= end_date && date_otpr != null && date_otpr < dt_arrival)
-                                //{
-                                //    // Этот документ подходит
-                                //    doc = docf;
-                                //    break;
-                                //}
+                                DateTime? date_pr = docf.otpr != null ? docf.otpr.date_pr : null;
+                                DateTime? date_otpr = docf.otpr != null ? docf.otpr.date_otpr : null;
+                                if (dt_old_outgoing != null && date_otpr > dt_old_outgoing && date_pr < dt_adoption)
+                                {
+                                    // Этот документ подходит
+                                    doc = docf;
+                                    break;
+                                }
                             }
                         }
                     }

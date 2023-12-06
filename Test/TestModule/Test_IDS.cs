@@ -544,9 +544,9 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateUZ_DOC_Adp_Out()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            DateTime? dt_old_outgoing = new DateTime(2023, 11, 8, 22, 25, 00);
-            DateTime dt_adoption = new DateTime(2023, 11, 14, 16, 00, 00);
-            int num = 61507802; //61337481
+            DateTime? dt_old_outgoing = new DateTime(2023, 09, 15, 17, 50, 00); // 2023-09-15 17:50:00.000
+            DateTime dt_adoption = new DateTime(2023, 10, 28, 07, 30, 00);     // 2023-10-28 07:30:00.000
+            int num = 51553246; //61337481
             ids.OperationUpdateUZ_DOC(num, dt_old_outgoing, dt_adoption, true, true);
         }
 

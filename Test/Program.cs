@@ -245,7 +245,7 @@ namespace Test
             //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
             //tids.IDS_WIR_OperationUpdateUZ_DOC2();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
-            //tids.IDS_WIR_OperationUpdateUZ_DOC_Adp_Out();               // Тест поиска документа по номеру вагона грузополучателям , станциям и предыдущей отправки и приема
+            tids.IDS_WIR_OperationUpdateUZ_DOC_Adp_Out();               // Тест поиска документа по номеру вагона грузополучателям , станциям и предыдущей отправки и приема
             //tids.IDS_WIR_OperationManualSearchIncomingWagon();        // Тест поиска вагонов введенных в ручную
 
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();             // Тест поиска вагонов прошедших погран переход
@@ -269,7 +269,7 @@ namespace Test
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
             //tids.IDS_WIR_GetExchangeRate();
             //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
-            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 
