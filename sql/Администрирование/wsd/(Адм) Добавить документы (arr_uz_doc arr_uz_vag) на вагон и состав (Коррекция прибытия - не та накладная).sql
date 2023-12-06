@@ -1,5 +1,9 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [id]
+declare @mun int = 51553246
+declare @id_arrival_uz_vagon int = 844981
+declare @id_document int = 618455
+declare @nom_main_doc sysname = '40582'
+
+SELECT [id]
       ,[id_arrival]
       ,[num]
       ,[position]
@@ -17,10 +21,10 @@ SELECT TOP (1000) [id]
       ,[change_user]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
-  where num =61507802--61337481
+  where num = @mun
   order by 1 desc
-  /****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [id]
+
+SELECT [id]
       ,[id_document]
       ,[num]
       ,[id_arrival]
@@ -67,8 +71,9 @@ SELECT TOP (1000) [id]
       ,[pay_summa]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-  where id=846352--846356
-  SELECT TOP (1000) [id]
+  where id=@id_arrival_uz_vagon
+
+SELECT [id]
       ,[id_document]
       ,[num]
       ,[id_arrival]
@@ -115,11 +120,10 @@ SELECT TOP (1000) [id]
       ,[pay_summa]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-  where num=61507802--61337481
+  where num=@mun
   order by 1 desc
 
-  /****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [id]
+SELECT [id]
       ,[id_doc_uz]
       ,[nom_doc]
       ,[nom_main_doc]
@@ -146,39 +150,38 @@ SELECT TOP (1000) [id]
       ,[date_pr]
       ,[date_vid]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
-  where id=619392--625443
-    /****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [id]
-      ,[id_doc_uz]
-      ,[nom_doc]
-      ,[nom_main_doc]
-      ,[code_stn_from]
-      ,[code_stn_to]
-      ,[code_border_checkpoint]
-      ,[cross_time]
-      ,[code_shipper]
-      ,[code_consignee]
-      ,[klient]
-      ,[code_payer_sender]
-      ,[code_payer_arrival]
-      ,[distance_way]
-      ,[note]
-      ,[parent_id]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-      ,[manual]
-      ,[date_otpr]
-      ,[srok_end]
-      ,[date_grpol]
-      ,[date_pr]
-      ,[date_vid]
-  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
-  where [nom_main_doc]=40505620
+  where id=@id_document
 
-  /****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP (1000) [num_doc]
+SELECT [id]
+      ,[id_doc_uz]
+      ,[nom_doc]
+      ,[nom_main_doc]
+      ,[code_stn_from]
+      ,[code_stn_to]
+      ,[code_border_checkpoint]
+      ,[cross_time]
+      ,[code_shipper]
+      ,[code_consignee]
+      ,[klient]
+      ,[code_payer_sender]
+      ,[code_payer_arrival]
+      ,[distance_way]
+      ,[note]
+      ,[parent_id]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[manual]
+      ,[date_otpr]
+      ,[srok_end]
+      ,[date_grpol]
+      ,[date_pr]
+      ,[date_vid]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+  where [nom_main_doc]=@nom_main_doc
+
+SELECT [num_doc]
       ,[revision]
       ,[status]
       ,[code_from]
@@ -189,61 +192,80 @@ SELECT TOP (1000) [num_doc]
       ,[close]
       ,[close_message]
   FROM [KRR-PA-CNT-Railway].[IDS].[UZ_DOC]
-  where [num_uz]='40505620'--'40505604'
+  where [num_uz]=@nom_main_doc
 
-  --INSERT INTO [IDS].[Arrival_UZ_Document]
---           ([id_doc_uz]
---           ,[nom_doc]
---           ,[nom_main_doc]
---           ,[code_stn_from]
---           ,[code_stn_to]
---           ,[code_border_checkpoint]
---           ,[cross_time]
---           ,[code_shipper]
---           ,[code_consignee]
---           ,[klient]
---           ,[code_payer_sender]
---           ,[code_payer_arrival]
---           ,[distance_way]
---           ,[note]
---           ,[parent_id]
---           ,[create]
---           ,[create_user]
---           ,[change]
---           ,[change_user]
---           ,[manual]
---           ,[date_otpr]
---           ,[srok_end]
---           ,[date_grpol]
---           ,[date_pr]
---           ,[date_vid])
---     VALUES
---           ('90462545'
---           ,NULL
---           ,'40505620'
---           ,416604
---           ,416604
---           ,NULL
---           ,NULL
---           ,6435
---           ,7932
---           ,0
---           ,'5639846'
---           ,'8116733'
---           ,771
---           ,NULL
---           ,NULL
---           ,getdate()
---           ,'EUROPE\ealevchenko'
---           ,NULL
---           ,NULL
---           ,0
---           ,'2023-11-12 09:20:00.000'
---           ,'2023-11-18 00:00:00.000'
---           ,'2023-11-14 15:11:00.000'
---           ,'2023-11-14 13:31:00.000'
---           ,'2023-11-14 15:36:00.000')
---GO
+SELECT [id]
+      ,[num]
+      ,[id_arrival_car]
+      ,[id_sap_incoming_supply]
+      ,[doc_outgoing_car]
+      ,[id_outgoing_car]
+      ,[id_sap_outbound_supply]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+      ,[highlight_color]
+      ,[id_usage_fee]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where [id_arrival_car] = 1661916
+
+
+  INSERT INTO [IDS].[Arrival_UZ_Document]
+           ([id_doc_uz]
+           ,[nom_doc]
+           ,[nom_main_doc]
+           ,[code_stn_from]
+           ,[code_stn_to]
+           ,[code_border_checkpoint]
+           ,[cross_time]
+           ,[code_shipper]
+           ,[code_consignee]
+           ,[klient]
+           ,[code_payer_sender]
+           ,[code_payer_arrival]
+           ,[distance_way]
+           ,[note]
+           ,[parent_id]
+           ,[create]
+           ,[create_user]
+           ,[change]
+           ,[change_user]
+           ,[manual]
+           ,[date_otpr]
+           ,[srok_end]
+           ,[date_grpol]
+           ,[date_pr]
+           ,[date_vid])
+     VALUES
+           ('35000000000534579018'
+           ,NULL
+           ,'40582'
+           ,074286
+           ,467201
+           ,066118
+           ,'2023-10-19 09:48:00'
+           ,9999
+           ,7932
+           ,0
+           ,'5639846'
+           ,'8116733'
+           ,1018
+           ,NULL
+           ,NULL
+           ,getdate()
+           ,'EUROPE\ealevchenko'
+           ,NULL
+           ,NULL
+           ,0
+           ,'2023-10-17 21:46:00.000'
+           ,'2023-11-18 00:00:00.000'
+           ,'2023-11-14 15:11:00.000'
+           ,'2023-11-14 13:31:00.000'
+           ,'2023-11-14 15:36:00.000')
+GO
 
 --INSERT INTO [IDS].[Arrival_UZ_Vagon]
 --           ([id_document]
