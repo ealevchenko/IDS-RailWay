@@ -2314,6 +2314,24 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/wsd/report/td/current_operation_wagon/id_wir/587382
+        [Route("report/td/current_operation_wagon/id_wir/{id_wir:long}")]
+        [ResponseType(typeof(current_operation_wagon))]
+        public IHttpActionResult GetCurrentOperationWagonOfID_Wir(long id_wir)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_id_wir = new System.Data.SqlClient.SqlParameter("@id_wir", id_wir);
+                string sql = "select * from [IDS].[get_current_operation_wagon_of_id_wir](@id_wir)";
+                current_operation_wagon result = db.Database.SqlQuery<current_operation_wagon>(sql, p_id_wir).FirstOrDefault();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         #endregion
 
         #region СЕРВИС Коммерческое состояние

@@ -943,7 +943,6 @@
         var $panel = tabs.$content.find('div#' + name_panel); // Панель
         $panel.append(row.$row);
     };
-
     //----------------------------------------------------------------------
     // ФОРМА ВЫБОРА ВРЕМЕНИ ОТЧЕТА
     // Настройка выбора диапазона отчета
@@ -6004,7 +6003,7 @@
 
         //-----------------------------------------------
         // Таблица : Отчет по вагону  
-        this.table_incoming_outgoing_car = new TTDR('div#incoming-outgoing-car');         // Создадим экземпляр
+        this.table_incoming_outgoing_car = new TTDR('div#incoming-outgoing-car');   // Создадим экземпляр
         this.table_incoming_outgoing_car.init({
             alert: null,
             detali_table: true,
@@ -6022,14 +6021,16 @@
             fn_select_rows: function (rows) {
                 if (rows && rows.length > 0 && rows[0].wir_id) {
                     this.view_common_wagon(rows[0]);
+                    this.load_current_operator(rows[0].wir_id)
                 } else {
                     this.view_common_wagon(null);
+                    this.view_current_operator_detali(null);
                 }
                 LockScreenOff();
             }.bind(this),
         });
         // Таблица : Отчет по вагону  
-        this.table_wagons_rent = new TTDR('div#list-operators-wagon');         // Создадим экземпляр
+        this.table_wagons_rent = new TTDR('div#list-operators-wagon');              // Создадим экземпляр
         this.table_wagons_rent.init({
             alert: null,
             detali_table: true,
@@ -6086,39 +6087,38 @@
             this.$input_outgoing_nom_doc.val('');
         }
     };
-    // отобразить информацию по оператору АМКР детально
-    view_td_report.prototype.view_current_operator = function (row) {
-        if (row) {
-            this.$input_last_date_outgoing.val(row.last_date_outgoing ? moment(row.last_date_outgoing).format(format_datetime) : '');
-            //this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime);
-            this.$input_wagon_rod_abbr.val(row['wagon_rod_abbr_' + App.Lang]);
-            this.$input_wagon_date_rem_uz.val(row.wagon_date_rem_uz ? moment(row.wagon_date_rem_uz).format(format_datetime) : '');
-            if (row.wir_highlight_color !== '') {
-                this.$textarea_wir_note.attr('style', 'background-color:' + row.wir_highlight_color);
+
+    view_td_report.prototype.view_current_operator_detali = function (result_wagons_operation) {
+        if (result_wagons_operation) {
+            this.$input_last_date_outgoing.val(result_wagons_operation.last_date_outgoing ? moment(result_wagons_operation.last_date_outgoing).format(format_datetime) : '');
+            //this.$input_instructional_letters_datetime.val(result_wagons_operation.instructional_letters_datetime);
+            this.$input_wagon_rod_abbr.val(result_wagons_operation['wagon_rod_abbr_' + App.Lang]);
+            this.$input_wagon_date_rem_uz.val(result_wagons_operation.wagon_date_rem_uz ? moment(result_wagons_operation.wagon_date_rem_uz).format(format_datetime) : '');
+            if (result_wagons_operation.wir_highlight_color !== '') {
+                this.$textarea_wir_note.attr('style', 'background-color:' + result_wagons_operation.wir_highlight_color);
             } else {
                 this.$textarea_wir_note.attr('style', '');
             }
-            this.$textarea_wir_note.val(row.wir_note);
-            this.$input_curr_wagons_rent_operator_abbr.val(row['curr_wagons_rent_operator_abbr_' + App.Lang]);
-            this.$input_curr_wagons_rent_limiting_abbr.val(row['curr_wagons_rent_limiting_abbr_' + App.Lang]);
-            this.$input_curr_wagons_rent_start.val(row.curr_wagons_rent_start ? moment(row.curr_wagons_rent_start).format(format_datetime) : '');
-            this.$input_curr_wagons_rent_end.val(row.curr_wagons_rent_end ? moment(row.curr_wagons_rent_end).format(format_datetime) : '');
-            this.$input_arrival_condition_abbr.val(row['arrival_condition_abbr_' + App.Lang]);
-            this.$input_current_condition_abbr.val(row['current_condition_abbr_' + App.Lang]);
-            this.$input_current_condition_create.val(row.current_condition_create ? moment(row.current_condition_create).format(format_datetime) : '');
-            this.$input_current_condition_create_user.val(row.current_condition_create_user);
-            //var d = moment(row.instructional_letters_datetime).isAfter(moment(row.last_date_outgoing));
-            if (row.cur_date_outgoing === null && moment(row.instructional_letters_datetime).isAfter(moment(row.last_date_outgoing))) {
+            this.$textarea_wir_note.val(result_wagons_operation.wir_note);
+            this.$input_curr_wagons_rent_operator_abbr.val(result_wagons_operation['curr_wagons_rent_operator_abbr_' + App.Lang]);
+            this.$input_curr_wagons_rent_limiting_abbr.val(result_wagons_operation['curr_wagons_rent_limiting_abbr_' + App.Lang]);
+            this.$input_curr_wagons_rent_start.val(result_wagons_operation.curr_wagons_rent_start ? moment(result_wagons_operation.curr_wagons_rent_start).format(format_datetime) : '');
+            this.$input_curr_wagons_rent_end.val(result_wagons_operation.curr_wagons_rent_end ? moment(result_wagons_operation.curr_wagons_rent_end).format(format_datetime) : '');
+            this.$input_arrival_condition_abbr.val(result_wagons_operation['arrival_condition_abbr_' + App.Lang]);
+            this.$input_current_condition_abbr.val(result_wagons_operation['current_condition_abbr_' + App.Lang]);
+            this.$input_current_condition_create.val(result_wagons_operation.current_condition_create ? moment(result_wagons_operation.current_condition_create).format(format_datetime) : '');
+            this.$input_current_condition_create_user.val(result_wagons_operation.current_condition_create_user);
+            //var d = moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing));
+            if (result_wagons_operation.cur_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing))) {
                 // Отображаем если несдан и инструкци я больше последней сдачи
-                this.$input_instructional_letters_num.val(row.instructional_letters_num);
-                this.$input_instructional_letters_datetime.val(row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : '');
-                this.$input_instructional_letters_station_name.val(row.instructional_letters_station_name);
+                this.$input_instructional_letters_num.val(result_wagons_operation.instructional_letters_num);
+                this.$input_instructional_letters_datetime.val(result_wagons_operation.instructional_letters_datetime ? moment(result_wagons_operation.instructional_letters_datetime).format(format_datetime) : '');
+                this.$input_instructional_letters_station_name.val(result_wagons_operation.instructional_letters_station_name);
             } else {
                 this.$input_instructional_letters_num.val('');
                 this.$input_instructional_letters_datetime.val('');
                 this.$input_instructional_letters_station_name.val('');
             }
-
         } else {
             this.$input_last_date_outgoing.val('');
             //this.$input_instructional_letters_datetime.val('');
@@ -6136,6 +6136,16 @@
             this.$input_instructional_letters_num.val('');
             this.$input_instructional_letters_datetime.val('');
             this.$input_instructional_letters_station_name.val('');
+        }
+    };
+    // отобразить информацию по оператору АМКР детально
+    view_td_report.prototype.load_current_operator = function (wir_id) {
+        if (wir_id) {
+            this.ids_wsd.getReportCurrentOperationWagonOfID_Wir(wir_id, function (result_wagons_operation) {
+                this.view_current_operator_detali(result_wagons_operation);
+            }.bind(this));
+        } else {
+            this.view_current_operator_detali(this);
         }
     };
     // Загрузить отчет  "Информация по вагону и собственнику"
@@ -6166,7 +6176,7 @@
             // Выборка информации о текущем операторе АМКР вагона
             this.ids_wsd.getReportCurrentOperationWagonOfNum(num, function (result_wagons_operation) {
                 // Обработать и показать данные
-                this.view_current_operator(result_wagons_operation);
+                this.view_current_operator_detali(result_wagons_operation);
                 // На проверку окончания загрузки
                 process--;
                 out_load(process);
@@ -6192,7 +6202,7 @@
         if (this.table_incoming_outgoing_car) {
             this.table_incoming_outgoing_car.view([]);
             this.view_common_wagon(null);
-            this.view_current_operator([]);
+            this.view_current_operator_detali([]);
             this.table_wagons_rent.view([]);
         };
         LockScreenOff();

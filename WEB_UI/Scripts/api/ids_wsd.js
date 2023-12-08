@@ -2484,6 +2484,29 @@
             },
         });
     };
+    // Получить отчет по текущему оператору АМКР (Информация по вагону и собственнику) номеру вагона
+    ids_wsd.prototype.getReportCurrentOperationWagonOfID_Wir = function (id_wir, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/report/td/current_operation_wagon/id_wir/' + id_wir,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportCurrentOperationWagonOfID_Wir", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //Получить отправленные вагоны по условию выбора
     ids_wsd.prototype.postReportOutgoingWagonOfWhere = function (where, callback) {
         $.ajax({

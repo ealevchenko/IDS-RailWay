@@ -3724,7 +3724,8 @@
         collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -6494,8 +6495,13 @@
                         break;
                     };
                     case 'incoming_outgoing_car': {
+
+                        if (data.arrival_uz_vagon_cargo_returns) {
+                            $(row).addClass('blue');
+                        }
                         if (data.wir_highlight_color !== null) {
-                            $(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
+                            $(row).addClass('red');
+                            //$(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
                         }
                         break;
                     };
