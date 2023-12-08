@@ -213,58 +213,58 @@ SELECT [id]
   where [id_arrival_car] = 1661916
 
 
-  INSERT INTO [IDS].[Arrival_UZ_Document]
-           ([id_doc_uz]
-           ,[nom_doc]
-           ,[nom_main_doc]
-           ,[code_stn_from]
-           ,[code_stn_to]
-           ,[code_border_checkpoint]
-           ,[cross_time]
-           ,[code_shipper]
-           ,[code_consignee]
-           ,[klient]
-           ,[code_payer_sender]
-           ,[code_payer_arrival]
-           ,[distance_way]
-           ,[note]
-           ,[parent_id]
-           ,[create]
-           ,[create_user]
-           ,[change]
-           ,[change_user]
-           ,[manual]
-           ,[date_otpr]
-           ,[srok_end]
-           ,[date_grpol]
-           ,[date_pr]
-           ,[date_vid])
-     VALUES
-           ('35000000000534579018'
-           ,NULL
-           ,'40582'
-           ,074286
-           ,467201
-           ,066118
-           ,'2023-10-19 09:48:00'
-           ,9999
-           ,7932
-           ,0
-           ,'5639846'
-           ,'8116733'
-           ,1018
-           ,NULL
-           ,NULL
-           ,getdate()
-           ,'EUROPE\ealevchenko'
-           ,NULL
-           ,NULL
-           ,0
-           ,'2023-10-17 21:46:00.000'
-           ,'2023-11-18 00:00:00.000'
-           ,'2023-11-14 15:11:00.000'
-           ,'2023-11-14 13:31:00.000'
-           ,'2023-11-14 15:36:00.000')
+  --INSERT INTO [IDS].[Arrival_UZ_Document]
+  --         ([id_doc_uz]
+  --         ,[nom_doc]
+  --         ,[nom_main_doc]
+  --         ,[code_stn_from]
+  --         ,[code_stn_to]
+  --         ,[code_border_checkpoint]
+  --         ,[cross_time]
+  --         ,[code_shipper]
+  --         ,[code_consignee]
+  --         ,[klient]
+  --         ,[code_payer_sender]
+  --         ,[code_payer_arrival]
+  --         ,[distance_way]
+  --         ,[note]
+  --         ,[parent_id]
+  --         ,[create]
+  --         ,[create_user]
+  --         ,[change]
+  --         ,[change_user]
+  --         ,[manual]
+  --         ,[date_otpr]
+  --         ,[srok_end]
+  --         ,[date_grpol]
+  --         ,[date_pr]
+  --         ,[date_vid])
+  --   VALUES
+  --         ('35000000000534579018'
+  --         ,NULL
+  --         ,'40582'
+  --         ,074286
+  --         ,467201
+  --         ,066118
+  --         ,'2023-10-19 09:48:00'
+  --         ,9999
+  --         ,7932
+  --         ,0
+  --         ,'5639846'
+  --         ,'8116733'
+  --         ,1018
+  --         ,NULL
+  --         ,NULL
+  --         ,getdate()
+  --         ,'EUROPE\ealevchenko'
+  --         ,NULL
+  --         ,NULL
+  --         ,0
+  --         ,'2023-10-17 21:46:00.000'
+  --         ,'2023-11-18 00:00:00.000'
+  --         ,'2023-11-14 15:11:00.000'
+  --         ,'2023-11-14 13:31:00.000'
+  --         ,'2023-11-14 15:36:00.000')
 GO
 
 --INSERT INTO [IDS].[Arrival_UZ_Vagon]
