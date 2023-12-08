@@ -119,7 +119,7 @@ namespace IDS.Helper
         /// <returns></returns>
         public static WagonInternalMovement SetSendingWagon(this WagonInternalRoutes wir, int id_outer_ways, DateTime date_start, int position, string num_sostav, string note, string user)
         {
-            WagonInternalMovement wim_new = null; 
+            WagonInternalMovement wim_new = null;
             if (wir != null && wir.close == null)
             {
                 // Получим последнее положение
@@ -184,7 +184,7 @@ namespace IDS.Helper
                         create = DateTime.Now,
                         create_user = user,
                         note = note,
-                        parent_id = wim.CloseMovement(date_start, null, user), 
+                        parent_id = wim.CloseMovement(date_start, null, user),
                     };
                     wir.WagonInternalMovement.Add(wim_new);
                 }
@@ -206,6 +206,8 @@ namespace IDS.Helper
                     id_operation = id_operation,
                     operation_start = date_start,
                     id_condition = (id_condition != null ? (int)id_condition : (wio_last != null ? wio_last.id_condition : 0)),
+                    con_change = (id_condition == null && wio_last != null ? wio_last.con_change : null),
+                    con_change_user = (id_condition == null && wio_last != null ? wio_last.con_change_user : null),
                     id_loading_status = (id_loading_status != null ? (int)id_loading_status : (wio_last != null ? wio_last.id_loading_status : 0)),
                     locomotive1 = locomotive1,
                     locomotive2 = locomotive2,
@@ -245,7 +247,8 @@ namespace IDS.Helper
 
                 return wio.id_operation == 9 ? true : false;
             }
-            else {
+            else
+            {
                 return false;
             }
         }
@@ -258,8 +261,10 @@ namespace IDS.Helper
         public static List<int> GetWagonsLockPresentOperation(this EFDbContext context, List<int> nums)
         {
             List<int> list_result = new List<int>();
-            foreach (int num in nums) {
-                if (context.isLockPresentOperation(num) == true) {
+            foreach (int num in nums)
+            {
+                if (context.isLockPresentOperation(num) == true)
+                {
                     list_result.Add(num);
                 }
             }
