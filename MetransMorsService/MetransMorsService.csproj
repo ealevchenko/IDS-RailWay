@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MetransMorsService</RootNamespace>
     <AssemblyName>MetransMorsService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>76e312d4</NuGetPackageImportStamp>

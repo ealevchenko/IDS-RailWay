@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>IDSService</RootNamespace>
     <AssemblyName>IDSService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>a6813e95</NuGetPackageImportStamp>

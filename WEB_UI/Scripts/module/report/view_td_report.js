@@ -10424,9 +10424,6 @@
                         return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
                             o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
                     }.bind(this));
-                    if (el_wag.num === 63532410) {
-                        var s = 0;
-                    }
                     var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
                     if (!op) {
                         // Не данных 
