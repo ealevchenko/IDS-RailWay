@@ -220,6 +220,9 @@
             'vtdr_title_button': ' Применить',
             'vtdr_title_button_searsh': 'НАЙТИ',
 
+            'vtdr_title_search_car': 'Применить',
+
+
             'vtdr_link_report_1': 'Погран-переход',
             'vtdr_title_report_1': 'Статистика',
             'vtdr_title_search_cars': 'Найти вагоны',
@@ -10832,6 +10835,24 @@
         this.switch_paid = sw_paid.element;
         // вагоны
         var row_setup_1 = new this.fe_ui.bs_row();
+        //var col_wagon_nums_apply = new this.fe_ui.bs_col({
+        //    size: 'xl',
+        //    col: 2,
+        //});
+        var bt_wagon_nums_apply = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: null,
+            title: langView('vtdr_title_search_car', App.Langs),
+            icon_left: null,
+            icon_right: 'fas fa-search',
+            click: function (event) {
+                event.preventDefault();
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
         var ta_wagon_nums = new this.fe_ui.bs_textarea({
             id: 'wagon_nums',
             form_group_size: 'xl',
@@ -10848,11 +10869,34 @@
             textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
             textarea_required: null,
             textarea_readonly: false,
+            input_group: true,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: [],
+            input_group_append_class: null,
+            input_group_append_objs: [],
         });
-        row_setup_1.$row.append(ta_wagon_nums.$element);
+        //row_setup_1.$row.append(ta_wagon_nums.$element).append(col_wagon_nums_apply.$col.append(bt_wagon_nums_apply.$button));
+        //row_setup_1.$row.append(ta_wagon_nums.$element.find('div.input-group-append').append(bt_wagon_nums_apply.$button));
+        var $element = ta_wagon_nums.$element;
+        $element.find('div.input-group-append').append(bt_wagon_nums_apply.$button);
+        row_setup_1.$row.append($element);
         this.textarea_wagon_nums = ta_wagon_nums.element;
         // основн документы
         var row_setup_2 = new this.fe_ui.bs_row();
+        var bt_main_epd_docs_apply = new this.fe_ui.bs_button({
+            color: 'warning',
+            size: 'sm',
+            class: 'mr-1',
+            id: null,
+            label: null,
+            title: langView('vtdr_title_search_car', App.Langs),
+            icon_left: null,
+            icon_right: 'fas fa-search',
+            click: function (event) {
+                event.preventDefault();
+                this.action_select_report_10_1();
+            }.bind(this),
+        });
         var ta_main_epd_docs = new this.fe_ui.bs_textarea({
             id: 'main_epd_docs',
             form_group_size: 'xl',
@@ -10869,8 +10913,15 @@
             textarea_placeholder: 'xxxxxxxx;xxxxxxxx',
             textarea_required: null,
             textarea_readonly: false,
+            input_group: true,
+            input_group_prepend_class: null,
+            input_group_prepend_objs: [],
+            input_group_append_class: null,
+            input_group_append_objs: [],
         });
-        row_setup_2.$row.append(ta_main_epd_docs.$element);
+        var $element = ta_main_epd_docs.$element;
+        $element.find('div.input-group-append').append(bt_main_epd_docs_apply.$button);
+        row_setup_2.$row.append($element);
         this.textarea_main_epd_docs = ta_main_epd_docs.element;
         // Операторы АМКР
         var row_setup_3 = new this.fe_ui.bs_row();
@@ -11539,6 +11590,15 @@
                 }
             }
 
+            if (select && this.nums && this.nums.length > 0) {
+                var res = this.nums.indexOf(value.num);
+                if (res === -1) select = false;
+            }
+            if (select && this.main_epd_docs && this.main_epd_docs.length > 0) {
+                var res = this.main_epd_docs.indexOf(value.arrival_uz_document_nom_main_doc);
+                if (res === -1) select = false;
+            }
+
             if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
                 //var res = value_operation_amkr.indexOf(String(value.arrival_uz_vagon_arrival_wagons_rent_id_operator));
                 var res = value_operation_amkr.indexOf(value.current_wagons_rent_operator_abbr_ru);
@@ -11753,8 +11813,8 @@
         if (this.switch_paid) { this.switch_paid.val(false); }
         if (this.switch_not_letters) { this.switch_not_letters.val(false); }
         if (this.switch_OTC_ban) { this.switch_OTC_ban.val(false); }
-        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); }
-        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); }
+        if (this.textarea_wagon_nums) { this.textarea_wagon_nums.val(''); this.nums = null; }
+        if (this.textarea_main_epd_docs) { this.textarea_main_epd_docs.val(''); this.main_epd_docs = null; }
         if (this.select_operation_amkr) { this.select_operation_amkr.val(-1); }
         if (this.select_arr_condition) { this.select_arr_condition.val(-1); }
         if (this.select_curr_condition) { this.select_curr_condition.val(-1); }
