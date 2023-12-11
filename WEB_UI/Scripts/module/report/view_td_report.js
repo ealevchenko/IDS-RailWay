@@ -6112,7 +6112,7 @@
             this.$input_current_condition_create.val(result_wagons_operation.current_condition_create ? moment(result_wagons_operation.current_condition_create).format(format_datetime) : '');
             this.$input_current_condition_create_user.val(result_wagons_operation.current_condition_create_user);
             //var d = moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing));
-            if (result_wagons_operation.cur_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing))) {
+            if (result_wagons_operation.last_date_outgoing === null || (result_wagons_operation.cur_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing)))) {
                 // Отображаем если несдан и инструкци я больше последней сдачи
                 this.$input_instructional_letters_num.val(result_wagons_operation.instructional_letters_num);
                 this.$input_instructional_letters_datetime.val(result_wagons_operation.instructional_letters_datetime ? moment(result_wagons_operation.instructional_letters_datetime).format(format_datetime) : '');
