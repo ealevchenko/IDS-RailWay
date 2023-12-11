@@ -10088,8 +10088,8 @@
                     }
                 }.bind(this));
                 //
-                this.select_operations.update(this.list_operators, -1);
-                this.select_rod.update(this.list_rod, -1);
+                this.select_operations.update(this.sort_text(this.list_operators, 'text'), -1);
+                this.select_rod.update(this.sort_text(this.list_rod, 'text'), -1);
                 this.view_filter_report_usage_fee_period();
                 LockScreenOff();
             }
