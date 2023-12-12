@@ -116,6 +116,10 @@
             'ttdr_field_incoming_cars_arrival_sostav_station_on_name': 'Станц. примыкания',
             'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
 
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
             'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
             'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
 
@@ -1213,6 +1217,33 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_station_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // НАТУРКА ОТПРАВКА
         // № п.п
@@ -3490,6 +3521,11 @@
         collums.push({ field: 'incoming_cars_arrival_uz_document_distance_way', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_pay_summa', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_station_on_abbr', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
+
+
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_common_detali

@@ -9,6 +9,7 @@ using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
 using System.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace WEB_UI.Controllers.api
 {
@@ -24,6 +25,17 @@ namespace WEB_UI.Controllers.api
         // Добавил 21-06-2022
         public long? arrival_car_id_outgoing_car { get; set; }
         public long? arrival_car_id_outgoing_uz_vagon { get; set; }
+        // Добавил 12-12-2022
+        public long? old_arrival_car_id_outgoing_car { get; set; }
+        public long? old_arrival_car_id_outgoing_uz_vagon { get; set; }
+        public DateTime? old_date_outgoing { get; set; }
+        public DateTime? old_date_outgoing_act { get; set; }
+        public int? old_outgoing_uz_vagon_id_cargo { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_ru { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_en { get; set; }
+        public int? old_outgoingl_uz_document_code_stn_to { get; set; }
+        public string old_outgoing_uz_document_station_to_name_ru { get; set; }
+        public string old_outgoing_uz_document_station_to_name_en { get; set; }
         // Добавил 10-05-2022
         public long? arrival_car_wim_cur_id { get; set; }
         public long? arrival_car_wim_cur_id_wagon_internal_routes { get; set; }
