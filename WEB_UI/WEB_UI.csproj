@@ -2051,7 +2051,6 @@
     <Content Include="Areas\Directory\Views\Home\Ways.cshtml" />
     <Content Include="Areas\Directory\Views\Home\Park.cshtml" />
     <Content Include="Areas\Directory\Views\Home\OperatorsWagons.cshtml" />
-    <Content Include="Areas\IDSRWT\Views\Home\Incoming1.cshtml" />
     <Content Include="Content\fontawesome-free\less\_sizing.less" />
     <Content Include="Content\fontawesome-free\scss\_functions.scss" />
     <Content Include="Content\fontawesome-free\scss\_sizing.scss" />
