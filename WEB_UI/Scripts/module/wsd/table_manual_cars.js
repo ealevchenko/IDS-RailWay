@@ -437,7 +437,8 @@
             case 'table-nums-cars': {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
-                this.order_column = [0, 'asc'];
+                this.ordering = false;
+                //this.order_column = [0, 'asc'];
                 this.type_select_rows = 1; // Выбирать одну
                 this.table_select = {
                     style: 'multi'
@@ -484,6 +485,7 @@
         // Настройки отчета
         this.fixedHeader = false;            // вкл. фикс. заголовка
         this.leftColumns = 0;
+        this.ordering = true;
         this.order_column = [0, 'asc'];
         this.type_select_rows = 0; // не показывать
         this.table_select = false;
@@ -513,7 +515,7 @@
                     "deferRender": true,
                     "paging": true,
                     "searching": true,
-                    "ordering": true,
+                    "ordering": this.ordering,
                     "info": true,
                     "keys": true,
                     colReorder: true,                       // вкл. перетаскивание полей
