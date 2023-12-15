@@ -589,10 +589,10 @@
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
             mywindow.document.write(OutText(el['arrival_uz_vagon_sertification_data_' + App.Lang]));
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
             mywindow.document.write(vesg.toFixed(2));
             mywindow.document.write('</td>');
-            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
+            mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
             mywindow.document.write(vesg_reweighing.toFixed(2));
             mywindow.document.write('</td>');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">&nbsp;</td>');
@@ -1026,19 +1026,38 @@
             var mywindow = window.open('', 'Форма ДГ-20');
             mywindow.document.write('<html><head><title>Форма ДГ-20</title>');
             mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_dg20.css">');
-            mywindow.document.write('<div class=WordSection1>');
+
+
+            if (this.rows_list1 && this.rows_list1.length > 0 && this.rows_list2 && this.rows_list2.length > 0) {
+                mywindow.document.write('<div class=WordSection1>');
+            } else {
+                mywindow.document.write('<div class=WordSection2>');
+            }
             mywindow.document.write('<table class="MsoTableGrid" border=0 cellspacing=0 cellpadding=0>');
-            mywindow.document.write('<tr>');
-            mywindow.document.write('<td width=525 valign=top>');
             if (this.rows_list1 && this.rows_list1.length > 0) {
+                mywindow.document.write('<tr>');
+                mywindow.document.write('<td width=525 valign=top>');
                 this.add_document(mywindow, this.rows_list1, 1)
+                mywindow.document.write('</td>');
             }
-            mywindow.document.write('</td>');
-            mywindow.document.write('<td width=525 valign=top>');
+            //mywindow.document.write('<tr>');
+            //mywindow.document.write('<td width=525 valign=top>');
+            //if (this.rows_list1 && this.rows_list1.length > 0) {
+            //    this.add_document(mywindow, this.rows_list1, 1)
+            //}
+            //mywindow.document.write('</td>');
+            // Pafe2
             if (this.rows_list2 && this.rows_list2.length > 0) {
+                mywindow.document.write('<td width=525 valign=top>');
                 this.add_document(mywindow, this.rows_list2, 2)
+                mywindow.document.write('</td>');
             }
-            mywindow.document.write('</td>');
+            //mywindow.document.write('<td width=525 valign=top>');
+            //if (this.rows_list2 && this.rows_list2.length > 0) {
+            //this.add_document(mywindow, this.rows_list2, 2)
+            //}
+            //mywindow.document.write('</td>');
+
             mywindow.document.write('</tr>');
             mywindow.document.write('</table>');
             mywindow.document.write('</div>');

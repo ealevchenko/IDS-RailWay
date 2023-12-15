@@ -215,7 +215,7 @@
                 title: 'отчеты',
                 list_menu: [
                     {
-                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.fst(table_incoming_sostav.id_sostav)
@@ -223,80 +223,80 @@
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.fsci(table_incoming_sostav.id_sostav)
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr');
                             }
                         }.bind(this)
 
                     },
                     {
-                        href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'gfa');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.move_nums(table_incoming_sostav.id_sostav, 'dg20');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'way');

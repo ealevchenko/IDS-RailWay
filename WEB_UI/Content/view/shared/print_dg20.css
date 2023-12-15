@@ -7,23 +7,23 @@ table.MsoTableGrid {
     border: none;
 }
 
-table.MsoTableGrid tr {
-    height: 566.35pt;
-}
-
-table.MsoTableGrid td {
-    width: 406.5pt;
-    border: none;
-    border-right: solid windowtext 1.0pt;
-    padding: 0cm 5.4pt 0cm 5.4pt;
-    height: 566.35pt;
-}
-
-   table.MsoTableGrid  td p {
-        margin-bottom: 0cm;
-        margin-bottom: .0001pt;
-        line-height: normal;
+    table.MsoTableGrid tr {
+        height: 566.35pt;
     }
+
+    table.MsoTableGrid td {
+        width: 406.5pt;
+        border: none;
+        border-right: 1.0pt dashed windowtext ;
+        padding: 0cm 5.4pt 0cm 5.4pt;
+        height: 566.35pt;
+    }
+
+        table.MsoTableGrid td p {
+            margin-bottom: 0cm;
+            margin-bottom: .0001pt;
+            line-height: normal;
+        }
 
 table.MsoNormalTable {
     width: 375.65pt;
@@ -32,8 +32,8 @@ table.MsoNormalTable {
 }
 
     table.MsoNormalTable td {
-        font-size:9px;
-        text-align:center;
+        font-size: 9px;
+        text-align: center;
     }
 
 /* Font Definitions */
@@ -58,7 +58,7 @@ p.MsoNormal, li.MsoNormal, div.MsoNormal {
     /*margin-bottom: 8.0pt;*/
     margin-left: 0cm;
     line-height: 107%;
-    font-size: 11.0pt;
+    font-size: 12.0pt;
     font-family: "Times New Roman",serif;
 }
 
@@ -82,10 +82,34 @@ span.a {
 }
 
 @page WordSection1 {
-    size: 841.9pt 595.3pt;
-    margin: 14.2pt 14.2pt 14.2pt 14.2pt;
+    size: A4 landscape;
+    margin: 1cm auto;
+    padding: 0;
 }
+
+@page WordSection2 {
+    size: A4;
+    margin: 1cm auto;
+    padding: 0;
+}
+
+/*@media print {
+    .page {
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+}*/
 
 div.WordSection1 {
     page: WordSection1;
+}
+
+div.WordSection2 {
+    page: WordSection2;
 }
