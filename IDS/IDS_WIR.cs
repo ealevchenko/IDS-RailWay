@@ -2769,7 +2769,7 @@ namespace IDS
                     res.result = (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для прибытия
                     return res;
                 }
-                if (sostav.date_adoption != null)
+                if (sostav.date_adoption != null && sostav.status > 1)
                 {
                     res.result = (int)errors_base.error_status_arrival_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию -принят)
                     return res;
