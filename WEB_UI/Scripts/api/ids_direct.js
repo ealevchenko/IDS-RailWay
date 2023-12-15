@@ -2534,6 +2534,15 @@
     ids_directory.prototype.getListConsignee = function (fvalue, ftext, filter) {
         return this.getListObj(this.list_consignee, fvalue, ftext, null, filter);
     };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getListConsignee_Of_Name = function (name, text) {
+        if (this.list_consignee) {
+            var obj = getObjects(this.list_consignee, name, text);
+            return obj;
+        }
+        return null;
+    };
+
     //*======= ids_directory.list_countrys  (Справочник стран) ======================================
     // Получить по id
     ids_directory.prototype.getCountrys_Of_ID = function (id) {
