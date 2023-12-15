@@ -215,7 +215,8 @@ namespace EFIDS.Helper
                 code = c.code,
                 name = c.name,
                 description = c.description,
-                auxiliary = c.auxiliary,
+                auxiliary = c.auxiliary, 
+                id_division = c.id_division,
             };
         }
 

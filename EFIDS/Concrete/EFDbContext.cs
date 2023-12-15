@@ -715,6 +715,12 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_Divisions
+
+            modelBuilder.Entity<Directory_Divisions>()
+                .HasMany(e => e.Directory_Consignee)
+                .WithOptional(e => e.Directory_Divisions)
+                .HasForeignKey(e => e.id_division);
+
             modelBuilder.Entity<Directory_Divisions>()
                 .HasMany(e => e.Directory_Divisions1)
                 .WithOptional(e => e.Directory_Divisions2)
