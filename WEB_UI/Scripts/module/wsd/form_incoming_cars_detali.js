@@ -1976,10 +1976,40 @@
                     element_check: function (value) {
                         if (value && Number(value) >= 0) {
                             this.elements.input_number_consignee_code.val(value);
+                            this.ids_consignee = this.get_ids_consignee(value);
+                            if (this.ids_consignee && this.ids_consignee.id_division) {
+                                this.ids_divisions = this.get_ids_divisions(this.ids_consignee.id_division, null, null);
+                                this.view_element(this.ids_divisions,
+                                    function (value) {
+                                        // Получили ответ
+                                        this.elements.input_text_division_code.val(this.ids_divisions.code);
+                                        this.elements.autocomplete_division_name.text(this.ids_divisions.name);
+                                        this.form.set_validation_object_ok(null, 'division_name', "Ок", true);
+                                    }.bind(this),
+                                    function (value) {
+                                        // нет данных в ИДС
+                                        this.elements.input_text_division_code.val('');
+                                        this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_add_division_name', App.Langs), true);
+
+                                    }.bind(this),
+                                    function (value) {
+                                        // нет входных данных данных 
+                                        this.elements.input_text_division_code.val('');
+                                        this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
+                                    }.bind(this)
+                                );
+                            } else {
+                                this.elements.input_text_division_code.val('');
+                                this.elements.autocomplete_division_name.text('');
+                                this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
+                            }
                             this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
                         } else {
-                            this.elements.input_number_consignee_code.val("");
+                            this.elements.input_number_consignee_code.val('');
                             this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
+                            this.elements.input_text_division_code.val('');
+                            this.elements.autocomplete_division_name.text('');
+                            this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
                         }
                     }.bind(this),
                 },
@@ -6013,6 +6043,7 @@
         if (obj_db) {
             result.code = obj_db.code;
             result.name = obj_db.name;
+            result.id_division = obj_db.id_division;
             return result;
         } else return null; // Объект не найден
     };
@@ -6193,6 +6224,28 @@
             return result;
         } else return null; // Объект не найден
     };
+    // Получить информацию по грузополучателю из базы данных ИДС
+    //form_incoming_cars_detali.prototype.get_ids_consignee = function (code, name) {
+    //    var obj_db = null;
+    //    var result = {};
+    //    if (code !== null) {
+    //        var obj = this.ids_dir.getConsignee_Of_ID(code);
+    //        obj_db = obj ? obj : null;
+    //    } else {
+    //        if (name && name !== '') {
+    //            var obj = this.ids_dir.getListConsignee_Of_Name('name', name);
+    //            obj_db = obj && obj.length > 0 ? obj[0] : 0;
+    //        } else {
+    //            return undefined; // Не один параметр не задан
+    //        }
+    //    }
+    //    if (obj_db) {
+    //        result.code = obj_db.code;
+    //        result.name = obj_db.name;
+    //        result.id_division = obj_db.id_division;
+    //        return result;
+    //    } else return null; // Объект не найден
+    //};
     // Получить информацию по платильщику по прибытию из базы данных ИДС
     form_incoming_cars_detali.prototype.get_ids_payer_sender = function (code, name) {
         var obj_db = null;
@@ -7064,7 +7117,7 @@
                             date_grpol: this.epd.date_grpol,
                             date_pr: this.epd.date_pr,
                             date_vid: this.epd.date_vid,
-                        }; 
+                        };
                         //
                         var id_cargo = this.ids_cargo_etsng && this.ids_cargo_etsng.id_cargo !== null ? this.ids_cargo_etsng.id_cargo : null;
                         var id_cargo_gng = this.ids_cargo_gng && this.ids_cargo_gng.id !== null ? this.ids_cargo_gng.id : null;
