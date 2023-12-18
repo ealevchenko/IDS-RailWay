@@ -22,14 +22,26 @@ html {
     background-color: #ffffff;
 }*/
 
-body {
-    /*height: 297mm;*/
-    width: 210mm;
-    /*padding: 10mm;*/
-    margin-left: auto;
+/*body {*/
+/*height: 297mm;*/
+/*width: 210mm;*/
+/*padding: 10mm;*/
+/*margin-left: auto;
     margin-right: auto;
     background-color: #ffffff;
     text-align: center;
+}*/
+
+@page WordSection1 {
+    size: A4;
+    margin: 1cm auto;
+    padding: 0;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #ffffff;
+    page: WordSection1;
 }
 
 /**, *:before, *:after {

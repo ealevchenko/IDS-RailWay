@@ -988,7 +988,8 @@
         // Добавить или править состав
         if (this.settings.mode === 0) {
             if (data.old === null) {
-                data.new.create = moment().format("YYYY-MM-DDThh:mm:ss");
+                //data.new.create = moment().format("YYYY-MM-DDThh:mm:ss");
+                data.new.create = moment().format();
                 data.new.create_user = App.User_Name;
                 // Добавить
                 this.ids_wsd.postIncomingSostav(data.new, function (result) {
@@ -1005,10 +1006,11 @@
                 }.bind(this));
             } else {
                 // Править
-                data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
+                //data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
+                data.new.change = moment().format();
                 data.new.change_user = App.User_Name;
                 this.ids_wsd.putIncomingSostav(data.new, function (result) {
-                    if (result > 0) {
+                    if (result >= 0) {
                         this.mf_edit.close(); // закроем форму
                         if (typeof this.settings.fn_edit === 'function') {
                             this.settings.fn_edit({ data: data, result: result });

@@ -227,7 +227,7 @@
                 control: null,
                 list: [],
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
 

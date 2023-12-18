@@ -315,6 +315,7 @@
         doc.write('<th scope="col">№</th>');
         doc.write('<th scope="col">Станция отправления</th>');
         doc.write('<th scope="col">Груз</th>');
+        doc.write('<th scope="col">Сертификатные данные</th>');
         doc.write('<th scope="col">Оператор</th>');
         doc.write('<th scope="col">Ограничение</th>');
         doc.write('<th scope="col">Собственник</th>');
@@ -336,7 +337,7 @@
         // Список вагонов есть
         if (list_cars) {
             for (var i = 0; i < list_cars.length; i++) {
-                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? (' ' + list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang]) : '');
+                var certification_data = (list_cars[i].arrival_uz_vagon_id_certification_data !== null ? (list_cars[i]['arrival_uz_vagon_sertification_data_' + App.Lang]) : '');
                 var id_operator = list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator ? list_cars[i].arrival_uz_vagon_arrival_wagons_rent_id_operator : 0;
                 var operator = list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operators_' + App.Lang];
                 var vesg = list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000) : 0;
@@ -344,7 +345,8 @@
                 doc.write('<tr>');
                 doc.write('<th>' + list_cars[i].arrival_car_position_arrival + '</th>');
                 doc.write('<td>' + list_cars[i]['arrival_uz_document_station_from_name_' + App.Lang] + '</td>');
-                doc.write('<td>' + list_cars[i]['arrival_uz_vagon_cargo_name_' + App.Lang] + certification_data + '</td>');
+                doc.write('<td>' + list_cars[i]['arrival_uz_vagon_cargo_name_' + App.Lang] + '</td>');
+                doc.write('<td>' + certification_data + '</td>');
                 doc.write('<td>' + list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
@@ -401,7 +403,7 @@
         mywindow.document.write('<tr>');
         mywindow.document.write('<th scope="col">№</th>');
         mywindow.document.write('<th scope="col">Код</th>');
-        mywindow.document.write('<th scope="col">Грузоподъемность</th>');
+        mywindow.document.write('<th scope="col">Грузоп.</th>');
         mywindow.document.write('<th scope="col">Вес,тн</th>');
         mywindow.document.write('<th scope="col">Род</th>');
         mywindow.document.write('<th scope="col">№ вагона</th>');
@@ -409,10 +411,10 @@
         mywindow.document.write('<th scope="col">Груз</th>');
         mywindow.document.write('<th scope="col">Станция отправления</th>');
         mywindow.document.write('<th scope="col">Оператор</th>');
+        mywindow.document.write('<th scope="col">Ограничение погрузки</th>');
         mywindow.document.write('<th scope="col">Собственник</th>');
         mywindow.document.write('<th scope="col">Цех-получатель</th>');
-        mywindow.document.write('<th scope="col">Ограничение погрузки</th>');
-        mywindow.document.write('<th scope="col">Судно</th>');
+/*        mywindow.document.write('<th scope="col">Судно</th>');*/
         mywindow.document.write('<th scope="col">Ком. состояние груза</th>');
         mywindow.document.write('<th scope="col">Акты</th>');
         mywindow.document.write('</tr>');
@@ -450,10 +452,10 @@
                 mywindow.document.write('<td>' + cur_el['arrival_uz_vagon_cargo_name_' + App.Lang] + certification_data + '</td>');
                 mywindow.document.write('<td>' + cur_el['arrival_uz_document_station_from_name_' + App.Lang] + '</td>');
                 mywindow.document.write('<td>' + cur_el['arrival_uz_vagon_arrival_wagons_rent_operator_abbr_' + App.Lang] + '</td>');
-                mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
-                mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_name_division_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang]) + '</td>');
-                mywindow.document.write('<td></td>');
+                mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
+                mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_division_abbr_' + App.Lang]) + '</td>');
+/*                mywindow.document.write('<td></td>');*/
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_commercial_condition_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + acts_uz + '</td>');
                 mywindow.document.write('</tr>');
@@ -508,8 +510,8 @@
                 }
             }.bind(this));
         }
-        mywindow.document.write('<p class=MsoNormal><b><span>ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</span></b><span>' + add_nbsp(40) + '<i>Форма ДГ-20</i></span></p>');
-        mywindow.document.write('<p class=MsoNormal><span>' + add_nbsp(80) + '<b>НАКЛАДНАЯ ПРЕДПРИЯТИЯ</b></span></p>');
+        mywindow.document.write('<p class=MsoNormal><b><span>ПАО «АРСЕЛОРМИТТАЛ КРИВОЙ РОГ»</span></b><span>' + add_nbsp(22) + '<i>Форма ДГ-20</i></span></p>');
+        mywindow.document.write('<p class=MsoNormal><span>' + add_nbsp(40) + '<b>НАКЛАДНАЯ ПРЕДПРИЯТИЯ</b></span></p>');
         mywindow.document.write('<p class=MsoNormal><span>&nbsp;</span></p>');
         mywindow.document.write('<p class=MsoNormal><span>                                                     НАКЛАДНАЯ № ' + num_doc + '</span></p>');
         mywindow.document.write('<p class=MsoNormal><span>                                              Ведомость прибытия груза № ' + this.sostav.num_doc + '</span></p>');

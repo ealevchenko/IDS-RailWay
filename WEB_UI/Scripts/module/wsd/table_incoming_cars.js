@@ -37,14 +37,14 @@
             'ticc_field_arrival_uz_vagon_owner_wagon': 'Собственник',
             'ticc_field_arrival_uz_vagon_owner_wagon_abbr': 'Собственник',
             'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_operator': 'id Опер. по отправке',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operators': 'Оператор по отправке',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_abbr': 'Оператор по отправке',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_start': 'Опер. по отпр. нач. аренды',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_end': 'Опер. по отпр. кон. аренды',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. по отпр. платный',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран. по отправке',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. по отправке',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operators': 'Оператор АМКР',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_abbr': 'Оператор АМКР',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_start': 'Опер. АМКР. нач. аренды',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_end': 'Опер. АМКР. кон. аренды',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. АМКР платный',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран.',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран.',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран.',
 
             'ticc_field_arrival_uz_vagon_condition_name': 'Огран. по отправке',
             'ticc_field_arrival_uz_vagon_condition_abbr': 'Разм. по приб.',
@@ -136,15 +136,15 @@
             'ticc_field_arrival_uz_vagon_wagon_date_rem_vag': 'Rem. railway carriage',
             'ticc_field_arrival_uz_vagon_owner_wagon': 'Owner',
             'ticc_field_arrival_uz_vagon_owner_wagon_abbr': 'Owner',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_operator': 'operator id on dispatch',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operators': 'Dispatch Operator',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_abbr': 'Dispatch Operator',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_start': 'Op. by desp. early rent',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_end': 'Op. by desp. con. rent',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_paid': 'Op. by desp. paid',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_limiting': 'id limiting on dispatch',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_name': ' on dispatch',
-            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr': ' on dispatch',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_operator': 'id Opera. upon dispatch',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operators': 'AMKR operator',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_abbr': 'AMKR operator',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_start': 'Oper. AMKR. beginning rent',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_end': 'Oper. AMKR. con. rent',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_operator_paid': 'Oper. AMKR paid',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_id_limiting': 'id Limiting',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_name': 'Limited',
+            'ticc_field_arrival_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Limited',
 
             'ticc_field_arrival_uz_vagon_condition_name': 'Restrict. on dispatch',
             'ticc_field_arrival_uz_vagon_condition_abbr': 'Size. by arb.',
@@ -358,7 +358,7 @@
         {
             field: 'arrival_uz_vagon_u_tara',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_u_tara ? Number(Number(row.arrival_uz_vagon_u_tara) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_u_tara ? Number(Number(row.arrival_uz_vagon_u_tara) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ticc_field_arrival_uz_vagon_u_tara', App.Langs), width: "50px", orderable: true, searchable: true
@@ -367,7 +367,7 @@
         {
             field: 'arrival_uz_vagon_ves_tary_arc',
             data: function (row, type, val, meta) {
-                return row.arrival_uz_vagon_ves_tary_arc ? Number(Number(row.arrival_uz_vagon_ves_tary_arc) / 1000).toFixed(3) : null;
+                return row.arrival_uz_vagon_ves_tary_arc ? Number(Number(row.arrival_uz_vagon_ves_tary_arc) / 1000).toFixed(2) : null;
             },
             className: 'dt-body-center',
             title: langView('ticc_field_arrival_uz_vagon_ves_tary_arc', App.Langs), width: "50px", orderable: true, searchable: true
