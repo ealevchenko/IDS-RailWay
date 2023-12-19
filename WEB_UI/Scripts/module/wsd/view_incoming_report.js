@@ -414,7 +414,7 @@
         mywindow.document.write('<th scope="col">Ограничение погрузки</th>');
         mywindow.document.write('<th scope="col">Собственник</th>');
         mywindow.document.write('<th scope="col">Цех-получатель</th>');
-/*        mywindow.document.write('<th scope="col">Судно</th>');*/
+        /*        mywindow.document.write('<th scope="col">Судно</th>');*/
         mywindow.document.write('<th scope="col">Ком. состояние груза</th>');
         mywindow.document.write('<th scope="col">Акты</th>');
         mywindow.document.write('</tr>');
@@ -455,7 +455,7 @@
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_division_abbr_' + App.Lang]) + '</td>');
-/*                mywindow.document.write('<td></td>');*/
+                /*                mywindow.document.write('<td></td>');*/
                 mywindow.document.write('<td>' + OutText(cur_el['arrival_uz_vagon_commercial_condition_' + App.Lang]) + '</td>');
                 mywindow.document.write('<td>' + acts_uz + '</td>');
                 mywindow.document.write('</tr>');
@@ -612,7 +612,7 @@
         mywindow.document.write('<p class=MsoNormal><span>' + add_nbsp(65) + '(подпись)' + add_nbsp(30) + '(Ф.И.О.)</span></p>');
     };
     // Натурная ведомость
-    view_incoming_report.prototype.fst = function (id_sostav) {
+    view_incoming_report.prototype.fst = function (id_sostav, landscape) {
         this.type_report = null;
         this.load_sostav(id_sostav, function (wagons) {
             if (wagons && wagons.length > 0) {
@@ -620,7 +620,11 @@
                 var mywindow = window.open('', langView('vicr_title_report_nvt', App.Langs).format(this.sostav.num_doc));
                 mywindow.document.write('<html><head><title>' + langView('vicr_title_report_nvt', App.Langs).format(this.sostav.num_doc) + '</title>');
                 mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
-                mywindow.document.write('</head><body>');
+                if (landscape) {
+                    mywindow.document.write('</head><body class="a4-landscape">');
+                } else {
+                    mywindow.document.write('</head><body class="a4">');
+                }
                 mywindow.document.write('<h2>' + langView('vicr_title_report_nvt', App.Langs).format(this.sostav.num_doc) + '</h2>');
                 this.title_report(mywindow.document);      // Заголовок
                 this.view_table_info_car_fst(mywindow.document, wagons);  // Вагоны в составе
@@ -635,7 +639,7 @@
         }.bind(this));
     }
     // Вывести отчет Натурная ведомость коммерческого осмотра
-    view_incoming_report.prototype.fsci = function (id_sostav) {
+    view_incoming_report.prototype.fsci = function (id_sostav, landscape) {
         this.type_report = null;
         this.load_sostav(id_sostav, function (wagons) {
             if (wagons && wagons.length > 0) {
@@ -643,7 +647,11 @@
                 var mywindow = window.open('', 'Натурная ведомость коммерческого осмотра №' + this.sostav.num_doc);
                 mywindow.document.write('<html><head><title>Натурная ведомость коммерческого осмотра №' + this.sostav.num_doc + '</title>');
                 mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print.css">');
-                mywindow.document.write('</head><body>');
+                if (landscape) {
+                    mywindow.document.write('</head><body class="a4-landscape">');
+                } else {
+                    mywindow.document.write('</head><body class="a4">');
+                }
                 mywindow.document.write('<h2>Натурная ведомость коммерческого осмотра №' + this.sostav.num_doc + '</h2>');
                 this.title_report(mywindow.document);      // Заголовок
                 this.view_table_info_car_fsci(mywindow, wagons, function (mywindow) {
@@ -953,11 +961,11 @@
         }
     };
     //
-    view_incoming_report.prototype.gfa = function () {
+    view_incoming_report.prototype.gfa1 = function () {
         if (this.rows && this.rows.length > 0) {
             var mywindow = window.open('', 'Акт общей формы');
             mywindow.document.write('<html><head><title>Акт общей формы</title>');
-            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa.css">');
+            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa1.css">');
             mywindow.document.write('</head><body>');
             mywindow.document.write('<div class=WordSection1>');
             mywindow.document.write('<br />');
@@ -1013,6 +1021,35 @@
             mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник АТ «Укрзалізниця»  ___________________________________</span></p>');
             mywindow.document.write('<br />');
             mywindow.document.write('<p class=MsoNormal><span lang=UK>оглядач</span> вагонів  <span lang=UK>П</span>ТОВ «Сталь Україна»        <span lang=UK>  ____________________________________</span></p>');
+            mywindow.document.write('</div>');
+            mywindow.document.write('</body>');
+            mywindow.document.write('</html>');
+            LockScreenOff();
+            mywindow.document.close(); // necessary for IE >= 10
+            mywindow.focus(); // necessary for IE >= 10
+        }
+    };
+
+    view_incoming_report.prototype.gfa = function () {
+        if (this.rows && this.rows.length > 0) {
+            var mywindow = window.open('', 'Акт общей формы');
+            mywindow.document.write('<html><head><title>Акт общей формы</title>');
+            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa.css">');
+            mywindow.document.write('</head><body>');
+            mywindow.document.write('<div class=WordSection1>');
+            mywindow.document.write('<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 width=1068 style = "width:800.9pt;margin-left:6.85pt;border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt; mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt">');
+            mywindow.document.write('<tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes;height:517.2pt">');
+            mywindow.document.write('<td width=548 valign=top style="width:411.1pt;border:solid windowtext 1.0pt;mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
+            mywindow.document.write('<p class=MsoNormal align=right style="margin-bottom:0cm;text-align:right;text-indent:1.35pt;line-height:normal"><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt">Форма ГУ-23</span></p>');
+            mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:8.0pt;text-align:center;text-indent:1.4pt;line-height:107%"><b style="mso-bidi-font-weight:normal"><span lang=UK>АКТ ЗАГАЛЬНОЇ ФОРМИ<span style="mso-spacerun:yes"></span><span style="mso-spacerun:yes"> </span>№</span></b><span lang=UK><span style="mso-spacerun:yes">  </span>________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Станція<span style="mso-spacerun:yes">     </span></span><span style="mso-ansi-language:RU">__</span><i style="mso-bidi-font-style:normal"><u><span lang=UK style="font-size:14.0pt;mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Східна <span class=SpellE>Прий<span lang=RU style="mso-ansi-language:RU">мально</span></span></span></u></i><i style="mso-bidi-font-style:normal"><u><span style="font-size:14.0pt; mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"> <span lang=UK>– Відправна</span></span></u></i><span lang=UK style="font-size:14.0pt;mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">__</span><span lang=UK style="font-size:18.0pt;line-height:107%"><o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Поїзд №<span style="mso-spacerun:yes"> </span>__________<span style="mso-spacerun:yes">  </span>на перегоні_____________________________________</span></p>');
+
+            mywindow.document.write('</td>');
+            mywindow.document.write('<td width=520 valign=top style="width:389.8pt;border:solid windowtext 1.0pt;border-left:none;mso-border-left-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
+            mywindow.document.write('</td>');
+            mywindow.document.write('</tr>');
+            mywindow.document.write('</table>');
             mywindow.document.write('</div>');
             mywindow.document.write('</body>');
             mywindow.document.write('</html>');

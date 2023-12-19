@@ -14,16 +14,18 @@
             'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mi_init_main': 'Инициализация формы прибытие...',
             'mi_title_label_dropdown': 'Отчетная документация',
-            'mi_title_report_fst': 'Натурная ведомость поезда',
-            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра',
-            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР.',
-            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл.',
-            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР.',
-            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл.',
-            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР.',
-            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл.',
-            'mi_title_report_gfa': 'Акт общей формы',
-            'mi_title_report_dg20': 'Накладная предприятия ДГ-20',
+            'mi_title_report_fst': 'Натурная ведомость поезда (А4)',
+            'mi_title_report_fst_landscape': 'Натурная ведомость поезда (А4-альбомный)',
+            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра (А4)',
+            'mi_title_report_fsci_landscape': 'Натурная ведомость коммерческого осмотра (А4-альбомный)',
+            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР. (А4)',
+            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл. (А4)',
+            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР. (А4)',
+            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл. (А4)',
+            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР. (А4)',
+            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл. (А4)',
+            'mi_title_report_gfa': 'Акт общей формы (А4-альбомный)',
+            'mi_title_report_dg20': 'Накладная предприятия ДГ-20 (А4-автоформат)',
             'mi_title_report_way': 'Путевая',
             'mi_operation_mess_print': 'Готовлю документ для печати ...',
             'mi_title_button_send_db_us_doc': 'БД ЭПД',
@@ -223,10 +225,26 @@
                         }.bind(this)
                     },
                     {
+                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst_landscape', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                                view_incoming_report.fst(table_incoming_sostav.id_sostav, true)
+                            }
+                        }.bind(this)
+                    },
+                    {
                         href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.fsci(table_incoming_sostav.id_sostav)
+                            }
+                        }.bind(this)
+                    },
+                    {
+                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci_landscape', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
+                                view_incoming_report.fsci(table_incoming_sostav.id_sostav, true)
                             }
                         }.bind(this)
                     },

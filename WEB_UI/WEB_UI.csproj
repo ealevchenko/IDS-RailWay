@@ -1774,8 +1774,9 @@
     <Content Include="Content\view\idsreport\main_sd_report.css" />
     <Content Include="Content\view\idsrwt\incoming1.css" />
     <Content Include="Content\view\idsrwt\outgoing1.css" />
-    <Content Include="Content\view\shared\print_way.css" />
     <Content Include="Content\view\shared\print_gfa.css" />
+    <Content Include="Content\view\shared\print_way.css" />
+    <Content Include="Content\view\shared\print_gfa1.css" />
     <Content Include="Content\view\shared\_idsreport.css" />
     <Content Include="Images\8m.png" />
     <Content Include="Images\directory\icon-edit.svg" />
@@ -2815,7 +2816,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50446</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44326</IISUrl>
+          <IISUrl>https://localhost:50446</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

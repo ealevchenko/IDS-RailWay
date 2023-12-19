@@ -1542,7 +1542,7 @@
                                 this.form.set_validation_object_ok(null, 'cargo_name', "");
                                 // Это порожний вагон
                                 var res = list_groups_cargo.indexOf(obj[0].id_group)
-                                if (list_groups_cargo.indexOf(obj[0].id_group)>=0) {
+                                if (list_groups_cargo.indexOf(obj[0].id_group) >= 0) {
                                     // вагон порожний
                                     this.elements.checkbox_loaded_car.val(false);
                                     this.elements.autocomplete_loading_devision.val(1);
@@ -1672,7 +1672,7 @@
                     input_readonly: false,
                     element_data: this.list_external_station,
                     element_minLength: 0,
-                    element_out_value: false,
+                    element_out_value: true,
                     element_val_inp: 'value',
                     element_check: function (text) {
                         if (text) {
@@ -3121,7 +3121,10 @@
         this.ids_wsd.getOutgoingDetentionReturnOfNum(wagon.num, function (return_wagons) {
 
             if (return_wagons && return_wagons.length > 0) {
-                this.table_outgoing_detention_return.view(return_wagons, null);
+                var actual_return_wagons = return_wagons.filter(function (i) {
+                    return moment(i.date_start).isAfter(moment(wagon.arrival_sostav_date_adoption));
+                });
+                this.table_outgoing_detention_return.view(actual_return_wagons, null);
                 this.current_return_wagons = return_wagons.find(function (o) {
                     return o.date_stop === null;
                 });
