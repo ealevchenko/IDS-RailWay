@@ -586,7 +586,7 @@
             mywindow.document.write(el.num);
             mywindow.document.write('</td>');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt;font-size:12px">');
-            mywindow.document.write(nom_main_doc + (el.arrival_uz_document_nom_doc ? '(' + el.arrival_uz_document_nom_doc + ')' : ''));
+            mywindow.document.write(nom_main_doc + (el.arrival_uz_document_nom_doc ? ' (' + el.arrival_uz_document_nom_doc + ')' : ''));
             mywindow.document.write('</td>');
             mywindow.document.write('<td valign=top style="width:21.3pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.35pt">');
             mywindow.document.write(OutText(el['arrival_uz_vagon_sertification_data_' + App.Lang]));
@@ -606,9 +606,9 @@
         mywindow.document.write('</table>');
         mywindow.document.write('<p class=MsoNormal><span>&nbsp;</span></p>');
         mywindow.document.write('<p class=MsoNormal><span>&nbsp;</span></p>');
-        mywindow.document.write('<p class=MsoNormal><span>Приемосдатчик груза и багажа ____________________   ____________________</span></p>');
+        mywindow.document.write('<p class=MsoNormal><span>Приемосдатчик груза и багажа _________________   _________________</span></p>');
         mywindow.document.write('<p class=MsoNormal><span>' + add_nbsp(65) + '(подпись)' + add_nbsp(30) + '(Ф.И.О.)</span></p>');
-        mywindow.document.write('<p class=MsoNormal><span>Грузополучатель' + add_nbsp(24) + '_____________________   ____________________</span></p>');
+        mywindow.document.write('<p class=MsoNormal><span>Грузополучатель' + add_nbsp(24) + '__________________   _________________</span></p>');
         mywindow.document.write('<p class=MsoNormal><span>' + add_nbsp(65) + '(подпись)' + add_nbsp(30) + '(Ф.И.О.)</span></p>');
     };
     // Натурная ведомость
@@ -961,75 +961,74 @@
         }
     };
     //
-    view_incoming_report.prototype.gfa1 = function () {
-        if (this.rows && this.rows.length > 0) {
-            var mywindow = window.open('', 'Акт общей формы');
-            mywindow.document.write('<html><head><title>Акт общей формы</title>');
-            mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa1.css">');
-            mywindow.document.write('</head><body>');
-            mywindow.document.write('<div class=WordSection1>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal style="margin-left:450pt"><span lang=UK>Форма ГУ-23</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal align=center style="text-align:center"><b><span lang=UK>АКТ ЗАГАЛЬНОЇ ФОРМИ №</span></b><span lang=UK>    ____</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція       <u>___________________________</u></span><u><span lang=EN-US>_________</span></u><u><span lang=UK>______________________</span></u><span lang=UK>залізниця  </span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Поїзд № _________на перегоні________________________________________                               </span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK> «____»________________2020р.       </span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Цей акт  складений  у присутності таких осіб:</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK> </span><span lang=UK> </span><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ________________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник ТОВ «Сталь Україна»   _______________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник АТ «Укрзалізниця»  _______________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція відправлення            <u>_____________________</u>  залізниця</span>_____________________</p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція призначення            <u> ________</u>_____________  залізниця</span><span lang=UK> </span><span lang=EN-US>______________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Накладна №    <u> ______</u>    від «_____»  _______________20__ р.</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Вагон, контейнер № </span></p>');
-            mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style="border-collapse:collapse;border:none">');
-            mywindow.document.write('<tr>');
-            mywindow.document.write('<td border:solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
-            mywindow.document.write('<p class=MsoNormal>');
-            $.each(this.rows, function (i, el) {
-                mywindow.document.write(el.num + '; ');
-            }.bind(this));
-            mywindow.document.write('</p>');
-            mywindow.document.write('</td>');
-            mywindow.document.write('</tr>');
-            mywindow.document.write('</table>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>Найменування вантажу_______________________________________________________________________</span></p>');
-            mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>Опис обставин , що викликали складання акта: </span></p>');
-            mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
-            mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
-            mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><b><span lang=UK>Підписи</span></b></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ___________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна»   ___________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник АТ «Укрзалізниця»  ___________________________________</span></p>');
-            mywindow.document.write('<br />');
-            mywindow.document.write('<p class=MsoNormal><span lang=UK>оглядач</span> вагонів  <span lang=UK>П</span>ТОВ «Сталь Україна»        <span lang=UK>  ____________________________________</span></p>');
-            mywindow.document.write('</div>');
-            mywindow.document.write('</body>');
-            mywindow.document.write('</html>');
-            LockScreenOff();
-            mywindow.document.close(); // necessary for IE >= 10
-            mywindow.focus(); // necessary for IE >= 10
-        }
-    };
-
+    //view_incoming_report.prototype.gfa1 = function () {
+    //    if (this.rows && this.rows.length > 0) {
+    //        var mywindow = window.open('', 'Акт общей формы');
+    //        mywindow.document.write('<html><head><title>Акт общей формы</title>');
+    //        mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa1.css">');
+    //        mywindow.document.write('</head><body>');
+    //        mywindow.document.write('<div class=WordSection1>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal style="margin-left:450pt"><span lang=UK>Форма ГУ-23</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal align=center style="text-align:center"><b><span lang=UK>АКТ ЗАГАЛЬНОЇ ФОРМИ №</span></b><span lang=UK>    ____</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція       <u>___________________________</u></span><u><span lang=EN-US>_________</span></u><u><span lang=UK>______________________</span></u><span lang=UK>залізниця  </span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Поїзд № _________на перегоні________________________________________                               </span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK> «____»________________2020р.       </span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Цей акт  складений  у присутності таких осіб:</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK> </span><span lang=UK> </span><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ________________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник ТОВ «Сталь Україна»   _______________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>  прийомоздавальник АТ «Укрзалізниця»  _______________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція відправлення            <u>_____________________</u>  залізниця</span>_____________________</p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Станція призначення            <u> ________</u>_____________  залізниця</span><span lang=UK> </span><span lang=EN-US>______________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Накладна №    <u> ______</u>    від «_____»  _______________20__ р.</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Вагон, контейнер № </span></p>');
+    //        mywindow.document.write('<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 style="border-collapse:collapse;border:none">');
+    //        mywindow.document.write('<tr>');
+    //        mywindow.document.write('<td border:solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt">');
+    //        mywindow.document.write('<p class=MsoNormal>');
+    //        $.each(this.rows, function (i, el) {
+    //            mywindow.document.write(el.num + '; ');
+    //        }.bind(this));
+    //        mywindow.document.write('</p>');
+    //        mywindow.document.write('</td>');
+    //        mywindow.document.write('</tr>');
+    //        mywindow.document.write('</table>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>Найменування вантажу_______________________________________________________________________</span></p>');
+    //        mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>Опис обставин , що викликали складання акта: </span></p>');
+    //        mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
+    //        mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
+    //        mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><span lang=UK>_____________________________________________________________________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormalCxSpMiddle style="margin-bottom:0cm;margin-bottom:.0001pt;text-align:justify;line-height:normal"><b><span lang=UK>Підписи</span></b></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна» ___________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник ТОВ «Сталь Україна»   ___________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>прийомоздавальник АТ «Укрзалізниця»  ___________________________________</span></p>');
+    //        mywindow.document.write('<br />');
+    //        mywindow.document.write('<p class=MsoNormal><span lang=UK>оглядач</span> вагонів  <span lang=UK>П</span>ТОВ «Сталь Україна»        <span lang=UK>  ____________________________________</span></p>');
+    //        mywindow.document.write('</div>');
+    //        mywindow.document.write('</body>');
+    //        mywindow.document.write('</html>');
+    //        LockScreenOff();
+    //        mywindow.document.close(); // necessary for IE >= 10
+    //        mywindow.focus(); // necessary for IE >= 10
+    //    }
+    //};
     view_incoming_report.prototype.gfa = function () {
         if (this.rows && this.rows.length > 0) {
             var mywindow = window.open('', 'Акт общей формы');
@@ -1037,16 +1036,70 @@
             mywindow.document.write('<link rel="stylesheet" type="text/css" href="../../Content/view/shared/print_gfa.css">');
             mywindow.document.write('</head><body>');
             mywindow.document.write('<div class=WordSection1>');
-            mywindow.document.write('<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 width=1068 style = "width:800.9pt;margin-left:6.85pt;border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt; mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt">');
+            mywindow.document.write('<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=1068 style="width:800.9pt;margin-left:6.85pt;border-collapse:collapse;border:none;mso-border-alt:none windowtext .5pt; mso-yfti-tbllook:1184;mso-padding-alt:0cm 5.4pt 0cm 5.4pt">');
             mywindow.document.write('<tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes;height:517.2pt">');
-            mywindow.document.write('<td width=548 valign=top style="width:411.1pt;border:solid windowtext 1.0pt;mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
+            mywindow.document.write('<td width=548 valign=top style="width:411.1pt;border:none windowtext 1.0pt;mso-border-alt:none windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
             mywindow.document.write('<p class=MsoNormal align=right style="margin-bottom:0cm;text-align:right;text-indent:1.35pt;line-height:normal"><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt">Форма ГУ-23</span></p>');
             mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:8.0pt;text-align:center;text-indent:1.4pt;line-height:107%"><b style="mso-bidi-font-weight:normal"><span lang=UK>АКТ ЗАГАЛЬНОЇ ФОРМИ<span style="mso-spacerun:yes"></span><span style="mso-spacerun:yes"> </span>№</span></b><span lang=UK><span style="mso-spacerun:yes">  </span>________</span></p>');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Станція<span style="mso-spacerun:yes">     </span></span><span style="mso-ansi-language:RU">__</span><i style="mso-bidi-font-style:normal"><u><span lang=UK style="font-size:14.0pt;mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Східна <span class=SpellE>Прий<span lang=RU style="mso-ansi-language:RU">мально</span></span></span></u></i><i style="mso-bidi-font-style:normal"><u><span style="font-size:14.0pt; mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"> <span lang=UK>– Відправна</span></span></u></i><span lang=UK style="font-size:14.0pt;mso-bidi-font-size:11.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">__</span><span lang=UK style="font-size:18.0pt;line-height:107%"><o:p></o:p></span></p>');
             mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Поїзд №<span style="mso-spacerun:yes"> </span>__________<span style="mso-spacerun:yes">  </span>на перегоні_____________________________________</span></p>');
-
+            mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:8.0pt;text-align:center;text-indent:1.4pt;line-height:107%"><u><span lang=UK>«______»<span style="mso-spacerun:yes">  </span></span></u><span lang=UK><span style="mso-spacerun:yes">     </span><u><span style="mso-spacerun:yes"></span></u><span style="mso-spacerun:yes">  </span>2023р.</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK><span style="mso-spacerun:yes">          </span>Цей акт <span style="mso-spacerun:yes"> </span>складений<span style="mso-spacerun:yes"></span>у присутності таких осіб:</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span lang=UK> вантажу <span style="mso-spacerun:yes"> </span></span></u><u><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ « СТАЛЬ УКРАЇНА »</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span lang=UK> вантажу<span style="mso-spacerun:yes">  </span></span></u><u><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ « СТАЛЬ УКРАЇНА »</span></u><span lang=UK>________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><u><span lang=UK>Комерційний агент <span style="mso-spacerun:yes"> </span>АО « Укрзалізниця»__________________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Станція відправлення  _________________________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Станція призначення<span style="mso-spacerun:yes"></span>_________________________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Накладна №<span style="mso-spacerun:yes"></span><span style="mso-spacerun:yes">___________</span>від «_____»<span style="mso-spacerun:yes">   </span>_______________2023р.</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.4pt;line-height:107%"><span lang=UK>Вагон, контейнер ');
+            $.each(this.rows, function (i, el) {
+                mywindow.document.write(el.num + '; ');
+            }.bind(this));
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.4pt;line-height:107%"><span lang=UK>Найменування вантажу<span style="mso-spacerun:yes">   </span><u>____________________порожні___________________</u></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.4pt;line-height:107%"><span lang=UK>Опис обставин , що викликали складання <span class=SpellE>акта</span>: </span></p><p class=MsoNormal style="margin-bottom:0cm;text-indent:1.4pt;line-height:107%"><span lang=UK>Інші обставини <u>______________________________________________________<o:p></o:p></u></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.4pt;line-height:107%"><span lang=UK style="mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin;color:black;background:whitesmoke">При комерційному огляді,</span><u><span  lang=UK> </span></u><span lang=UK>поданих на п/шлях ПАО «АрселорМіттал Кривий  Ріг»</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.4pt;line-height:107%;tab-stops:347.3pt 354.4pt"><span lang=UK style="mso-ansi-language:RU"><span  style="mso-spacerun:yes"> </span></span><span lang=UK>виявлені такі  невідповідності: __________________________________________</span><span  style="mso-ansi-language:RU">_<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.35pt;line-height:normal;tab-stops:347.3pt 354.4pt"><span style="mso-ansi-language:RU"><span  style="mso-spacerun:yes"> </span></span><span lang=UK>_____________________________________________________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.35pt;line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang=UK>Підписи:</span></b><u><span  lang=UK><o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.35pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span  lang=UK> вантажу <span style="mso-spacerun:yes"> </span></span></u><u><span  lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.35pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span  lang=UK> вантажу <span style="mso-spacerun:yes"> </span></span></u><u><span  lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%;tab-stops:354.4pt"><u><span lang=UK>Комерційний агент <span  style="mso-spacerun:yes"> </span>АО « Укрзалізниця»__________________________________</span></u></p>');
             mywindow.document.write('</td>');
-            mywindow.document.write('<td width=520 valign=top style="width:389.8pt;border:solid windowtext 1.0pt;border-left:none;mso-border-left-alt:solid windowtext .5pt;mso-border-alt:solid windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
+            mywindow.document.write('<td width=520 valign=top style="width:389.8pt;border:none windowtext 1.0pt;border-left:none;mso-border-left-alt:none windowtext .5pt;mso-border-alt:none windowtext .5pt;padding:0cm 5.4pt 0cm 5.4pt;height:517.2pt">');
+            mywindow.document.write('<p class=MsoNormal align=right style="margin-bottom:0cm;text-align:right;line-height:normal"><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:  11.0pt;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Форма ГУ-23</span><span lang=UK style="mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:8.0pt;text-align:center;text-indent:1.4pt;line-height:107%"><b style="mso-bidi-font-weight:normal"><span lang=UK>АКТ ЗАГАЛЬНОЇ ФОРМИ<span style="mso-spacerun:yes"></span>№__________<o:p></o:p></span></b></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;line-height:107%"><span lang=UK style="font-size:12.0pt;mso-bidi-font-size:14.0pt;line-height:107%;  font-family:"Franklin Gothic Book",sans-serif;mso-fareast-font-family:"Arial Unicode MS";  mso-bidi-font-family:Calibri">Станція</span><span lang=UK style="font-size:12.0pt;mso-bidi-font-size:14.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif"> </span> <span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;font-family:" Franklin Gothic Book",sans-serif"> <span style="mso-spacerun:yes"></span></span > <i style="mso-bidi-font-style:normal"><span lang=UK style="font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Східна <span class=SpellE>Прий<span lang=RU style="mso-ansi-language:RU">мально</span></span> – Відправна<o:p></o:p></span></i></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;line-height:107%"> <span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Поїзд № _____________ перегоні _______________________________________<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal align=center style="margin-bottom:8.0pt;text-align:center;line-height:107%"><u><span lang=UK>«______»<span style="mso-spacerun:yes"></span></span></u><span lang=UK><span style="mso-spacerun:yes"></span><u><span style="mso-spacerun:yes"></span></u><span style="mso-spacerun:yes"></span></span><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif"><span style="mso-spacerun:yes"> </span>2023р<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:8.0pt;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><span style="mso-spacerun:yes"></span>Цей акт<span style="mso-spacerun:yes"></span>складено<span style="mso-spacerun:yes"></span>у присутності таких осіб:<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span lang=UK> вантажу <span style="mso-spacerun:yes"></span></span></u><u><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:" Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span lang=UK> вантажу<span style="mso-spacerun:yes"></span></span></u><u><span lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span></u><span lang=UK>________________________</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span lang=UK>Станція відправлення _______________________­­­­_________________залізниця</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span lang=UK>Станція призначення<span style="mso-spacerun:yes"></span>_______________________­­­­_________________ залізниця</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span lang=UK> Накладна №<span style="mso-spacerun:yes"></span>____________<span style="mso-spacerun:yes"></span>від «_____»<span style="mso-spacerun:yes"></span>_______________2023р.</span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;line-height:107%"><span lang=UK>Вагон, контейнер');
+            $.each(this.rows, function (i, el) {
+                mywindow.document.write(el.num + '; ');
+            }.bind(this));
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('<br />');
+            mywindow.document.write('</span><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;font-family:" Franklin Gothic Book",sans-serif"><o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Опис обставин ,що викликали складання <span class=SpellE>акта</span>:<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">При особистому наданні для підпису </span><span lang=UK>комерційний агент<span style="mso-spacerun:yes"></span></span><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><span style="mso-spacerun:yes"></span><o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">АТ « Укрзалізниця»________________________________________________<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-top:12.0pt;margin-right:0cm;margin-bottom:  0cm;margin-left:0cm;line-height:normal"><b style="mso-bidi-font-weight:normal"><span lang=UK style="mso-bidi-font-size:14.0pt;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">АКТУ ЗАГАЛЬНОЇ ФОРМИ<span style="mso-spacerun:yes"></span>№ ___________________________</span></b><span lang=UK style="mso-bidi-font-size:14.0pt;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><span style="mso-spacerun:yes"></span>зазначений<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-top:12.0pt;margin-right:0cm;margin-bottom:  0cm;margin-left:0cm;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">акт підписувати відмовилась.<o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;line-height:107%"><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;font-family:" Franklin Gothic Book",sans-serif"><o:p>&nbsp;</o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:0cm;text-indent:1.35pt;line-height:107%"><b style="mso-bidi-font-weight:normal"><span lang=UK style="mso-bidi-font-size:  14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin">Підписи:</span></b><span lang=UK style="mso-bidi-font-size:14.0pt;line-height:107%;mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin"><o:p></o:p></span></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.35pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span  lang=UK> вантажу <span style="mso-spacerun:yes"> </span></span></u><u><span  lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
+            mywindow.document.write('<p class=MsoNormal style="margin-bottom:6.0pt;text-indent:1.35pt;line-height:107%"><span class=SpellE><u><span lang=UK>Прийомоздавальник</span></u></span><u><span  lang=UK> вантажу <span style="mso-spacerun:yes"> </span></span></u><u><span  lang=UK style="font-size:10.0pt;mso-bidi-font-size:11.0pt;line-height:107%;font-family:"Franklin Gothic Book",sans-serif">ТОВ «СТАЛЬ УКРАЇНА»</span><span lang=UK>________________________<o:p></o:p></span></u></p>');
             mywindow.document.write('</td>');
             mywindow.document.write('</tr>');
             mywindow.document.write('</table>');
