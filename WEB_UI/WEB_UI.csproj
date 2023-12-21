@@ -2816,7 +2816,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50446</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:50446</IISUrl>
+          <IISUrl>https://localhost:44326</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
