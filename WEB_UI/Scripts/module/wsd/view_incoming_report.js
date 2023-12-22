@@ -315,7 +315,7 @@
         doc.write('<th scope="col">№</th>');
         doc.write('<th scope="col">Станция отправления</th>');
         doc.write('<th scope="col">Груз</th>');
-        doc.write('<th scope="col">Сертификатные данные</th>');
+        doc.write('<th scope="col">Серт. данные</th>');
         doc.write('<th scope="col">Оператор</th>');
         doc.write('<th scope="col">Ограничение</th>');
         doc.write('<th scope="col">Собственник</th>');
@@ -351,9 +351,9 @@
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_arrival_wagons_rent_limiting_abbr_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_owner_wagon_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i].arrival_uz_vagon_wagon_adm) + '</td>');
-                doc.write('<td>' + list_cars[i].num + '</td>');
+                doc.write('<td><b>' + list_cars[i].num + '</b></td>');
                 doc.write('<td>' + nom_main_doc + (list_cars[i].arrival_uz_document_nom_doc ? '(' + list_cars[i].arrival_uz_document_nom_doc + ')' : '') + '</td>');
-                doc.write('<td>' + (list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000).toFixed(2) : '0.00') + '</td>');
+                doc.write('<td><b>' + (list_cars[i].arrival_uz_vagon_vesg ? Number(Number(list_cars[i].arrival_uz_vagon_vesg) / 1000).toFixed(2) : '0.00') + '</b></td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_division_abbr_' + App.Lang]) + '</td>');
                 doc.write('<td>' + OutText(list_cars[i]['arrival_uz_vagon_condition_abbr_' + App.Lang]) + '</td>');
                 doc.write('<td></td>');
@@ -377,19 +377,19 @@
         doc.write('<tr>');
         doc.write('<th colspan="6" class="total">Всего вагонов</th>');
         doc.write('<td class="total">' + list_cars.length + '</td>');
-        doc.write('<th colspan="2" class="total">Общий вес</th>');
+        doc.write('<th colspan="3" class="total">Общий вес</th>');
         doc.write('<td class="total">' + total_vesg.toFixed(2) + '</td>');
         doc.write('<th colspan="3"></td>');
         doc.write('</tr>');
         doc.write('<tr>');
-        doc.write('<th colspan="13">Информация по операторам</th>');
+        doc.write('<th colspan="14">Информация по операторам</th>');
         doc.write('</tr>');
         if (group_operators && group_operators.length > 0) {
             for (var io = 0; io < group_operators.length; io++) {
                 doc.write('<tr>');
                 doc.write('<th colspan="6" class="total">' + group_operators[io].operator + '</th>');
                 doc.write('<td class="total">' + group_operators[io].count + '</td>');
-                doc.write('<th colspan="2"></th>');
+                doc.write('<th colspan="3"></th>');
                 doc.write('<td class="total">' + group_operators[io].vesg.toFixed(2) + '</td>');
                 doc.write('<th colspan="3"></td>');
                 doc.write('</tr>');
