@@ -124,7 +124,7 @@ table {
 
 
 .table-title {
-    max-width: 200mm;
+    /*max-width: 200mm;*/
     /*width: 200mm;*/ /* Ширина таблицы */
     /*border: 1px solid #000000;*/
 }
@@ -145,7 +145,7 @@ table {
     }
 
 .table-info {
-    max-width: 200mm;
+    /*max-width: 200mm;*/
     /*width: 200mm;*/ /* Ширина таблицы */
     border: 1px solid #000000;
     border-collapse: collapse; /* Отображать только одинарные линии */

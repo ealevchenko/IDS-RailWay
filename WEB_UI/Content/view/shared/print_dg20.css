@@ -81,13 +81,13 @@ span.a {
     line-height: 107%;
 }
 
-@page WordSection1 {
+@page p_A4_landscape {
     size: A4 landscape;
     margin: 1cm auto;
     padding: 0;
 }
 
-@page WordSection2 {
+@page p_A4 {
     size: A4;
     margin: 1cm auto;
     padding: 0;
@@ -106,10 +106,10 @@ span.a {
     }
 }*/
 
-div.WordSection1 {
-    page: WordSection1;
+div.a4_landscape {
+    page: p_A4_landscape;
 }
 
-div.WordSection2 {
-    page: WordSection2;
+div.a4 {
+    page: p_A4;
 }

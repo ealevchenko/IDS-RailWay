@@ -25,7 +25,7 @@
             'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР. (А4)',
             'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл. (А4)',
             'mi_title_report_gfa': 'Акт общей формы (А4-альбомный)',
-            'mi_title_report_dg20': 'Накладная предприятия ДГ-20 (А4-автоформат)',
+            'mi_title_report_dg20': 'Накладная предприятия ДГ-20 (А4-альбомный)',
             'mi_title_report_way': 'Путевая',
             'mi_operation_mess_print': 'Готовлю документ для печати ...',
             'mi_title_button_send_db_us_doc': 'БД ЭПД',
