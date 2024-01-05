@@ -211,7 +211,7 @@ namespace Test.TestModule
         public void IDS_GetDirectory_ChangeNumWagon()
         {
             IDS_Directory ids = new IDS_Directory(service.Test);
-            int result = ids.ChangeNumWagon(27015, 22012, @"EUROPE\ealevchenko");
+            int result = ids.ChangeNumWagon(41551862, 2246, @"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result);
         }
 
@@ -700,8 +700,8 @@ namespace Test.TestModule
         public void IDS_WIR_CalcUsageFeeOfOutgoingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            //210779 //200473 // 210834
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(231767, @"EUROPE\ealevchenko");
+            //210779 //200473 // 210834 // 242289
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(242283, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
