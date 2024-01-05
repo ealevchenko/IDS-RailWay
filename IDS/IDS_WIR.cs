@@ -10308,6 +10308,12 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Поиск wir возвратного вагона
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_wir"></param>
+        /// <returns></returns>
         public long GetIDWIR(ref EFDbContext context, long id_wir)
         {
             EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
@@ -10330,6 +10336,76 @@ namespace IDS
                 return wir.id;
             }
         }
+        public class SettlementRate
+        {
+            public int id_currency { get; set; } = -1;               // Выбранная валюта
+            public decimal rate { get; set; } = 0;                   // Выбранная ставка
+            public decimal rate_currency { get; set; } = 0;          // ставка для расчета (с учетом схода)
+            public decimal exchange_rate { get; set; } = 1;
+        }
+
+        /// <summary>
+        /// Получить ставку, курс и валюту (с учетом схода)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="derailment"></param>
+        /// <param name="wufp"></param>
+        /// <param name="list_bank"></param>
+        /// <returns></returns>
+        public SettlementRate GetExchangeRate(ref EFDbContext context, bool derailment, Wagon_Usage_Fee_Period wufp, List<Directory_BankRate> list_bank)
+        {
+            SettlementRate srate = new SettlementRate();
+            // Ставка, курс и валюта (с учетом схода)
+            EFDirectory_Currency ef_dir_curr = new EFDirectory_Currency(context);
+            // Проверим на сход
+            if (!derailment)
+            {
+                if (wufp.id_currency != null)
+                {
+                    srate.id_currency = (int)wufp.id_currency;
+                    srate.rate = wufp.rate != null ? (decimal)wufp.rate : 0;
+                    srate.rate_currency = wufp.rate != null ? (decimal)wufp.rate : 0;
+                    if (wufp.id_currency > 1)
+                    {
+                        // отправимся за курсом
+                        Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency).FirstOrDefault();
+                        if (curr != null)
+                        {
+                            Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
+                            srate.exchange_rate = (decimal)res_er.rate;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // сход
+                if (wufp.id_currency_derailment != null)
+                {
+                    srate.id_currency = (int)wufp.id_currency_derailment;
+                    srate.rate = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
+                    srate.rate_currency = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
+                    if (wufp.id_currency_derailment > 1)
+                    {
+                        // отправимся за курсом
+                        Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency_derailment).FirstOrDefault();
+                        if (curr != null)
+                        {
+                            Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
+                            srate.exchange_rate = (decimal)res_er.rate;
+                        }
+
+                    }
+                }
+            }
+            return srate;
+        }
+        /// <summary>
+        /// Расчет платы за пользование по принятому составу
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateIDWagon CalcUsageFeeOfIncomingSostav(long id_sostav, string user)
         {
             ResultUpdateIDWagon result = new ResultUpdateIDWagon(id_sostav, 0);
@@ -10407,7 +10483,7 @@ namespace IDS
                     result.result = (int)errors_base.error_status_outgoing_sostav;     // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
                     return result;
                 }
-                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); // && p.num == 52648847
+                List<OutgoingCars> list_out_cars = out_sostav.OutgoingCars.Where(p => p.position_outgoing != null).ToList(); // && p.num == 52136538  
                 if (list_out_cars == null || list_out_cars.Count() == 0)
                 {
                     result.result = (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отправки
@@ -10424,6 +10500,13 @@ namespace IDS
                 return result;
             }
         }
+        /// <summary>
+        /// Расчет платы за пользование по сданному составу
+        /// </summary>
+        /// <param name="id_sostav"></param>
+        /// <param name="list"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateIDWagon CalcUsageFeeOfOutgoingCars(long id_sostav, List<OutgoingCars> list, string user)
         {
             ResultUpdateIDWagon result = new ResultUpdateIDWagon(id_sostav, list.Count());
@@ -10452,7 +10535,7 @@ namespace IDS
                     result.result = (int)errors_base.not_list_exchange_rate;    // Ошибка, нет данных по курсу валют
                     return result;
                 }
-                foreach (OutgoingCars car in list) //.Where(w => w.num == 59080978)
+                foreach (OutgoingCars car in list) //.Where(w => w.num == 61495180)
                 {
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
                     if (wir == null)
@@ -10521,6 +10604,8 @@ namespace IDS
                     list_period_where.Clear();
                     Usage_Fee_Period arr_perriod = list_uf_period_outgoing.Where(o => o.start <= date_adoption && o.stop >= date_adoption).FirstOrDefault();
                     Usage_Fee_Period out_perriod = list_uf_period_outgoing.Where(o => o.start <= date_outgoing && o.stop >= date_outgoing).FirstOrDefault();
+                    bool uz_wagon = false;              // Вагоны ЦТЛ
+                    // Сформируем список периодов
                     if (arr_perriod != null)
                     {
                         list_period_where.Add(arr_perriod);
@@ -10531,6 +10616,7 @@ namespace IDS
                     }
                     foreach (Usage_Fee_Period ufp in list_period_where)
                     {
+                        uz_wagon = (ufp.hour_after_30 != null && ufp.hour_after_30 == true ? true : false); // Определим вагоны ЦТЛ
                         list_period_setup.Add(new Wagon_Usage_Fee_Period()
                         {
                             date_adoption = date_adoption >= ufp.start && date_adoption <= ufp.stop ? (DateTime?)date_adoption : null,
@@ -10550,133 +10636,53 @@ namespace IDS
                             hour_after_30 = ufp.hour_after_30
                         });
                     }
-                    // 
-                    int hour_period = 0;                // Время (часов)
-                    int remaining_minutes_period = 0;   // Остаток минут
-                    int grace_time = 0;                 // Льготное время
-                    bool uz_wagon = false;              // Вагоны ЦТЛ
-                    decimal exchange_rate = 1;          // курс валюты
-                    decimal rate_currency = 0;          // ставка для расчета (с учетом схода)
-                    int stage = 0;                      // этапы расчета (0-одинарный, 1-первый, 2-промежуточный, 3-последний)
-                    float coefficient_route = 1;        // коэффициент маршрута, для всех по умолчанию 1;
-                    int calc_hour_period = 0;           // Время расчетное (часов)
-                    int calc_time = 0;                  // Расчетное время
-                    decimal calc_fee_amount = 0;        // Расчетная сумма
-                    int id_currency = -1;               // Выбранная валюта
-                    decimal rate = 0;                   // Выбранная ставка
-                    int cammon_minut_period = 0;        // Общее время простоя
-                    bool rounding = false;              // Признак округление в первом периоде расчета уже было
-                                                        // Пройдемся по активным периодам
-                    foreach (Wagon_Usage_Fee_Period wufp in list_period_setup)
+                    //============================================================================
+                    //  РАСЧЕТ
+                    //============================================================================
+                    int hour_period = 0;                                // Время (часов)
+                    int remaining_minutes_period = 0;                   // Остаток минут
+                    int grace_time = 0;                                 // Льготное время
+                    SettlementRate curr_rate = new SettlementRate();    // Ставка, курс и валюта (с учетом схода)
+                    float coefficient_route = 1;                        // коэффициент маршрута, для всех по умолчанию 1;
+                    // -----
+                    int calc_hour_period = 0;                           // Время расчетное (часов)
+                    int calc_time = 0;                                  // Расчетное время
+                    decimal calc_fee_amount = 0;                        // Расчетная сумма
+                    int cammon_minut_period = 0;                        // Общее время простоя
+                    TimeSpan tm_period;
+                    // Опредеим расчет ЦТЛ или собсьвенники
+                    if (!uz_wagon)
                     {
-                        TimeSpan tm_period;
-                        grace_time = 0;             // сбросим льготный период
-                        exchange_rate = 1;          // сбросим курс
-                        rate_currency = 0;                   // сбросим ставку
-                        coefficient_route = 1;      // сбросим коэффициент
-                        if (wufp.date_adoption != null)
+                        // Вагоны собсьвенники (Считаем без периодов берем по последнему)
+                        DateTime? dt_start = list_period_setup.First().date_adoption;
+                        DateTime? dt_end = list_period_setup.Last().date_outgoing;
+                        Wagon_Usage_Fee_Period wufp = list_period_setup.Last();
+                        if (dt_start == null || dt_end == null)
                         {
-                            // Первый период
-                            if (wufp.date_outgoing != null)
-                            {
-                                tm_period = (DateTime)wufp.date_outgoing - (DateTime)wufp.date_adoption; // первый и последний период
-                                stage = 0;
-                            }
-                            else
-                            {
-                                //tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1) - (DateTime)wufp.date_adoption; // за первый период
-                                tm_period = (DateTime)wufp.stop.AddSeconds(1) - (DateTime)wufp.date_adoption; // за первый период
-                                stage = 1;
-                            }
-                            // определим льготный период
-                            if (inp_cargo && out_cargo)
-                            {
-                                grace_time = wufp.grace_time_2 != null ? (int)wufp.grace_time_2 : 0;
-                            }
-                            else
-                            {
-                                grace_time = wufp.grace_time_1 != null ? (int)wufp.grace_time_1 : 0;
-                            }
+                            result.result = (int)errors_base.not_dt_calc_usage_fee;    // Ошибка (нет даты начала или конца периода) выполнения расчета платы за пользование
+                            return result;
                         }
-                        else
-                        {
-                            if (wufp.date_outgoing != null)
-                            {
-                                //tm_period = ((DateTime)wufp.date_outgoing).AddMinutes(-1) - (DateTime)wufp.start; // за последний период
-                                tm_period = ((DateTime)wufp.date_outgoing) - (DateTime)wufp.start; // за последний период
-                                stage = 3;
-                            }
-                            else
-                            {
-                                tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1) - (DateTime)wufp.start; // за промежуточный период период
-                                stage = 2;
-                            }
-                        }
-                        // просчитаем интервал
+                        // просчитаем временной интервал
+                        tm_period = (DateTime)dt_end - (DateTime)dt_start; // первый и последний период
                         hour_period = (int)Math.Truncate(tm_period.TotalHours);
                         remaining_minutes_period = (int)Math.Truncate(tm_period.TotalMinutes - (hour_period * 60));
-                        // Округление до часа,
-                        if (wufp.hour_after_30 != null && wufp.hour_after_30 == true)
+                        // Округление до часа
+                        if (remaining_minutes_period > 0)
                         {
-                            uz_wagon = true;
-                            rounding = false; //!!! Всегда
-                            if (remaining_minutes_period >= 30 && !rounding)
-                            {
-                                hour_period++;
-                                rounding = true;
-                            }
+                            hour_period++;
                             remaining_minutes_period = 0;
                         }
-                        else
+                        // определим льготный период
+                        if (inp_cargo && out_cargo)
                         {
-                            if (remaining_minutes_period > 0)
-                            {
-                                hour_period++;
-                                remaining_minutes_period = 0;
-                            }
-
-                        }
-                        // Ставка, курс и валюта (с учетом схода)
-                        if (!derailment)
-                        {
-                            if (wufp.id_currency != null)
-                            {
-                                id_currency = (int)wufp.id_currency;
-                                rate = wufp.rate != null ? (decimal)wufp.rate : 0;
-                                rate_currency = wufp.rate != null ? (decimal)wufp.rate : 0;
-                                if (wufp.id_currency > 1)
-                                {
-                                    // отправимся за курсом
-                                    Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency).FirstOrDefault();
-                                    if (curr != null)
-                                    {
-                                        Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
-                                        exchange_rate = (decimal)res_er.rate;
-                                    }
-                                }
-                            }
+                            grace_time = wufp.grace_time_2 != null ? (int)wufp.grace_time_2 : 0;
                         }
                         else
                         {
-                            // сход
-                            if (wufp.id_currency_derailment != null)
-                            {
-                                id_currency = (int)wufp.id_currency_derailment;
-                                rate = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
-                                rate_currency = wufp.rate_derailment != null ? (decimal)wufp.rate_derailment : 0;
-                                if (wufp.id_currency_derailment > 1)
-                                {
-                                    // отправимся за курсом
-                                    Directory_Currency curr = ef_dir_curr.Context.Where(c => c.id == wufp.id_currency_derailment).FirstOrDefault();
-                                    if (curr != null)
-                                    {
-                                        Directory_BankRate res_er = list_bank.Where(e => e.code == curr.code).FirstOrDefault();
-                                        exchange_rate = (decimal)res_er.rate;
-                                    }
-
-                                }
-                            }
+                            grace_time = wufp.grace_time_1 != null ? (int)wufp.grace_time_1 : 0;
                         }
+                        // Получим ставку, курс
+                        curr_rate = GetExchangeRate(ref context, derailment, wufp, list_bank);
                         // Определим коэффициент маршрута если нет схода
                         if (!derailment && wufp.coefficient_route != null && route != null && route == true)
                         {
@@ -10686,66 +10692,165 @@ namespace IDS
                         {
                             coefficient_route = (float)wufp.coefficient_not_route;
                         }
-                        // расчеты
-                        switch (stage)
+                        calc_hour_period = hour_period;
+                        int hour_calc = (hour_period - grace_time);
+                        // пересчет времени с учетом uz_wagon
+                        var remainder = (hour_calc % 24);
+                        if (remainder > 0)
                         {
-                            case 0:
+                            remainder = 24 - remainder;
+                        }
+                        calc_time = hour_calc + (remainder); // округлим до целых суток
+                        calc_fee_amount = ((curr_rate.rate_currency / 24) * calc_time * (decimal)coefficient_route) * curr_rate.exchange_rate;
+                    }
+                    else
+                    {
+                        // Вагоны ЦТЛ (Считаем с учетом периодов с проверкой на выход за приделы )
+
+                        // 
+                        //int hour_period = 0;                // Время (часов)
+                        //int remaining_minutes_period = 0;   // Остаток минут
+                        //int grace_time = 0;                 // Льготное время
+
+                        //decimal rate_currency = 0;          // ставка для расчета (с учетом схода)
+                        int stage = 0;                      // этапы расчета (0-одинарный, 1-первый, 2-промежуточный, 3-последний)
+                        //float coefficient_route = 1;        // коэффициент маршрута, для всех по умолчанию 1;
+                       //int calc_hour_period = 0;           // Время расчетное (часов)
+                        //int calc_time = 0;                  // Расчетное время
+                       // decimal calc_fee_amount = 0;        // Расчетная сумма
+                        //int id_currency = -1;               // Выбранная валюта
+                        //decimal rate = 0;                   // Выбранная ставка
+                        //int cammon_minut_period = 0;        // Общее время простоя
+                        bool rounding = false;              // Признак округление в первом периоде расчета уже было
+                                                            // Пройдемся по активным периодам
+                        foreach (Wagon_Usage_Fee_Period wufp in list_period_setup)
+                        {
+                            grace_time = 0;                 // сбросим льготный период
+                            curr_rate.exchange_rate = 1;    // сбросим курс
+                            curr_rate.rate_currency = 0;    // сбросим ставку
+                            coefficient_route = 1;          // сбросим коэффициент
+
+                            if (wufp.date_adoption != null)
+                            {
+                                // Первый период
+                                if (wufp.date_outgoing != null)
                                 {
-                                    calc_hour_period = hour_period;
-                                    int hour_calc = (hour_period - grace_time);
-                                    // пересчет времени с учетом uz_wagon
-                                    //calc_time = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
-                                    var remainder = (hour_calc % 24);
-                                    if (remainder > 0)
-                                    {
-                                        remainder = 24 - remainder;
-                                    }
-                                    calc_time = hour_calc + (!uz_wagon ? remainder : 0); // округлим до целых суток
-                                    calc_fee_amount = ((rate_currency / 24) * calc_time * (decimal)coefficient_route) * exchange_rate;
-                                    break;
-                                };
-                            case 1:
-                                {
-                                    // Первый период
-                                    calc_hour_period = hour_period;
-                                    int hour_calc = (hour_period - grace_time);
-                                    calc_time = hour_calc;
-                                    calc_fee_amount = ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
-                                    break;
-                                };
-                            case 2:
-                                {
-                                    // промежуточный период
-                                    calc_hour_period += hour_period;
-                                    int hour_calc = (hour_period);
-                                    calc_time += hour_calc;
-                                    calc_fee_amount += ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
-                                    break;
+                                    tm_period = (DateTime)wufp.date_outgoing - (DateTime)wufp.date_adoption; // первый и последний период
+                                    stage = 0;
                                 }
-                            case 3:
+                                else
                                 {
-                                    // последний период
-                                    calc_hour_period += hour_period;
-                                    int hour_calc = (hour_period);
-                                    // пересчет времени с учетом uz_wagon
-                                    //hour_calc = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
-                                    var remainder = (hour_calc % 24);
-                                    if (remainder > 0)
-                                    {
-                                        remainder = 24 - remainder;
-                                    }
-                                    hour_calc = hour_calc + (!uz_wagon ? remainder : 0); // округлим до целых
-                                    calc_time += hour_calc;
-                                    calc_fee_amount += ((rate_currency / 24) * hour_calc * (decimal)coefficient_route) * exchange_rate;
-                                    break;
+                                    tm_period = (DateTime)wufp.stop.AddSeconds(1) - (DateTime)wufp.date_adoption; // за первый период
+                                    stage = 1;
                                 }
+                                // определим льготный период
+                                if (inp_cargo && out_cargo)
+                                {
+                                    grace_time = wufp.grace_time_2 != null ? (int)wufp.grace_time_2 : 0;
+                                }
+                                else
+                                {
+                                    grace_time = wufp.grace_time_1 != null ? (int)wufp.grace_time_1 : 0;
+                                }
+                            }
+                            else
+                            {
+                                if (wufp.date_outgoing != null)
+                                {
+                                    tm_period = ((DateTime)wufp.date_outgoing) - (DateTime)wufp.start; // за последний период
+                                    stage = 3;
+                                }
+                                else
+                                {
+                                    tm_period = (DateTime)wufp.stop.AddSeconds(1).AddMinutes(1) - (DateTime)wufp.start; // за промежуточный период период
+                                    stage = 2;
+                                }
+                            }
+                            // просчитаем интервал
+                            hour_period = (int)Math.Truncate(tm_period.TotalHours);
+                            remaining_minutes_period = (int)Math.Truncate(tm_period.TotalMinutes - (hour_period * 60));
+                            // Округление до часа,
+                            //rounding = false; //!!! в первом случаее сделал округление всегда, но 3.01.2024 id_outgoing=242270 ваг 52136538 замечание применяется только 1 раз- убрал
+                            if (remaining_minutes_period >= 30 && !rounding)
+                            {
+                                hour_period++;
+                                rounding = true;
+                            }
+                            remaining_minutes_period = 0;
+
+                            // Ставка, курс и валюта (с учетом схода)
+                            curr_rate = GetExchangeRate(ref context, derailment, wufp, list_bank);
+                            // Определим коэффициент маршрута если нет схода
+                            if (!derailment && wufp.coefficient_route != null && route != null && route == true)
+                            {
+                                coefficient_route = (float)wufp.coefficient_route;
+                            }
+                            if (!derailment && wufp.coefficient_not_route != null && route != null && route == false)
+                            {
+                                coefficient_route = (float)wufp.coefficient_not_route;
+                            }
+                            // расчеты
+                            switch (stage)
+                            {
+                                case 0:
+                                    {
+                                        // первый и последний период
+                                        calc_hour_period = hour_period;
+                                        int hour_calc = (hour_period - grace_time);
+                                        // пересчет времени с учетом uz_wagon
+                                        //calc_time = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                        //var remainder = (hour_calc % 24);
+                                        //if (remainder > 0)
+                                        //{
+                                        //    remainder = 24 - remainder;
+                                        //}
+                                        //calc_time = hour_calc + (!uz_wagon ? remainder : 0); // округлим до целых суток
+                                        calc_time = hour_calc; // округлим до целых суток
+                                        calc_fee_amount = ((curr_rate.rate_currency / 24) * calc_time * (decimal)coefficient_route) * curr_rate.exchange_rate;
+                                        break;
+                                    };
+                                case 1:
+                                    {
+                                        // Первый период
+                                        calc_hour_period = hour_period;
+                                        int hour_calc = (hour_period - grace_time);
+                                        calc_time = hour_calc;
+                                        calc_fee_amount = ((curr_rate.rate_currency / 24) * hour_calc * (decimal)coefficient_route) * curr_rate.exchange_rate;
+                                        break;
+                                    };
+                                case 2:
+                                    {
+                                        // промежуточный период
+                                        calc_hour_period += hour_period;
+                                        int hour_calc = (hour_period);
+                                        calc_time += hour_calc;
+                                        calc_fee_amount += ((curr_rate.rate_currency / 24) * hour_calc * (decimal)coefficient_route) * curr_rate.exchange_rate;
+                                        break;
+                                    }
+                                case 3:
+                                    {
+                                        // последний период
+                                        calc_hour_period += hour_period;
+                                        int hour_calc = (hour_period);
+                                        // пересчет времени с учетом uz_wagon
+                                        //hour_calc = hour_calc + (!derailment ? (!uz_wagon ? (24 - (hour_calc % 24)) : 0) : 0); // округлим до целых суток если не сход
+                                        //var remainder = (hour_calc % 24);
+                                        //if (remainder > 0)
+                                        //{
+                                        //    remainder = 24 - remainder;
+                                        //}
+                                        //hour_calc = hour_calc + (!uz_wagon ? remainder : 0); // округлим до целых
+                                        calc_time += hour_calc;
+                                        calc_fee_amount += ((curr_rate.rate_currency / 24) * hour_calc * (decimal)coefficient_route) * curr_rate.exchange_rate;
+                                        break;
+                                    }
+                            }
                         }
                     }
                     //
                     WagonUsageFee wuf = null;
                     TimeSpan tm = date_outgoing - date_adoption; // за первый период
                     cammon_minut_period = (int)tm.TotalMinutes;
-
                     if (wir.id_usage_fee != null)
                     {
                         // Плата расчитана
@@ -10761,9 +10866,9 @@ namespace IDS
                             wuf.out_cargo = out_cargo;
                             wuf.derailment = derailment;// сход
                             wuf.count_stage = list_period_setup.Count(); // Количество стадий расчета
-                            wuf.id_currency = id_currency;
-                            wuf.rate = rate;
-                            wuf.exchange_rate = exchange_rate;
+                            wuf.id_currency = curr_rate.id_currency;
+                            wuf.rate = curr_rate.rate;
+                            wuf.exchange_rate = curr_rate.exchange_rate;
                             wuf.coefficient = coefficient_route;
                             wuf.use_time = calc_hour_period;
                             wuf.grace_time = grace_time;
@@ -10793,9 +10898,9 @@ namespace IDS
                             out_cargo = out_cargo,
                             derailment = derailment, // сход
                             count_stage = list_period_setup.Count(), // Количество стадий расчета
-                            id_currency = id_currency,
-                            rate = rate,
-                            exchange_rate = exchange_rate,
+                            id_currency = curr_rate.id_currency,
+                            rate = curr_rate.rate,
+                            exchange_rate = curr_rate.exchange_rate,
                             coefficient = coefficient_route,
                             use_time = calc_hour_period,
                             grace_time = grace_time,
@@ -10814,9 +10919,6 @@ namespace IDS
                         ef_wir.Update(wir);
                         result.SetInsertResult(car.id, 1, car.num);
                     }
-                    //string rod = out_uz_vag.Directory_GenusWagons.abbr_ru;
-                    //string operator_arrival = out_uz_vag.id_wagons_rent_arrival != null ? out_uz_vag.Directory_WagonsRent.Directory_OperatorsWagons.abbr_ru : null;
-                    //string operator_outgoing = out_uz_vag.id_wagons_rent_outgoing != null ? out_uz_vag.Directory_WagonsRent1.Directory_OperatorsWagons.abbr_ru : null;
                 }
                 result.SetResult(context.SaveChanges());
                 return result;
@@ -10828,7 +10930,6 @@ namespace IDS
                 return result;
             }
         }
-
         /// <summary>
         /// Расчет платы за пользование по сданным составам за выбранный период
         /// </summary>
