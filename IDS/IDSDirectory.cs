@@ -668,7 +668,7 @@ namespace IDS
                 wagon.id_genus = (((wagon.id_genus == 0 && id_genus > 0) || (wagon.id_genus > 0 && id_genus > 0 && wagon.id_genus != id_genus)) ? id_genus : wagon.id_genus);
                 //wagon.bit_warning = bit_warning;
                 wagon.kol_os = ((wagon.kol_os == 0 && kol_os > 0) || (wagon.kol_os > 0 && kol_os > 0 && wagon.kol_os != kol_os) ? kol_os : wagon.kol_os);
-                wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : wagon.usl_tip);
+                wagon.usl_tip = (wagon.usl_tip == null && usl_tip != null ? usl_tip : (wagon.usl_tip != null && usl_tip == null ? null :  wagon.usl_tip));
                 wagon.date_rem_vag = date_rem_vag;
                 wagon.id_type_ownership = id_type_ownership;
                 wagon.sign = sign;
