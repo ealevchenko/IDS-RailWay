@@ -10535,7 +10535,7 @@ namespace IDS
                     result.result = (int)errors_base.not_list_exchange_rate;    // Ошибка, нет данных по курсу валют
                     return result;
                 }
-                foreach (OutgoingCars car in list) //.Where(w => w.num == 50240720)
+                foreach (OutgoingCars car in list) //.Where(w => w.num == 63375885)
                 {
                     Console.WriteLine("Обрабатываю вагон №{0}", car.num);
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
@@ -10705,8 +10705,10 @@ namespace IDS
                                 remainder = 24 - remainder;
                             }
                             // текущая плата почасово
-                            int rc_res = (int)((curr_rate.rate_currency / 24) * 1000);
-                            decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
+                            //int rc_res = (int)((curr_rate.rate_currency / 24) * 1000); // Убрал обрезание до 3 знака
+                            //decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
+                            decimal rate_currency_hour = curr_rate.rate_currency / 24;
+
                             calc_time = hour_calc + (remainder); // округлим до целых суток
                             calc_fee_amount = (rate_currency_hour * calc_time * (decimal)coefficient_route) * curr_rate.exchange_rate;
                         }
@@ -10783,9 +10785,9 @@ namespace IDS
                                     coefficient_route = (float)wufp.coefficient_not_route;
                                 }
                                 // текущая плата почасово
-                                //decimal rate_currency_hour = Math.Round((curr_rate.rate_currency / 24), 3, MidpointRounding.AwayFromZero);
-                                int rc_res = (int)((curr_rate.rate_currency / 24) * 1000);
-                                decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
+                                //int rc_res = (int)((curr_rate.rate_currency / 24) * 1000); // Убрал обрезание до 3 знака
+                                //decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
+                                decimal rate_currency_hour = curr_rate.rate_currency / 24; 
                                 // расчеты
                                 switch (stage)
                                 {
