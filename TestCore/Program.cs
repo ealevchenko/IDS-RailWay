@@ -116,7 +116,8 @@ namespace HelloApp
                 //runner.DoAction("Action1");
 
                 IDS_WIR ids_wir = new IDS_WIR(logger, config);
-                ids_wir.ClearDoubling_Directory_WagonsRent(null);
+                //ids_wir.ClearDoubling_Directory_WagonsRent(null);
+                ids_wir.UpdateOperationArrivalSostav(284389, null);
 
                 //Console.WriteLine("Hello, World!");
 

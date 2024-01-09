@@ -47,8 +47,160 @@ namespace IDS_
             this.options = optionsBuilder.UseSqlServer(connectionString).Options;
         }
 
+        #region АРЕНДЫ ВАГОНОВ (ОПЕРАТОРЫ) - ПРАВКА, ОБНОВЛЕНИЕ, ИСПРАВЛЕНИЕ
+
+        #region Прибытие составов
         /// <summary>
-        /// Обновить по сданному или отправленному составу оператора АМКР
+        /// Обновить по принятому составу оператора АМКР (Аренду)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateWagon UpdateOperationArrivalSostav(ref EFDbContext context, long id_arrival_sostav, string user)
+        {
+            ResultUpdateWagon result = new ResultUpdateWagon(0);
+            try
+            {
+                if (context == null)
+                {
+                    context = new EFDbContext(this.options);
+                };
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                EFArrivalCar ef_arr_car = new EFArrivalCar(context);
+                EFArrivalUzVagon ef_arr_vag = new EFArrivalUzVagon(context);
+                EFDirectoryWagonsRent ef_wag_rent = new EFDirectoryWagonsRent(context);
+                ArrivalSostav? sostav = ef_arr_sostav.Context.Where(s => s.Id == id_arrival_sostav).FirstOrDefault();
+                if (sostav != null)
+                {
+                    // Состав принят
+                    if (sostav.Status == 2)
+                    {
+                        List<ArrivalCar> cars = ef_arr_car.Context.Where(c => c.IdArrival == sostav.Id && c.PositionArrival != null).ToList();
+                        result.count = cars.Count();
+                        _logger.LogInformation(_eventId, "По сотаву {0} Определено {1} вагонов", id_arrival_sostav, result.count);
+                        //Console.WriteLine("По сотаву {0} Определено {1} вагонов", id_outgoing_sostav, result.count);
+                        foreach (ArrivalCar car in cars)
+                        {
+                            ArrivalUzVagon? vag = ef_arr_vag.Context.Where(v => v.Id == car.IdArrivalUzVagon).FirstOrDefault();
+                            if (vag != null)
+                            {
+                                // Получим аренды по данному вагону
+                                DirectoryWagonsRent? rent = ef_wag_rent.Context.Where(r => r.Num == vag.Num && r.RentStart <= sostav.DateAdoption && r.RentEnd > sostav.DateAdoption).FirstOrDefault();
+                                DirectoryWagonsRent? rent_null = ef_wag_rent.Context.Where(r => r.Num == vag.Num && r.RentStart <= sostav.DateAdoption && r.RentEnd == null).OrderByDescending(c => c.Id).FirstOrDefault();
+                                int? id_wagons_rent_arrival = null;
+                                id_wagons_rent_arrival = rent != null ? (int?)rent.Id : rent_null != null ? (int?)rent_null.Id : null;
+                                // если аренда новая и записаная - разные, изменим аренду
+                                if (id_wagons_rent_arrival != null && vag.IdWagonsRentArrival != id_wagons_rent_arrival)
+                                {
+                                    vag.IdWagonsRentArrival = id_wagons_rent_arrival;
+                                    vag.Change = DateTime.Now;
+                                    vag.ChangeUser = user;
+                                    result.SetUpdateResult(1, vag.Num);
+                                    _logger.LogInformation(_eventId, "По вагону {0} определена замена аренды по прибытию {1}", vag.Num, id_wagons_rent_arrival);
+                                }
+                                else
+                                {
+                                    result.SetSkipResult(0, vag.Num);
+                                }
+                            }
+                        }
+                        if (result.update > 0)
+                        {
+                            result.SetResult(context.SaveChanges());
+                        }
+                    }
+                    else
+                    {
+                        result.SetResult((int)errors_base.error_status_arrival_sostav); // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
+                    }
+                }
+                else
+                {
+                    result.SetResult((int)errors_base.not_arrival_sostav_db); //В базе данных нет записи состава
+                }
+                _logger.LogInformation(_eventId, "По составу {0} определено {1} вагонов (обновновить: {2}, пропустить :{3}), результат обновления :{4}", id_arrival_sostav, result.count, result.update, result.skip, result.result);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "UpdateOperationArrivalSostav(context={0}, id_outgoing_sostav={1}, user={2})", context, id_arrival_sostav, user);
+                result.SetResult((int)errors_base.global);
+                return result;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Обновить по принятому составу оператора АМКР (Аренду)
+        /// </summary>
+        /// <param name="id_arrival_sostav"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public ResultUpdateWagon UpdateOperationArrivalSostav(long id_arrival_sostav, string user)
+        {
+            ResultUpdateWagon rt = new ResultUpdateWagon(0);
+            try
+            {
+                EFDbContext context = new EFDbContext(this.options);
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                return UpdateOperationArrivalSostav(ref context, id_arrival_sostav, user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "UpdateOperationArrivalSostav(id_outgoing_sostav={0}, user={1})", id_arrival_sostav, user);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        /// <summary>
+        /// Обновить по принятому составу оператора АМКР (Аренду)
+        /// </summary>
+        /// <param name="date_adoption"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public OperationResultID UpdateOperationArrivalSostav(DateTime date_adoption, string user)
+        {
+            OperationResultID rt = new OperationResultID();
+            try
+            {
+                EFDbContext context = new EFDbContext(this.options);
+
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                EFArrivalSostav ef_arr_sostav = new EFArrivalSostav(context);
+                List<ArrivalSostav> list_sostav = ef_arr_sostav.Context.Where(s => s.DateAdoption >= date_adoption).ToList();
+                foreach (ArrivalSostav sost in list_sostav)
+                {
+                    ResultUpdateWagon rt_st = UpdateOperationArrivalSostav(sost.Id, user);
+                    rt.SetResultOperation(rt_st.result, sost.Id);
+                }
+                _logger.LogInformation(_eventId, "Выполнение завершено, определено {0} составов, код выполнения {1}", rt.listResult.Count(), rt.result);
+
+                return rt;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "UpdateOperationArrivalSostav(date_outgoing={0}, user={1})", date_adoption, user);
+                rt.SetResult((int)errors_base.global);
+                return rt;// Возвращаем id=-1 , Ошибка
+            }
+        }
+        #endregion
+
+        #region Отправка составов
+        /// <summary>
+        /// Обновить по сданному или отправленному составу оператора АМКР (Аренду)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="id_outgoing_sostav"></param>
@@ -73,7 +225,7 @@ namespace IDS_
                 EFOutgoingUzVagon ef_out_vag = new EFOutgoingUzVagon(context);
                 EFDirectoryWagonsRent ef_wag_rent = new EFDirectoryWagonsRent(context);
                 OutgoingSostav? sostav = ef_out_sostav.Context.Where(s => s.Id == id_outgoing_sostav).FirstOrDefault();
-                List<ChangeID> del_id_wr = new List<ChangeID>(); // Список id rent для удаления
+                //List<ChangeID> del_id_wr = new List<ChangeID>(); // Список id rent для удаления
 
                 if (sostav != null)
                 {
@@ -134,7 +286,7 @@ namespace IDS_
             }
         }
         /// <summary>
-        /// Обновить по сданному или отправленному составу оператора АМКР
+        /// Обновить по сданному или отправленному составу оператора АМКР (Аренду)
         /// </summary>
         /// <param name="id_outgoing_sostav"></param>
         /// <param name="user"></param>
@@ -159,6 +311,12 @@ namespace IDS_
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        /// <summary>
+        /// Обновить по сданному или отправленному составу оператора АМКР (Аренду)
+        /// </summary>
+        /// <param name="date_outgoing"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public OperationResultID UpdateOperationOutgoingSostav(DateTime date_outgoing, string user)
         {
             OperationResultID rt = new OperationResultID();
@@ -190,6 +348,11 @@ namespace IDS_
                 return rt;// Возвращаем id=-1 , Ошибка
             }
         }
+        /// <summary>
+        /// Очистить задвоение операторов АМКР (Аренд)
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public ResultUpdateWagon ClearDoubling_Directory_WagonsRent(string user)
         {
             ResultUpdateWagon result = new ResultUpdateWagon(0);
@@ -283,6 +446,8 @@ namespace IDS_
                 return result;// Возвращаем id=-1 , Ошибка
             }
         }
+        #endregion
+        #endregion
 
     }
 }

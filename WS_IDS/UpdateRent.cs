@@ -19,8 +19,9 @@ namespace WS_IDS
         private readonly ILogger<UpdateRent> _logger;
         private readonly IConfiguration _configuration;
         EventId _eventId = new EventId(0);
-        private int interval = 1000;                                // Интервал выполнения таймера
-        private int control_period = 10;                            // Период контроля отправленных составов (дней)
+        private int interval = 1000;                               // Интервал выполнения таймера
+        private int control_period_arr = 10;                       // Период контроля принятых составов (дней)
+        private int control_period_out = 10;                       // Период контроля отправленных составов (дней)
         Stopwatch stopWatch = new Stopwatch();
 
         private Timer? _timer = null;
@@ -38,7 +39,8 @@ namespace WS_IDS
             _configuration = configuration;
             _eventId = int.Parse(_configuration["EventID:UpdateRent"]);
             interval = int.Parse(configuration["Interval:UpdateRent"]);
-            control_period = int.Parse(configuration["Control:UpdateRent"]);
+            control_period_arr = int.Parse(configuration["Control:UpdateRentArrival"]);
+            control_period_out = int.Parse(configuration["Control:UpdateRentOutgoing"]);
             this.ids_wir = new IDS_WIR(logger, configuration, _eventId);
 
         }
@@ -69,7 +71,11 @@ namespace WS_IDS
             stopWatch.Stop();
             _logger.LogWarning(_eventId, "UpdateRent:ClearDoubling - runing, result = {0}, runtime = {1}", res_cl.result, GetElapsedTime(stopWatch.Elapsed));
             stopWatch.Start();
-            OperationResultID res_out = this.ids_wir.UpdateOperationOutgoingSostav(DateTime.Now.AddDays(-10), null);
+            OperationResultID res_arr = this.ids_wir.UpdateOperationArrivalSostav(DateTime.Now.AddDays(-control_period_arr), null);
+            stopWatch.Stop();
+            _logger.LogWarning(_eventId, "UpdateRent:OperationArrival - runing, result = {0}, runtime = {1}", res_arr.result, GetElapsedTime(stopWatch.Elapsed));
+            stopWatch.Start();
+            OperationResultID res_out = this.ids_wir.UpdateOperationOutgoingSostav(DateTime.Now.AddDays(-control_period_out), null);
             stopWatch.Stop();
             _logger.LogWarning(_eventId, "UpdateRent:OperationOutgoing - runing, result = {0}, runtime = {1}", res_out.result, GetElapsedTime(stopWatch.Elapsed));
             lock (locker_test)
