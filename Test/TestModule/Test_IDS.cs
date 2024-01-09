@@ -229,8 +229,9 @@ namespace Test.TestModule
         }
         public void IDS_Directory_UpdateArrivalRentWagon()
         {
+            //2024-01-05 00:00:00.000
             IDS_Directory ids = new IDS_Directory(service.Test);
-            int result = ids.UpdateArrivalRentWagon(52291986, new DateTime(2023,8,4,0,0,0), @"EUROPE\ealevchenko");
+            int result = ids.UpdateArrivalRentWagon(61138012, new DateTime(2024,1,5,0,0,0), @"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result);
         }
 
@@ -701,7 +702,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834 // 242289
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(252324, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(252297, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
@@ -734,8 +735,8 @@ namespace Test.TestModule
         public void IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            DateTime start = new DateTime(2023, 9, 1, 0, 0, 0);
-            DateTime stop = new DateTime(2023, 9, 3, 23, 59, 59);
+            DateTime start = new DateTime(2024, 1, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2024, 1, 10, 23, 59, 59);
             List<ResultUpdateIDWagon> res = ids.CalcUsageFeeOfOutgoingSostav(start, stop, @"EUROPE\ealevchenko");
         }
 

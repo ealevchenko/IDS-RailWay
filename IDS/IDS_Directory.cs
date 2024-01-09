@@ -1630,7 +1630,13 @@ namespace IDS
                 return result;
             }
         }
-
+        /// <summary>
+        /// Обновить аренду по вагону с указаного периода времени
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="data_rent"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int UpdateArrivalRentWagon(int num, DateTime data_rent, string user)
         {
             try
@@ -1665,6 +1671,13 @@ namespace IDS
                 return (int)errors_base.global;
             }
         }
+        /// <summary>
+        /// Обновить аренду по группе вагонов с указаного периода времени
+        /// </summary>
+        /// <param name="nums"></param>
+        /// <param name="data_rent"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int UpdateArrivalRentWagons(List<int> nums, DateTime data_rent, string user)
         {
             try
