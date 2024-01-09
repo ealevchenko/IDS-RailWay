@@ -24,8 +24,15 @@ public partial class DirectoryConsignee
     [Column("auxiliary")]
     public bool Auxiliary { get; set; }
 
+    [Column("id_division")]
+    public int? IdDivision { get; set; }
+
     [InverseProperty("CodeConsigneeNavigation")]
     public virtual ICollection<ArrivalUzDocument> ArrivalUzDocuments { get; } = new List<ArrivalUzDocument>();
+
+    [ForeignKey("IdDivision")]
+    [InverseProperty("DirectoryConsignees")]
+    public virtual DirectoryDivision? IdDivisionNavigation { get; set; }
 
     [InverseProperty("CodeShipperNavigation")]
     public virtual ICollection<OutgoingUzDocument> OutgoingUzDocuments { get; } = new List<OutgoingUzDocument>();

@@ -76,6 +76,8 @@ public partial class EFDbContext : DbContext
 
     public virtual DbSet<DirectoryDivision> DirectoryDivisions { get; set; }
 
+    public virtual DbSet<DirectoryExchangeRate> DirectoryExchangeRates { get; set; }
+
     public virtual DbSet<DirectoryExternalStation> DirectoryExternalStations { get; set; }
 
     public virtual DbSet<DirectoryGenusWagon> DirectoryGenusWagons { get; set; }
@@ -322,6 +324,8 @@ public partial class EFDbContext : DbContext
 
             entity.HasOne(d => d.IdTypeOwnershipNavigation).WithMany(p => p.ArrivalUzVagons).HasConstraintName("FK_Arrival_UZ_Vagon_Directory_TypeOwnerShip");
 
+            entity.HasOne(d => d.IdWagonsRentArrivalNavigation).WithMany(p => p.ArrivalUzVagons).HasConstraintName("FK_Arrival_UZ_Vagon_Directory_WagonsRent");
+
             entity.HasOne(d => d.NumNavigation).WithMany(p => p.ArrivalUzVagons)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Arrival_UZ_Vagon_Directory_Wagons");
@@ -438,6 +442,8 @@ public partial class EFDbContext : DbContext
         modelBuilder.Entity<DirectoryConsignee>(entity =>
         {
             entity.Property(e => e.Code).ValueGeneratedNever();
+
+            entity.HasOne(d => d.IdDivisionNavigation).WithMany(p => p.DirectoryConsignees).HasConstraintName("FK_Directory_Consignee_Directory_Divisions");
         });
 
         modelBuilder.Entity<DirectoryCurrency>(entity =>
@@ -457,6 +463,11 @@ public partial class EFDbContext : DbContext
                 .HasConstraintName("FK_Directory_Divisions_Directory_TypeDivision");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent).HasConstraintName("FK_Directory_Divisions_Directory_Divisions");
+        });
+
+        modelBuilder.Entity<DirectoryExchangeRate>(entity =>
+        {
+            entity.Property(e => e.Re).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<DirectoryExternalStation>(entity =>

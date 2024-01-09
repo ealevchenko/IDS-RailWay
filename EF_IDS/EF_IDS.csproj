@@ -18,4 +18,8 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="5.3.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

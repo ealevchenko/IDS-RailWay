@@ -48,6 +48,9 @@ public partial class DirectoryDivision
     [InverseProperty("IdDivisionOnAmkrNavigation")]
     public virtual ICollection<ArrivalUzVagon> ArrivalUzVagons { get; } = new List<ArrivalUzVagon>();
 
+    [InverseProperty("IdDivisionNavigation")]
+    public virtual ICollection<DirectoryConsignee> DirectoryConsignees { get; } = new List<DirectoryConsignee>();
+
     [InverseProperty("IdDevisionNavigation")]
     public virtual ICollection<DirectoryWay> DirectoryWays { get; } = new List<DirectoryWay>();
 
