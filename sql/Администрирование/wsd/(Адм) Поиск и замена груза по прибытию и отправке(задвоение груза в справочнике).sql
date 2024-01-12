@@ -8,7 +8,7 @@ SELECT TOP (1000) [id]
       ,[change]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_CargoETSNG]
-  where code=291035
+  where code=161147  
 
   /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
@@ -24,7 +24,18 @@ SELECT TOP (1000) [id]
       ,[change_user]
       ,[id_out_group]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo]
-  where [id_cargo_etsng]=4
+  where [id_cargo_etsng]=21
+
+SELECT TOP (1000) [id]
+      ,[code]
+      ,[cargo_gng_name_ru]
+      ,[cargo_gng_name_en]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_CargoGNG]
+  where [code]=27011210 
 
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]

@@ -335,7 +335,7 @@ declare @stop datetime = convert(datetime,'2023-12-31',120);
 		,il.[note] as instructional_letters_note
 		--,account_balance = [IDS].[get_count_account_balance_of_id_operator](arr_wag_rent.[id_operator], dir_rod.rod_uz) -- arr_doc_uz.[klient]
 		,account_balance = (CASE WHEN arr_doc_uz.[klient] = 1 THEN 0 ELSE [IDS].[get_count_account_balance_of_id_operator](arr_wag_rent.[id_operator], dir_rod.rod_uz) END) -- or arr_doc_vag.[cargo_returns] = 1 
-		into view_incoming_cars
+		--into view_incoming_cars
 	FROM IDS.ArrivalCars as arr_car
 		--> Прибытие состава
 	    Left JOIN IDS.ArrivalSostav as arr_sost ON arr_sost.id = arr_car.id_arrival

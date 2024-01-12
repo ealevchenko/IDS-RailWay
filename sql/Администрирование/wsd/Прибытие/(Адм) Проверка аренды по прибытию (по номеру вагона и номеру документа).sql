@@ -1,5 +1,7 @@
-declare @num_doc int = 1651 
-declare @num int = 53470696--61134227--
+use [KRR-PA-CNT-Railway]
+
+declare @num_doc int = 22  
+declare @num int = 60397817--61134227--
 
 
 SELECT [id]
