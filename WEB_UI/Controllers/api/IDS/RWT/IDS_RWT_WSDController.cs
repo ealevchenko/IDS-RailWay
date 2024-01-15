@@ -1442,6 +1442,9 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string operation_wagon_create_user { get; set; }
         public DateTime? operation_wagon_close { get; set; }
         public string operation_wagon_close_user { get; set; }
+        public DateTime? date_outgoing { get; set; }
+        public DateTime? date_outgoing_act { get; set; }
+        public DateTime? date_departure_amkr { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/wsd")]

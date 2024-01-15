@@ -361,7 +361,8 @@
                         view_arrival_cars.view(current_id_way) // Показать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                    });
+                    }
+                );
             }),
         // Выполнить операцию вернуть вагоны отправленного состава на АМКР (Обновление wsd)
         operation_return_cars = $('button#return-cars').on('click',
@@ -384,10 +385,10 @@
                         view_return_cars.view(current_id_way) // Показать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                    });
-            }),
-
-
+                    }
+                );
+            }
+        ),
         // Изменить дислокацию
         bt_dislocation = $('button#dislocation').on('click',
             function (event) {
@@ -410,34 +411,6 @@
                     alert.out_warning_message("Выберите путь, по которому нужно провести роспуск.");
                 }
             }),
-        //// Выполнить отправка
-        //bt_sending = $('button#sending').on('click',
-        //    function (event) {
-        //        alert.clear_message();
-        //        event.preventDefault();
-        //        if (current_id_way) {
-        //            operation_detali.view_sending(current_id_way);
-        //        } else {
-        //            alert.out_warning_message("Выберите путь, c которого будет произведена отправка.");
-        //        }
-        //    }),
-        // Прибытие вагона
-        //bt_arrival = $('button#arrival').on('click',
-        //    function (event) {
-        //        alert.clear_message();
-        //        event.preventDefault();
-        //        //// Определим выбранный путь
-        //        //var select_row = table_tree_way.html_table.find('tr.selected');
-        //        //// Определим станцию пути
-        //        //var id_station = null;
-        //        //var id_way = null;
-        //        //if (select_row && select_row.length > 0) {
-        //        //    id_station = Number($(select_row[0]).attr("station"));
-        //        //    id_way = Number($(select_row[0]).attr("way"));
-        //        //}
-        //        // Откроем окно
-        //        operation_detali.view_arrival(current_id_station, current_id_way);
-        //    }),
         // Предъявление состава на УЗ
         bt_provide = $('button#provide').on('click',
             function (event) {
@@ -531,7 +504,8 @@
                             }
                         } else {
                             // Вагон вышел
-                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
+                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].date_outgoing) + '. Вагон убыл ' + (result_position[0].date_departure_amkr !== null ? getReplaceTOfDT(result_position[0].date_departure_amkr): ' - ')+ ' со станции ' + result_position[0]['station_name_' + lang]; 
+                            //Вагон сдан на УЗ 2023-07-06 11:00. Вагон убыл 2023-07-06 21:15 со станции Промышленная» // getReplaceTOfDT(result_position[0].date_outgoing)
                         }
                     }
                     LockScreenOff();
