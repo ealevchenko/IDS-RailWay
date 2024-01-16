@@ -171,7 +171,7 @@
         var $th_pb = $('<th></th>', {
             'width': '20%',
             'scope': 'col',
-            'class': 'text-center',
+            'class': 'text-center font-weight-bold',
             'colspan': '1',
         });
         var $th_count = $('<th></th>', {
@@ -523,25 +523,39 @@
     };
     // Обновить подвал
     ids_tree_way.prototype.update_foot = function () {
+        var count_send = 0;
         var count_all = 0;
         var amkr_all = 0;
         var capacity_all = 0;
         var tr = this.body.find('tr[data-tree-area="station"]');
         $.each(tr, function (i, el) {
+            var $div_name = $(el.cells[2]);
             var $div_pb = $(el.cells[3]);
             var $td_count = $(el.cells[4]);
             var $td_amkr = $(el.cells[5]);
             var $td_capacity = $(el.cells[6]);
+
+            var name = $div_name.text();
+            var send = $div_pb.text();
+            // Получить только отправленные
+            if (send.indexOf('-') >= 0) {
+                send = send.slice(send.indexOf('-') + 1);
+            }
             var count = $td_count.text();
             var amkr = $td_amkr.text();
             var capacity = $td_capacity.text();
-            count_all += count ? Number(count) : 0;
-            amkr_all += amkr ? Number(amkr) : 0;
-            capacity_all += capacity ? Number(capacity) : 0;
+            if (name !== 'Кирова') {
+                count_send += send ? Number(send) : 0;
+                count_all += count ? Number(count) : 0;
+                amkr_all += amkr ? Number(amkr) : 0;
+                capacity_all += capacity ? Number(capacity) : 0;
+            }
+
         }.bind(this));
         // вывести итого
         var tr_foot = this.foot.find('tr');
         if (tr_foot && tr_foot.length > 0) {
+            $(tr_foot[0].cells[1]).text(count_send);
             $(tr_foot[0].cells[2]).text(count_all);
             $(tr_foot[0].cells[3]).text(amkr_all);
             //$(tr_foot[0].cells[4]).text(capacity_all);
