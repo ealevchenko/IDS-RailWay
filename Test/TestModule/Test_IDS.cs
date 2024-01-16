@@ -413,7 +413,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 418516, 423932, 510028 };
+            List<int> list = new List<int>() { 758807, 764587, 764588, 313857, 377869 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>
