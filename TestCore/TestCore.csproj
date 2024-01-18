@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -45,6 +45,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EF_IDS\EF_IDS.csproj" />
     <ProjectReference Include="..\IDS_\IDS_.csproj" />
+    <ProjectReference Include="..\WebApiToken\WebApiToken.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
+using Helper;
 
 namespace HelloApp
 {
@@ -102,6 +103,9 @@ namespace HelloApp
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
+                WebClientGIVC client_givc = new WebClientGIVC(logger, config);
+                string res = client_givc.GetReq1892();
+
                 //using var servicesProvider = new ServiceCollection()
                 //    .AddTransient<Runner>() // Runner is the custom class
                 //    .AddLogging(loggingBuilder =>
@@ -115,9 +119,9 @@ namespace HelloApp
                 //var runner = servicesProvider.GetRequiredService<Runner>();
                 //runner.DoAction("Action1");
 
-                IDS_WIR ids_wir = new IDS_WIR(logger, config);
-                //ids_wir.ClearDoubling_Directory_WagonsRent(null);
-                ids_wir.UpdateOperationArrivalSostav(284389, null);
+                ////IDS_WIR ids_wir = new IDS_WIR(logger, config);
+                //////ids_wir.ClearDoubling_Directory_WagonsRent(null);
+                ////ids_wir.UpdateOperationArrivalSostav(284389, null);
 
                 //Console.WriteLine("Hello, World!");
 
