@@ -381,14 +381,25 @@
     var FC = App.form_control;
 
     // Получить часы из менут
+    //var getHoursFromMinuts = function (minutes) {
+    //    var hours = parseInt(minutes / 60);
+    //    hours = hours < 10 ? '0' + hours : hours;
+    //    var min = minutes % 60;
+    //    min = min < 10 ? '0' + min : min;
+    //    return hours + ':' + min;
+    //}
     var getHoursFromMinuts = function (minutes) {
-        var hours = parseInt(minutes / 60);
-        hours = hours < 10 ? '0' + hours : hours;
-        var min = minutes % 60;
-        min = min < 10 ? '0' + min : min;
-        return hours + ':' + min;
-    }
+        if (minutes && minutes > 0) {
+            var h = parseInt(minutes / 60);
+            h = h < 10 ? '0' + h : h;
+            var m = minutes % 60;
+            m = m < 10 ? '0' + m : m;
+            return `${h.toString().padStart(6, '0')}:${m.toString().padStart(2, '0')}`;
+        } else {
+            return null;
+        }
 
+    }
     // Перечень полей
     var list_collums = [
         {
