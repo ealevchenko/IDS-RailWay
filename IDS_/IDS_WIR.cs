@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using GIVC;
 
 namespace IDS_
 {
@@ -48,7 +48,6 @@ namespace IDS_
         }
 
         #region АРЕНДЫ ВАГОНОВ (ОПЕРАТОРЫ) - ПРАВКА, ОБНОВЛЕНИЕ, ИСПРАВЛЕНИЕ
-
         #region Прибытие составов
         /// <summary>
         /// Обновить по принятому составу оператора АМКР (Аренду)
