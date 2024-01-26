@@ -70,7 +70,7 @@ namespace WS_IDS
                 run_exec = false;
             }
             // Выполним в 9 часов 
-            if (cur_day != day && cur_hour == 10 && run_exec == false)
+            if (cur_day != day && cur_hour == 13 && run_exec == false)
             {
                 day = cur_day;
                 run_exec = true;
