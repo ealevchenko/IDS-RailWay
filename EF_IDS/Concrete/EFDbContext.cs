@@ -147,6 +147,7 @@ public partial class EFDbContext : DbContext
     public virtual DbSet<DirectoryWagonsRent> DirectoryWagonsRents { get; set; }
 
     public virtual DbSet<DirectoryWay> DirectoryWays { get; set; }
+    public virtual DbSet<GivcRequest> GivcRequests { get; set; }
 
     public virtual DbSet<InstructionalLetter> InstructionalLetters { get; set; }
 
@@ -584,6 +585,11 @@ public partial class EFDbContext : DbContext
             entity.HasOne(d => d.IdStationNavigation).WithMany(p => p.DirectoryWays)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Directory_Ways_Directory_Station");
+        });
+
+        modelBuilder.Entity<GivcRequest>(entity =>
+        {
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<InstructionalLettersWagon>(entity =>

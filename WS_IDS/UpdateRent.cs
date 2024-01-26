@@ -19,7 +19,7 @@ namespace WS_IDS
         private readonly ILogger<UpdateRent> _logger;
         private readonly IConfiguration _configuration;
         EventId _eventId = new EventId(0);
-        private int interval = 1000;                               // Интервал выполнения таймера
+        private int interval = 3600;                               // Интервал выполнения таймера
         private int control_period_arr = 10;                       // Период контроля принятых составов (дней)
         private int control_period_out = 10;                       // Период контроля отправленных составов (дней)
         Stopwatch stopWatch = new Stopwatch();
@@ -48,7 +48,8 @@ namespace WS_IDS
         public Task StartAsync(CancellationToken stoppingToken)
         {
             _logger.LogWarning(_eventId, "UpdateRent - start, interval{0}", interval);
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
+            //_timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
+            _timer = new Timer(DoWork, null, 0, interval * 1000);
             return Task.CompletedTask;
         }
 

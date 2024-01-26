@@ -21,6 +21,8 @@ namespace Helper
         private string user;
         private string psw;
         private static string token = null;
+        private string jsonString = null;
+        public string JsonResponse { get { return this.jsonString; } }
         public bool error;
 
         public WebApiToken(ILogger<Object> logger, string user, string psw, string url, string url_token)
@@ -41,7 +43,7 @@ namespace Helper
             catch (Exception e)
             {
                 this.error = true;
-                _logger.LogError(String.Format("WebApiToken(url_token={0}, userName={1}, password={2}, Exception={3})", url_token, this.user, this.psw, e));
+                _logger.LogError(String.Format("WebApiToken(url_token={0}, userName={1}, password={2}), Exception={3}", url_token, this.user, this.psw, e));
 
             }
         }
@@ -66,10 +68,10 @@ namespace Helper
                 //var content = new JsonContent(pairs);
 
                 using StringContent content = new(System.Text.Json.JsonSerializer.Serialize(new
-                                                    {
-                                                        username = user,
-                                                        password = psw,
-                                                        refresh_token = ref_token
+                {
+                    username = user,
+                    password = psw,
+                    refresh_token = ref_token
                 }),
                                                     Encoding.UTF8,
                                                     "application/json");
@@ -81,7 +83,7 @@ namespace Helper
 
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromMinutes(10);
+                    client.Timeout = TimeSpan.FromMinutes(1);
                     var response =
                         client.PostAsync(url + "/" + url_token, content).Result;
                     _logger.LogDebug(String.Format("Web API Connect [AbsoluteUri :{0}, user : {1} status:{2}", response.RequestMessage.RequestUri.AbsoluteUri, user, response.StatusCode));
@@ -163,6 +165,33 @@ namespace Helper
                 _logger.LogError(String.Format("GetApiValues(api_comand={0}), Exception={1})", api_url, e));
 
                 return null;
+            }
+        }
+        public T? GetDeserializeJSON_ApiValues<T>(string api_comand)
+        {
+            try
+            {
+                jsonString = GetApiValues(api_comand);
+                T? result = System.Text.Json.JsonSerializer.Deserialize<T>(jsonString);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(String.Format("GetDeserializeJSON_ApiValues(api_comand={0}), Exception={1})", api_comand, e));
+                return default(T);
+            }
+        }
+        public T? GetDeserializeJSON_ApiValuesResult<T>(string jsonString)
+        {
+            try
+            {
+                T? result = System.Text.Json.JsonSerializer.Deserialize<T>(jsonString);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(String.Format("GetDeserializeJSON_ApiValuesResult(jsonString={0}), Exception={1})", jsonString, e));
+                return default(T);
             }
         }
     }

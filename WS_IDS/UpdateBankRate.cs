@@ -22,7 +22,7 @@ namespace WS_IDS
         private readonly ILogger<UpdateBankRate> _logger;
         private readonly IConfiguration _configuration;
         EventId _eventId = new EventId(0);
-        private int interval = 1000 * 60 * 60;                                // Интервал выполнения таймера
+        private int interval = 3600;                                // Интервал выполнения таймера
         private List<int> list_r030;
 
         private String? connectionString;
@@ -50,7 +50,8 @@ namespace WS_IDS
         public Task StartAsync(CancellationToken stoppingToken)
         {
             _logger.LogWarning(_eventId, "UpdateBankRate -start, interval{0}", interval);
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
+            //_timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(interval));
+            _timer = new Timer(DoWork, null, 0, interval * 1000);
             return Task.CompletedTask;
         }
 

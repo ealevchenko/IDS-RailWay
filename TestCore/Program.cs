@@ -17,6 +17,10 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 using Helper;
+using GIVC;
+using System.Reflection;
+using NLog.Fluent;
+using TestCore.TestModele;
 
 namespace HelloApp
 {
@@ -37,50 +41,8 @@ namespace HelloApp
 
     public class Program
     {
-        //public class ApplicationContext : DbContext
-        //{
-        //    public virtual DbSet<ArrivalCar> ArrivalCars { get; set; }
-
-        //    public ApplicationContext()
-        //    {
-        //        //Database.EnsureCreated();
-        //    }
-
-        //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //    {
-        //        //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=helloappdb;Trusted_Connection=True;");
-        //        optionsBuilder.UseSqlServer("Data Source=krr-sql-paclx03;Initial Catalog=KRR-PA-CNT-Railway;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;");
-        //    }
-        //}
-
-
-
-
-        //class Person
-        //{
-        //    public string Name { get; }
-        //    public int Age { get; set; }
-        //    public Person(string name, int age)
-        //    {
-        //        Name = name;
-        //        Age = age;
-        //    }
-        //}
-
-        //public class ExchangeRate
-        //{
-        //    public int? r030 { get; set; }
-        //    public string txt { get; set; }
-        //    public decimal? rate { get; set; }
-        //    public string cc { get; set; }
-        //    public string exchangedate { get; set; }
-        //}
-
-        //
         public static void Main(string[] args)
         {
-            //NLog.ILogger logger = LogManager.GetCurrentClassLogger();
-
             ILogger<Program> logger = LoggerFactory.Create(builder => builder.AddNLog()).CreateLogger<Program>();
             try
             {
@@ -103,8 +65,118 @@ namespace HelloApp
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                WebClientGIVC client_givc = new WebClientGIVC(logger, config);
-                string res = client_givc.GetReq1892();
+                IDS_GIVC ids_givc = new IDS_GIVC(logger, config);
+                int res_cl = ids_givc.RequestToGIVC("req1892", null);
+
+                #region TestGIVC УЗ ГИВЦ
+                //TestGIVC tGIVC = new TestGIVC(logger, config);
+                //tGIVC.Req0002();
+                //tGIVC.Req1892();
+                //tGIVC.Req1091();
+                //tGIVC.Req4373();
+                //tGIVC.Req7002();
+                //tGIVC.reqDisvag();
+                //tGIVC.reqNDI();
+                #endregion
+
+
+                //+++++++++++++++++++++++++++++++ req1892 ++++++++++++++++++++++++++++++
+                //WebClientGIVC client_givc = new WebClientGIVC(logger, config);
+                //req1892 res = client_givc.GetReq1892(467004, 467201, 7932, 7932);
+                //req1892 res = client_givc.GetReq1892(467004, 467201);
+
+                //string path = "req1892.txt";
+                //using (StreamWriter writer = new StreamWriter(path, false))
+                //{
+                //    //string str_field = "";
+                //    string str = "";
+                //    object myClass = new disl_vag_detali();
+                //    List<string> fieds = new List<string>();
+
+                //    //foreach (var prop in typeof(myClass).GetProperties())
+                //    //{
+                //    //    fieds.Add(field.Name);
+                //    //    str_field += field.Name + ";";
+                //    //}
+                //    //foreach (var field in myClass.GetType().GetProperties())
+                //    //{
+                //    //    fieds.Add(field.Name);
+                //    //    str_field += field.Name + ";";
+                //    //}
+
+
+                //    string str_field =
+                //                "gruz_detali[etsng];" +
+                //                "gruz_detali[nvs];" +
+                //                "km;" +
+                //                "ves_gruz;" +
+                //                "mnkua_opv;" +
+                //               "kol_vag;" +
+                //               "st_otpr_detali[esr_otpr];" +
+                //               "st_otpr_detali[n_rpus];" +
+                //               "kod_grotp;" +
+                //               "mname_rv;" +
+                //               "esr_form;" +
+                //               "st_nazn_detali[n_rpus];" +
+                //               "st_nazn_detali[esr_nazn_vag];" +
+                //               "n_dorus;" +
+                //               "date_pogr;" +
+                //               "kod_grp;" +
+                //               "nom_sost;" +
+                //               "date_op;" +
+                //               "stan_detali[n_rpus];" +
+                //               "stan_detali[esr_op];" +
+                //               "prog_cha_prib;" +
+                //               "kod_dor;" +
+                //               "rod_vag;" +
+                //               "esr_nazn;" +
+                //               "pr_nrp;";
+                //    writer.WriteLine(str_field);
+
+
+                //    foreach (disl_vag_detali disl in res.disl_vag.ToList())
+                //    {
+                //        var flds = disl.GetType().GetProperties();
+                //        var fl = flds.Where(c => c.Name == "n_rpus");
+                //        //var val = fl.va
+                //        //FieldInfo fld = typeof(flds).GetField("n_rpus");
+                //        //var prop = typeof(disl).GetProperties()
+                //        str =
+                //            (disl.gruz != null && disl.gruz.etsng != null ? disl.gruz.etsng : "") + ";" +
+                //            (disl.gruz != null && disl.gruz.nvs != null ? disl.gruz.nvs : "") + ";"  +
+                //            (disl.km != null ? disl.km : "") + ";" +
+                //            (disl.ves_gruz != null ? disl.ves_gruz : "") + ";" +
+                //            (disl.mnkua_opv != null ? disl.mnkua_opv : "") + ";" +
+                //            (disl.kol_vag != null ? disl.kol_vag : "") + ";" +
+                //            (disl.st_otpr != null && disl.st_otpr.esr_otpr != null ? disl.st_otpr.esr_otpr : "") + ";" +
+                //            (disl.st_otpr != null && disl.st_otpr.n_rpus != null ? disl.st_otpr.n_rpus : "") + ";" +
+                //            (disl.kod_grotp != null ? disl.kod_grotp : "") + ";" +
+                //            (disl.mname_rv != null ? disl.mname_rv : "") + ";" +
+                //            (disl.esr_form != null ? disl.esr_form : "") + ";" +
+                //            (disl.st_nazn != null && disl.st_nazn.n_rpus != null ? disl.st_nazn.n_rpus : "") + ";" +
+                //            (disl.st_nazn != null && disl.st_nazn.esr_nazn_vag != null ? disl.st_nazn.esr_nazn_vag : "") + ";" +
+                //            (disl.n_dorus != null ? disl.n_dorus : "") + ";" +
+                //            (disl.date_pogr != null ? disl.date_pogr : "") + ";" +
+                //            (disl.kod_grp != null ? disl.kod_grp : "") + ";" +
+                //            (disl.nom_sost != null ? disl.nom_sost : "") + ";" +
+                //            (disl.date_op != null ? disl.date_op : "") + ";" +
+                //            (disl.stan != null && disl.stan.n_rpus != null ? disl.stan.n_rpus : "") + ";" +
+                //            (disl.stan != null && disl.stan.esr_op != null ? disl.stan.esr_op : "") + ";" +
+                //            (disl.prog_cha_prib != null ? disl.prog_cha_prib : "") + ";" +
+                //            (disl.kod_dor != null ? disl.kod_dor : "") + ";" +
+                //            (disl.rod_vag != null ? disl.rod_vag : "") + ";" +
+                //            (disl.esr_nazn != null ? disl.esr_nazn : "") + ";" +
+                //            (disl.pr_nrp != null ? disl.pr_nrp : "") + ";";
+                //        writer.WriteLine(str);
+                //    }
+
+
+                //}
+
+                //string res = client_givc.Getreq1091();
+
+                //req1892? weatherForecast =
+                //      JsonSerializer.Deserialize<req1892>(jsonString);
 
                 //using var servicesProvider = new ServiceCollection()
                 //    .AddTransient<Runner>() // Runner is the custom class
