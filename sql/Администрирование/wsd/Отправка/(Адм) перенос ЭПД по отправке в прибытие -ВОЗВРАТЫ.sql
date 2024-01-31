@@ -1,4 +1,3 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
 --SELECT TOP (1000) [num_doc]
 --      ,[revision]
 --      ,[status]
@@ -37,7 +36,7 @@ SELECT TOP (1000) [num_doc]
   --    ,[xml_doc]
   --    ,[num_uz]
 	 -- ,[close] = GetDate()
-  --    ,[close_message]=N'Возврат с УЗ'
+  --    ,[close_message]=N'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ'
   --FROM [KRR-PA-CNT-Railway].[IDS].[UZ_DOC_OUT]
   ----where [num_doc]='85387287'
   --where [num_doc]='90361781'
