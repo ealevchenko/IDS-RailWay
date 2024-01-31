@@ -237,7 +237,7 @@ namespace IDS
                 };
                 // Получим пути по данной станции
                 EFDirectory_Ways ef_ways = new EFDirectory_Ways(context);
-                List<Directory_Ways> list_ways_station = ef_ways.Context.Where(w => w.id_station == id_station).ToList();
+                List<Directory_Ways> list_ways_station = ef_ways.Context.Where(w => w.id_station == id_station && w.way_delete == null).ToList();
                 int position = 1;
                 foreach (Directory_Ways way in list_ways_station)
                 {
