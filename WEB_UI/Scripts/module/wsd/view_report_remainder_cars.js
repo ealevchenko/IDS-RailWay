@@ -1143,30 +1143,30 @@
 /*            $('td#count_wagon').text(wagons.length);*/
         }.bind(this));
     };
-    // Пренадлежит внешним вагонам
+    // принадлежит внешним вагонам
     view_report_remainder_cars.prototype.is_outer_cars = function (i) {
         var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator });
         var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator });
         return !Boolean(amkr || amkr_vz);
         //return Boolean(i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188);
     };
-    // Пренадлежит внешним вагонам АМКР
+    // принадлежит внешним вагонам АМКР
     view_report_remainder_cars.prototype.is_amkr_outer_cars = function (i) {
         //return Boolean(i.id_operator === 14 || i.id_operator === 16);
         var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(amkr);
     };
-    // Пренадлежит вагонам АМКР ВЗ
+    // принадлежит вагонам АМКР ВЗ
     view_report_remainder_cars.prototype.is_amkr_cars = function (i) {
         //return Boolean(i.id_operator === 188);
         var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(amkr_vz);
     };
-    // Пренадлежит сданным вагонам
+    // принадлежит сданным вагонам
     view_report_remainder_cars.prototype.is_handed_cars = function (i) {
         return i.outgoing_sostav_status !== null && Number(i.outgoing_sostav_status) === 2;
     };
-    // Пренадлежит цестернам
+    // принадлежит цестернам
     view_report_remainder_cars.prototype.is_amkr_cisterns = function (i) {
         //return Boolean((i.id_operator === 28
         //    || i.id_operator === 23
@@ -1184,7 +1184,7 @@
         var cisterns = this.list_cisterns.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(cisterns && i.wagon_rod === 70);
     };
-    // Пренадлежит контр-агенту
+    // принадлежит контр-агенту
     view_report_remainder_cars.prototype.is_client = function (i) {
         return i.arrival_klient === true;
     };

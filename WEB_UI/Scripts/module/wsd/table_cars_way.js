@@ -2639,7 +2639,7 @@
                 var row = this.obj_t_cars.rows(indexes).data().toArray();
                 if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
                     e.preventDefault();
-                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
+                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон принадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
                 }
             }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                 var index = this.obj_t_cars.rows({ selected: true });

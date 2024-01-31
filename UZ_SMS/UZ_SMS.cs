@@ -703,7 +703,7 @@ namespace UZ
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                         if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                         {
-                            // Проверим вагон пренадлежит документу
+                            // Проверим вагон принадлежит документу
                             UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
                             if (vagon != null)
                             {
@@ -791,7 +791,7 @@ namespace UZ
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                         if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0 && otpr.date_otpr >= lower_date && otpr.date_otpr <= upper_date)
                         {
-                            // Проверим вагон пренадлежит документу
+                            // Проверим вагон принадлежит документу
                             UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
                             if (vagon != null)
                             {
