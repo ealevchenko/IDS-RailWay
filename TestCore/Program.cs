@@ -65,13 +65,13 @@ namespace HelloApp
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
-                IDS_GIVC ids_givc = new IDS_GIVC(logger, config);
-                int res_cl = ids_givc.RequestToGIVC("req1892", null);
+                //IDS_GIVC ids_givc = new IDS_GIVC(logger, config);
+                //int res_cl = ids_givc.RequestToGIVC("req1892", null);
 
                 #region TestGIVC УЗ ГИВЦ
-                //TestGIVC tGIVC = new TestGIVC(logger, config);
+                TestGIVC tGIVC = new TestGIVC(logger, config);
                 //tGIVC.Req0002();
-                //tGIVC.Req1892();
+                tGIVC.Req1892();
                 //tGIVC.Req1091();
                 //tGIVC.Req4373();
                 //tGIVC.Req7002();

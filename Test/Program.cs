@@ -230,7 +230,7 @@ namespace Test
             //tids.IDS_WIR_OperationReturnProvideWagons();              // Тест операции вернуть пръедявленый состав
 
             //tids.IDS_WIR_OperationClearEPDSendingSostav();             // Тест операции сброса ЭПД состава который отправили
-            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
+            tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
             //tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
 
 
