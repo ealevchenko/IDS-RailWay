@@ -10705,9 +10705,9 @@ namespace IDS
                                 remainder = 24 - remainder;
                             }
                             // текущая плата почасово
-                            //int rc_res = (int)((curr_rate.rate_currency / 24) * 1000); // Убрал обрезание до 3 знака
-                            //decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
-                            decimal rate_currency_hour = curr_rate.rate_currency / 24;
+                            int rc_res = (int)((curr_rate.rate_currency / 24) * 10000000); // Убрал обрезание до 3 знака
+                            decimal rate_currency_hour = (decimal)(rc_res / 10000000);
+                            //decimal rate_currency_hour = curr_rate.rate_currency / 24;
 
                             calc_time = hour_calc + (remainder); // округлим до целых суток
                             calc_fee_amount = (rate_currency_hour * calc_time * (decimal)coefficient_route) * curr_rate.exchange_rate;
@@ -10785,9 +10785,9 @@ namespace IDS
                                     coefficient_route = (float)wufp.coefficient_not_route;
                                 }
                                 // текущая плата почасово
-                                //int rc_res = (int)((curr_rate.rate_currency / 24) * 1000); // Убрал обрезание до 3 знака
-                                //decimal rate_currency_hour = (decimal)(rc_res / 1000.0);
-                                decimal rate_currency_hour = curr_rate.rate_currency / 24; 
+                                long rc_res = (long)((curr_rate.rate_currency / 24) * 10000000); // Убрал обрезание до 3 знака
+                                decimal rate_currency_hour = (decimal)(rc_res / 10000000.0);
+                                //decimal rate_currency_hour = curr_rate.rate_currency / 24; 
                                 // расчеты
                                 switch (stage)
                                 {
