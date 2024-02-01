@@ -20,7 +20,7 @@
             'vrrc_title_handed_cars': 'Сданные вагоны на УЗ',
             'vrrc_title_amkr_cisterns': 'Цистерны арендованные',
             'vrrc_title_select_day': 'Сверх суток:',
-            'vrrc_title_select_top': 'Топ:',
+            'vrrc_title_select_top': 'Не перемещается более, час:',
             'vrrc_title_dislocations': 'Дислокация:',
             'vrrc_title_current_ways': 'Ж.д. путь:',
             'vrrc_title_operators': 'Оператор:',
@@ -43,7 +43,7 @@
             'vrrc_title_not_surrender_cars': 'Без учета сданных вагонов:',
 
             'vrrc_title_aplly_day': 'Применить выбрать свыше указанных дней',
-            'vrrc_title_aplly_top': 'Применить выбрать топ',
+            'vrrc_title_aplly_top': 'Применить выбрать не перемещается более, час',
             'vrrc_title_yes': 'Да',
 
 
@@ -76,7 +76,7 @@
             'vrrc_title_handed_cars': 'Handed cars at UZ',
             'vrrc_title_amkr_cisterns': 'Tanks rented',
             'vrrc_title_select_day': 'Over day:',
-            'vrrc_title_select_top': 'Top:',
+            'vrrc_title_select_top': 'Doesn`t move for more than an hour:',
             'vrrc_title_operators': 'Operator:',
             'vrrc_title_limiting': 'Limit:',
             'vrrc_title_cargo_arrival': 'Cargo on arrival:',
@@ -97,7 +97,7 @@
             'vrrc_title_not_surrender_cars': 'Excluding surrendered cars:',
 
             'vrrc_title_aplly_day': 'Apply select over specified days',
-            'vrrc_title_aplly_top': 'Apply select top',
+            'vrrc_title_aplly_top': 'Apply select does not move for more than an hour',
             'vrrc_title_yes': 'Yes',
 
             'vrrc_title_add_ok': 'UPDATE',
@@ -226,6 +226,8 @@
             id_destination_station: -1,     //Станция назначения
             paid: false,                    //Признак платности
             id_station_amkr: -1,            //Станция нахождения вагона
+            id_dislocation: -1,             //Дислокация
+            id_current_way: -1,             //Ж.Д.путь
         }
         // Сообщение
         LockScreen(langView('vrrc_mess_init_panel', App.Langs));
@@ -623,6 +625,7 @@
                 this.modal_confirm_form.view(langView('vrrc_title_confirm_clear', App.Langs), langView('vrrc_title_mesage_clear', App.Langs), function (res) {
                     if (res) {
                         this.clear_where();
+                        this.update_where(); // Обновим выборку
                     }
                 }.bind(this));
             }.bind(this));
@@ -679,7 +682,7 @@
                 this.where_option.amkr_cisterns = checked;
                 this.update_where(); // Обновим выборку
             }.bind(this));
-            // top
+            // top Сверх суток
             this.el_imp_day.on('keydown', function (event) {
                 if (event.keyCode == 13) {
                     $(event.currentTarget).change();
@@ -748,7 +751,7 @@
                 event.stopPropagation();
                 this.update_where(); // Обновим выборку
             }.bind(this));
-            // top
+            // top неперемещался более часа
             this.el_imp_top.on('keydown', function (event) {
                 if (event.keyCode == 13) {
                     $(event.currentTarget).change();
@@ -919,7 +922,7 @@
             this.el_destination_station.on('change', function (event) {
                 //this.event_select_change(event, '');
             }.bind(this));
-            // Выбор платноти
+            // Выбор платности
             this.el_paid.on('change', function (event) {
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
@@ -1090,7 +1093,7 @@
                 this.tab_cars.view(wagons, null);
                 var info = this.tab_cars.obj_t_cars.page.info();
                 $('td#count_wagon').text(info.recordsDisplay);
-/*                $('td#count_wagon').text(wagons.length);*/
+                /*                $('td#count_wagon').text(wagons.length);*/
                 this.init_where();
             }.bind(this));
         }.bind(this));
@@ -1108,6 +1111,10 @@
             column.search('', true, false);
         }.bind(this));
         // Проедемся по элементам выбора и сбросим выбор
+        this.el_imp_day.val(0);
+        this.where_option.select_day = 0;
+        this.el_imp_top.val(0);
+        this.where_option.select_top = 0;
         this.el_select_dislocation.val('');
         this.el_select_current_way.val('');
         this.el_select_operator.val('');
@@ -1126,7 +1133,6 @@
         this.el_loading_division_amkr.val('');
         this.el_paid.prop('checked', false);
         this.el_current_station_amkr.val('');
-
         this.tab_cars.obj_t_cars.search('').draw();
 
         LockScreenOff();
@@ -1140,7 +1146,7 @@
             this.tab_cars.view(wagons, null);
             var info = this.tab_cars.obj_t_cars.page.info();
             $('td#count_wagon').text(info.recordsDisplay);
-/*            $('td#count_wagon').text(wagons.length);*/
+            /*            $('td#count_wagon').text(wagons.length);*/
         }.bind(this));
     };
     // принадлежит внешним вагонам
@@ -1308,13 +1314,21 @@
                     }.bind(this));
                 };
             }
-            if (this.where_option.select_day > 0) {
-                wagons = wagons.filter(function (i) {
-                    return i.arrival_duration >= (this.where_option.select_day * (24 * 60));
-                }.bind(this)).sort(function (a, b) {
-                    return b.arrival_duration - a.arrival_duration
-                });
-            }
+
+            //if (this.where_option.select_day > 0) {
+            wagons = wagons.filter(function (i) {
+                return i.arrival_duration >= (this.where_option.select_day * (24 * 60));
+            }.bind(this)).sort(function (a, b) {
+                return b.arrival_duration - a.arrival_duration
+            });
+            //}
+            //if (this.where_option.select_top > 0) {
+            wagons = wagons.filter(function (i) {
+                return i.current_way_duration >= (this.where_option.select_top * 60);
+            }.bind(this)).sort(function (a, b) {
+                return b.current_way_duration - a.current_way_duration
+            });
+            //}
 
             // Выборка закончена вернем данные
             if (typeof fn_where === 'function') {
