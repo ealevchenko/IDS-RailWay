@@ -398,7 +398,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(252462, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(252367, @"EUROPE\ealevchenko"); //231984
         }
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
@@ -702,7 +702,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834 // 242289
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(252297, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(252479, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
@@ -736,7 +736,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             DateTime start = new DateTime(2024, 1, 1, 0, 0, 0);
-            DateTime stop = new DateTime(2024, 1, 10, 23, 59, 59);
+            DateTime stop = new DateTime(2024, 2, 1, 23, 59, 59);
             List<ResultUpdateIDWagon> res = ids.CalcUsageFeeOfOutgoingSostav(start, stop, @"EUROPE\ealevchenko");
         }
 
