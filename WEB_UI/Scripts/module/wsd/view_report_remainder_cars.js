@@ -784,7 +784,7 @@
                 var value = this.el_imp_top.val();
                 if (value !== '' && value !== null) {
                     this.where_option.select_top = Number(value);
-                    if (this.where_option.select_top < 100) {
+                    if (this.where_option.select_top < 1000) {
                         this.el_imp_top.val(++this.where_option.select_top);
                     } else {
                         this.where_option.select_top = 0;
@@ -805,7 +805,7 @@
                     if (this.where_option.select_top > 0) {
                         this.el_imp_top.val(--this.where_option.select_top);
                     } else {
-                        this.where_option.select_top = 100;
+                        this.where_option.select_top = 1000;
                         this.el_imp_top.val(this.where_option.select_top)
                     }
 
