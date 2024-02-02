@@ -74,7 +74,8 @@ namespace IDS_
                 client_givc = new WebClientGIVC(_logger, _configuration);
                 if (type_requests == "req1892")
                 {
-                    req1892 res = client_givc.GetReq1892(467004, 467004, 7932, 7932);
+                    //req1892 res = client_givc.GetReq1892(467004, 467004, 7932, 7932);
+                    req1892 res = client_givc.GetReq1892(467004, 467201, 7932, 7932, "01.01.2024", "31.12.2024");
                     result_givc_req.CountLine = res != null && res.disl_vag != null ? res.disl_vag.Count() : 0;
                 }
                 result_givc_req.ResultRequests = client_givc.JsonResponse;
@@ -89,6 +90,17 @@ namespace IDS_
                 _logger.LogError(_eventId, e, "RequestToGIVC(type_requests={0}, user={1})", type_requests, user);
                 return (int)errors_base.global;
             }
+        }
+        /// <summary>
+        /// Вернуть последнюю дату запроса по типу запроса
+        /// </summary>
+        /// <param name="type_request"></param>
+        /// <returns></returns>
+        public DateTime? GetLastDateTimeRequest(string type_request) {
+            EFDbContext context = new EFDbContext(this.options);
+            EFGivcRequest ef_givc = new EFGivcRequest(context);
+            GivcRequest givc = ef_givc.Context.Where(g=>g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
+            return givc != null ? givc.DtRequests : null;
         }
         #endregion
     }

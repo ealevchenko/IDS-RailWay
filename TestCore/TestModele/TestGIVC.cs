@@ -101,7 +101,7 @@ namespace TestCore.TestModele
             if (client_givc != null)
             {
                 //req1892 res = client_givc.GetReq1892(0, 467201, 7932, 7932, "0", "421034");
-                req1892 res = client_givc.GetReq1892(467004, 467201, 7932, 7932, "01.01.2024", "31.01.2024");
+                req1892 res = client_givc.GetReq1892(467004, 467201, 7932, 7932, "01.01.2024", "31.12.2024");
                 //req1892 res = client_givc.GetReq1892(467004, 467004, 7932, 7932);
                 //req1892 res = client_givc.GetReq1892(467004, 467004);
                 string path = @"D:\ГИВС\req1892.txt";

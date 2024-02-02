@@ -62,23 +62,32 @@ namespace WS_IDS
             //var count = Interlocked.Increment(ref executionCount);
             //_logger.LogInformation("Таймер. Count: {Count}", count);
             DateTime dt = DateTime.Now;
+            DateTime cur_date = dt.Date;
             int cur_day = dt.Date.Day;
             int cur_hour = dt.Hour;
             // В начале суток сбросим все тригеры выполнения
-            if (cur_day != day && cur_day == 0)
+            if (cur_day != day && cur_hour == 0)
             {
                 run_exec = false;
             }
-            // Выполним в 9 часов 
-            if (cur_day != day && cur_hour == 13 && run_exec == false)
+            // Выполним в 10 часов 
+            if (cur_day != day && cur_hour == 10 && run_exec == false)
             {
-                day = cur_day;
-                run_exec = true;
-                _logger.LogWarning(_eventId, "UpdateGIVC - run");
-                stopWatch.Start();
-                int res_cl = ids_givc.RequestToGIVC("req1892", null);
-                stopWatch.Stop();
-                _logger.LogWarning(_eventId, "UpdateGIVC:RequestToGIVC - runing, result = {0}, runtime = {1}", res_cl, GetElapsedTime(stopWatch.Elapsed));
+                DateTime? dt_last = ids_givc.GetLastDateTimeRequest("req1892");
+                if (dt_last == null || (dt_last != null && (((DateTime)dt_last).Date != cur_date)) || (dt_last != null && (((DateTime)dt_last).Date == cur_date && ((DateTime)dt_last).Hour != cur_hour)))
+                {
+                    day = cur_day;
+                    run_exec = true;
+                    _logger.LogWarning(_eventId, "UpdateGIVC - run");
+                    stopWatch.Start();
+                    int res_cl = ids_givc.RequestToGIVC("req1892", null);
+                    stopWatch.Stop();
+                    _logger.LogWarning(_eventId, "UpdateGIVC:RequestToGIVC - runing, result = {0}, runtime = {1}", res_cl, GetElapsedTime(stopWatch.Elapsed));
+                }
+                else
+                {
+                    _logger.LogWarning(_eventId, "UpdateGIVC:RequestToGIVC - skip, Record exists, request date = {0}", dt_last);
+                }
 
             }
             lock (locker_test)
