@@ -1,4 +1,5 @@
 ﻿using EF_IDS.Concrete;
+using EF_IDS.Entities;
 using IDS_;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,11 +19,12 @@ namespace WS_IDS
         //private int executionCount = 0;
         private readonly ILogger<UpdateGIVC> _logger;
         private readonly IConfiguration _configuration;
-        EventId _eventId = new EventId(0);
+        private EventId _eventId = new EventId(0);
         private int interval = 60;                            // Интервал выполнения таймера
-        Stopwatch stopWatch = new Stopwatch();
-        int day = 0;
-        bool run_exec = false;
+        private Stopwatch stopWatch = new Stopwatch();
+        private int day = 0;
+        private bool run_exec = false;
+        private int exec_attempts = 10;
 
         private Timer? _timer = null;
         private IDS_GIVC ids_givc = null;
@@ -69,11 +71,25 @@ namespace WS_IDS
             if (cur_day != day && cur_hour == 0)
             {
                 run_exec = false;
+                exec_attempts = 10;
             }
             // Выполним в 10 часов 
-            if (cur_day != day && cur_hour == 10 && run_exec == false)
+            if (cur_day != day && cur_hour == 10 && run_exec == false && exec_attempts > 0)
             {
-                DateTime? dt_last = ids_givc.GetLastDateTimeRequest("req1892");
+                DateTime? dt_last = null;// ids_givc.GetLastDateTimeRequest("req1892");
+                GivcRequest? last_givc_req = ids_givc.GetLastGivcRequest("req1892");
+                if (last_givc_req != null &&
+                    ((DateTime)last_givc_req.DtRequests).Date == cur_date &&
+                    last_givc_req.CountLine <=0)
+                {
+                    exec_attempts--; // Уменьшаем количество попыток
+                    dt_last = null;
+                }
+                else
+                {
+                    dt_last = last_givc_req != null ? last_givc_req.DtRequests : null;
+                }
+
                 if (dt_last == null || (dt_last != null && (((DateTime)dt_last).Date != cur_date)) || (dt_last != null && (((DateTime)dt_last).Date == cur_date && ((DateTime)dt_last).Hour != cur_hour)))
                 {
                     day = cur_day;

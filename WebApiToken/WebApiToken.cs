@@ -24,7 +24,7 @@ namespace Helper
         private string jsonString = null;
         public string JsonResponse { get { return this.jsonString; } }
         public bool error;
-
+        public bool error_token;
         public WebApiToken(ILogger<Object> logger, string user, string psw, string url, string url_token)
         {
 
@@ -36,13 +36,29 @@ namespace Helper
                 this.psw = psw;
                 this.url = url;
                 this.url_token = url_token;
-                Dictionary<string, string> tokenDictionary = GetTokenDictionary(this.user, this.psw, token);
-                bool keyExistance = tokenDictionary.ContainsKey("access_token");
-                if (keyExistance) token = tokenDictionary["access_token"];
+                //this.error_token = AuthorizationToken();
+                //Dictionary<string, string> tokenDictionary = GetTokenDictionary(this.user, this.psw, token);
+                //bool keyExistance = tokenDictionary.ContainsKey("access_token");
+                //if (keyExistance) token = tokenDictionary["access_token"];
             }
             catch (Exception e)
             {
                 this.error = true;
+                _logger.LogError(String.Format("WebApiToken(url_token={0}, userName={1}, password={2}), Exception={3}", url_token, this.user, this.psw, e));
+
+            }
+        }
+        public bool AuthorizationToken() {
+            try
+            {
+                Dictionary<string, string> tokenDictionary = GetTokenDictionary(this.user, this.psw, token);
+                bool keyExistance = tokenDictionary.ContainsKey("access_token");
+                if (keyExistance) token = tokenDictionary["access_token"];
+                return !keyExistance;
+            }
+            catch (Exception e)
+            {
+                return false;
                 _logger.LogError(String.Format("WebApiToken(url_token={0}, userName={1}, password={2}), Exception={3}", url_token, this.user, this.psw, e));
 
             }
@@ -91,6 +107,7 @@ namespace Helper
                     {
                         string err = "Ошибка выполнения client.PostAsync :" + response.ToString();
                         _logger.LogError(err);
+
                     }
                     var result = response.Content.ReadAsStringAsync().Result;
                     // Десериализация полученного JSON-объекта
@@ -147,6 +164,8 @@ namespace Helper
             try
             {
                 if (String.IsNullOrWhiteSpace(url)) return null;
+                this.error_token = AuthorizationToken();
+                if (this.error_token) return "error_toking";
                 using (var client = CreateClient(token))
                 {
                     if (client == null) return null;
@@ -163,7 +182,6 @@ namespace Helper
             catch (Exception e)
             {
                 _logger.LogError(String.Format("GetApiValues(api_comand={0}), Exception={1})", api_url, e));
-
                 return null;
             }
         }

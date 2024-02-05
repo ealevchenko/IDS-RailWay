@@ -71,7 +71,7 @@ namespace HelloApp
                 #region TestGIVC УЗ ГИВЦ
                 TestGIVC tGIVC = new TestGIVC(logger, config);
                 //tGIVC.Req0002();
-                tGIVC.Req1892();
+                //tGIVC.Req1892();
                 //tGIVC.Req1091();
                 //tGIVC.Req4373();
                 //tGIVC.Req7002();

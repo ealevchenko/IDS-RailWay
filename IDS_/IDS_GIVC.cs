@@ -76,7 +76,13 @@ namespace IDS_
                 {
                     //req1892 res = client_givc.GetReq1892(467004, 467004, 7932, 7932);
                     req1892 res = client_givc.GetReq1892(467004, 467201, 7932, 7932, "01.01.2024", "31.12.2024");
-                    result_givc_req.CountLine = res != null && res.disl_vag != null ? res.disl_vag.Count() : 0;
+                    if (client_givc.ErrorWeb != null && client_givc.ErrorWeb == false && client_givc.ErrorToking == false)
+                    {
+                        result_givc_req.CountLine = res != null && res.disl_vag != null ? res.disl_vag.Count() : 0;
+                    }
+                    else {
+                        result_givc_req.CountLine = - 1;
+                    }
                 }
                 result_givc_req.ResultRequests = client_givc.JsonResponse;
                 ef_givc.Add(result_givc_req);
@@ -90,6 +96,17 @@ namespace IDS_
                 _logger.LogError(_eventId, e, "RequestToGIVC(type_requests={0}, user={1})", type_requests, user);
                 return (int)errors_base.global;
             }
+        }
+        /// <summary>
+        /// Вернуть последнюю строку запроса
+        /// </summary>
+        /// <param name="type_request"></param>
+        /// <returns></returns>
+        public GivcRequest? GetLastGivcRequest(string type_request) {
+            EFDbContext context = new EFDbContext(this.options);
+            EFGivcRequest ef_givc = new EFGivcRequest(context);
+            GivcRequest? givc = ef_givc.Context.Where(g=>g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
+            return givc;
         }
         /// <summary>
         /// Вернуть последнюю дату запроса по типу запроса
