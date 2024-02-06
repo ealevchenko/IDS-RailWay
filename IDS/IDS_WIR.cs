@@ -7570,39 +7570,73 @@ namespace IDS
                 UZ.UZ_SMS uz_sms = new UZ.UZ_SMS(this.servece_owner);
                 // Проверим вагон
                 if (car == null) return null;
-                if (String.IsNullOrWhiteSpace(car.num_doc))
-                {
-                    UZ.UZ_DOC uz_doc = null;
-                    // документ не определен
-                    if (type_searsh == 0 || type_searsh == 1)
-                    {
-                        uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, arr_date, out_date);
-                    }
-                    if (type_searsh == 1 && uz_doc == null)
-                    {
-                        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
-                    }
-                    if (type_searsh == 2)
-                    {
-                        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
-                    }
-                    return uz_doc;
-                }
-                else
-                {
+                // Проверим документ определен?
+                if (!String.IsNullOrWhiteSpace(car.num_doc)) {
                     // документ определен обновим его
                     EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
                     UZ_DOC_OUT uz_doc_old = ef_uzdoc.Get(car.num_doc);
                     UZ.UZ_DOC uz_doc_new = uz_sms.GetDocumentOfDB_NumDoc(car.num_doc);
                     if ((uz_doc_new != null && uz_doc_old != null && uz_doc_old.revision < uz_doc_new.revision) || (uz_doc_new != null && uz_doc_old == null))
                     {
-                        return uz_doc_new;
+                        return uz_doc_new; // Документ имеет новую ревизию
                     }
-                    else
+                    else if (uz_doc_new.status != uz_status.canceled)
                     {
-                        return null;
+                        return null; // Документ старая ревизия и не удален
                     }
+                    // Проодит только удаленные ревизии
                 }
+                // Документ не определен или документ с признаком удален
+                UZ.UZ_DOC uz_doc = null;
+                // документ не определен
+                if (type_searsh == 0 || type_searsh == 1)
+                {
+                    uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, arr_date, out_date);
+                }
+                if (type_searsh == 1 && uz_doc == null)
+                {
+                    uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
+                }
+                if (type_searsh == 2)
+                {
+                    uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
+                }
+                return uz_doc;
+
+
+                //if (String.IsNullOrWhiteSpace(car.num_doc))
+                //{
+                //    UZ.UZ_DOC uz_doc = null;
+                //    // документ не определен
+                //    if (type_searsh == 0 || type_searsh == 1)
+                //    {
+                //        uz_doc = uz_sms.GetDocumentOfDB_NumShipper(car.num, new int[] { 7932 }, arr_date, out_date);
+                //    }
+                //    if (type_searsh == 1 && uz_doc == null)
+                //    {
+                //        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
+                //    }
+                //    if (type_searsh == 2)
+                //    {
+                //        uz_doc = uz_sms.GetDocumentOfSMS_NumShipper(car.num, "7932", arr_date, out_date);
+                //    }
+                //    return uz_doc;
+                //}
+                //else
+                //{
+                //    // документ определен обновим его
+                //    EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
+                //    UZ_DOC_OUT uz_doc_old = ef_uzdoc.Get(car.num_doc);
+                //    UZ.UZ_DOC uz_doc_new = uz_sms.GetDocumentOfDB_NumDoc(car.num_doc);
+                //    if ((uz_doc_new != null && uz_doc_old != null && uz_doc_old.revision < uz_doc_new.revision) || (uz_doc_new != null && uz_doc_old == null))
+                //    {
+                //        return uz_doc_new;
+                //    }
+                //    else
+                //    {
+                //        return null;
+                //    }
+                //}
             }
             catch (Exception e)
             {
@@ -10705,8 +10739,8 @@ namespace IDS
                                 remainder = 24 - remainder;
                             }
                             // текущая плата почасово
-                            int rc_res = (int)((curr_rate.rate_currency / 24) * 10000000); // Убрал обрезание до 3 знака
-                            decimal rate_currency_hour = (decimal)(rc_res / 10000000);
+                            long rc_res = (long)((curr_rate.rate_currency / 24) * 10000000); // Убрал обрезание до 3 знака
+                            decimal rate_currency_hour = (decimal)(rc_res / 10000000.0);
                             //decimal rate_currency_hour = curr_rate.rate_currency / 24;
 
                             calc_time = hour_calc + (remainder); // округлим до целых суток

@@ -462,7 +462,7 @@ namespace UZ
 
                 List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
 
-                list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
+                list = list.ToList().Where(d => d.status != uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
                 if (list == null || list.Count() == 0) return doc;
                 doc = new UZ_DOC()
@@ -496,7 +496,7 @@ namespace UZ
 
                 List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
 
-                list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr >= lower_date && d.otpr.date_otpr <= upper_date).OrderBy(c => c.otpr.date_otpr).ToList();
+                list = list.ToList().Where(d => d.status!= uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr >= lower_date && d.otpr.date_otpr <= upper_date).OrderBy(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
                 if (list == null || list.Count() == 0) return doc;
                 doc = new UZ_DOC()
