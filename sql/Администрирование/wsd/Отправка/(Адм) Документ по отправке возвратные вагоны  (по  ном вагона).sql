@@ -1,0 +1,70 @@
+SELECT TOP (1000) [id]
+      ,[id_document]
+      ,[num]
+      ,[id_outgoing]
+      ,[id_car]
+      ,[id_condition]
+      ,[id_wagons_rent_arrival]
+      ,[id_wagons_rent_outgoing]
+      ,[id_countrys]
+      ,[id_genus]
+      ,[id_owner]
+      ,[gruzp_uz]
+      ,[tara_uz]
+      ,[note_uz]
+      ,[gruzp]
+      ,[u_tara]
+      ,[ves_tary_arc]
+      ,[id_warehouse]
+      ,[id_division]
+      ,[laden]
+      ,[id_cargo]
+      ,[id_cargo_gng]
+      ,[vesg]
+      ,[code_stn_to]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon]
+    where num=61336715
+  order by 1 desc
+
+  SELECT TOP (1000) [id]
+      ,[id_doc_uz]
+      ,[nom_doc]
+      ,[code_stn_from]
+      ,[code_stn_to]
+      ,[country_nazn]
+      ,[code_border_checkpoint]
+      ,[cross_date]
+      ,[code_shipper]
+      ,[code_consignee]
+      ,[vid]
+      ,[code_payer]
+      ,[distance_way]
+      ,[osum]
+      ,[date_sozdan]
+      ,[date_otpr]
+      ,[date_pr]
+      ,[date_grpol]
+      ,[date_vid]
+      ,[info_sht]
+      ,[name_gr]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Document]
+  where id = 436776
+
+ -- UPDATE [IDS].[Outgoing_UZ_Vagon]
+ --  SET [id_document] = 436776
+ --     ,[gruzp] = 70
+ --     ,[u_tara] = 22500
+ --     ,[ves_tary_arc] = 23500
+ --     ,[vesg] = 67850
+ --WHERE id = 659922
+GO
+
