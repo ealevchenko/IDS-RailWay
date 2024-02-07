@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -254,5 +256,30 @@ namespace GIVC
     {
         public string? TableName { get; set; }
         public IList<rows_detali>? rows { get; set; }
+    }
+
+    public class DataGIVC {
+
+        private readonly ILogger<Object> _logger;
+        private readonly IConfiguration _configuration;
+        public DataGIVC(ILogger<Object> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
+
+        public T? GetDeserializeJSON_ApiValuesResult<T>(string jsonString)
+        {
+            try
+            {
+                T? result = System.Text.Json.JsonSerializer.Deserialize<T>(jsonString);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(String.Format("GetDeserializeJSON_ApiValuesResult(jsonString={0}), Exception={1})", jsonString, e));
+                return default(T);
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace IDS_
         EventId _eventId = new EventId(0);
         private String? connectionString;
         private WebClientGIVC client_givc = null;
+        private DataGIVC data_givc = null;
         public void SetupDB(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("IDS");
@@ -34,6 +35,7 @@ namespace IDS_
             _logger = logger;
             _configuration = configuration;
             _eventId = int.Parse(_configuration["EventID:IDS_GIVC"]);
+            data_givc = new DataGIVC(logger, configuration);
             SetupDB(configuration);
         }
         public IDS_GIVC(ILogger<Object> logger, IConfiguration configuration, EventId rootId) : base()
@@ -41,6 +43,7 @@ namespace IDS_
             _logger = logger;
             _configuration = configuration;
             _eventId = rootId.Id + int.Parse(_configuration["EventID:IDS_GIVC"]);
+            data_givc = new DataGIVC(logger, configuration);
             SetupDB(configuration);
         }
 
@@ -80,8 +83,9 @@ namespace IDS_
                     {
                         result_givc_req.CountLine = res != null && res.disl_vag != null ? res.disl_vag.Count() : 0;
                     }
-                    else {
-                        result_givc_req.CountLine = - 1;
+                    else
+                    {
+                        result_givc_req.CountLine = -1;
                     }
                 }
                 result_givc_req.ResultRequests = client_givc.JsonResponse;
@@ -102,23 +106,82 @@ namespace IDS_
         /// </summary>
         /// <param name="type_request"></param>
         /// <returns></returns>
-        public GivcRequest? GetLastGivcRequest(string type_request) {
-            EFDbContext context = new EFDbContext(this.options);
-            EFGivcRequest ef_givc = new EFGivcRequest(context);
-            GivcRequest? givc = ef_givc.Context.Where(g=>g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
-            return givc;
+        public GivcRequest? GetLastGivcRequest(string type_request)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext(this.options);
+                EFGivcRequest ef_givc = new EFGivcRequest(context);
+                GivcRequest? givc = ef_givc.Context.Where(g => g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
+                return givc;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "GetLastGivcRequest(type_request={0})", type_request);
+                return null;
+            }
         }
         /// <summary>
         /// Вернуть последнюю дату запроса по типу запроса
         /// </summary>
         /// <param name="type_request"></param>
         /// <returns></returns>
-        public DateTime? GetLastDateTimeRequest(string type_request) {
-            EFDbContext context = new EFDbContext(this.options);
-            EFGivcRequest ef_givc = new EFGivcRequest(context);
-            GivcRequest givc = ef_givc.Context.Where(g=>g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
-            return givc != null ? givc.DtRequests : null;
+        public DateTime? GetLastDateTimeRequest(string type_request)
+        {
+            try
+            {
+                EFDbContext context = new EFDbContext(this.options);
+                EFGivcRequest ef_givc = new EFGivcRequest(context);
+                GivcRequest? givc = ef_givc.Context.Where(g => g.TypeRequests == type_request).OrderByDescending(g => g.DtRequests).FirstOrDefault();
+                return givc != null ? givc.DtRequests : null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "GetLastDateTimeRequest(type_request={0})", type_request);
+                return null;
+            }
         }
+        /// <summary>
+        /// Вернуть распарсеный запрос из строки
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="givc_req"></param>
+        /// <returns></returns>
+        public T? GetGivcRequest<T>(GivcRequest givc_req)
+        {
+            try
+            {
+                T? result = data_givc.GetDeserializeJSON_ApiValuesResult<T>(givc_req.ResultRequests);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "GetGivcRequest(givc_req={0})", givc_req);
+                return default(T?);
+            }
+        }
+        /// <summary>
+        /// Вернуть распарсеный запрос req1892 из строки
+        /// </summary>
+        /// <param name="givc_req"></param>
+        /// <returns></returns>
+        public req1892? GetGivcRequest1892(GivcRequest givc_req)
+        {
+            try
+            {
+                if (givc_req == null || givc_req.TypeRequests != "req1892") return null;
+                req1892? res = GetGivcRequest<req1892>(givc_req);
+                return res;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(_eventId, e, "GetGivcRequest1892(givc_req={0})", givc_req);
+                return null;
+            }
+
+        }
+
         #endregion
     }
 }

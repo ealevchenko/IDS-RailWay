@@ -21,9 +21,7 @@ namespace GIVC
         private string Edrpou = "24432974";
         public string? JsonResponse { get { return this.web_api != null ? this.web_api.JsonResponse : null; } }
 
-
         private WebApiToken web_api = null;
-
         public bool?  ErrorWeb { get { return web_api!=null ? web_api.error : null; } }
         public bool?  ErrorToking { get { return web_api!=null ? web_api.error_token : null; } }
         public WebClientGIVC(ILogger<Object> logger, IConfiguration configuration)
@@ -171,7 +169,6 @@ namespace GIVC
             reqNDI resp = web_api.GetDeserializeJSON_ApiValues<reqNDI>("GetData/reqNDI" + String.Format("?NomNDI={0}", NomNDI));
             return resp;
         }
-
         public string Getreq1091()
         {
             if (String.IsNullOrWhiteSpace(url)) return null;

@@ -48,7 +48,8 @@ namespace Helper
 
             }
         }
-        public bool AuthorizationToken() {
+        public bool AuthorizationToken()
+        {
             try
             {
                 Dictionary<string, string> tokenDictionary = GetTokenDictionary(this.user, this.psw, token);
@@ -199,18 +200,6 @@ namespace Helper
                 return default(T);
             }
         }
-        public T? GetDeserializeJSON_ApiValuesResult<T>(string jsonString)
-        {
-            try
-            {
-                T? result = System.Text.Json.JsonSerializer.Deserialize<T>(jsonString);
-                return result;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(String.Format("GetDeserializeJSON_ApiValuesResult(jsonString={0}), Exception={1})", jsonString, e));
-                return default(T);
-            }
-        }
+
     }
 }
