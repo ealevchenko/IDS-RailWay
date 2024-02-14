@@ -231,7 +231,7 @@ namespace Test
 
             //tids.IDS_WIR_OperationClearEPDSendingSostav();             // Тест операции сброса ЭПД состава который отправили
             //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
-            tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
+            //tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
 
 
 
@@ -320,7 +320,7 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
