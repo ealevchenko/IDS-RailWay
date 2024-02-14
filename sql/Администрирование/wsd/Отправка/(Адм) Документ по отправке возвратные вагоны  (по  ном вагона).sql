@@ -27,7 +27,7 @@ SELECT TOP (1000) [id]
       ,[change]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon]
-    where num=61336715
+    where num=64167331
   order by 1 desc
 
   SELECT TOP (1000) [id]
@@ -57,14 +57,14 @@ SELECT TOP (1000) [id]
       ,[change]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Document]
-  where id = 436776
+  where id = 436537
 
- -- UPDATE [IDS].[Outgoing_UZ_Vagon]
- --  SET [id_document] = 436776
- --     ,[gruzp] = 70
- --     ,[u_tara] = 22500
- --     ,[ves_tary_arc] = 23500
- --     ,[vesg] = 67850
- --WHERE id = 659922
+ -- UPDATE [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon]
+ --  SET [id_document] = 436537
+ --     ,[gruzp] = 70.3
+ --     ,[u_tara] = 23550
+ --     ,[ves_tary_arc] = 23600
+ --     ,[vesg] = 66450
+ --WHERE id = 661079
 GO
 
