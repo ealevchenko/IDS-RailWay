@@ -87,10 +87,6 @@
       <Project>{910d6360-9e8c-4143-a4dd-84e778edb7a6}</Project>
       <Name>IDSLogs</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KIS\KIS.csproj">
-      <Project>{93477563-45b7-4c49-a5e7-f8aedee05bd8}</Project>
-      <Name>KIS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UZ\UZ.csproj">
       <Project>{d7147560-b66a-41bb-bddd-4d24403d5e97}</Project>
       <Name>UZ</Name>

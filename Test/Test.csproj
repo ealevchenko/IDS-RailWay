@@ -103,10 +103,6 @@
       <Project>{182770bf-7bf4-44c3-bfee-d855c496009e}</Project>
       <Name>EFIDS_Arhiv</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EFKIS\EFKIS.csproj">
-      <Project>{1def3df1-f167-42f0-8a87-5ce6f144ec7e}</Project>
-      <Name>EFKIS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EFMT\EFMT.csproj">
       <Project>{0ef55f70-8933-4553-a6d9-407d54b61b49}</Project>
       <Name>EFMT</Name>
@@ -126,10 +122,6 @@
     <ProjectReference Include="..\IDS\IDS.csproj">
       <Project>{5929fe8f-0a9b-4eed-80e4-624705795d02}</Project>
       <Name>IDS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KIS\KIS.csproj">
-      <Project>{93477563-45b7-4c49-a5e7-f8aedee05bd8}</Project>
-      <Name>KIS</Name>
     </ProjectReference>
     <ProjectReference Include="..\MT\MT.csproj">
       <Project>{165bfdab-435f-42eb-8b6c-120f910a62e8}</Project>
