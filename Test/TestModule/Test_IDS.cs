@@ -413,7 +413,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 758807, 764587, 764588, 313857, 377869 };
+            List<int> list = new List<int>() { 814519, 814518, 814517, 814516, 814515, 814514, 814513, 814512, 814511, 814510, 814509, 814508, 814506, 814505, 814503, 814502, 814501, 814500, 814499, 814498, 814497, 814496, 814471, 814467, 802047, 802046, 802045, 814240, 814008, 814260, 814259, 814257, 814251, 814250, 814248, 814247 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>
@@ -422,7 +422,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 344044, 344135, 344140, 344199, 396677, 396682, 409676, 409680, 438775, 438776, 480174, 480176, 501867, 501868 };
+            List<int> list = new List<int>() { 813718, 814006, 814205, 814007 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>
