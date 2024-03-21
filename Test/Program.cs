@@ -174,7 +174,7 @@ namespace Test
             //Console.WriteLine(Math.Round(value, 1, MidpointRounding.AwayFromZero));
 
             #region Test_KIS Тест Кис
-            Test_KIS tkis = new Test_KIS();
+            //Test_KIS tkis = new Test_KIS();
             //tkis.EFKIS_Vagon_Sob();
             //tkis.EFKIS_GetCurrentVAGON_SOB();
             //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
