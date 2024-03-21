@@ -298,7 +298,7 @@
             var bt_plus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-plus');
             var bt_minus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-minus');
             var bt_aplly_top = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-top', null, 'fas fa-retweet');
-            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 100, null, null, null);
+            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 1000, null, null, null);
             div_igp_top.$div.append(bt_minus_top.$button);
             div_iga_top.$div.append(bt_plus_top.$button).append(bt_aplly_top.$button.attr('title', langView('vrrc_title_aplly_top', App.Langs)));
             div_ig_top.$div.append(div_igp_top.$div).append(imp_top.$input.val('0')).append(div_iga_top.$div);
@@ -762,15 +762,15 @@
                 var value = $(event.currentTarget).val();
                 if (value !== '' && value !== null) {
 
-                    if (Number(value) > 100) {
-                        this.where_option.select_top = 100;
+                    if (Number(value) > 1000) {
+                        this.where_option.select_top = 1000;
                         $(event.currentTarget).val(this.where_option.select_top);
                     }
                     if (Number(value) < 0) {
                         this.where_option.select_top = 0;
                         $(event.currentTarget).val(this.where_option.select_top);
                     }
-                    if (Number(value) >= 0 && Number(value) <= 100) {
+                    if (Number(value) >= 0 && Number(value) <= 1000) {
                         this.where_option.select_top = Number(value);
                     }
                 } else {
