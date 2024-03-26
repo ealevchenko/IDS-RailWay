@@ -159,6 +159,9 @@
             'field_wagon_ban_uz': 'Запреты по УЗ',
             'field_wagon_closed_route': 'Замкнутый маршрут (кольцо)',
             'field_wir_note': 'Примечание',
+            'field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'field_old_date_outgoing': 'Дата последней сдачи',
+            'field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
 
             'title_yes': 'Да',
             'title_busy': 'Занят',
@@ -339,6 +342,9 @@
             'field_wagon_ban_uz': 'UZ bans',
             'field_wagon_closed_route': 'Closed route (ring)',
             'field_wir_note': 'Note',
+            'field_old_outgoing_uz_vagon_cargo_name': 'Cargo according to OTPR previous',
+            'field_old_date_outgoing': 'Last due date',
+            'field_old_outgoing_uz_document_station_to_name': 'OTPR station previous',
 
             'title_yes': 'Yes',
             'title_busy': 'Busy',
@@ -1663,6 +1669,34 @@
             className: 'dt-body-nowrap text-left',
             title: langView('field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -1944,6 +1978,9 @@
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
+        collums.push('old_outgoing_uz_vagon_cargo_name');                    // Последний груз
+        collums.push('old_date_outgoing');                    // дата последней здачи
+        collums.push('old_outgoing_uz_document_station_to_name');                    // Последняя станция отправления
         return init_columns(collums, list_collums);
     };
     // инициализация полей таблицы вагоны на пути (Отчет 0 - вагоны детально, дерево путей)
@@ -2108,6 +2145,9 @@
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
+        collums.push('old_outgoing_uz_vagon_cargo_name');                    // Последний груз
+        collums.push('old_date_outgoing');                    // дата последней здачи
+        collums.push('old_outgoing_uz_document_station_to_name');                    // Последняя станция отправления
         return init_columns(collums, list_collums);
     };
     // инициализация полей таблицы вагоны на пути отправки (Отчет 1- вагоны детально, дерево путей)

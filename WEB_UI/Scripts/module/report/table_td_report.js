@@ -387,6 +387,10 @@
             'ttdr_field_total_cargo_group_name': 'Род груза',
             'ttdr_field_total_group_ext_station_from': 'Группа станция отправления',
 
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
             'ttdr_mess_view_report': 'Показать отчет ...',
@@ -3210,6 +3214,34 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_total_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -4038,6 +4070,10 @@
         collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
         collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
         collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
+
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //

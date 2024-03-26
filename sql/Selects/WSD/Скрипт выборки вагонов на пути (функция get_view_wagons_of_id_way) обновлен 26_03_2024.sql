@@ -1,16 +1,18 @@
-declare @id_way int = 770;
+use [KRR-PA-CNT-Railway]
+declare @id_way int =220;
 
---select * from [IDS].[get_view_wagons_of_id_way](@id_way);
+select * from [IDS].[get_view_wagons_of_id_way](@id_way);
 
-	--> Получим уставку норма простоя
-	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
+		--> Получим уставку норма простоя
+		declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
+
 
 	select wir.id as wir_id
 		,wim.id as wim_id
 		,wio.id as wio_id
 		--=============== ОСНОВНОЕ ОКНО ==================
-		--,old_out_sostav.date_outgoing as old_date_outgoing
-		--,old_out_sostav.date_outgoing_act as old_date_outgoing_act
 		,wir.num
 		,wim.position
 		--> Оператор
@@ -185,28 +187,48 @@ declare @id_way int = 770;
 		--=============== ОСТАЛЬНОЕ ==================
 		,wir.doc_outgoing_car as doc_outgoing_car				-- Наличие документа для сдачи
 		,arr_doc_uz.[nom_doc] as arrival_nom_doc			-- Номер документа(досылки)
-		,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
+		-- заменил 12-01-2024
+		,arrival_nom_main_doc = CASE WHEN arr_doc_uz.[nom_main_doc] is not null AND arr_doc_uz.[nom_main_doc]>0 THEN arr_doc_uz.[nom_main_doc] ELSE null END
+		--,arr_doc_uz.[nom_main_doc] as arrival_nom_main_doc		-- Номер основного документа (если заполнен)
 		,arr_doc_uz.[klient] as arrival_klient					-- Признак контр-агента
 		,arr_sost.composition_index as arrival_composition_index
 		,arr_sost.date_adoption as arrival_date_adoption		-- дата приема
 		,out_car.[id_outgoing_return_start] as outgoing_id_return
+		-- заменил 12-01-2024 (возврат по отправке или текущий)
 		,outgoing_return_cause_ru = CASE WHEN out_car.[id_outgoing_return_start] is not null THEN dir_out_return.[cause_ru] ELSE dir_curr_return.[cause_ru] END
 		,outgoing_return_cause_en = CASE WHEN out_car.[id_outgoing_return_start] is not null THEN dir_out_return.[cause_en] ELSE dir_curr_return.[cause_en] END
+		--,dir_return.[cause_ru] as outgoing_return_cause_ru
+		--,dir_return.[cause_en] as outgoing_return_cause_en
 		,out_sost.date_outgoing as outgoing_date				-- дата отправки
 		,out_sost.status as outgoing_sostav_status				-- статус состава для отправки
 		,dir_wagon.note as wagon_ban_uz							-- Запреты по УЗ 
 		,dir_wagon.[closed_route] as wagon_closed_route			--Замкнутый маршрут (кольцо)
 		,wir.note as wir_note									-- Примечание по ходу движения вагона
 		,wir.highlight_color as wir_highlight_color				-- Подсветка строки
+		-- Добавил последнюю отправку 26-03-2024
+		,old_out_car.id as old_arrival_car_id_outgoing_car
+		,old_out_car.id_outgoing_uz_vagon as old_arrival_car_id_outgoing_uz_vagon
+		,old_out_sostav.date_outgoing as old_date_outgoing
+		,old_out_sostav.date_outgoing_act as old_date_outgoing_act
+		,old_out_uz_vag.[id_cargo] as old_outgoing_uz_vagon_id_cargo
+		,old_out_dir_cargo.cargo_name_ru as old_outgoing_uz_vagon_cargo_name_ru
+		,old_out_dir_cargo.cargo_name_en as old_outgoing_uz_vagon_cargo_name_en
+		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
+		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
+		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
 		 --> Текущая операция
 		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes order by id desc)
-		 --> Последнее отправление
+		 --> Последнее отправление (обновил 26.03.2024)
 		Left JOIN IDS.WagonInternalRoutes as wir_old ON wir_old.id = wir.parent_id
 		Left JOIN [IDS].[OutgoingCars] as old_out_car ON old_out_car.id = wir_old.id_outgoing_car
 		Left JOIN [IDS].[OutgoingSostav] as old_out_sostav ON old_out_sostav.id = old_out_car.id_outgoing
+		Left JOIN [IDS].[Outgoing_UZ_Vagon] as old_out_uz_vag ON old_out_uz_vag.id = old_out_car.id_outgoing_uz_vagon
+		Left JOIN [IDS].[Outgoing_UZ_Document] as old_out_uz_doc ON old_out_uz_doc.id = old_out_uz_vag.id_document
+		Left JOIN IDS.Directory_Cargo as old_out_dir_cargo ON old_out_dir_cargo.id =  old_out_uz_vag.id_cargo
+		Left JOIN [IDS].[Directory_ExternalStation] as old_out_ext_station_to ON old_out_uz_doc.[code_stn_to] = old_out_ext_station_to.code
 		 --==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
 		--> Прибытие вагона
 		Left JOIN IDS.ArrivalCars as arr_car ON wir.id_arrival_car = arr_car.id
@@ -277,6 +299,7 @@ declare @id_way int = 770;
 		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
 		--> Справочник Внешних станций УЗ
 		Left JOIN UZ.Directory_Stations as let_station_uz ON  il.destination_station = let_station_uz.code_cs
+		-- заменил 12-01-2024 (возврат по отправке или текущий)
 		--> Возврат по отправке
 		Left JOIN [IDS].[OutgoingDetentionReturn] as out_dr ON out_dr.id = out_car.id_outgoing_return_start
 		--> Справочник Возвратов
@@ -285,9 +308,4 @@ declare @id_way int = 770;
 		Left JOIN [IDS].[OutgoingDetentionReturn] as curr_dr ON curr_dr.id = (SELECT top(1) [id] FROM [IDS].[OutgoingDetentionReturn] where [num]=wir.num and [date_stop] is null order by 1 desc)	
 		--> Справочник Возвратов
 		Left JOIN [IDS].[Directory_DetentionReturn] as dir_curr_return ON curr_dr.id_detention_return = dir_curr_return.id
-
-	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL) 
-	AND wir.num = 60632601 
-
-
-	
+	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)

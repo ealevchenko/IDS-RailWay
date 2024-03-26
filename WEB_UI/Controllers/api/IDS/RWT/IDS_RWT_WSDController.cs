@@ -457,6 +457,17 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string instructional_letters_note { get; set; }
         public int? idle_time { get; set; }
         public int? idle_time_act { get; set; }
+        // Добавил 26-03-2024
+        public long? old_arrival_car_id_outgoing_car { get; set; }
+        public long? old_arrival_car_id_outgoing_uz_vagon { get; set; }
+        public DateTime? old_date_outgoing { get; set; }
+        public DateTime? old_date_outgoing_act { get; set; }
+        public int? old_outgoing_uz_vagon_id_cargo { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_ru { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_en { get; set; }
+        public int? old_outgoingl_uz_document_code_stn_to { get; set; }
+        public string old_outgoing_uz_document_station_to_name_ru { get; set; }
+        public string old_outgoing_uz_document_station_to_name_en { get; set; }
     }
     public class view_operator_ob
     {
@@ -740,7 +751,17 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public bool? wagon_closed_route { get; set; }
         public string wir_note { get; set; }
         public string wir_highlight_color { get; set; }
-
+        // Добавил 26-03-2024
+        public long? old_arrival_car_id_outgoing_car { get; set; }
+        public long? old_arrival_car_id_outgoing_uz_vagon { get; set; }
+        public DateTime? old_date_outgoing { get; set; }
+        public DateTime? old_date_outgoing_act { get; set; }
+        public int? old_outgoing_uz_vagon_id_cargo { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_ru { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_en { get; set; }
+        public int? old_outgoingl_uz_document_code_stn_to { get; set; }
+        public string old_outgoing_uz_document_station_to_name_ru { get; set; }
+        public string old_outgoing_uz_document_station_to_name_en { get; set; }
     }
 
     public class view_outer_way_wagons
