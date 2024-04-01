@@ -895,7 +895,7 @@
                 if ((data.count_wagons_arrival > 0 || data.count_wagons_accepted > 0) && data.count_wagons_send > data.count_wagons_accepted) {
                     $(row).addClass('yellow');// Отметим состав частично принят
                 }
-
+                $('td.fl-name_outer_way', row).attr('title', data['name_outer_way_' + App.Lang]);
                 if (data.count_wagons_accepted > 0 && data.count_wagons_send === data.count_wagons_accepted) {
                     // Вагоны приняты, проверим как
 

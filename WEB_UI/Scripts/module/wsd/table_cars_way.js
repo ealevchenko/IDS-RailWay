@@ -2645,6 +2645,14 @@
                         $(row).addClass('wagon-ban');  // Отметим вагон заблокирован
                     }
                 }
+
+                if (this.settings.type_report === 4) {
+                    if (data.current_way_end !== null && data.current_outer_way_start !== null && data.current_outer_way_end === null) {
+                        $('td.fl-current_way_full_name', row).attr('title', data['current_outer_way_name_' + App.Lang]);
+                    } else {
+                        $('td.fl-current_way_full_name', row).attr('title', data['current_way_num_' + App.Lang] + '-' + data['current_way_name_' + App.Lang]);
+                    }
+                }
             }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
