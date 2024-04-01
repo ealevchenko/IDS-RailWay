@@ -3944,7 +3944,7 @@
         collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
         collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
         collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
-        collums.push({ field: 'usage_fee_wagon_persent_derailment_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     //
@@ -7487,7 +7487,7 @@
                         sum_count_wagon += el.count_wagon;
                         sum_usage_fee_sum_calc_time += el.sum_calc_time;
                         sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
-                        sum_usage_fee_wagon_persent_fee_amount += el.persent_derailment;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent;
                     });
                 }
                 usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
@@ -7507,7 +7507,7 @@
                 this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
                     $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
                 });
-                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_derailment_fee_amount').every(function () {
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_fee_amount').every(function () {
                     $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
                 });
                 break;

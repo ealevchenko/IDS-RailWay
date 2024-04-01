@@ -395,6 +395,7 @@
         this.outgoing_cars_usage_fee = [];
         this.outgoing_cars_usage_fee_not_derailment = [];
         this.outgoing_cars_usage_fee_operator_amkr = [];
+        this.outgoing_cars_usage_fee_operator_amkr_derailment = [];
 
         this.usage_fee_period = [];
         this.manual_usage_fee = [];
@@ -10420,11 +10421,13 @@
             }.bind(this)).reduce(function (a, b) {
                 return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
+
             var sum_amount_derailment = result_cars.filter(function (i) {
                 return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && i.wagon_usage_fee_derailment;
             }.bind(this)).reduce(function (a, b) {
                 return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
+
             var sum_amount_not_derailment = result_cars.filter(function (i) {
                 return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && !i.wagon_usage_fee_derailment;
             }.bind(this)).reduce(function (a, b) {
@@ -10513,9 +10516,93 @@
 
                 };
             }.bind(this));
+            // выборка для списков Отчет-Груз по Оператору сход АМКР
+            $.each(result_cars, function (key, el_wag) {
+                if (el_wag.wagon_usage_fee_derailment >0 && (el_wag.wagon_usage_fee_calc_fee_amount > 0 || el_wag.wagon_usage_fee_manual_fee_amount > 0)) {
+                    var op = list_usage_fee_operator_amkr_derailment.find(function (o) {
+                        return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
+                            o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
+                    }.bind(this));
+                    var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
+                    if (!op) {
+                        // Не данных 
+                        list_usage_fee_operator_amkr_derailment.push({
+                            id_operator: el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator,
+                            operators: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_group_operators_' + App.Lang],
+                            operator_abbr: el_wag['outgoing_uz_vagon_outgoing_wagons_rent_operator_group_abbr_' + App.Lang],
+                            id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                            cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                            count_wagon: 1,
+                            sum_calc_time: el_wag.wagon_usage_fee_downtime ? el_wag.wagon_usage_fee_downtime : 0,
+                            sum_calc_fee_amount: fee_amout,
+                            persent: Number(Number(fee_amout * 100) / sum_amount_derailment),
+                            //persent: el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_derailment) : 0,
+                            derailment: el_wag.wagon_usage_fee_derailment,
+                        });
+                    } else {
+                        op.count_wagon = op.count_wagon + 1;
+                        op.sum_calc_time = el_wag.wagon_usage_fee_downtime ? op.sum_calc_time + el_wag.wagon_usage_fee_downtime : op.sum_calc_time;
+                        op.sum_calc_fee_amount = op.sum_calc_fee_amount + fee_amout;
+                        op.persent = Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment);
+                        //op.persent_derailment = op.wagon_usage_fee_derailment ? Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment) : 0;
+                    };
+                    //--------------------------------------------------------
+                    var cuf = list_cars_usage_fee.find(function (o) {
+                        return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
+                    }.bind(this));
+                    var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
+                    if (!cuf) {
+                        // Не данных 
+                        list_cars_usage_fee.push({
+                            id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                            cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                            count_wagon: 1,
+                            sum_calc_time: el_wag.wagon_usage_fee_downtime ? el_wag.wagon_usage_fee_downtime : 0,
+                            sum_calc_fee_amount: fee_amout,
+                            persent: Number(Number(fee_amout * 100) / sum_amount),
+                            persent_not_derailment: !el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_not_derailment) : 0,
+                            derailment: el_wag.wagon_usage_fee_derailment,
+                        });
+                    } else {
+                        cuf.count_wagon = cuf.count_wagon + 1;
+                        cuf.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cuf.sum_calc_time + el_wag.wagon_usage_fee_downtime : cuf.sum_calc_time;
+                        cuf.sum_calc_fee_amount = cuf.sum_calc_fee_amount + fee_amout;
+                        cuf.persent = Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount);
+                        cuf.persent_not_derailment = !cuf.wagon_usage_fee_derailment ? Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount_not_derailment) : 0;
+                    };
+                    //--------------------------------------------------------
+                    if (!el_wag.wagon_usage_fee_derailment) {
+                        var cufnd = list_cars_usage_fee_not_derailment.find(function (o) {
+                            return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
+                        }.bind(this));
+                        var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
+                        if (!cufnd) {
+                            // Не данных 
+                            list_cars_usage_fee_not_derailment.push({
+                                id_cargo: el_wag.arrival_uz_vagon_id_cargo,
+                                cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
+                                count_wagon: 1,
+                                sum_calc_time: el_wag.wagon_usage_fee_downtime ? el_wag.wagon_usage_fee_downtime : 0,
+                                sum_calc_fee_amount: fee_amout,
+                                persent: Number(Number(fee_amout * 100) / sum_amount),
+                                persent_not_derailment: !el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_not_derailment) : 0,
+                                derailment: el_wag.wagon_usage_fee_derailment,
+                            });
+                        } else {
+                            cufnd.count_wagon = cufnd.count_wagon + 1;
+                            cufnd.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cufnd.sum_calc_time + el_wag.wagon_usage_fee_downtime : cufnd.sum_calc_time;
+                            cufnd.sum_calc_fee_amount = cufnd.sum_calc_fee_amount + fee_amout;
+                            cufnd.persent = Number(Number(cufnd.sum_calc_fee_amount * 100) / sum_amount);
+                            cufnd.persent_not_derailment = !cufnd.wagon_usage_fee_derailment ? Number(Number(cufnd.sum_calc_fee_amount * 100) / sum_amount_not_derailment) : 0;
+                        };
+                    }
+
+                };
+            }.bind(this));
             this.outgoing_cars_usage_fee = this.sort_table(list_cars_usage_fee, 'id_cargo', 'count_wagon', true);
             this.outgoing_cars_usage_fee_not_derailment = this.sort_table(list_cars_usage_fee_not_derailment, 'id_cargo', 'count_wagon', true);
             this.outgoing_cars_usage_fee_operator_amkr = this.sort_table(list_usage_fee_operator_amkr, 'id_cargo', 'count_wagon', true);
+            this.outgoing_cars_usage_fee_operator_amkr_derailment = this.sort_table(list_usage_fee_operator_amkr_derailment, 'id_cargo', 'count_wagon', true);
 
             process_load--;
             out_load(process_load);
@@ -10589,10 +10676,10 @@
     };
     // Выполнить фильтрацию и вывести данные по отчету "Таблица-Плата за пользование груз по операторам-сход"
     view_td_report.prototype.view_filter_report_usage_fee_operator_amkr_derailment = function () {
-        if (this.outgoing_cars_usage_fee_operator_amkr) {
+        if (this.outgoing_cars_usage_fee_operator_amkr_derailment) {
 
             // сделаем копию данных
-            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee_operator_amkr.filter(function (i) { return i.derailment; }.bind(this))));
+            var list_view = JSON.parse(JSON.stringify(this.outgoing_cars_usage_fee_operator_amkr_derailment));
             // Применим фильтр
 
             // Отобразим
@@ -10603,7 +10690,7 @@
             ];
 
             $.each(this.sort_table(list_view, 'id_cargo', 'sum_calc_fee_amount', false), function (key, element) {
-                data.push({ "group": element.cargo_name, "name": element.operator_abbr + "-" + element.count_wagon + "ваг.," + Number(element.sum_calc_fee_amount).toFixed(0) + "грн.", "value": Number(Number(element.sum_calc_fee_amount).toFixed(0)) });
+                    data.push({ "group": element.cargo_name, "name": element.operator_abbr + "-" + element.count_wagon + "ваг.," + Number(element.sum_calc_fee_amount).toFixed(0) + "грн.", "value": Number(Number(element.sum_calc_fee_amount).toFixed(0)) });
             }.bind(this));
 
             this.chart_data_usage_fee_operator_amkr_derailment = data;
