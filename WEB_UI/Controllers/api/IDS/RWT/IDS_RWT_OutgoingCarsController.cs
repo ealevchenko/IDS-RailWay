@@ -1325,11 +1325,13 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
+                this.ef_ids.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 System.Data.SqlClient.SqlParameter b_is_acts = new System.Data.SqlClient.SqlParameter("@IsActs", is_acts);
                 string sql = "select * from [IDS].[get_view_outgoing_cars_of_period](@start, @stop, @IsActs) order by outgoing_sostav_date_outgoing";
                 List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, b_is_acts).ToList();
+                this.ef_ids.Database.CommandTimeout = null;
                 return Ok(list);
             }
             catch (Exception e)
