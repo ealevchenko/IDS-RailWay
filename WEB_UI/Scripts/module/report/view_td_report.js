@@ -10481,7 +10481,7 @@
                             derailment: el_wag.wagon_usage_fee_derailment,
                         });
                     } else {
-                        cuf.count_wagon = cuf.count_wagon + 1;
+                        cuf.count_wagon += 1;
                         cuf.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cuf.sum_calc_time + el_wag.wagon_usage_fee_downtime : cuf.sum_calc_time;
                         cuf.sum_calc_fee_amount = cuf.sum_calc_fee_amount + fee_amout;
                         cuf.persent = Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount);
@@ -10506,7 +10506,7 @@
                                 derailment: el_wag.wagon_usage_fee_derailment,
                             });
                         } else {
-                            cufnd.count_wagon = cufnd.count_wagon + 1;
+                            cufnd.count_wagon +=1;
                             cufnd.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cufnd.sum_calc_time + el_wag.wagon_usage_fee_downtime : cufnd.sum_calc_time;
                             cufnd.sum_calc_fee_amount = cufnd.sum_calc_fee_amount + fee_amout;
                             cufnd.persent = Number(Number(cufnd.sum_calc_fee_amount * 100) / sum_amount);
@@ -10546,57 +10546,6 @@
                         op.persent = Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment);
                         //op.persent_derailment = op.wagon_usage_fee_derailment ? Number(Number(op.sum_calc_fee_amount * 100) / sum_amount_derailment) : 0;
                     };
-                    //--------------------------------------------------------
-                    var cuf = list_cars_usage_fee.find(function (o) {
-                        return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
-                    }.bind(this));
-                    var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
-                    if (!cuf) {
-                        // Не данных 
-                        list_cars_usage_fee.push({
-                            id_cargo: el_wag.arrival_uz_vagon_id_cargo,
-                            cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
-                            count_wagon: 1,
-                            sum_calc_time: el_wag.wagon_usage_fee_downtime ? el_wag.wagon_usage_fee_downtime : 0,
-                            sum_calc_fee_amount: fee_amout,
-                            persent: Number(Number(fee_amout * 100) / sum_amount),
-                            persent_not_derailment: !el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_not_derailment) : 0,
-                            derailment: el_wag.wagon_usage_fee_derailment,
-                        });
-                    } else {
-                        cuf.count_wagon = cuf.count_wagon + 1;
-                        cuf.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cuf.sum_calc_time + el_wag.wagon_usage_fee_downtime : cuf.sum_calc_time;
-                        cuf.sum_calc_fee_amount = cuf.sum_calc_fee_amount + fee_amout;
-                        cuf.persent = Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount);
-                        cuf.persent_not_derailment = !cuf.wagon_usage_fee_derailment ? Number(Number(cuf.sum_calc_fee_amount * 100) / sum_amount_not_derailment) : 0;
-                    };
-                    //--------------------------------------------------------
-                    if (!el_wag.wagon_usage_fee_derailment) {
-                        var cufnd = list_cars_usage_fee_not_derailment.find(function (o) {
-                            return o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
-                        }.bind(this));
-                        var fee_amout = el_wag.wagon_usage_fee_manual_fee_amount !== null ? el_wag.wagon_usage_fee_manual_fee_amount : el_wag.wagon_usage_fee_calc_fee_amount ? el_wag.wagon_usage_fee_calc_fee_amount : 0;
-                        if (!cufnd) {
-                            // Не данных 
-                            list_cars_usage_fee_not_derailment.push({
-                                id_cargo: el_wag.arrival_uz_vagon_id_cargo,
-                                cargo_name: el_wag['arrival_uz_vagon_cargo_name_' + App.Lang],
-                                count_wagon: 1,
-                                sum_calc_time: el_wag.wagon_usage_fee_downtime ? el_wag.wagon_usage_fee_downtime : 0,
-                                sum_calc_fee_amount: fee_amout,
-                                persent: Number(Number(fee_amout * 100) / sum_amount),
-                                persent_not_derailment: !el_wag.wagon_usage_fee_derailment ? Number(Number(fee_amout * 100) / sum_amount_not_derailment) : 0,
-                                derailment: el_wag.wagon_usage_fee_derailment,
-                            });
-                        } else {
-                            cufnd.count_wagon = cufnd.count_wagon + 1;
-                            cufnd.sum_calc_time = el_wag.wagon_usage_fee_downtime ? cufnd.sum_calc_time + el_wag.wagon_usage_fee_downtime : cufnd.sum_calc_time;
-                            cufnd.sum_calc_fee_amount = cufnd.sum_calc_fee_amount + fee_amout;
-                            cufnd.persent = Number(Number(cufnd.sum_calc_fee_amount * 100) / sum_amount);
-                            cufnd.persent_not_derailment = !cufnd.wagon_usage_fee_derailment ? Number(Number(cufnd.sum_calc_fee_amount * 100) / sum_amount_not_derailment) : 0;
-                        };
-                    }
-
                 };
             }.bind(this));
             this.outgoing_cars_usage_fee = this.sort_table(list_cars_usage_fee, 'id_cargo', 'count_wagon', true);
