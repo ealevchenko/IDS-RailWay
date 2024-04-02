@@ -403,7 +403,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingCar(821358, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(884759, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
@@ -702,7 +702,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             //210779 //200473 // 210834 // 242289
-            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(252503, @"EUROPE\ealevchenko");
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(292944, @"EUROPE\ealevchenko");
         }
         public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
         {
