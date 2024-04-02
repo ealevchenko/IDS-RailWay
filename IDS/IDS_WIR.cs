@@ -723,6 +723,8 @@ namespace IDS
         private List<int> list_stations_searsh_arrival_epd = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
         private int min_period_searsh_arrival_epd = -36;
 
+        private int min_period_preparation_of_epd = 3; // минимальный период допуска по времении для подготовки документов ЭПД (состав отправили а документ могут быть созданы позже)
+
         private List<int> list_groups_cargo = new List<int>() { 11, 16, 20, 24 }; // Список id групп груза с порожними вагонами
 
         public IDS_WIR()
@@ -9012,7 +9014,7 @@ namespace IDS
                                             ArrivalSostav arr_sostav = ef_arr_sostav.Context.Where(s => s.id == arr_car.id_arrival).FirstOrDefault();
                                             if (arr_sostav != null)
                                             {
-                                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, sostav.date_departure_amkr != null ? (DateTime)sostav.date_departure_amkr : (sostav.date_outgoing != null ? (DateTime)sostav.date_outgoing : sostav.date_readiness_amkr), type_searsh);
+                                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, sostav.date_departure_amkr != null ? (DateTime)sostav.date_departure_amkr : (sostav.date_outgoing != null ? ((DateTime)sostav.date_outgoing).AddHours(this.min_period_preparation_of_epd) : sostav.date_readiness_amkr), type_searsh);
                                                 if (new_uz_doc != null)
                                                 {
                                                     if (new_uz_doc.otpr != null && new_uz_doc.otpr.vagon != null && new_uz_doc.otpr.vagon.Length > 0)
@@ -9158,7 +9160,7 @@ namespace IDS
                             if (arr_sostav != null)
                             {
 
-                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, car.OutgoingSostav.date_departure_amkr != null ? (DateTime)car.OutgoingSostav.date_departure_amkr : (car.OutgoingSostav.date_outgoing != null ? (DateTime)car.OutgoingSostav.date_outgoing : car.OutgoingSostav.date_readiness_amkr), 1);
+                                UZ.UZ_DOC new_uz_doc = GetSendingEPD(car, (DateTime)arr_sostav.date_adoption, car.OutgoingSostav.date_departure_amkr != null ? (DateTime)car.OutgoingSostav.date_departure_amkr : (car.OutgoingSostav.date_outgoing != null ? ((DateTime)car.OutgoingSostav.date_outgoing).AddHours(this.min_period_preparation_of_epd) : car.OutgoingSostav.date_readiness_amkr), 1);
                                 if (new_uz_doc != null)
                                 {
                                     List<EPDOutgoingCar> list_cars = new List<EPDOutgoingCar>();
