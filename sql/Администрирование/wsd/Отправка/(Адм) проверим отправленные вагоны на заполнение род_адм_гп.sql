@@ -61,7 +61,7 @@ SELECT TOP (1000) [num]
       ,[closed_route]
       ,[new_construction]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons]
-  where [num] = 52637782
+  where [num] = 61015145 
   /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
 SELECT TOP (1000) [id]
       ,[num]
@@ -75,4 +75,4 @@ SELECT TOP (1000) [id]
       ,[change_user]
       ,[parent_id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent]
-  where [num] = 52637782
+  where [num] = 61015145 
