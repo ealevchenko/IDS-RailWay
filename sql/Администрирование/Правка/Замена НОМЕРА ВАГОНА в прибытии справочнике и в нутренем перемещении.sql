@@ -1,8 +1,8 @@
 USE [KRR-PA-CNT-Railway]
 GO
 
-declare @num_old int = 8857
-declare @num_new int = 23673
+declare @num_old int = 68704923
+declare @num_new int = 63051783
 
 UPDATE [IDS].[ArrivalCars]
    SET [num] = @num_new
