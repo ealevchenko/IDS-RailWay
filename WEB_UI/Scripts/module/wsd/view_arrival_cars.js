@@ -708,7 +708,7 @@
                 control: null,
                 list: this.get_list_way(-1),
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     this.load_wagons_of_way(id);
@@ -989,7 +989,6 @@
                 }
             }.bind(this));
         }.bind(this));
-
     };
     // Показать текущую ситуацию по вагонам на пути приема и состава ()
     view_arrival_cars.prototype.view_wagons = function () {
