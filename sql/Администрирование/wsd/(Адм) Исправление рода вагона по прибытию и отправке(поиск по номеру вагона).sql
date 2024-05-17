@@ -1,4 +1,5 @@
-declare @num int = 24536120           
+declare @num int = 52642535
+       
 SELECT TOP (1000) [num]
       ,[id_countrys]
       ,[id_genus]
@@ -27,7 +28,20 @@ SELECT TOP (1000) [num]
       ,[closed_route]
       ,[new_construction]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons]
-  where num =@num 
+  where num =@num
+  
+  SELECT [id]
+      ,[abbr_ru]
+      ,[genus_ru]
+      ,[abbr_en]
+      ,[genus_en]
+      ,[rod_uz]
+      ,[rod_default]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_GenusWagons]
 
 SELECT TOP (1000) [id]
       ,[id_document]
@@ -62,7 +76,7 @@ SELECT TOP (1000) [id]
       --,[change]
       --,[change_user]
       --,[id_owner]
-      --,[id_countrys]
+      ,[id_countrys]
       ,[id_genus]
       --,[kol_os]
       --,[usl_tip]
