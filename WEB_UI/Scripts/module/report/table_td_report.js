@@ -335,6 +335,7 @@
             'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата сдачи (акт)',
             'ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз ОТПР',
             'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route': 'Маршрут/не маршрут',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_route_sign': 'Маршрут/не маршрут',
 
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
@@ -3012,6 +3013,22 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign',
+            data: function (row, type, val, meta) {
+                if (row.outgoing_sostav_route_sign !== null) {
+                    if (row.outgoing_sostav_route_sign) {
+                        return langView('ttdr_title_route', App.Langs);
+                    } else {
+                        return langView('ttdr_title_not_route', App.Langs);
+                    }
+                } else {
+                    return null;
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_route_sign', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         // № Письма
         {
             field: 'instructional_letters_num',
@@ -3991,7 +4008,8 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
-        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        //collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
@@ -4017,7 +4035,8 @@
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
-        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        //collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
