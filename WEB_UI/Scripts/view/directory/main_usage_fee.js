@@ -56,6 +56,8 @@
             'mainuf_mess_valid_select_period_is_null': 'Не выбраны связки оператор-род',
 
             'mainuf_error_value_manual_fee_amount': 'Ошибка, введена неправильная сумма :{0} - число должно быть больше 0 и иметь 2 знака после точки!',
+            'mainuf_error_value_manual_time': 'Ошибка, введена неправильное время :{0} - число должно быть больше 0 и определенно в целых минутах',
+            'mainuf_error_value': 'Ошибка, не введены данные для изменения',
 
         },
         'en':  //default language: English
@@ -100,6 +102,12 @@
     var SRV = App.ids_server;
     var ids_srv = new SRV(); // Создадим класс ids_server
 
+    // Показать правильную дату
+    function getTimeFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        let minutes = mins % 60;
+        return hours + ':' + minutes;
+    };
 
     // Функция обновить данные из базы list-список таблиц, update-обновить принудительно, callback-возврат список обновленных таблиц
     var load_db = function (list, update, callback) {
@@ -136,9 +144,24 @@
     var table_usage_fee_period = new TTDR('div#usage-fee-period');                     // Создадим экземпляр
     var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');       // Создадим экземпляр
 
+    var out_label_time = function (val) {
+        var res = "error";
+        if (isNumeric(val) && Number(val) >= 0) {
+            var res = getTimeFromMins(Number(val));
+        } else if (val === null || val === "") {
+            var res = "";
+        }
+        $lb_manual_time_hour.text(res);
+    };
 
     var $num_wagon = $('input#num_wagon');
     var $manual_fee_amount = $('input#manual_fee_amount');
+    var $manual_time = $('input#manual_time');
+    $manual_time.on('change', function (e) {
+        var val = $(e.currentTarget).val();
+        out_label_time(val);
+    });
+    var $lb_manual_time_hour = $('label#manual_time_hour');
     var $note = $('input#note');
 
     var $bt_search_wagon = $('button#bt_search_wagon').on('click', function (event) {
@@ -147,7 +170,7 @@
     });
     var $bt_update_wagon = $('button#bt_update_wagon').on('click', function (event) {
         event.preventDefault();
-        update_manual_fee_amount($manual_fee_amount.val());
+        update_manual_fee_amount($manual_fee_amount.val(), $manual_time.val());
     });
 
     var validation = function () {
@@ -320,10 +343,13 @@
     };
     // править плату за пользование
     var update_outgoing_wagon = function () {
+        var mfa = $manual_fee_amount.val();
+        var mt = $manual_time.val();
         if (select_rows !== null) {
             var options = {
                 id_wir: select_rows.id_wir,
-                manual_fee_amount: Number($manual_fee_amount.val()),
+                manual_fee_amount: ((mfa !== null && mfa !== "") ? Number(mfa) : null),
+                manual_time: ((mt !== null && mt !== "") ? Number(mt) : null),
                 note: $note.val(),
                 user: App.User_Name,
             };
@@ -359,18 +385,46 @@
     };
 
     // Проверка номера вагона
-    var update_manual_fee_amount = function (num) {
+    var update_manual_fee_amount = function (mfa, mt) {
         alert.clear_message();
         LockScreen(langView('mainuf_update', App.Langs));
         $bt_update_wagon.prop("disabled", true);
-        if (!isDecimal(num)) {
-            // Ошибка ввода
-            alert.out_error_message(langView('mainuf_error_value_manual_fee_amount', App.Langs).format(num));
+        var update = false;
+        if ((mfa !== null && mfa !== "") || (mt !== null && mt !== "")) {
+            if (mfa !== null && mfa !== "") {
+                if (!isDecimal(mfa) || Number(mfa) < 0) {
+                    // Ошибка ввода
+                    alert.out_error_message(langView('mainuf_error_value_manual_fee_amount', App.Langs).format(mfa));
+                    $bt_update_wagon.prop("disabled", false);
+                    update = false;
+                    LockScreenOff();
+                } else {
+                    update = true;
+                }
+            }
+            if (mt !== null && mt !== "") {
+                if (!isNumeric(mt) || Number(mt) < 0) {
+                    // Ошибка ввода
+                    alert.out_error_message(langView('mainuf_error_value_manual_time', App.Langs).format(mt));
+                    $bt_update_wagon.prop("disabled", false);
+                    update = false;
+                } else {
+                    update = true;
+                }
+            }
+        } else {
+            mfa = null;
+            mt = null;
+            update = true;
+        }
+        if (update) {
+            update_outgoing_wagon();
             $bt_update_wagon.prop("disabled", false);
             LockScreenOff();
         } else {
-            update_outgoing_wagon();
+            alert.out_error_message(langView('mainuf_error_value', App.Langs));
             $bt_update_wagon.prop("disabled", false);
+            LockScreenOff();
         }
 
     };
@@ -397,8 +451,10 @@
         LockScreen(langView('mainuf_init_main', App.Langs));
         $bt_update_wagon.prop("disabled", true);
         $manual_fee_amount.val('');
+        $manual_time.val('');
         $note.val('');
         $manual_fee_amount.prop("disabled", true);
+        $manual_time.prop("disabled", true);
         $note.prop("disabled", true);
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
@@ -939,7 +995,10 @@
                         select_rows = rows[0];
                         $bt_update_wagon.prop("disabled", false);
                         $manual_fee_amount.prop("disabled", false);
+                        $manual_time.prop("disabled", false);
                         $manual_fee_amount.val(rows[0].wagon_usage_fee_manual_fee_amount);
+                        $manual_time.val(rows[0].wagon_usage_fee_manual_time);
+                        out_label_time(rows[0].wagon_usage_fee_manual_time);
                         $note.prop("disabled", false);
                         $note.val(rows[0].wagon_usage_fee_note);
                     } else {
@@ -947,6 +1006,8 @@
                         $bt_update_wagon.prop("disabled", true);
                         $manual_fee_amount.val('');
                         $manual_fee_amount.prop("disabled", true);
+                        $manual_time.val('');
+                        $manual_time.prop("disabled", true);
                         $note.val('');
                         $note.prop("disabled", true);
                     }

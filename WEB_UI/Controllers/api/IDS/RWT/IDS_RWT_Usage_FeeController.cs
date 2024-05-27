@@ -16,6 +16,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     {
         public long id_wir { get; set; }
         public decimal? manual_fee_amount { get; set; }
+        public int? manual_time { get; set; }
         public string note { get; set; }
         public string user { get; set; }
     }
@@ -189,6 +190,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 WagonUsageFee wuf = this.ef_wuf.Context.Where(u => u.id_wir == value.id_wir).FirstOrDefault();
                 wuf.manual_fee_amount = value.manual_fee_amount;
+                wuf.manual_time = value.manual_time;
                 wuf.note = value.note;
                 wuf.change_user = value.user;
                 wuf.change = DateTime.Now;
