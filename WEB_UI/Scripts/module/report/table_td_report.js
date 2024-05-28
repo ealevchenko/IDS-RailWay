@@ -3338,7 +3338,7 @@
     function getRoundingHourFromMins(mins) {
         let hours = Math.trunc(mins / 60);
         let minutes = mins % 60;
-        if (minutes > 0) hours++;
+        if (minutes > 30) hours++;
         return hours;
     };
 
