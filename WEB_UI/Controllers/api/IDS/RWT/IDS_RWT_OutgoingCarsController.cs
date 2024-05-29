@@ -1233,16 +1233,17 @@ namespace WEB_UI.Controllers.api
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        // GET: api/ids/rwt/outgoing_cars/view/car/previous/wir/id/564009
-        [Route("view/car/previous/wir/id/{id:int}")]
+        // GET: api/ids/rwt/outgoing_cars/view/car/previous/wir/id/564009/num/
+        [Route("view/car/previous/wir/id/{id:int}/num/{num:int}")]
         [ResponseType(typeof(ViewOutgoingCars))]
-        public IHttpActionResult GetViewPreviousOutgoingCarsOfIDWIR(int id)
+        public IHttpActionResult GetViewPreviousOutgoingCarsOfIDWIR(int id, int num)
         {
             try
             {
                 System.Data.SqlClient.SqlParameter p_id = new System.Data.SqlClient.SqlParameter("@id_wir", id);
-                string sql = "select * from [IDS].[get_view_outgoing_cars_of_id_car]((select [id_outgoing_car] from [IDS].[WagonInternalRoutes] where [id]= (select [parent_id] FROM [IDS].[WagonInternalRoutes] where [id]= @id_wir)))";
-                ViewOutgoingCars result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_id).FirstOrDefault();
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num);
+                string sql = "select * from [IDS].[get_view_outgoing_cars_of_id_car]((select [id_outgoing_car] from [IDS].[WagonInternalRoutes] where [id]= (select [parent_id] FROM [IDS].[WagonInternalRoutes] where [id]= @id_wir) and num = @num))";
+                ViewOutgoingCars result = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_id, p_num).FirstOrDefault();
                 return Ok(result);
             }
             catch (Exception e)

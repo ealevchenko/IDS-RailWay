@@ -7813,9 +7813,9 @@
                         }
                     }
                 }.bind(this);
-                // Получить прерырущие отправки с АМКР
+                // Получить предыдущие отправки с АМКР
                 $.each(this.wagons, function (i, el) {
-                    this.ids_wsd.getViewPreviousOutgoingCarsOfIDWIR(el.id_wir, function (outgoing_car) {
+                    this.ids_wsd.getViewPreviousOutgoingCarsOfIDWIR(el.id_wir, el.num, function (outgoing_car) {
                         el['previous_outgoing_car'] = outgoing_car;
                         process_load--;
                         out_load(process_load);

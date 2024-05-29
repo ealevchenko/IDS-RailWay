@@ -1696,7 +1696,7 @@
         });
         //
         this.table_outg_sostav_all = new TTDR('div#outgoing-sostav-all');               // Создадим экземпляр
-        // Инициализация модуля "Таблица прибывающих составов"
+        // Инициализация модуля "Таблица отправленных составов"
         this.table_outg_sostav_all.init({
             alert: null,
             detali_table: false,

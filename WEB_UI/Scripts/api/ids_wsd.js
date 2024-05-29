@@ -1137,10 +1137,10 @@
         });
     };
     // Получить информацию по отправленному вагону предыдущего прибытия вагона на АМКР(по id_wir текущего прибытия)
-    ids_wsd.prototype.getViewPreviousOutgoingCarsOfIDWIR = function (id, callback) {
+    ids_wsd.prototype.getViewPreviousOutgoingCarsOfIDWIR = function (id, num, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/outgoing_cars/view/car/previous/wir/id/' + id,
+            url: '../../api/ids/rwt/outgoing_cars/view/car/previous/wir/id/' + id + "/num/" + num,
             async: true,
             dataType: 'json',
             beforeSend: function () {
