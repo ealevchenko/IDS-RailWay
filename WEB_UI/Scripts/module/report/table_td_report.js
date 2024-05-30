@@ -4032,7 +4032,6 @@
         //collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
         collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime_final', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
