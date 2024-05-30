@@ -2668,7 +2668,7 @@
         {
             field: 'outgoing_cars_wagon_usage_fee_calc_time',
             data: function (row, type, val, meta) {
-                return row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null;
+                return row.wagon_usage_fee_manual_time !== null ? getTimeFromMins(row.wagon_usage_fee_manual_time) : (row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null);
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
