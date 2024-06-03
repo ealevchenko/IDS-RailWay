@@ -315,8 +315,8 @@
                     var pays = [];
                     for (var p = 0; p < pay.length; p++) {
                         pays.push({
-                            kod: pay.kod,
-                            summa: Number(pay.summa),
+                            kod: pay[p].kod,
+                            summa: Number(pay[p].summa),
                         });
                     }
                     //
