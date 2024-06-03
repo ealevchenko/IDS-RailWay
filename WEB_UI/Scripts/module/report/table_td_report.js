@@ -6982,7 +6982,8 @@
                         //}
                         sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
                         //sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
-                        downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
+                        //downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
+                        downtime += el.wagon_usage_fee_manual_time !== null ? el.wagon_usage_fee_manual_time : (el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0);
                         fee_amount += el.wagon_usage_fee_manual_fee_amount !== null ? el.wagon_usage_fee_manual_fee_amount : (el.wagon_usage_fee_calc_fee_amount !== null ? el.wagon_usage_fee_calc_fee_amount : 0);
                     });
                 }
@@ -7001,7 +7002,10 @@
                 //this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
                 //    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
                 //});
-                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
+                //this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
+                //    $(this.footer()).html(downtime ? getTimeFromMins(downtime) : '0:00');
+                //});
+                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime_final').every(function () {
                     $(this.footer()).html(downtime ? getTimeFromMins(downtime) : '0:00');
                 });
                 this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_calc_fee_amount_final').every(function () {
