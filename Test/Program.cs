@@ -231,7 +231,7 @@ namespace Test
 
             //tids.IDS_WIR_OperationClearEPDSendingSostav();             // Тест операции сброса ЭПД состава который отправили
             //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
-            tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
+            //tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
 
 
 
@@ -269,7 +269,7 @@ namespace Test
             //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
             //tids.IDS_WIR_GetExchangeRate();
             //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
-            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
             #endregion
 

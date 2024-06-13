@@ -12,6 +12,7 @@ namespace EFIDS.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Usage_Fee_Period()
         {
+            Usage_Fee_Period_Detali = new HashSet<Usage_Fee_Period_Detali>();
             Usage_Fee_Period1 = new HashSet<Usage_Fee_Period>();
         }
 
@@ -65,7 +66,6 @@ namespace EFIDS.Entities
         public string close_user { get; set; }
 
         public int? parent_id { get; set; }
-
         public virtual Directory_GenusWagons Directory_GenusWagons { get; set; }
 
         public virtual Directory_OperatorsWagons Directory_OperatorsWagons { get; set; }
@@ -73,6 +73,9 @@ namespace EFIDS.Entities
         public virtual Directory_Currency Directory_Currency { get; set; }
 
         public virtual Directory_Currency Directory_Currency1 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period_Detali> Usage_Fee_Period_Detali { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Usage_Fee_Period> Usage_Fee_Period1 { get; set; }

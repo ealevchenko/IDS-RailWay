@@ -2816,7 +2816,77 @@
             },
         });
     };
-
+    //Получить детали по выбраному периоду
+    ids_wsd.prototype.getUsageFeePeriodDetaliOfIDPeriod = function (id_usage_fee_period, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/detali/id_period/' + id_usage_fee_period,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriodDetaliOfIDPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Добавить обновить детали периода
+    ids_wsd.prototype.postChangeUsageFeePeriodDetali = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/usage_fee_period_detali/change/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeUsageFeePeriodDetali", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Удалить детали периода
+    ids_wsd.prototype.deleteUsageFeePeriodDetali = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/delete/usage_fee_period_detali/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.deleteUsageFeePeriodDetali", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
 
     App.ids_wsd = ids_wsd;
 

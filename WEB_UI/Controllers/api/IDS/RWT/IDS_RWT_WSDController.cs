@@ -1262,6 +1262,18 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public List<ListUsageFee> list_period { get; set; }
         public string user { get; set; }
     }
+    public class OperationChangeUsageFeePeriodDetali
+    {
+        public int id_usage_fee_period { get; set; }
+        public int id { get; set; }
+        public int? stn_from { get; set; }
+        public int? arrival_cargo { get; set; }
+        public int? stn_to { get; set; }
+        public int? outgoing_cargo { get; set; }
+        public int grace_time { get; set; }
+        public string user { get; set; }
+    }
+
     #endregion
 
     public class view_arrival_sostav
@@ -2409,6 +2421,42 @@ namespace WEB_UI.Controllers.api.IDS.RWT
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
                 int result = ids_wir.ServiceChangeUsageFeePeriod(value.start, value.stop, value.hour_after_30, value.id_currency, value.rate, value.id_currency_derailment, value.rate_derailment, value.coefficient_route, value.coefficient_not_route, value.grace_time_1, value.grace_time_2, value.note, value.list_period, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // POST api/ids/rwt/wsd/service/operation/usage_fee_period_detali/change
+        [HttpPost]
+        [Route("service/operation/usage_fee_period_detali/change")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult PostChangeUsageFeePeriodDetali([FromBody] OperationChangeUsageFeePeriodDetali value)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.ServiceChangeUsageFeePeriodDetali(value.id_usage_fee_period, value.id, value.stn_from, value.arrival_cargo, value.stn_to, value.outgoing_cargo, value.grace_time, value.user);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        // DELETE api/ids/rwt/wsd/service/operation/delete/usage_fee_period_detali/id/
+        [HttpDelete]
+        [Route("service/operation/delete/usage_fee_period_detali/id/{id:int}")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult DeleteUsageFeePeriodDetali(int id)
+        {
+            try
+            {
+                IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
+                int result = ids_wir.ServiceDeleteUsageFeePeriodDetali(id);
                 return Ok(result);
             }
             catch (Exception e)

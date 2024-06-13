@@ -392,6 +392,14 @@
             'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
             'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
 
+            'ttdr_field_code_stn_from': 'Ст. отпр.',
+            'ttdr_field_from_station_name': 'Ст. отпр.',
+            'ttdr_field_arrival_cargo_name': 'Груз. приб.',
+            'ttdr_field_code_stn_to': 'Ст. прием.',
+            'ttdr_field_to_station_name': 'Ст. прием.',
+            'ttdr_field_outgoing_cargo_name': 'Груз. отпр.',
+            'ttdr_field_grace_time': 'Льгот. время',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
             'ttdr_mess_view_report': 'Показать отчет ...',
@@ -413,6 +421,9 @@
             'ttdr_title_button_field_select': 'Выбрать',
             'ttdr_title_button_field_view_all': 'Показать все',
             'ttdr_title_button_field_clear': 'Сбросить',
+            'ttdr_field_add_detali': 'Добавить',
+            'ttdr_field_edit_detali': 'Править',
+            'ttdr_field_delete_detali': 'Удалить',
         },
         'en':  //default language: English
         {
@@ -3272,6 +3283,66 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Ставки детали
+        // Станция отправления
+        {
+            field: 'code_stn_from',
+            data: function (row, type, val, meta) {
+                return row.code_stn_from;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_code_stn_from', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'from_station_name',
+            data: function (row, type, val, meta) {
+                return row['from_station_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_from_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция прибытия
+        {
+            field: 'code_stn_to',
+            data: function (row, type, val, meta) {
+                return row.code_stn_to;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_code_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'to_station_name',
+            data: function (row, type, val, meta) {
+                return row['to_station_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_to_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // груз прибытия
+        {
+            field: 'arrival_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_arrival_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'grace_time',
+            data: function (row, type, val, meta) {
+                return row.grace_time;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_grace_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3330,6 +3401,24 @@
         {
             button: 'page_length',
             extend: 'pageLength',
+        },
+        {
+            button: 'add_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_add_detali', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'edit_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_edit_detali', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'delete_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_delete_detali', App.Langs),
+            enabled: false
         },
     ];
 
@@ -4021,6 +4110,17 @@
         return init_columns_detali(collums, list_collums);
     };
     //
+    table_td_report.prototype.init_columns_usage_fee_period_detali = function () {
+        var collums = [];
+        collums.push({ field: 'code_stn_from', title: null, class: null });
+        collums.push({ field: 'arrival_cargo_name', title: null, class: null });
+        collums.push({ field: 'code_stn_to', title: null, class: null });
+        collums.push({ field: 'outgoing_cargo_name', title: null, class: null });
+        collums.push({ field: 'grace_time', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
+    //
     table_td_report.prototype.init_columns_usage_fee_outgoing_cars = function () {
         var collums = [];
         collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
@@ -4691,6 +4791,29 @@
             }.bind(this)
         });
         buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period_detali = function () {
+        var buttons = [];
+        buttons.push({
+            name: 'add_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'edit_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'delete_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
         return init_buttons(buttons, list_buttons);
     };
     //
@@ -6046,6 +6169,26 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            case 'usage_fee_period_detali': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false; // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period_detali();
+                this.table_buttons = this.init_button_usage_fee_period_detali();
+                this.dom = 'Bfrtip';
+                break;
+            };
             case 'usage_fee_outgoing_cars': {
                 this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
                 this.pageLength = 10;
@@ -6409,6 +6552,7 @@
             fn_init: null,
             fn_select_rows: null,
             fn_action_view_wagons: null,
+            fn_action: null,
         }, options);
         //
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
@@ -6761,6 +6905,17 @@
                 }.bind(this));
                 break;
             };
+            case 'usage_fee_period_detali': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
         };
         // На проверку окончания инициализации
         //----------------------------------
@@ -6769,6 +6924,12 @@
         }
         //----------------------------------
     };
+    // Нажата кнопка
+    table_td_report.prototype.action = function(e, dt, node, config){
+        if (typeof this.settings.fn_action === 'function') {
+            this.settings.fn_action(e, dt, node, config);
+        }
+    }
     // Выбрано
     table_td_report.prototype.select_rows = function () {
         var index = this.obj_t_report.rows({ selected: true });
@@ -6779,27 +6940,16 @@
     // Отображение кнопки добавить
     table_td_report.prototype.enable_button = function () {
         switch (this.settings.type_report) {
-            //case 'adoption_sostav': {
-            //    if (this.select_rows_sostav && this.select_rows_sostav.length > 0) {
-            //        this.obj_t_sostav.button(5).enable(true);
-            //        if (this.select_rows_sostav[0].status < 1) {
-            //            this.obj_t_sostav.button(3).enable(true);
-            //            this.obj_t_sostav.button(4).enable(true); // отмена сдачи состава
-            //            this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_accept', App.Langs));
-            //        } else {
-            //            // Если статус в работе принят или удален 
-            //            this.obj_t_sostav.button(3).enable(true);
-            //            this.obj_t_sostav.button(4).enable(false);
-            //            //if (this.select_rows_sostav[0].status === 2) { this.obj_t_sostav.button(4).enable(true); } else { this.obj_t_sostav.button(4).enable(false); }
-            //            this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_view', App.Langs));
-            //        }
-            //    } else {
-            //        this.obj_t_sostav.button(3).enable(false);
-            //        this.obj_t_sostav.button(4).enable(false);
-            //        this.obj_t_sostav.button(5).enable(false);
-            //    }
-            //    break;
-            //};
+            case 'usage_fee_period_detali': {
+                if (this.selected_rows && this.selected_rows.length > 0) {
+                    this.obj_t_report.button(1).enable(true);
+                    this.obj_t_report.button(2).enable(true);
+                } else {
+                    this.obj_t_report.button(1).enable(false);
+                    this.obj_t_report.button(2).enable(false);
+                }
+                break;
+            };
         };
     };
     // Показать данные

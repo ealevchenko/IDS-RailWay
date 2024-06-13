@@ -3,6 +3,8 @@ using EFIDS.Entities;
 using EFIDS.Helper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -65,6 +67,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string usage_fee_period_close_user { get; set; }
         public int? usage_fee_period_parent_id { get; set; }
         public bool? usage_fee_period_hour_after_30 { get; set; }
+    }
+
+    public class ViewUsageFeePeriodDetali
+    {
+        public int id { get; set; }
+        public int? id_usage_fee_period { get; set; }
+        public int? code_stn_from { get; set; }
+        public string from_station_name_ru { get; set; }
+        public string from_station_name_en { get; set; }
+        public int? id_cargo_arrival { get; set; }
+        public string arrival_cargo_name_ru { get; set; }
+        public string arrival_cargo_name_en { get; set; }
+        public int? code_stn_to { get; set; }
+        public string to_station_name_ru { get; set; }
+        public string to_station_name_en { get; set; }
+        public int? id_cargo_outgoing { get; set; }
+        public string outgoing_cargo_name_ru { get; set; }
+        public string outgoing_cargo_name_en { get; set; }
+        public int? grace_time { get; set; }
     }
 
     [RoutePrefix("api/ids/rwt/usage_fee")]
@@ -180,6 +201,25 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 return BadRequest(e.Message);
             }
         }
+
+        // GET: api/ids/rwt/usage_fee/period/detali/id_period/2350
+        [Route("period/detali/id_period/{id:int}")]
+        [ResponseType(typeof(ViewUsageFeePeriodDetali))]
+        public IHttpActionResult GetUsage_Fee_Period_DetaliOfIDPeriod(int id)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter id_usage_fee_period = new System.Data.SqlClient.SqlParameter("@id_usage_fee_period", id);
+                string sql = "select * from [IDS].[get_view_usage_fee_period_detali_of_id_period](@id_usage_fee_period)";
+                List<ViewUsageFeePeriodDetali> list = this.ef_ids.Database.SqlQuery<ViewUsageFeePeriodDetali>(sql, id_usage_fee_period).ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         // POST api/ids/rwt/usage_fee/manual_fee_amount
         [HttpPost]

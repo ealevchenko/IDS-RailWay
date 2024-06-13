@@ -7573,7 +7573,8 @@ namespace IDS
                 // Проверим вагон
                 if (car == null) return null;
                 // Проверим документ определен?
-                if (!String.IsNullOrWhiteSpace(car.num_doc)) {
+                if (!String.IsNullOrWhiteSpace(car.num_doc))
+                {
                     // документ определен обновим его
                     EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
                     UZ_DOC_OUT uz_doc_old = ef_uzdoc.Get(car.num_doc);
@@ -10344,6 +10345,105 @@ namespace IDS
                 return (int)errors_base.global; // Глобальная ошибка
             }
         }
+        /// <summary>
+        /// Правка деталей периодов платы за пользование
+        /// </summary>
+        /// <param name="id_usage_fee_period"></param>
+        /// <param name="id"></param>
+        /// <param name="stn_from"></param>
+        /// <param name="arrival_cargo"></param>
+        /// <param name="stn_to"></param>
+        /// <param name="outgoing_cargo"></param>
+        /// <param name="grace_time"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int ServiceChangeUsageFeePeriodDetali(int id_usage_fee_period, int id, int? stn_from, int? arrival_cargo, int? stn_to, int? outgoing_cargo, int grace_time, string user)
+        {
+            try
+            {
+                // Проверим и скорректируем пользователя
+                if (String.IsNullOrWhiteSpace(user))
+                {
+                    user = System.Environment.UserDomainName + @"\" + System.Environment.UserName;
+                }
+                using (EFDbContext context = new EFDbContext())
+                {
+                    Usage_Fee_Period ufp = context.Usage_Fee_Period.Where(u => u.id == id_usage_fee_period).FirstOrDefault();
+                    if (ufp == null) return (int)errors_base.not_usage_fee_period_of_db;
+                    if (id < 0) return 0;
+                    if (id > 0)
+                    {
+                        // Правка
+                        Usage_Fee_Period_Detali ufpd = context.Usage_Fee_Period_Detali
+                            .Where(d => d.id_usage_fee_period == id_usage_fee_period && d.id == id)
+                            .FirstOrDefault();
+                        if (ufpd == null) return (int)errors_base.not_usage_fee_period_detali_of_db;
+                        ufpd.code_stn_from = stn_from;
+                        ufpd.id_cargo_arrival = arrival_cargo;
+                        ufpd.code_stn_to = stn_to;
+                        ufpd.id_cargo_outgoing = outgoing_cargo;
+                        ufpd.grace_time = grace_time;
+                        return context.SaveChanges();
+                    }
+                    else
+                    {
+                        // Правка
+                        Usage_Fee_Period_Detali ufpd_old = context.Usage_Fee_Period_Detali
+                            .Where(d => d.id_usage_fee_period == id_usage_fee_period
+                            && d.code_stn_from == stn_from
+                            && d.code_stn_to == stn_to
+                            && d.id_cargo_arrival == arrival_cargo
+                            && d.id_cargo_outgoing == outgoing_cargo
+                            && d.grace_time == grace_time
+                            ).FirstOrDefault();
+                        if (ufpd_old!= null) return (int)errors_base.exists_usage_fee_period_detali_of_db;
+                        // Добавить
+                        Usage_Fee_Period_Detali ufpd = new Usage_Fee_Period_Detali()
+                        {
+                            id = 0,
+                            id_usage_fee_period = id_usage_fee_period,
+                            code_stn_from = stn_from,
+                            id_cargo_arrival = arrival_cargo,
+                            code_stn_to = stn_to,
+                            id_cargo_outgoing = outgoing_cargo,
+                            grace_time = grace_time,
+                        };
+                        ufp.Usage_Fee_Period_Detali.Add(ufpd);
+                        return context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ServiceChangeUsageFeePeriodDetali(id_usage_fee_period={0}, id={1}, stn_from={2} arrival_cargo={3}, stn_to={4}, outgoing_cargo={5},  grace_time={6}, user={7})",
+                    id_usage_fee_period, id, stn_from, arrival_cargo, stn_to, outgoing_cargo, grace_time, user), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }
+        /// <summary>
+        /// Удаление деталей периодов платы за пользование
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int ServiceDeleteUsageFeePeriodDetali(int id)
+        {
+            try
+            {
+                using (EFDbContext context = new EFDbContext())
+                {
+                    Usage_Fee_Period_Detali ufpd = context.Usage_Fee_Period_Detali.Where(d => d.id == id).FirstOrDefault();
+                    if (ufpd == null) return (int)errors_base.not_usage_fee_period_detali_of_db;
+                    context.Usage_Fee_Period_Detali.Remove(ufpd);
+                    return context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("ServiceDeleteUsageFeePeriodDetali(id={0})", id), servece_owner, eventID);
+                return (int)errors_base.global; // Глобальная ошибка
+            }
+        }        
+        
         /// <summary>
         /// Поиск wir возвратного вагона
         /// </summary>

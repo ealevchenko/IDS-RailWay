@@ -16,6 +16,7 @@ namespace EFIDS.Concrete
 
         // Расчет платы за пользование
         public virtual DbSet<Usage_Fee_Period> Usage_Fee_Period { get; set; }
+        public virtual DbSet<Usage_Fee_Period_Detali> Usage_Fee_Period_Detali { get; set; }
         public virtual DbSet<Directory_BankRate> Directory_BankRate { get; set; }
 
         // SAP Входящая поставка
@@ -165,6 +166,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Usage_Fee_Period1)
                 .WithOptional(e => e.Usage_Fee_Period2)
                 .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Usage_Fee_Period)
+                .HasForeignKey(e => e.id_usage_fee_period);
             #endregion
 
             #region СОСТОЯНИЕ ПАРКА
@@ -581,6 +587,18 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Vagon)
                 .WithOptional(e => e.Directory_Cargo)
                 .HasForeignKey(e => e.id_cargo);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Directory_Cargo)
+                .HasForeignKey(e => e.id_cargo_arrival);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Usage_Fee_Period_Detali1)
+                .WithOptional(e => e.Directory_Cargo1)
+                .HasForeignKey(e => e.id_cargo_outgoing);
+
+
             #endregion
 
             #region Грузы Directory_CargoETSNG
@@ -768,6 +786,15 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_ExternalStation)
                 .HasForeignKey(e => e.code_stn_to);
 
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Directory_ExternalStation)
+                .HasForeignKey(e => e.code_stn_from);
+
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Usage_Fee_Period_Detali1)
+                .WithOptional(e => e.Directory_ExternalStation1)
+                .HasForeignKey(e => e.code_stn_to);
             #endregion
 
             #region Directory_GenusWagons

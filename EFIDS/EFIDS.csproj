@@ -246,6 +246,7 @@
     <Compile Include="Entities\RWT\Usage_Fee_Period.cs" />
     <Compile Include="Entities\RWT\WagonUsageFee.cs" />
     <Compile Include="Entities\Directory\Directory_BankRate.cs" />
+    <Compile Include="Entities\RWT\Usage_Fee_Period_Detali.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -39,6 +39,19 @@
             'mainuf_label_grace_time_value2': 'Льгот время 2-е: ',
             'mainuf_title_grace_time_value2': 'Льгот время 2-е',
 
+            'mainuf_label_stn_from': 'Cт. отпр. :',
+            'mainuf_title_stn_from': 'Cт. отпр.',
+            'mainuf_label_arrival_cargo': 'Груз. приб. :',
+            'mainuf_title_arrival_cargo': 'Груз. приб.',
+            'mainuf_label_stn_to': 'Cт. приб. :',
+            'mainuf_title_stn_to': 'Cт. приб.',
+            'mainuf_label_outgoing_cargo': 'Груз. отпр. :',
+            'mainuf_title_outgoing_cargo': 'Груз. отпр.',
+            'mainuf_label_grace_time': 'Льгот время :',
+            'mainuf_title_grace_time': 'Льгот время',
+            'mainuf_label_bt_save': 'Сохранить',
+
+
             'mainuf_label_bt_apply': 'Применить',
             'mainuf_mess_valid_date_period_start': 'Не указано начало',
             'mainuf_mess_valid_date_period_stop': 'Не указано окончание',
@@ -47,13 +60,29 @@
             'mainuf_mess_valid_rate_value_not_null': 'Не указана ставка',
             'mainuf_mess_valid_derailment_rate_value_not_null': 'Не указана ставка (сход)',
 
+
+
             'mainuf_form_aplly': 'ПРИМЕНИТЬ?',
             'mainuf_form_aplly_period_message': 'Применить настройки периода на выбранные операторы',
             'mainuf_mess_cancel_operation_aplly_period': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА"-Отменена пользователем',
             'mainuf_mess_update_operation_aplly_period': 'Выполняю операцию "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА"',
+
+            'mainuf_form_aplly_period_detali_message': 'Применить настройки детального ограничения на выбранный период',
+            'mainuf_mess_cancel_operation_aplly_period_detali': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА"-Отменена пользователем',
+            'mainuf_mess_update_operation_aplly_period_detali': 'Выполняю операцию "ПРИМЕНИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА"',
+
             'mainuf_mess_ok_operation_aplly_period': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА" - выполнена',
+            'mainuf_mess_ok_operation_aplly_period_detali': 'Операция "ПРИМЕНИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА" - выполнена',
+            'mainuf_mess_ok_operation_delete_period_detali': 'Операция "УДАЛИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА" - выполнена',
+
             'mainuf_mess_error_operation_aplly_period': 'Ошибка выполнения операции "ПРИМЕНИТЬ НАСТРОЙКИ ПЕРИОДА", код ошибки=',
+            'mainuf_mess_error_operation_aplly_period_detali': 'Ошибка выполнения операции "ПРИМЕНИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА", код ошибки=',
+            'mainuf_mess_error_operation_delete_period_detali': 'Ошибка выполнения операции "УДАЛИТЬ НАСТРОЙКИ ОГРАНИЧЕНИЯ ПЕРИОДА", код ошибки=',
+
             'mainuf_mess_valid_select_period_is_null': 'Не выбраны связки оператор-род',
+
+            'mainuf_mess_valid_select_period_detali_is_null': 'Не выбраны условия льготного времени',
+
 
             'mainuf_error_value_manual_fee_amount': 'Ошибка, введена неправильная сумма :{0} - число должно быть больше 0 и иметь 2 знака после точки!',
             'mainuf_error_value_manual_time': 'Ошибка, введена неправильное время :{0} - число должно быть больше 0 и определенно в целых минутах',
@@ -130,9 +159,15 @@
 
     var list_operators_genus = [];      // Перечень операторов и родов вагонов
     var list_currency = [];             // Перечень валют
+    var list_external_station = [];     // Перечень внешних станций
+    var list_cargo = [];                // Перечень грузов
+
     var list_operation_rod = [];        // Перечень выбранных операторов и родов
     var list_period = [];               // Перечень периодов
-    var list_select_period = [];        // Перечень периодов
+    var list_select_period = [];        // Перечень выбранных периодов
+    var list_period_detali = [];        // Перечень выбранных деталей периодов
+    var list_select_period_detali = []; // Перечень выбранных деталных периодов
+    var id_usage_fee_period = null;
 
     var list_outgoing_num = [];         // Перечень
     var select_rows = null;
@@ -142,6 +177,7 @@
     var $form_edit = $('div#form-edit');
 
     var table_usage_fee_period = new TTDR('div#usage-fee-period');                     // Создадим экземпляр
+
     var table_usage_fee_outgoing_cars = new TTDR('div#usage-fee-outgoing-cars');       // Создадим экземпляр
 
     var out_label_time = function (val) {
@@ -201,6 +237,33 @@
         return valid;
     };
 
+    var validation_detali = function () {
+        form_edit.validation_common.clear_all();
+        var valid = true;
+        // Проверка 
+
+        if (list_select_period === null || (list_select_period !== null && list_select_period.length === 0)) {
+            form_edit.validation_common.out_error_message(langView('mainuf_mess_valid_select_period_is_null', App.Langs));
+            valid = false;
+        }
+
+        var stn_from = Number(edit_elements.select_code_stn_from.val());
+        var arrival_cargo = Number(edit_elements.select_id_cargo_arrival.val());
+        var stn_to = Number(edit_elements.select_code_stn_to.val());
+        var outgoing_cargo = Number(edit_elements.select_id_cargo_outgoing.val());
+        if (stn_from === -1 && arrival_cargo === -1 && stn_to === -1 && outgoing_cargo === -1) {
+            form_edit.validation_common.out_error_message(langView('mainuf_mess_valid_select_period_detali_is_null', App.Langs));
+            form_edit.validation_common.check_control_select_not_null(edit_elements.select_code_stn_from, langView('mainuf_mess_valid_select_period_detali_is_null', App.Langs), '', true);
+            form_edit.validation_common.check_control_select_not_null(edit_elements.select_id_cargo_arrival, langView('mainuf_mess_valid_select_period_detali_is_null', App.Langs), '', true);
+            form_edit.validation_common.check_control_select_not_null(edit_elements.select_code_stn_to, langView('mainuf_mess_valid_select_period_detali_is_null', App.Langs), '', true);
+            form_edit.validation_common.check_control_select_not_null(edit_elements.select_id_cargo_outgoing, langView('mainuf_mess_valid_select_period_detali_is_null', App.Langs), '', true);
+            valid = false;
+        }
+        // Ставка
+        valid = valid & form_edit.validation_common.check_control_input_not_null(edit_elements.input_number_grace_time, langView('mainuf_mess_valid_rate_value_not_null', App.Langs), '', true);
+        return valid;
+    };
+
     var action_apply = function () {
         var valid = validation();
         if (valid) {
@@ -253,6 +316,61 @@
 
         }
     }
+    // Обновить или добавить детали периода
+    var action_save = function () {
+        var valid = validation_detali();
+        if (valid) {
+            var operation = {
+                id_usage_fee_period: list_select_period[0].id_usage_fee_period,
+                id: list_select_period_detali !== null && list_select_period_detali.length > 0 ? list_select_period_detali[0].id : 0,
+                stn_from: get_select_number_value(edit_elements.select_code_stn_from),
+                arrival_cargo: get_select_number_value(edit_elements.select_id_cargo_arrival),
+                stn_to: get_select_number_value(edit_elements.select_code_stn_to),
+                outgoing_cargo: get_select_number_value(edit_elements.select_id_cargo_outgoing),
+                grace_time: get_input_number_value(edit_elements.input_number_grace_time),
+                user: App.User_Name,
+            };
+            var r = 5;
+            ids_wsd.postChangeUsageFeePeriodDetali(operation, function (result_operation) {
+                if (result_operation > 0) {
+                    form_edit.validation_common.out_info_message(langView('mainuf_mess_ok_operation_aplly_period_detali', App.Langs));
+                    LockScreenOff();
+                } else {
+                    // Ошибка выполнения
+                    form_edit.validation_common.out_error_message(langView('mainuf_mess_error_operation_aplly_period_detali', App.Langs) + result_operation);
+                    LockScreenOff();
+                }
+                // Обновим данные
+                update_usage_fee_period_detali.call(this, id_usage_fee_period);
+            }.bind(this));
+        } else {
+
+        }
+    }
+    // Удалить детали периода
+    var active_delete = function () {
+        modal_confirm_form.view(langView('mainuf_form_aplly', App.Langs), langView('mainuf_form_aplly_period_detali_message', App.Langs), function (res) {
+            if (res) {
+                // Выполнить операцию
+                LockScreen(langView('mainuf_mess_update_operation_aplly_period_detali', App.Langs));
+                var id = list_select_period_detali !== null && list_select_period_detali.length > 0 ? list_select_period_detali[0].id : 0;
+                ids_wsd.deleteUsageFeePeriodDetali(id, function (result_operation) {
+                if (result_operation > 0) {
+                    form_edit.validation_common.out_info_message(langView('mainuf_mess_ok_operation_delete_period_detali', App.Langs));
+                    LockScreenOff();
+                } else {
+                    // Ошибка выполнения
+                    form_edit.validation_common.out_error_message(langView('mainuf_mess_error_operation_delete_period_detali', App.Langs) + result_operation);
+                    LockScreenOff();
+                }
+                // Обновим данные
+                update_usage_fee_period_detali.call(this, id_usage_fee_period);
+            }.bind(this));
+            } else {
+                form_edit.validation_common.out_warning_message(langView('mainuf_mess_cancel_operation_aplly_period_detali', App.Langs))
+            }
+        }.bind(this));
+    }
 
     var update_period_operation_rod = function () {
         var process_period = 0;
@@ -266,6 +384,7 @@
 
         list_period = [];
         list_select_period = [];
+        list_period_detali = [];
         if (list_operation_rod && list_operation_rod.length > 0) {
             process_period = list_operation_rod.length;
             $.each(list_operation_rod, function (key, el) {
@@ -333,6 +452,17 @@
         }
     };
 
+    // обновить данные детального периода
+    var update_usage_fee_period_detali = function (id_usage_fee_period) {
+        ids_wsd.getUsageFeePeriodDetaliOfIDPeriod(id_usage_fee_period, function (list_result) {
+            list_period_detali = list_result;
+            list_select_period_detali = [];
+            this.table_usage_fee_period_detali.obj_t_report.button(0).enable(true);
+            this.table_usage_fee_period_detali.view(list_period_detali);
+            LockScreenOff();
+        }.bind(this));
+    };
+
     // Показать вагоны в отправках
     var view_outgoing_wagon = function () {
         ids_wsd.getViewOutgoingCarsOfNum($num_wagon.val(), function (vagon_result) {
@@ -364,7 +494,6 @@
 
             }.bind(this));
         }
-
     };
 
     // Проверка номера вагона
@@ -431,6 +560,28 @@
 
     var active_tab = 0;
 
+    var form_edit_detali_clear = function (enable) {
+        $('button#save').prop("disabled", !enable);
+        form_edit.set('code_stn_from', -1);
+        form_edit.set('id_cargo_arrival', -1);
+        form_edit.set('code_stn_to', -1);
+        form_edit.set('id_cargo_outgoing', -1);
+        form_edit.set('grace_time', null);
+        if (enable) {
+            form_edit.enable('code_stn_from');
+            form_edit.enable('id_cargo_arrival');
+            form_edit.enable('code_stn_to');
+            form_edit.enable('id_cargo_outgoing');
+            form_edit.enable('grace_time');
+        } else {
+            form_edit.disable('code_stn_from');
+            form_edit.disable('id_cargo_arrival');
+            form_edit.disable('code_stn_to');
+            form_edit.disable('id_cargo_outgoing');
+            form_edit.disable('grace_time');
+        }
+    };
+
     var form_edit_clear = function () {
         $('button#apply').prop("disabled", true);
         form_edit.set('date_period_start', null); form_edit.disable('date_period_start');
@@ -444,6 +595,7 @@
         form_edit.set('coefficient_not_route_value', null); form_edit.disable('coefficient_not_route_value');
         form_edit.set('grace_time_value1', null); form_edit.disable('grace_time_value1');
         form_edit.set('grace_time_value2', null); form_edit.disable('grace_time_value2');
+        form_edit_detali_clear(false);
     };
 
     // После загрузки документа
@@ -458,14 +610,17 @@
         $note.prop("disabled", true);
         modal_confirm_form.init();
         // Загрузим справочники, с признаком обязательно
-        load_db(['operators_wagons', 'currency', 'genus_wagon'], true, function (result) {
+        load_db(['operators_wagons', 'currency', 'genus_wagon', 'external_station', 'cargo'], true, function (result) {
             // Обновить
             setInterval(function () {
                 $('label#curent_date').text(moment().format(format_datetime));
             }, 1000);
 
             list_currency = ids_dir.getListCurrency('id', 'currency', App.Lang, null);
-            var process = 5;
+            list_external_station = ids_dir.getListExternalStation('code', 'station_name', App.Lang, null);
+            list_cargo = ids_dir.getListCargo('id', 'cargo_name', App.Lang, null);
+
+            var process = 6;
 
             // Выход из инициализации
             var out_init = function (process) {
@@ -505,6 +660,7 @@
                             this.table_operators_wagons_genus.view(list_operators_genus);
                             list_period = [];
                             list_select_period = [];
+                            list_period_detali = [];
                             table_usage_fee_period.view(list_period);
                             LockScreenOff();
                         }.bind(this));
@@ -513,6 +669,7 @@
                         this.table_operators_wagons_genus.view(list_operators_genus);
                         list_period = [];
                         list_select_period = [];
+                        list_period_detali = [];
                         table_usage_fee_period.view(list_period);
                         LockScreenOff();
                     }
@@ -558,6 +715,7 @@
                 },
                 fn_select_rows: function (rows) {
                     list_select_period = rows;
+                    list_select_period_detali = [];
                     form_edit.validation_common.clear_all();
                     if (rows && rows.length > 0) {
                         $('button#apply').prop("disabled", false);
@@ -572,8 +730,32 @@
                         form_edit.set('coefficient_not_route_value', rows[rows.length - 1].usage_fee_period_coefficient_not_route); form_edit.enable('coefficient_not_route_value');
                         form_edit.set('grace_time_value1', rows[rows.length - 1].usage_fee_period_grace_time_1); form_edit.enable('grace_time_value1');
                         form_edit.set('grace_time_value2', rows[rows.length - 1].usage_fee_period_grace_time_2); form_edit.enable('grace_time_value2');
+                        if (rows.length == 1) {
+                            form_edit_detali_clear(false);
+                            id_usage_fee_period = rows[0].id_usage_fee_period;
+                            update_usage_fee_period_detali.call(this, id_usage_fee_period);
+                            //ids_wsd.getUsageFeePeriodDetaliOfIDPeriod(id_usage_fee_period, function (list_result) {
+                            //    list_period_detali = list_result;
+                            //    list_select_period_detali = [];
+                            //    this.table_usage_fee_period_detali.obj_t_report.button(0).enable(true);
+                            //    this.table_usage_fee_period_detali.view(list_period_detali);
+                            //    LockScreenOff();
+                            //}.bind(this));
+                        } else {
+                            form_edit_detali_clear(false);
+                            list_period_detali = [];
+                            list_select_period_detali = [];
+                            this.table_usage_fee_period_detali.obj_t_report.button(0).enable(false);
+                            this.table_usage_fee_period_detali.view(list_period_detali);
+                            LockScreenOff();
+                        }
                     } else {
                         form_edit_clear();
+                        list_period_detali = [];
+                        list_select_period_detali = [];
+                        this.table_usage_fee_period_detali.obj_t_report.button(0).enable(false);
+                        this.table_usage_fee_period_detali.view(list_period_detali);
+                        LockScreenOff();
                     }
                 }.bind(this),
             });
@@ -620,6 +802,21 @@
                 obj: 'bs_form_row',
                 options: {
                     class: null,
+                },
+                childs: []
+            };
+
+            var form_edit_row_7_edit = {
+                obj: 'bs_form_row',
+                options: {
+                    class: 'm-1 border border-primary',
+                },
+                childs: []
+            };
+            var form_edit_row_7_table = {
+                obj: 'bs_form_row',
+                options: {
+                    class: 'mt-2',
                 },
                 childs: []
             };
@@ -884,6 +1081,180 @@
                 childs: []
             };
 
+            var form_select_stn_from = {
+                obj: 'bs_select',
+                options: {
+                    id: 'code_stn_from',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_stn_from', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_stn_from', App.Langs),
+                    input_placeholder: null,
+                    input_required: true,
+                    input_group: false,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_data: list_external_station,
+                    element_default: -1,
+                    element_change: function (e) {
+                        // var code = Number($(e.currentTarget).val());
+                    }.bind(this),
+                    element_check: function (value) {
+
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_select_arrival_cargo = {
+                obj: 'bs_select',
+                options: {
+                    id: 'id_cargo_arrival',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_arrival_cargo', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_arrival_cargo', App.Langs),
+                    input_placeholder: null,
+                    input_required: true,
+                    input_group: false,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_data: list_cargo,
+                    element_default: -1,
+                    element_change: function (e) {
+                        // var code = Number($(e.currentTarget).val());
+                    }.bind(this),
+                    element_check: function (value) {
+
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_select_stn_to = {
+                obj: 'bs_select',
+                options: {
+                    id: 'code_stn_to',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_stn_to', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_stn_to', App.Langs),
+                    input_placeholder: null,
+                    input_required: true,
+                    input_group: false,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_data: list_external_station,
+                    element_default: -1,
+                    element_change: function (e) {
+                        // var code = Number($(e.currentTarget).val());
+                    }.bind(this),
+                    element_check: function (value) {
+
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_select_outgoing_cargo = {
+                obj: 'bs_select',
+                options: {
+                    id: 'id_cargo_outgoing',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_outgoing_cargo', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_outgoing_cargo', App.Langs),
+                    input_placeholder: null,
+                    input_required: true,
+                    input_group: false,
+                    input_group_prepend_class: null,
+                    input_group_prepend_objs: null,
+                    input_group_append_class: null,
+                    input_group_append_objs: null,
+                    input_group_obj_form: null,
+                    element_data: list_cargo,
+                    element_default: -1,
+                    element_change: function (e) {
+                        // var code = Number($(e.currentTarget).val());
+                    }.bind(this),
+                    element_check: function (value) {
+
+                    }.bind(this),
+                },
+                childs: []
+            };
+            var form_input_grace_time = {
+                obj: 'bs_input_number',
+                options: {
+                    id: 'grace_time',
+                    validation_group: 'common',
+                    form_group_size: 'xl',
+                    form_group_col: 6,
+                    form_group_class: 'text-left',
+                    label: langView('mainuf_label_grace_time', App.Langs),
+                    label_class: 'mb-1',
+                    input_size: null,
+                    input_class: null,
+                    input_title: langView('mainuf_title_grace_time', App.Langs),
+                    input_placeholder: null,
+                    input_required: null,
+                    input_readonly: false,
+                    input_group: false,
+                },
+                childs: []
+            };
+            var col_bt_save = {
+                obj: 'bs_col',
+                options: {
+                    size: 'xl',
+                    col: 6,
+                    class: 'p-2 d-flex justify-content-center',
+                },
+                childs: []
+            };
+            var bt_save = {
+                obj: 'bs_button',
+                options: {
+                    color: 'success',
+                    size: null,
+                    class: null,
+                    id: 'save',
+                    label: langView('mainuf_label_bt_save', App.Langs),
+                    title: '',
+                    icon_left: 'fa-regular fa-floppy-disk', //<i class="fa-regular fa-floppy-disk"></i>
+                    icon_right: null,
+                    click: function (event) {
+                        event.preventDefault();
+                        action_save.call(this);
+                    }.bind(this),
+                }
+            };
             // Кнопки
             var row_edit1 = {
                 obj: 'bs_row',
@@ -919,6 +1290,17 @@
                 }
             };
 
+            var col_table = {
+                obj: 'bs_col',
+                options: {
+                    id: 'usage-fee-period-detali',
+                    size: 'xl',
+                    col: 12,
+                    class: 'mt-2 text-left',
+                },
+                childs: []
+            };
+
             form_edit_row_1.childs.push(form_input_date_period_start);
             form_edit_row_1.childs.push(form_input_date_period_stop);
 
@@ -936,6 +1318,19 @@
             form_edit_row_6.childs.push(form_input_grace_time_value1);
             form_edit_row_6.childs.push(form_input_grace_time_value2);
 
+
+            form_edit_row_7_edit.childs.push(form_select_stn_from);
+            form_edit_row_7_edit.childs.push(form_select_arrival_cargo);
+            form_edit_row_7_edit.childs.push(form_select_stn_to);
+            form_edit_row_7_edit.childs.push(form_select_outgoing_cargo);
+            form_edit_row_7_edit.childs.push(form_input_grace_time);
+            col_bt_save.childs.push(bt_save);
+            form_edit_row_7_edit.childs.push(col_bt_save);
+            //form_edit_row_7_edit.childs.push(col_edit_arr);
+            //form_edit_row_7_edit.childs.push(col_edit_out);
+
+            form_edit_row_7_edit.childs.push(col_table);
+
             col_edit1.childs.push(bt_apply);
             row_edit1.childs.push(col_edit1);
 
@@ -945,6 +1340,10 @@
             objs_edit.push(form_edit_row_3);
             objs_edit.push(form_edit_row_4);
             objs_edit.push(form_edit_row_5);
+            objs_edit.push(form_edit_row_6);
+            objs_edit.push(form_edit_row_7_edit);
+            objs_edit.push(form_edit_row_7_table);
+
 
             // Инициализируем форму редактирования
             form_edit.init({
@@ -969,6 +1368,46 @@
                     $form_edit.empty();
                     $form_edit.append(form_edit.$form);
                     // На проверку окончания инициализации
+
+                    this.table_usage_fee_period_detali = new TTDR('div#usage-fee-period-detali');       // Создадим экземпляр
+                    this.table_usage_fee_period_detali.init({
+                        alert: null,
+                        detali_table: false,
+                        type_report: 'usage_fee_period_detali',     //
+                        link_num: false,
+                        ids_dir: ids_dir,
+                        fn_init: function () {
+                            // На проверку окончания инициализации
+                            process--;
+                            out_init(process);
+                        },
+                        fn_action_view_detali: function (rows) {
+
+                        },
+                        fn_select_rows: function (rows) {
+                            list_select_period_detali = rows;
+                            if (rows != null && rows.length > 0) {
+                                form_edit_detali_clear(true);
+                                form_edit.set('code_stn_from', rows[0].code_stn_from);
+                                form_edit.set('id_cargo_arrival', rows[0].id_cargo_arrival);
+                                form_edit.set('code_stn_to', rows[0].code_stn_to);
+                                form_edit.set('id_cargo_outgoing', rows[0].id_cargo_outgoing);
+                                form_edit.set('grace_time', rows[0].grace_time);
+                            } else {
+                                form_edit_detali_clear(false);
+                            }
+                        }.bind(this),
+                        fn_action: function (e, dt, node, config) {
+                            if (config.button === 'add_detali') {
+                                list_select_period_detali = [];
+                                form_edit_detali_clear(true);
+                            }
+                            if (config.button === 'delete_detali') {
+                                active_delete.call(this);
+                            }
+                        }.bind(this),
+                    });
+
                     process--;
                     out_init(process);
                 }.bind(this),
