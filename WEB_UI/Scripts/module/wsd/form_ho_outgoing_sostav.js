@@ -53,6 +53,7 @@
             'fhoogs_error_date_time': 'Укажите правильно дату и время',
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             'fhoogs_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhoogs_mess_error_operation_return_present1': 'Ошибка расчета платы операции "Предъявить состав на УЗ", код ошибки = ',
         },
         'en':  //default language: English
         {
@@ -90,6 +91,7 @@
             'fhoogs_error_date_time': 'Please enter the correct date and time',
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
             'fhoogs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
+            'fhoogs_mess_error_operation_return_present1': 'Error calculating the fee for the operation "Present the train to the UZ", error code = ',
         }
     };
     // Определлим список текста для этого модуля
@@ -583,14 +585,19 @@
         LockScreen(langView('fhoogs_mess_operation_run', App.Langs));
         this.ids_wsd.postOperationPresentSostav(data, function (result) {
             if (result > 0) {
-                this.mf_edit.close(); // закроем форму
-                if (typeof this.settings.fn_edit === 'function') {
-                    this.settings.fn_edit({ data: data, result: result });
-                }
-                LockScreenOff();
+                this.ids_wsd.getCalcUsageFeeOfOutgoingSostav(data.id, function (result_calc) {
+                    this.mf_edit.close(); // закроем форму
+                    if (typeof this.settings.fn_edit === 'function') {
+                        this.settings.fn_edit({ data: data, result: result });
+                    }
+                    if (result_calc.error > 0) {
+                        this.mf_edit.out_error(langView('fhoogs_mess_error_operation_return_present1', App.Langs) + result_calc.error);
+                    }
+                    LockScreenOff();
+                }.bind(this));
             } else {
                 LockScreenOff();
-                this.mf_edit.out_error(langView('fogcd_mess_error_operation_return_present', App.Langs) + result);
+                this.mf_edit.out_error(langView('fhoogs_mess_error_operation_return_present', App.Langs) + result);
             }
         }.bind(this));
     };

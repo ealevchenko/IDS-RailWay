@@ -6036,18 +6036,19 @@ namespace IDS
                 sostav.change_user = user;
                 ef_out_sostav.Update(sostav);
                 int result_sostav = context.SaveChanges(); // Применить операции
-                if (result_sostav >= 0)
-                {
-                    ResultUpdateIDWagon result_calc = CalcUsageFeeOfOutgoingSostav(id_outgoing_sostav, user);
-                    if (result_calc.result >= 0)
-                    {
-                        result_sostav += result_calc.result;
-                    }
-                    else
-                    {
-                        result_sostav = (int)errors_base.error_calc_usage_fee; //// Ошибка выполнения расчета платы за пользование
-                    }
-                }
+                //TODO: ! Расчет платы выполняем в новом api (WSD/view/calc_wagon/outgoing/sostav/)
+                //if (result_sostav >= 0)
+                //{
+                //    ResultUpdateIDWagon result_calc = CalcUsageFeeOfOutgoingSostav(id_outgoing_sostav, user);
+                //    if (result_calc.result >= 0)
+                //    {
+                //        result_sostav += result_calc.result;
+                //    }
+                //    else
+                //    {
+                //        result_sostav = (int)errors_base.error_calc_usage_fee; //// Ошибка выполнения расчета платы за пользование
+                //    }
+                //}
                 return result_sostav;
             }
             catch (Exception e)

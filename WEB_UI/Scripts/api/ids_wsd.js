@@ -2887,7 +2887,32 @@
             },
         });
     };
-
+    // Выполнить расчет платы за пользование по сданному составу
+    ids_wsd.prototype.getCalcUsageFeeOfOutgoingSostav = function (id_sostav, callback) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/view/calc_wagon/outgoing/sostav/' + id_sostav,
+            async: true,
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getCalcUsageFeeOfOutgoingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     App.ids_wsd = ids_wsd;
 
     window.App = App;
