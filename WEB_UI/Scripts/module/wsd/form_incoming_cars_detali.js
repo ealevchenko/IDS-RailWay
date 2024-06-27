@@ -5527,7 +5527,7 @@
                         //this.form.set_validation_object_ok(null, 'name_operator', "ok", true);
                     }.bind(this), null, null
                 );
-                // Оператор на вагон
+                // Ограничение
                 this.ids_limiting_loading = this.get_ids_limiting_loading(this.ids_current_rent ? this.ids_current_rent.id_limiting : null);
                 this.view_element(this.ids_limiting_loading,
                     function (value) {
