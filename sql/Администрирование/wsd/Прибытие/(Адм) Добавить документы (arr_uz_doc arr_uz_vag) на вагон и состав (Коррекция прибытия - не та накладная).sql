@@ -1,7 +1,7 @@
-declare @mun int = 51553246
-declare @id_arrival_uz_vagon int = 844981
-declare @id_document int = 618455
-declare @nom_main_doc sysname = '40582'
+declare @mun int = 61239257
+declare @id_arrival_uz_vagon int = 964158
+declare @id_document int = 712253
+declare @nom_main_doc sysname = '40027690'
 
 SELECT [id]
       ,[id_arrival]
@@ -213,59 +213,59 @@ SELECT [id]
   where [id_arrival_car] = 1661916
 
 
-  --INSERT INTO [IDS].[Arrival_UZ_Document]
-  --         ([id_doc_uz]
-  --         ,[nom_doc]
-  --         ,[nom_main_doc]
-  --         ,[code_stn_from]
-  --         ,[code_stn_to]
-  --         ,[code_border_checkpoint]
-  --         ,[cross_time]
-  --         ,[code_shipper]
-  --         ,[code_consignee]
-  --         ,[klient]
-  --         ,[code_payer_sender]
-  --         ,[code_payer_arrival]
-  --         ,[distance_way]
-  --         ,[note]
-  --         ,[parent_id]
-  --         ,[create]
-  --         ,[create_user]
-  --         ,[change]
-  --         ,[change_user]
-  --         ,[manual]
-  --         ,[date_otpr]
-  --         ,[srok_end]
-  --         ,[date_grpol]
-  --         ,[date_pr]
-  --         ,[date_vid])
-  --   VALUES
-  --         ('35000000000534579018'
-  --         ,NULL
-  --         ,'40582'
-  --         ,074286
-  --         ,467201
-  --         ,066118
-  --         ,'2023-10-19 09:48:00'
-  --         ,9999
-  --         ,7932
-  --         ,0
-  --         ,'5639846'
-  --         ,'8116733'
-  --         ,1018
-  --         ,NULL
-  --         ,NULL
-  --         ,getdate()
-  --         ,'EUROPE\ealevchenko'
-  --         ,NULL
-  --         ,NULL
-  --         ,0
-  --         ,'2023-10-17 21:46:00.000'
-  --         ,'2023-11-18 00:00:00.000'
-  --         ,'2023-11-14 15:11:00.000'
-  --         ,'2023-11-14 13:31:00.000'
-  --         ,'2023-11-14 15:36:00.000')
-GO
+--  INSERT INTO [IDS].[Arrival_UZ_Document]
+--           ([id_doc_uz]
+--           ,[nom_doc]
+--           ,[nom_main_doc]
+--           ,[code_stn_from]
+--           ,[code_stn_to]
+--           ,[code_border_checkpoint]
+--           ,[cross_time]
+--           ,[code_shipper]
+--           ,[code_consignee]
+--           ,[klient]
+--           ,[code_payer_sender]
+--           ,[code_payer_arrival]
+--           ,[distance_way]
+--           ,[note]
+--           ,[parent_id]
+--           ,[create]
+--           ,[create_user]
+--           ,[change]
+--           ,[change_user]
+--           ,[manual]
+--           ,[date_otpr]
+--           ,[srok_end]
+--           ,[date_grpol]
+--           ,[date_pr]
+--           ,[date_vid])
+--     VALUES
+--           ('93100891'
+--           ,NULL
+--           ,'40027690'
+--           ,400502
+--           ,467004
+--           ,NULL
+--           ,NULL
+--           ,1727
+--           ,7932
+--           ,0
+--           ,'5636888'
+--           ,'8116733'
+--           ,771
+--           ,NULL
+--           ,NULL
+--           ,getdate()
+--           ,'EUROPE\ealevchenko'
+--           ,NULL
+--           ,NULL
+--           ,0
+--           ,'2024-06-16 11:20:00.000'
+--           ,'2024-06-22 00:00:00.000'
+--           ,'2024-06-22 11:55:00.000'
+--           ,'2024-06-22 01:37:00.000'
+--           ,'2024-06-22 15:15:00.000')
+--GO
 
 --INSERT INTO [IDS].[Arrival_UZ_Vagon]
 --           ([id_document]
@@ -314,15 +314,15 @@ GO
 --           ,[pay_summa]
 --           ,[id_wagons_rent_arrival])
 --     VALUES
---           (625506
---           ,61507802
---           ,274091
---           ,1666410
+--           (727136
+--           ,61239257
+--           ,315697
+--           ,1785618
 --           ,4
 --           ,NULL
 --           ,70
 --           ,NULL
---           ,23600
+--           ,23800
 --           ,0
 --           ,NULL
 --           ,1
@@ -357,6 +357,6 @@ GO
 --           ,NULL
 --           ,NULL
 --           ,0
---           ,621390
---           ,225370)
+--           ,NULL
+--           ,199969)
 --GO
