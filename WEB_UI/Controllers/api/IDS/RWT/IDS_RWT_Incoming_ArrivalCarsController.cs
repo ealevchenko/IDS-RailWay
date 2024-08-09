@@ -557,6 +557,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
+                this.ef_ids.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", value.start);
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", value.stop);
                 System.Data.SqlClient.SqlParameter p_laden = new System.Data.SqlClient.SqlParameter("@laden", value.laden);
@@ -586,6 +587,7 @@ namespace WEB_UI.Controllers.api
 
                 string sql = "EXEC [IDS].[get_view_incoming_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @nom_docs, @id_operator, @id_limiting, @id_owner, @code_stn_from, @id_cargo, @id_certification_data, @supply_cargo_code, @id_group_cargo, @code_consignee, @id_division, @id_genus, @id_condition, @code_payer_arrival, @code_payer_arrival_name, @id_station_on";
                 List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_nom_docs, p_id_operator, p_id_limiting, p_id_owner, p_code_stn_from, p_id_cargo, p_id_certification_data, p_supply_cargo_code, p_id_group_cargo, p_code_consignee, p_id_division, p_id_genus, p_id_condition, p_code_payer_arrival, p_code_payer_arrival_name, p_id_station_on).ToList();
+                this.ef_ids.Database.CommandTimeout = null;
                 return Ok(result);
             }
             catch (Exception e)
