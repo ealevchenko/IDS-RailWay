@@ -24,7 +24,7 @@ use [KRR-PA-CNT-Railway]
 --  order by 1 desc
 
 
-declare @id_wir int = 849153
+declare @id_wir int = 903346
 
 delete
   FROM [IDS].[WagonInternalMovement]

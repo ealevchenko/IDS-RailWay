@@ -8,7 +8,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonOperations]
 
-declare @num int = 53833836 
+declare @num int = 98016 
 SELECT TOP (1000) [id]
       ,[num]
       ,[id_arrival_car]

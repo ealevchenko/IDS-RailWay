@@ -1,4 +1,4 @@
-declare @num_doc int = 10;
+declare @num_doc int = 3;
 
 SELECT [id]
       ,[id_arrived]
@@ -92,7 +92,7 @@ SELECT [id]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
   where id in (select [id_arrival_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where [id_arrival] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc) and [position_arrival] is not null)
-  --and num in (64169410,63867725,64978810,64051659,63553887,63251433,63062574,63716989,56936750,63716039,61590212,62891502,63116321,64244353,64938830,64237662,64226939,64227002,56104847,64169865,63991046,63116602,60633971,63716625,63992770,63949002,52292463,67473165,56628985,55080287,64170467,63118467,64056716,63867964,53164398)
+  and num in (58585928)
 
   SELECT TOP (1000) [id]
       ,[id_group]
