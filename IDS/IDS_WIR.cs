@@ -2823,7 +2823,25 @@ namespace IDS
                             car = period_car.Where(c => c.num == num).OrderByDescending(d => d.create).FirstOrDefault();
                             if (car != null)
                             {
-                                if (car.arrival != null && car.ArrivalSostav.status == 2)
+                                bool b_out_car = true;
+                                // Проверим отправку
+                                WagonInternalRoutes wir_car = car.WagonInternalRoutes.OrderByDescending(w => w.id).FirstOrDefault();
+                                if (wir_car != null)
+                                {
+                                    OutgoingCars out_car = wir_car.OutgoingCars;
+                                    if (out_car != null)
+                                    {
+                                        OutgoingSostav out_sost = out_car.OutgoingSostav;
+                                        if (out_sost != null)
+                                        {
+                                            if (out_sost.date_departure_amkr != null)
+                                            {
+                                                b_out_car = false;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (car.arrival != null && car.ArrivalSostav.status == 2 && b_out_car)
                                 {
                                     type_update = 5; // Состав и вагон принят, запрет
                                 }
@@ -2844,14 +2862,17 @@ namespace IDS
                                     }
                                     else
                                     {
-                                        if (car.arrival != null)
+                                        if (car.ArrivalSostav.status != 2 && car.ArrivalSostav.status != 1)
                                         {
-                                            type_update = 5; // Состав и вагон принят, запрет
-                                        }
-                                        else
-                                        {
-                                            // Вагон свободен для переноса
-                                            type_update = 2; // Состав не обработан или отклонен вагон можно переносить                                        
+                                            if (car.arrival != null)
+                                            {
+                                                type_update = 5; // Состав и вагон принят, запрет
+                                            }
+                                            else
+                                            {
+                                                // Вагон свободен для переноса
+                                                type_update = 2; // Состав не обработан или отклонен вагон можно переносить                                        
+                                            }
                                         }
                                     }
                                 }
@@ -2859,7 +2880,7 @@ namespace IDS
                         }
                     }
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.num == num && w.close == null).FirstOrDefault();
-                    type_update = wir != null ? 6 : type_update; // Запрет есть незакрыток внутреннее перемещение
+                    type_update = wir != null ? 6 : type_update; // Запрет есть незакрыто внутреннее перемещение
                     Manual_Search_Vagon msv = new Manual_Search_Vagon()
                     {
                         num = num,
@@ -10397,7 +10418,7 @@ namespace IDS
                             && d.id_cargo_outgoing == outgoing_cargo
                             && d.grace_time == grace_time
                             ).FirstOrDefault();
-                        if (ufpd_old!= null) return (int)errors_base.exists_usage_fee_period_detali_of_db;
+                        if (ufpd_old != null) return (int)errors_base.exists_usage_fee_period_detali_of_db;
                         // Добавить
                         Usage_Fee_Period_Detali ufpd = new Usage_Fee_Period_Detali()
                         {
@@ -10443,8 +10464,8 @@ namespace IDS
                 e.ExceptionMethodLog(String.Format("ServiceDeleteUsageFeePeriodDetali(id={0})", id), servece_owner, eventID);
                 return (int)errors_base.global; // Глобальная ошибка
             }
-        }        
-        
+        }
+
         /// <summary>
         /// Поиск wir возвратного вагона
         /// </summary>
