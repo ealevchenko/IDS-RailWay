@@ -24,7 +24,7 @@ use [KRR-PA-CNT-Railway]
 --  order by 1 desc
 
 
-declare @id_wir int = 903346
+declare @id_wir int = 943991
 
 delete
   FROM [IDS].[WagonInternalMovement]
@@ -37,7 +37,7 @@ delete
 
 
 
-declare @id_arrival_car bigint = (select [id_arrival_car] FROM [IDS].[WagonInternalRoutes] where id =849153);
+declare @id_arrival_car bigint = (select [id_arrival_car] FROM [IDS].[WagonInternalRoutes] where id =@id_wir);
 declare @id_arrival_uz_vagon bigint = (select [id_arrival_uz_vagon] FROM [IDS].[ArrivalCars] where id =@id_arrival_car);
 
 select @id_wir,@id_arrival_car,@id_arrival_uz_vagon
