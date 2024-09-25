@@ -1,3 +1,7 @@
+
+use [KRR-PA-CNT-Railway]
+SELECT Size/128.0, * from sys.database_files
+
 SELECT
     t.NAME AS TableName,
     s.Name AS SchemaName,

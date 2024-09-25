@@ -1,4 +1,3 @@
-/****** Script for SelectTopNRows command from SSMS  ******/
 SELECT [id]
       ,[doc_Id]
       ,[doc_Revision]
