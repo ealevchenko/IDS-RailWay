@@ -6,7 +6,10 @@ SELECT @SQL += 'ALTER INDEX ' + QUOTENAME(name) + ' ON ' + QUOTENAME(OBJECT_SCHE
 FROM sys.indexes
 WHERE index_id > 0 AND OBJECTPROPERTY(object_id, 'IsUserTable') = 1;
 
-print @SQL
+--print @SQL
 EXEC sp_executesql @SQL;
 
 --EXEC sp_updatestats;
+--SELECT * 
+--FROM sys.indexes
+--WHERE index_id > 0 AND OBJECTPROPERTY(object_id, 'IsUserTable') = 1;
