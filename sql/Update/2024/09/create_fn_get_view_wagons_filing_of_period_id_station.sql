@@ -14,6 +14,7 @@ GO
 
 
 
+
 CREATE FUNCTION [IDS].[get_view_wagons_filing_of_period_id_station]
  (
 	@start datetime,
@@ -28,20 +29,45 @@ CREATE FUNCTION [IDS].[get_view_wagons_filing_of_period_id_station]
 	[num_filing] [nvarchar](50) NOT NULL,
 	[id_wio] [bigint] NOT NULL,
 	[note] [nvarchar](250) NULL,
+	[start_filing] [datetime] NOT NULL,
+	[end_filing] [datetime] NULL,
 	[filing_create] [datetime] NOT NULL,
 	[filing_create_user] [nvarchar](50) NOT NULL,
 	[filing_change] [datetime] NULL,
 	[filing_change_user] [nvarchar](50) NULL,
 	[filing_close] [datetime] NULL,
 	[filing_close_user] [nvarchar](50) NULL,
-	[filing_start] [datetime] NULL,
-	[filing_end] [datetime] NULL,
 	[num] [int] NOT NULL,
 	[position] [int] NOT NULL,
-	[from_wim_create] [datetime] NOT NULL,
-	[from_wim_create_user] [nvarchar](50) NOT NULL,
-	[from_wim_close] [datetime] NULL,
-	[from_wim_close_user] [nvarchar](50) NULL,
+	[filing_way_start] [datetime] NOT NULL,
+	[filing_way_end] [datetime] NULL,
+	[filing_start] [datetime] NULL,
+	[filing_end] [datetime] NULL,
+	[filing_wim_create] [datetime] NOT NULL,
+	[filing_wim_create_user] [nvarchar](50) NOT NULL,
+	[filing_wim_close] [datetime] NULL,
+	[filing_wim_close_user] [nvarchar](50) NULL,
+	[filing_id_station] [int] NOT NULL,
+	[filing_station_name_ru] [nvarchar](50) NULL,
+	[filing_station_name_en] [nvarchar](50) NULL,
+	[filing_station_abbr_ru] [nvarchar](50) NULL,
+	[filing_station_abbr_en] [nvarchar](50) NULL,
+	[filing_id_park] [int] NULL,
+	[filing_park_name_ru] [nvarchar](100) NULL,
+	[filing_park_name_en] [nvarchar](100) NULL,
+	[filing_park_abbr_ru] [nvarchar](50) NULL,
+	[filing_park_abbr_en] [nvarchar](50) NULL,
+	[filing_id_way] [int] NOT NULL,
+	[filing_way_num_ru] [nvarchar](20) NULL,
+	[filing_way_num_en] [nvarchar](20) NULL,
+	[filing_way_name_ru] [nvarchar](100) NULL,
+	[filing_way_name_en] [nvarchar](100) NULL,
+	[filing_way_abbr_ru] [nvarchar](50) NULL,
+	[filing_way_abbr_en] [nvarchar](50) NULL,
+	[filing_way_capacity] [int] NULL,
+	[filing_way_close] [datetime] NULL,
+	[filing_way_delete] [datetime] NULL,
+	[filing_way_note] [nvarchar](100) NULL,
 	[wagon_adm] [int] NULL,
 	[wagon_adm_name_ru] [nvarchar](100) NULL,
 	[wagon_adm_name_en] [nvarchar](100) NULL,
@@ -127,20 +153,48 @@ CREATE FUNCTION [IDS].[get_view_wagons_filing_of_period_id_station]
 		,wf.[num_filing]
 		,wf.[id] as id_wio
 		,wf.[note]
+		,wf.[start_filing]
+		,wf.[end_filing]
 		,wf.[create] as filing_create
 		,wf.[create_user] as filing_create_user
 		,wf.[change] as filing_change
 		,wf.[change_user] as filing_change_user
 		,wf.[close] as filing_close
 		,wf.[close_user] as filing_close_user
+		,wir.[num]
+		,wim_filing.[position] as position		-- Позиция вагона
+		,wim_filing.[way_start] as filing_way_start
+		,wim_filing.[way_end] as filing_way_end
 		,wim_filing.[filing_start]
 		,wim_filing.[filing_end]
-		,wir.[num] 
-		,wim_filing.[position] as position		-- Позиция вагона
-		,wim_filing.[create] as from_wim_create
-		,wim_filing.[create_user] as from_wim_create_user
-		,wim_filing.[close] as from_wim_close
-		,wim_filing.[close_user] as from_wim_close_user
+		,wim_filing.[create] as filing_wim_create
+		,wim_filing.[create_user] as filing_wim_create_user
+		,wim_filing.[close] as filing_wim_close
+		,wim_filing.[close_user] as filing_wim_close_user
+		--> Станция отправки
+		,wim_filing.[id_station] as filing_id_station
+		,dir_station_filing.[station_name_ru] as filing_station_name_ru
+		,dir_station_filing.[station_name_en] as filing_station_name_en
+		,dir_station_filing.[station_abbr_ru] as filing_station_abbr_ru
+		,dir_station_filing.[station_abbr_en] as filing_station_abbr_en
+		--> Парк
+		,dir_way_filing.[id_park] as filing_id_park
+		,dir_park_filing.[park_name_ru] as filing_park_name_ru
+		,dir_park_filing.[park_name_en] as filing_park_name_en
+		,dir_park_filing.[park_abbr_ru] as filing_park_abbr_ru
+		,dir_park_filing.[park_abbr_en] as filing_park_abbr_en
+		--> Путь отправки
+		,wim_filing.[id_way] as filing_id_way
+		,dir_way_filing.[way_num_ru] as filing_way_num_ru
+		,dir_way_filing.[way_num_en] as filing_way_num_en
+		,dir_way_filing.[way_name_ru] as filing_way_name_ru
+		,dir_way_filing.[way_name_en] as filing_way_name_en
+		,dir_way_filing.[way_abbr_ru] as filing_way_abbr_ru
+		,dir_way_filing.[way_abbr_en] as filing_way_abbr_en
+		,dir_way_filing.[capacity] as filing_way_capacity
+		,dir_way_filing.[way_close] as filing_way_close
+		,dir_way_filing.[way_delete] as filing_way_delete
+		,dir_way_filing.[note] as filing_way_note
 		--> Администрация
 		,dir_countrys.code_sng as wagon_adm
 		,dir_countrys.countrys_name_ru as wagon_adm_name_ru
@@ -229,7 +283,7 @@ CREATE FUNCTION [IDS].[get_view_wagons_filing_of_period_id_station]
 		,current_station_amkr_name_en = null
 		,current_station_amkr_abbr_ru = null
 		,current_station_amkr_abbr_en = null
-		--into filing_wagons
+	--into filing_wagons
 	FROM IDS.WagonFiling as wf 
 		--> Список подач
 		INNER JOIN IDS.WagonInternalMovement as wim_filing ON wim_filing.id_filing = wf.id 
@@ -278,9 +332,14 @@ CREATE FUNCTION [IDS].[get_view_wagons_filing_of_period_id_station]
 		Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 		--> Справочник Сотояния загрузки
 		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio_filing.id_loading_status = cur_load.id
+		-- Справочник Станция отправки
+		Left JOIN [IDS].[Directory_Station] as dir_station_filing ON wim_filing.[id_station] = dir_station_filing.id
+		--> Справочни Путь отправки
+		Left JOIN [IDS].[Directory_Ways] as dir_way_filing ON wim_filing.[id_way] = dir_way_filing.id 
+		--> Справочни Путь отправки
+		Left JOIN [IDS].[Directory_ParkWays] as dir_park_filing ON dir_way_filing.id_park = dir_park_filing.id
 	where ((wf.[create] is not null and wf.[close] is null) or (wf.[create] >= @start and wf.[create]<=@stop))
-	and wim_filing.id_station = @id_station
-	ORDER BY wf.[create], wim_filing.position
+	and wim_filing.id_station = @id_station	ORDER BY wf.[create], wim_filing.position
 	RETURN
  END
 

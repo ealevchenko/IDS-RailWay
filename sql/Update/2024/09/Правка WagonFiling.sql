@@ -1,17 +1,24 @@
-USE [KRR-PA-CNT-Railway]
+USE [KRR-PA-CNT-Railway-Archive]
 GO
 
-/****** Object:  Table [IDS].[WagonFiling]    Script Date: 02.10.2024 14:58:50 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+
+ALTER TABLE [IDS].[WagonInternalMovement] DROP CONSTRAINT [FK_WagonInternalMovement_WagonFiling]
+GO
+
+drop table [IDS].[WagonFiling]
+go
+
 CREATE TABLE [IDS].[WagonFiling](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[num_filing] [nvarchar](50) NOT NULL,
 	[id_wio] [bigint] NOT NULL,
+	[id_devision] [int] NOT NULL,
 	[note] [nvarchar](250) NULL,
 	[start_filing] [datetime] NOT NULL,
 	[end_filing] [datetime] NULL,
@@ -33,6 +40,14 @@ REFERENCES [IDS].[WagonInternalOperation] ([id])
 GO
 
 ALTER TABLE [IDS].[WagonFiling] CHECK CONSTRAINT [FK_WagonFiling_WagonInternalOperation]
+GO
+
+
+ALTER TABLE [IDS].[WagonInternalMovement]  WITH CHECK ADD  CONSTRAINT [FK_WagonInternalMovement_WagonFiling] FOREIGN KEY([id_filing])
+REFERENCES [IDS].[WagonFiling] ([id])
+GO
+
+ALTER TABLE [IDS].[WagonInternalMovement] CHECK CONSTRAINT [FK_WagonInternalMovement_WagonFiling]
 GO
 
 

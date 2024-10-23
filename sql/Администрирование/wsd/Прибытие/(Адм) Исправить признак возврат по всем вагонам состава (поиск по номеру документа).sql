@@ -1,4 +1,6 @@
-declare @num_doc int = 1755;
+use [KRR-PA-CNT-Railway]
+
+declare @num_doc int = 1983 ;
 
 SELECT TOP (1000) [id]
       ,[id_document]
@@ -49,7 +51,7 @@ SELECT TOP (1000) [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
   where id in (select [id_arrival_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where [id_arrival]=(select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc))
 
---  UPDATE [IDS].[Arrival_UZ_Vagon]
---   SET [cargo_returns] = 1
--- WHERE id in (1051147,1051148)
---GO
+ -- UPDATE [IDS].[Arrival_UZ_Vagon]
+ --  SET [cargo_returns] = 1
+ --WHERE id in (1064020)
+GO
