@@ -744,10 +744,16 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 DateTime new_dt = ((DateTime)upper_date).AddHours(0);
 
+                //string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                //    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                //    "and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
+                //    "and (update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))) order by [dt] "; //desc
+
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
-                    "and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
-                    "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))    )) order by [dt] "; //desc
+    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+    "and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
+    "and (update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120)))"+
+    " order by [dt] "; //desc
                 List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 //List<UZ_Data> list_uzd_uncredited = list_uzd.Where(u => u.doc_Status == "Uncredited").ToList();
                 //List<UZ_Data> list_uzd_not_uncredited = list_uzd.Where(u => u.doc_Status != "Uncredited").ToList();
