@@ -17,6 +17,12 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		,wf.id as id_filing
 		,wf.start_filing
 		,wf.end_filing
+		,wf.[create] as create_filing
+		,wf.[create_user] as create_user_filing
+		,wf.[change] as change_filing
+		,wf.[change_user] as change_user_filing
+		,wf.[close] as close_filing
+		,wf.[close_user] as close_user_filing
 		,wim.filing_start as way_filing_start
 		,wim.filing_end as way_filing_end
 		--> Оператор
@@ -110,7 +116,11 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		,cur_load.[loading_status_ru] as current_loading_status_ru
 		,cur_load.[loading_status_en] as current_loading_status_en
 		--> Состояние занят
-	    ,current_wagon_busy = CASE WHEN (wio.operation_start is not null and wio.[operation_end] is null) or (wf.start_filing  is not null and wf.end_filing is null and wim.filing_end is null ) THEN 1  ELSE 0 END
+	    ,current_wagon_busy = CASE 
+		WHEN (wio.operation_start is not null and wio.[operation_end] is null) or (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null)) 
+		THEN 1  
+		ELSE 0 
+		END
 		--> Текущая операция
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
