@@ -398,7 +398,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(252367, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(324809, @"EUROPE\ealevchenko"); //231984
         }
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
@@ -413,7 +413,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 814519, 814518, 814517, 814516, 814515, 814514, 814513, 814512, 814511, 814510, 814509, 814508, 814506, 814505, 814503, 814502, 814501, 814500, 814499, 814498, 814497, 814496, 814471, 814467, 802047, 802046, 802045, 814240, 814008, 814260, 814259, 814257, 814251, 814250, 814248, 814247 };
+            List<int> list = new List<int>() { 957259, 957260, 957261, 957581, 957585, 957615, 957616, 957618, 957964, 957965, 957966, 957967, 957968, 958012, 958286, 958287, 958288, 958289, 958290, 958291, 958292, 958293, 958294, 958295, 958296, 958297, 958298, 958299, 958300, 958301, 958302, 958303, 958304, 958305, 958306, 958307 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>
@@ -422,7 +422,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 813718, 814006, 814205, 814007 };
+            List<int> list = new List<int>() { 343805 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>
