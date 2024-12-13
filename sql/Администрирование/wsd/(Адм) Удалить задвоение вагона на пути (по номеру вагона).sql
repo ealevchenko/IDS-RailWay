@@ -1,4 +1,4 @@
-declare @num int = 23514
+declare @num int = 452
 
 SELECT [id]
       ,[num]

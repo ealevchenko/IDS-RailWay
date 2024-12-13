@@ -4,8 +4,8 @@ declare @id_way int =164;
 
 select * from [IDS].[get_view_wagons_of_id_way](164)
 
-		--> Получим уставку норма простоя
-		declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+	--> Получим уставку норма простоя
+	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
 
 	select wir.id as wir_id
 		,wim.id as wim_id
@@ -13,10 +13,16 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		--=============== ОСНОВНОЕ ОКНО ==================
 		,wir.num
 		,wim.position
-		--> Подача
+		--> Подача 03.12.2024
 		,wf.id as id_filing
+		,wf.num_filing
+		,wf.type_filing
+		,wf.id_division as id_division_filing
+		,wf.vesg as vesg_filing
+		,wf.note as note_filing
 		,wf.start_filing
 		,wf.end_filing
+		,wf.doc_received as doc_received_filing
 		,wf.[create] as create_filing
 		,wf.[create_user] as create_user_filing
 		,wf.[change] as change_filing
@@ -36,6 +42,7 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		,dir_operator.[paid] as operator_paid
 		,dir_operator.[color] as operator_color
 		,dir_operator.monitoring_idle_time as operator_monitoring_idle_time
+		,dir_operator_group.[group] as operator_group
 		--> Ограничение
 		,dir_limload.[id] as id_limiting_loading
 		,dir_limload.[limiting_name_ru]
@@ -115,18 +122,81 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		,cur_load.[id] as current_id_loading_status
 		,cur_load.[loading_status_ru] as current_loading_status_ru
 		,cur_load.[loading_status_en] as current_loading_status_en
-		--> Состояние занят
+		--> Состояние занят 23.10.2024
 	    ,current_wagon_busy = CASE 
 		WHEN (wio.operation_start is not null and wio.[operation_end] is null) or (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null)) 
 		THEN 1  
 		ELSE 0 
-		END
+		END		
 		--> Текущая операция
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
 		,wio.[operation_start] as current_operation_start
 		,wio.[operation_end] as current_operation_end
+		--++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		--> Текушая информация по перемещению груза на АМКР
+		,wimc_curr.[internal_doc_num]
+		,wimc_curr.[id_weighing_num]
+		,wimc_curr.[doc_received] as move_cargo_doc_received
+		--> Текущий груз перемещения
+		,curr_dir_cargo.id_group as current_cargo_id_group
+		,curr_dir_group_cargo.cargo_group_name_ru as current_cargo_group_name_ru
+		,curr_dir_group_cargo.cargo_group_name_en as current_cargo_group_name_en
+		,wimc_curr.[id_cargo] as current_cargo_id_cargo
+		,curr_dir_cargo.cargo_name_ru as current_cargo_name_ru
+		,curr_dir_cargo.cargo_name_en as current_cargo_name_en
+		-->
+		,curr_dir_int_cargo.id_group as current_internal_cargo_id_group
+		,curr_dir_group_int_cargo.cargo_group_name_ru as current_internal_cargo_group_name_ru
+		,curr_dir_group_int_cargo.cargo_group_name_en as current_internal_cargo_group_name_en
+		,wimc_curr.[id_internal_cargo] as current_internal_cargo_id_internal_cargo
+		,curr_dir_int_cargo.cargo_name_ru as current_internal_cargo_name_ru
+		,curr_dir_int_cargo.cargo_name_en as current_internal_cargo_name_en
+		-->
+		,wimc_curr.[vesg] as current_vesg
+		--> Текущая станция отправления
+		,wimc_curr.[id_station_from_amkr]
+		,dir_station_from_amkr.[station_name_ru] as current_station_from_amkr_name_ru
+		,dir_station_from_amkr.[station_name_en] as current_station_from_amkr_name_en
+		,dir_station_from_amkr.[station_abbr_ru] as current_station_from_amkr_abbr_ru
+		,dir_station_from_amkr.[station_abbr_en] as current_station_from_amkr_abbr_en
+		--> Текущий цех погрузки
+		,wimc_curr.[id_division_from]
+		,dir_division_from.code as current_division_from_code
+		,dir_division_from.name_division_ru as current_division_from_name_ru
+		,dir_division_from.name_division_en as current_division_from_name_en
+		,dir_division_from.division_abbr_ru as current_division_from_abbr_ru
+		,dir_division_from.division_abbr_en as current_division_from_abbr_en
+		,wimc_curr.[id_wim_load]
+		--> Текущая переодресация
+		,wimc_curr.[id_wim_redirection]
+		--> Текущая внешняя станция
+		,wimc_curr.[code_external_station]
+		,curr_dir_ext_station.station_name_ru as current_external_station_on_name_ru
+		,curr_dir_ext_station.station_name_en as current_external_station_on_name_en
+		,wimc_curr.[id_station_on_amkr]
+		,dir_station_on_amkr.[station_name_ru] as current_station_on_amkr_name_ru
+		,dir_station_on_amkr.[station_name_en] as current_station_on_amkr_name_en
+		,dir_station_on_amkr.[station_abbr_ru] as current_station_on_amkr_abbr_ru
+		,dir_station_on_amkr.[station_abbr_en] as current_station_on_amkr_abbr_en
+		--> Текущий внещний цех
+		,wimc_curr.[id_division_on]
+		,dir_division_on.code as current_division_on_code
+		,dir_division_on.name_division_ru as current_division_on_name_ru
+		,dir_division_on.name_division_en as current_division_on_name_en
+		,dir_division_on.division_abbr_ru as current_division_on_abbr_ru
+		,dir_division_on.division_abbr_en as current_division_on_abbr_en
+		-->
+		,wimc_curr.[id_wim_unload]
+		--> 
+		,wimc_curr.[create] as move_cargo_create
+		,wimc_curr.[create_user] as move_cargo_create_user
+		,wimc_curr.[change] as move_cargo_change
+		,wimc_curr.[change_user] as move_cargo_change_user
+		,wimc_curr.[close] as move_cargo_close
+		,wimc_curr.[close_user] as move_cargo_close_user
+		------------------------------------------------
 		,[arrival_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, arr_sost.date_adoption, getdate()) ELSE null END)
 		,[arrival_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN @arrival_idle_time ELSE null END)		
 		,[arrival_usage_fee] = 0.00
@@ -234,12 +304,15 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
 		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
 		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
-		--into wagon_of_way
+		--into view_way
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
-		--> Текущая подача
+		 --> Текущая подача 23.10.2024
 		 Left JOIN IDS.WagonFiling as wf ON wf.id = wim.id_filing
+		 -- Добавил 10.12.2024
+		 --> Текущая строка перевозки грузов 	
+		 LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
 		 --> Текущая операция
 		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes order by id desc)
 		 --> Последнее отправление (обновил 26.03.2024)
@@ -332,4 +405,25 @@ select * from [IDS].[get_view_wagons_of_id_way](164)
 		Left JOIN [IDS].[OutgoingDetentionReturn] as curr_dr ON curr_dr.id = (SELECT top(1) [id] FROM [IDS].[OutgoingDetentionReturn] where [num]=wir.num and [date_stop] is null order by 1 desc)	
 		--> Справочник Возвратов
 		Left JOIN [IDS].[Directory_DetentionReturn] as dir_curr_return ON curr_dr.id_detention_return = dir_curr_return.id
+		-- Добавил 10.12.2024
+		--> Груз текущий
+		Left JOIN IDS.Directory_Cargo as curr_dir_cargo ON curr_dir_cargo.id =  wimc_curr.[id_cargo]
+		--> Группа текущего груза.
+		Left JOIN IDS.Directory_CargoGroup as curr_dir_group_cargo ON curr_dir_group_cargo.id = curr_dir_cargo.id_group
+		--> Груз(внутренний) текущий
+		Left JOIN IDS.[Directory_InternalCargo] as curr_dir_int_cargo ON curr_dir_int_cargo.id = wimc_curr.[id_internal_cargo]
+		--> Группа груза(внутреннего) текущий
+		Left JOIN IDS.[Directory_InternalCargoGroup] as curr_dir_group_int_cargo ON curr_dir_group_int_cargo.id = curr_dir_int_cargo.[id_group]
+		-- Справочник Станция отправки
+		Left JOIN [IDS].[Directory_Station] as dir_station_from_amkr ON dir_station_from_amkr.id = wimc_curr.[id_station_from_amkr]
+		--> Справочник Подразделения (цех отправитель)
+		Left JOIN IDS.Directory_Divisions as dir_division_from ON dir_division_from.id = wimc_curr.[id_division_from]
+		--> Справочник Станция отправления (Внешняя станция получения)
+		Left JOIN IDS.Directory_ExternalStation as curr_dir_ext_station ON curr_dir_ext_station.code = wimc_curr.[code_external_station]
+		-- Справочник Станция отправки
+		Left JOIN [IDS].[Directory_Station] as dir_station_on_amkr ON dir_station_on_amkr.id = wimc_curr.[id_station_on_amkr]
+		--> Справочник Подразделения (цех отправитель)
+		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
+
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
+
