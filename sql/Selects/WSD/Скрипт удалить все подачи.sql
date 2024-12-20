@@ -28,3 +28,7 @@ GO
 
 
 delete FROM [KRR-PA-CNT-Railway-Archive].[IDS].[WagonFiling]
+
+delete
+  FROM [KRR-PA-CNT-Railway-Archive].[IDS].[WagonInternalOperation]
+  where [id_operation] in (13,14, 15,16)

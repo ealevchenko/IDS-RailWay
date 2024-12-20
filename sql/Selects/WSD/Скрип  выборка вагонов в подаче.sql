@@ -4,7 +4,7 @@ declare @id_station int = 7
 declare @start datetime = convert(datetime,'2024-10-01',120);
 declare @stop datetime = convert(datetime,'2024-12-30',120);
 
-select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@id_station)
+--select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@id_station)
 
 	SELECT
 		--> Внутренее перемещение
