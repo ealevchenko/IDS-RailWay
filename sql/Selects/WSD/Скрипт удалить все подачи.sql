@@ -29,6 +29,14 @@ GO
 
 delete FROM [KRR-PA-CNT-Railway-Archive].[IDS].[WagonFiling]
 
+
+UPDATE [IDS].[WagonInternalOperation]
+   SET [parent_id] = null
+ where [parent_id] in (select id
+  FROM [KRR-PA-CNT-Railway-Archive].[IDS].[WagonInternalOperation]
+  where [id_operation] in (13,14, 15,16))
+GO
+
 delete
   FROM [KRR-PA-CNT-Railway-Archive].[IDS].[WagonInternalOperation]
   where [id_operation] in (13,14, 15,16)

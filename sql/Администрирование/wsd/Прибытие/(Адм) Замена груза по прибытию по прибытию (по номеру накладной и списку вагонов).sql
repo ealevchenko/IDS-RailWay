@@ -1,4 +1,4 @@
-declare @num_doc int = 3;
+declare @num_doc int = 2519 ;
 
 SELECT [id]
       ,[id_arrived]
@@ -92,7 +92,7 @@ SELECT [id]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
   where id in (select [id_arrival_uz_vagon] FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars] where [id_arrival] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc) and [position_arrival] is not null)
-  and num in (58585928)
+  and num in (56358740,63746879,63543086,64954639,63716708,64978943,63856215,64908205,56288533,56672041,63543151,63543037)
 
   SELECT TOP (1000) [id]
       ,[id_group]
@@ -108,6 +108,35 @@ SELECT [id]
       ,[id_out_group]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo]
 
+  -- !!!Выбраны документы
+  SELECT TOP (1000) [id]
+      ,[id_doc_uz]
+      ,[nom_doc]
+      ,[nom_main_doc]
+      ,[code_stn_from]
+      ,[code_stn_to]
+      ,[code_border_checkpoint]
+      ,[cross_time]
+      ,[code_shipper]
+      ,[code_consignee]
+      ,[klient]
+      ,[code_payer_sender]
+      ,[code_payer_arrival]
+      ,[distance_way]
+      ,[note]
+      ,[parent_id]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[manual]
+      ,[date_otpr]
+      ,[srok_end]
+      ,[date_grpol]
+      ,[date_pr]
+      ,[date_vid]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+  where id in (842301,842302,842303,842304,842305,842306,842307,842308,842309,842310,842311,842312)
 --  UPDATE [IDS].[Arrival_UZ_Vagon]
 --   SET [id_cargo] = 1
 --      ,[id_cargo_gng] = null
@@ -118,4 +147,14 @@ SELECT [id]
 --   SET [id_cargo] = 28
 --      ,[id_cargo_gng] = 6
 -- WHERE id in (873560,873561,873562,873563,873564,873565,873566,873567,873568,873569,873570,873571,873572,873573,873574,873575,873576,873577,873578,873579,873580,873581,873582,873583,873584,873585,873586,873587,873588,873589,873590,873591,873592,873593,873594)
+--GO
+
+--UPDATE [IDS].[Arrival_UZ_Document]
+--   SET[code_stn_from] = 394509
+--      ,[code_stn_to] = 467004
+--      ,[code_border_checkpoint] = 331800
+--      ,[code_shipper] = 7122
+--      ,[code_payer_sender] = '8141477'
+--      ,[distance_way] = 837
+-- where id in (842301,842302,842303,842304,842305,842306,842307,842308,842309,842310,842311,842312)
 --GO

@@ -4,7 +4,7 @@ declare @id_station int = 7
 declare @start datetime = convert(datetime,'2024-10-01',120);
 declare @stop datetime = convert(datetime,'2024-12-30',120);
 
---select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@id_station)
+select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@id_station)
 
 	SELECT
 		--> Внутренее перемещение
@@ -127,7 +127,7 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		,arr_dir_cond.condition_abbr_en as arrival_condition_abbr_en
 		,arr_dir_cond.red as arrival_condition_red
 		--> Разметка по текущей операции
-		,wio_filing.id_condition as current_condition_id_condition
+		,wio.id_condition as current_condition_id_condition
 		,cur_dir_cond.condition_name_ru as current_condition_name_ru
 		,cur_dir_cond.condition_name_en as current_condition_name_en
 		,cur_dir_cond.condition_abbr_ru as current_condition_abbr_ru
@@ -169,8 +169,8 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
-		,wio_filing.[operation_start] as current_operation_start
-		,wio_filing.[operation_end] as current_operation_end
+		,wio.[operation_start] as current_operation_start
+		,wio.[operation_end] as current_operation_end
 		--> Текушая информация по перемещению груза на АМКР
 		--move_cargo
 		,wimc_curr.[internal_doc_num]
@@ -240,11 +240,14 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		--> положение на момент подачи
 		INNER JOIN IDS.WagonInternalRoutes as wir ON wim_filing.id_wagon_internal_routes = wir.id
 		--> Текущее внетренее перемещение
-		INNER JOIN IDS.WagonInternalMovement as curr_wim ON curr_wim.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes]= wir.id order by id desc) 
+		--INNER JOIN IDS.WagonInternalMovement as curr_wim ON curr_wim.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes]= wir.id order by id desc) 
 		--> Операция подачи		
 		LEFT JOIN IDS.WagonInternalOperation as wio_filing  ON wio_filing.[id] = wim_filing.[id_wio]
+		--> Текущая операция
+		Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
+
 		--> Текущая строка перевозки грузов 	
-		LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
+		LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id and [close] is null order by id desc) 
 
 	   --==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
 		--> Прибытие на АМКР
@@ -274,7 +277,7 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		--> Техническое сотояние по прибытию
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition =  arr_dir_cond.id 
 		--> Справочник Разметка по текущей операции
-		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio_filing.id_condition =  cur_dir_cond.id
+		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
 		--> Груз по прибытию
 		Left JOIN IDS.Directory_Cargo as arr_dir_cargo ON arr_doc_vag.id_cargo =  arr_dir_cargo.id 	
 		--> Группа груза по прибытию
@@ -290,9 +293,13 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		--> Справочник Подразделения (цех получатель по прибытию)
 		Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 		--> Справочник Операции над вагоном (текущая операция)
-		Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio_filing.id_operation =  cur_dir_operation.id
+		Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio.id_operation =  cur_dir_operation.id
 		--> Справочник Сотояния загрузки
-		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio_filing.id_loading_status = cur_load.id
+		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
+		----> Справочник Операции над вагоном (в подаче)
+		--Left JOIN IDS.Directory_WagonOperations as filing_dir_operation ON wio_filing.id_operation =  cur_dir_operation.id
+		----> Справочник Сотояния загрузки (в подаче)
+		--Left JOIN [IDS].[Directory_WagonLoadingStatus] as filing_load ON wio_filing.id_loading_status = cur_load.id
 		-- Справочник Станция отправки
 		Left JOIN [IDS].[Directory_Station] as dir_station_filing ON wim_filing.[id_station] = dir_station_filing.id
 		--> Справочни Путь отправки
@@ -319,6 +326,9 @@ declare @stop datetime = convert(datetime,'2024-12-30',120);
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
 
 	where ((wf.[create] is not null and wf.[close] is null) or (wf.[create] >= @start and wf.[create]<=@stop))
-	and wim_filing.id_station = @id_station	ORDER BY wf.[create], wim_filing.position	
+	and wim_filing.id_station = @id_station	
+	--and wir.num = 63664924
+	ORDER BY wf.[create], wim_filing.position 
+	
 
 
