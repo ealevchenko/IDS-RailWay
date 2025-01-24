@@ -1,8 +1,8 @@
 use [KRR-PA-CNT-Railway-Archive]
 
-declare @id_way int =164;
+declare @id_way int =122;
 
-    select * from [IDS].[get_view_wagons_of_id_way](164)
+    select * from [IDS].[get_view_wagons_of_id_way](@id_way)
 
 	--> Получим уставку норма простоя
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
@@ -129,7 +129,7 @@ declare @id_way int =164;
 		ELSE 0 
 		END	
 	    ,current_move_busy = CASE 
-		WHEN (out_sost.status > 0 OR cur_dir_operation.id in (9) OR (wio.operation_start is not null and wio.[operation_end] is null)) 
+		WHEN (out_sost.status > 0 OR cur_dir_operation.id in (9) OR (wio.operation_start is not null and wio.[operation_end] is null) OR (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null))) 
 		THEN 1  
 		ELSE 0 
 		END		
