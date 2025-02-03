@@ -1,8 +1,6 @@
-use [KRR-PA-CNT-Railway-Archive]
+declare @id_way int = 122
 
-declare @id_way int =122;
-
-    select * from [IDS].[get_view_wagons_of_id_way](@id_way)
+select * from [IDS].[get_view_wagons_of_id_way](@id_way) where num = 62389481 
 
 	--> Получим уставку норма простоя
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
@@ -29,6 +27,23 @@ declare @id_way int =122;
 		,wf.[change_user] as change_user_filing
 		,wf.[close] as close_filing
 		,wf.[close_user] as close_user_filing
+		-- Подача  предыдущая 03-02-2025
+		,wf_pre.id as id_previous_filing 
+		,wf_pre.num_filing as num_previous_filing 
+		,wf_pre.type_filing as type_filing 
+		,wf_pre.id_division as id_previous_division_filing
+		,wf_pre.vesg as vesg_previous_filing
+		,wf_pre.note as note_previous_filing
+		,wf_pre.start_filing as start_previous_filing
+		,wf_pre.end_filing as end_previous_filing
+		,wf_pre.doc_received as doc_received_previous_filing
+		,wf_pre.[create] as create_previous_filing
+		,wf_pre.[create_user] as create_user_previous_filing
+		,wf_pre.[change] as change_previous_filing
+		,wf_pre.[change_user] as change_user_previous_filing
+		,wf_pre.[close] as close_previous_filing
+		,wf_pre.[close_user] as close_user_previous_filing
+		--
 		,wim.filing_start as way_filing_start
 		,wim.filing_end as way_filing_end
 		--> Оператор
@@ -134,12 +149,12 @@ declare @id_way int =122;
 		ELSE 0 
 		END		
 	    ,current_load_busy = CASE 
-		WHEN ((cur_load.id in (1,2,3,4,5,6)) OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)) 
+		WHEN ((cur_load.id in (1,2,4,5,6,7)) OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null AND cur_load.id not in (0,3))) 
 		THEN 1  
 		ELSE 0 
 		END			
 	    ,current_unload_busy = CASE 
-		WHEN ((cur_load.id in (0,3,4,5)) OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)) 
+		WHEN ((cur_load.id in (0, 3)) OR (cur_load.id in (1,2,4,5,6,7) AND wf_pre.id is not null AND wf_pre.[close] is null)) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
 		THEN 1  
 		ELSE 0 
 		END	
@@ -203,7 +218,7 @@ declare @id_way int =122;
 		,dir_division_on.division_abbr_ru as current_division_on_abbr_ru
 		,dir_division_on.division_abbr_en as current_division_on_abbr_en
 		-->
-		,wimc_curr.[id_wim_unload]
+		--,wimc_curr.[id_wim_unload]
 		--> 
 		,wimc_curr.[create] as move_cargo_create
 		,wimc_curr.[create_user] as move_cargo_create_user
@@ -319,12 +334,13 @@ declare @id_way int =122;
 		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
 		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
 		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
-		--into view_way
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
 		 --> Текущая подача 23.10.2024
 		 Left JOIN IDS.WagonFiling as wf ON wf.id = wim.id_filing
+		 --> Текущая подача 23.10.2024
+		 Left JOIN IDS.WagonFiling as wf_pre ON wf_pre.id = (SELECT top(1) [id_filing] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes] = wir.id and [id_filing] is not null order by [id_filing] desc)
 		 -- Добавил 10.12.2024
 		 --> Текущая строка перевозки грузов 	
 		 LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
@@ -441,4 +457,5 @@ declare @id_way int =122;
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
 
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
-
+	and wir.num = 62389481 
+	--order by wim.position

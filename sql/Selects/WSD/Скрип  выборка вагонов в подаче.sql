@@ -1,6 +1,6 @@
 --use [KRR-PA-CNT-Railway]
 use [KRR-PA-CNT-Railway-Archive]
-declare @id_station int = 6
+declare @id_station int = 7
 declare @start datetime = convert(datetime,'2025-01-01',120);
 declare @stop datetime = convert(datetime,'2025-01-30',120);
 
@@ -225,7 +225,7 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		,dir_division_on.division_abbr_ru as current_division_on_abbr_ru
 		,dir_division_on.division_abbr_en as current_division_on_abbr_en
 		-->
-		,wimc_curr.[id_wim_unload]
+		--,wimc_curr.[id_wim_unload]
 		--> 
 		,wimc_curr.[create] as move_cargo_create
 		,wimc_curr.[create_user] as move_cargo_create_user
