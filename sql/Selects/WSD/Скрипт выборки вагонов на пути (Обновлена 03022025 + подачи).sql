@@ -1,6 +1,6 @@
 declare @id_way int = 122
 
-select * from [IDS].[get_view_wagons_of_id_way](@id_way) where num = 62389481 
+select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481 
 
 	--> Получим уставку норма простоя
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
@@ -155,6 +155,11 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) where num = 62389481
 		END			
 	    ,current_unload_busy = CASE 
 		WHEN ((cur_load.id in (0, 3)) OR (cur_load.id in (1,2,4,5,6,7) AND wf_pre.id is not null AND wf_pre.[close] is null)) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
+		THEN 1  
+		ELSE 0 
+		END	
+		,exist_load_document = CASE 
+		WHEN (cur_load.id not in (0, 3) AND  wf_pre.id is not null AND wf_pre.type_filing = 2 AND (wimc_curr.[doc_received] is not null OR wf_pre.doc_received is not null))
 		THEN 1  
 		ELSE 0 
 		END	
@@ -457,5 +462,5 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) where num = 62389481
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
 
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
-	and wir.num = 62389481 
+	and wir.num = 56069024 
 	--order by wim.position
