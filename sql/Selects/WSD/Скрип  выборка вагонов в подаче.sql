@@ -1,8 +1,8 @@
 --use [KRR-PA-CNT-Railway]
 use [KRR-PA-CNT-Railway-Archive]
-declare @id_station int = 7
-declare @start datetime = convert(datetime,'2025-01-01',120);
-declare @stop datetime = convert(datetime,'2025-01-30',120);
+declare @id_station int = 6
+declare @start datetime = convert(datetime,'2025-02-01',120);
+declare @stop datetime = convert(datetime,'2025-02-28',120);
 
 select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@id_station)
 
@@ -10,7 +10,7 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		--> Внутренее перемещение
 		wim_filing.[id] as id_wim
 		,wim_filing.[id_wagon_internal_routes] as id_wir
-		,[is_moving] = [IDS].[is_wagon_moving_of_id_wim](wim_filing.[id])
+		,[is_moving] = [IDS].[is_wagon_moving_of_id_wim](wim_filing.[id])--,curr_wim.[id] as curr_id_wim
 		--> Подача 03.12.2024
 		,wf.id as id_filing
 		,wf.num_filing
@@ -126,6 +126,7 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		,arr_dir_cond.condition_abbr_ru as arrival_condition_abbr_ru
 		,arr_dir_cond.condition_abbr_en as arrival_condition_abbr_en
 		,arr_dir_cond.red as arrival_condition_red
+		--====================================================================
 		--> Разметка по текущей операции
 		,wio.id_condition as current_condition_id_condition
 		,cur_dir_cond.condition_name_ru as current_condition_name_ru
@@ -161,7 +162,7 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		,arr_dir_division_amkr.name_division_en as arrival_division_amkr_name_en
 		,arr_dir_division_amkr.division_abbr_ru as arrival_division_amkr_abbr_ru
 		,arr_dir_division_amkr.division_abbr_en as arrival_division_amkr_abbr_en
-		--> Состояние загрузки
+		--> Состояние загрузки текущее
 		,cur_load.[id] as current_id_loading_status
 		,cur_load.[loading_status_ru] as current_loading_status_ru
 		,cur_load.[loading_status_en] as current_loading_status_en
@@ -171,8 +172,11 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
 		,wio.[operation_start] as current_operation_start
 		,wio.[operation_end] as current_operation_end
+		,wio.[id_organization_service] as  current_id_organization_service
+		,curr_dir_org_service.[organization_service_ru] as current_organization_service_ru
+		,curr_dir_org_service.[organization_service_en] as current_organization_service_en
+		--> Добавил 06-12-2024
 		--> Текушая информация по перемещению груза на АМКР
-		--move_cargo
 		,wimc_curr.[internal_doc_num]
 		,wimc_curr.[id_weighing_num]
 		,wimc_curr.[doc_received] as move_cargo_doc_received
@@ -233,7 +237,87 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		,wimc_curr.[change_user] as move_cargo_change_user
 		,wimc_curr.[close] as move_cargo_close
 		,wimc_curr.[close_user] as move_cargo_close_user
-		--into view_filing
+		--====================================================================
+		--> Разметка по операции подаче
+		,wio_filing.id_condition as filing_condition_id_condition
+		,filing_dir_cond.condition_name_ru as filing_condition_name_ru
+		,filing_dir_cond.condition_name_en as filing_condition_name_en
+		,filing_dir_cond.condition_abbr_ru as filing_condition_abbr_ru
+		,filing_dir_cond.condition_abbr_en as filing_condition_abbr_en
+		,filing_dir_cond.red as filing_condition_red
+		 --> Состояние загрузки в подаче
+		,filing_load.[id] as filing_id_loading_status
+		,filing_load.[loading_status_ru] as filing_loading_status_ru
+		,filing_load.[loading_status_en] as filing_loading_status_en
+		--> Операция в подаче
+		,filing_dir_operation.[id] as filing_id_operation
+		,filing_dir_operation.[operation_name_ru] as filing_operation_name_ru
+		,filing_dir_operation.[operation_name_en] as filing_operation_name_en
+		,wio_filing.[operation_start] as filing_operation_start
+		,wio_filing.[operation_end] as filing_operation_end
+		,wio.[id_organization_service] as  filing_id_organization_service
+		,filing_dir_org_service.[organization_service_ru] as filing_organization_service_ru
+		,filing_dir_org_service.[organization_service_en] as filing_organization_service_en
+		--> Перемещение груза на АМКР в подаче
+		,wimc_filing.[internal_doc_num] as filing_internal_doc_num
+		,wimc_filing.[id_weighing_num] as filing_id_weighing_num
+		,wimc_filing.[doc_received] as filing_move_cargo_doc_received
+		--> Текущий груз перемещения
+		,filing_dir_cargo.id_group as filing_cargo_id_group
+		,filing_dir_group_cargo.cargo_group_name_ru as filing_cargo_group_name_ru
+		,filing_dir_group_cargo.cargo_group_name_en as filing_cargo_group_name_en
+		,wimc_curr.[id_cargo] as filing_cargo_id_cargo
+		,filing_dir_cargo.cargo_name_ru as filing_cargo_name_ru
+		,filing_dir_cargo.cargo_name_en as filing_cargo_name_en
+		-->
+		,filing_dir_int_cargo.id_group as filing_internal_cargo_id_group
+		,filing_dir_group_int_cargo.cargo_group_name_ru as filing_internal_cargo_group_name_ru
+		,filing_dir_group_int_cargo.cargo_group_name_en as filing_internal_cargo_group_name_en
+		,wimc_filing.[id_internal_cargo] as filing_internal_cargo_id_internal_cargo
+		,filing_dir_int_cargo.cargo_name_ru as filing_internal_cargo_name_ru
+		,filing_dir_int_cargo.cargo_name_en as filing_internal_cargo_name_en
+		-->
+		,wimc_filing.[vesg] as filing_vesg
+		--> Станция отправления подачи
+		,wimc_filing.[id_station_from_amkr] as filing_id_station_from_amkr
+		,filing_dir_station_from_amkr.[station_name_ru] as filing_station_from_amkr_name_ru
+		,filing_dir_station_from_amkr.[station_name_en] as filing_station_from_amkr_name_en
+		,filing_dir_station_from_amkr.[station_abbr_ru] as filing_station_from_amkr_abbr_ru
+		,filing_dir_station_from_amkr.[station_abbr_en] as filing_station_from_amkr_abbr_en
+		--> Цех погрузки подачи
+		,wimc_filing.[id_division_from] as filing_id_division_from
+		,filing_dir_division_from.code as filing_division_from_code
+		,filing_dir_division_from.name_division_ru as filing_division_from_name_ru
+		,filing_dir_division_from.name_division_en as filing_division_from_name_en
+		,filing_dir_division_from.division_abbr_ru as filing_division_from_abbr_ru
+		,filing_dir_division_from.division_abbr_en as filing_division_from_abbr_en
+		,wimc_filing.[id_wim_load] as filing_id_wim_load
+		--> Переодресация подачи
+		,wimc_filing.[id_wim_redirection] as filing_id_wim_redirection
+		--> Текущая внешняя станция
+		,wimc_filing.[code_external_station] as filing_code_external_station
+		,filing_dir_ext_station.station_name_ru as filing_external_station_on_name_ru
+		,filing_dir_ext_station.station_name_en as filing_external_station_on_name_en
+		,wimc_filing.[id_station_on_amkr] as filing_id_station_on_amkr
+		,filing_dir_station_on_amkr.[station_name_ru] as filing_station_on_amkr_name_ru
+		,filing_dir_station_on_amkr.[station_name_en] as filing_station_on_amkr_name_en
+		,filing_dir_station_on_amkr.[station_abbr_ru] as filing_station_on_amkr_abbr_ru
+		,filing_dir_station_on_amkr.[station_abbr_en] as filing_station_on_amkr_abbr_en
+		--> Текущий внещний цех
+		,wimc_filing.[id_division_on] as filing_id_division_on
+		,filing_dir_division_on.code as filing_division_on_code
+		,filing_dir_division_on.name_division_ru as filing_division_on_name_ru
+		,filing_dir_division_on.name_division_en as filing_division_on_name_en
+		,filing_dir_division_on.division_abbr_ru as filing_division_on_abbr_ru
+		,filing_dir_division_on.division_abbr_en as filing_division_on_abbr_en
+		--> 
+		,wimc_filing.[create] as filing_move_cargo_create
+		,wimc_filing.[create_user] as filing_move_cargo_create_user
+		,wimc_filing.[change] as filing_move_cargo_change
+		,wimc_filing.[change_user] as filing_move_cargo_change_user
+		,wimc_filing.[close] as filing_move_cargo_close
+		,wimc_filing.[close_user] as filing_move_cargo_close_user
+		--into wagons_filing
 	FROM IDS.WagonFiling as wf 
 		--> Список подач
 		INNER JOIN IDS.WagonInternalMovement as wim_filing ON wim_filing.id_filing = wf.id 
@@ -245,10 +329,10 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		LEFT JOIN IDS.WagonInternalOperation as wio_filing  ON wio_filing.[id] = wim_filing.[id_wio]
 		--> Текущая операция
 		Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
-
 		--> Текущая строка перевозки грузов 	
-		LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id and [close] is null order by id desc) 
-
+		LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
+		--> Строка перевозки грузов пренадлежащая подаче 	
+		LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_filing  ON wimc_filing.[id_wim_load] = wim_filing.id
 	   --==== ПРИБЫТИЕ И ПРИЕМ ВАГОНА =====================================================================
 		--> Прибытие на АМКР
 		Left JOIN IDS.ArrivalCars as arr_car ON wir.id_arrival_car = arr_car.id
@@ -278,6 +362,8 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		Left JOIN IDS.Directory_ConditionArrival as arr_dir_cond ON arr_doc_vag.id_condition =  arr_dir_cond.id 
 		--> Справочник Разметка по текущей операции
 		Left JOIN IDS.Directory_ConditionArrival as cur_dir_cond ON wio.id_condition =  cur_dir_cond.id
+		--> Справочник Разметка в подаче
+		Left JOIN IDS.Directory_ConditionArrival as filing_dir_cond ON wio_filing.id_condition =  filing_dir_cond.id
 		--> Груз по прибытию
 		Left JOIN IDS.Directory_Cargo as arr_dir_cargo ON arr_doc_vag.id_cargo =  arr_dir_cargo.id 	
 		--> Группа груза по прибытию
@@ -294,8 +380,12 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		Left JOIN IDS.Directory_Divisions as arr_dir_division_amkr ON arr_doc_vag.id_division_on_amkr =  arr_dir_division_amkr.id
 		--> Справочник Операции над вагоном (текущая операция)
 		Left JOIN IDS.Directory_WagonOperations as cur_dir_operation ON wio.id_operation =  cur_dir_operation.id
-		--> Справочник Сотояния загрузки
+		--> Справочник Операции над вагоном (операция подачи)
+		Left JOIN IDS.Directory_WagonOperations as filing_dir_operation ON wio_filing.id_operation =  filing_dir_operation.id
+		--> Справочник Сотояния загрузки текущий
 		Left JOIN [IDS].[Directory_WagonLoadingStatus] as cur_load ON wio.id_loading_status = cur_load.id
+		--> Справочник Сотояния загрузки по подаче
+		Left JOIN [IDS].[Directory_WagonLoadingStatus] as filing_load ON wio_filing.id_loading_status = filing_load.id
 		----> Справочник Операции над вагоном (в подаче)
 		--Left JOIN IDS.Directory_WagonOperations as filing_dir_operation ON wio_filing.id_operation =  cur_dir_operation.id
 		----> Справочник Сотояния загрузки (в подаче)
@@ -308,27 +398,51 @@ select * from [IDS].[get_view_wagons_filing_of_period_id_station](@start,@stop,@
 		Left JOIN [IDS].[Directory_ParkWays] as dir_park_filing ON dir_way_filing.id_park = dir_park_filing.id
 		--> Груз текущий
 		Left JOIN IDS.Directory_Cargo as curr_dir_cargo ON curr_dir_cargo.id =  wimc_curr.[id_cargo]
+		--> Груз в подаче
+		Left JOIN IDS.Directory_Cargo as filing_dir_cargo ON filing_dir_cargo.id =  wimc_filing.[id_cargo]
 		--> Группа текущего груза.
 		Left JOIN IDS.Directory_CargoGroup as curr_dir_group_cargo ON curr_dir_group_cargo.id = curr_dir_cargo.id_group
+		--> Группа груза в подаче.
+		Left JOIN IDS.Directory_CargoGroup as filing_dir_group_cargo ON filing_dir_group_cargo.id = filing_dir_cargo.id_group
 		--> Груз(внутренний) текущий
 		Left JOIN IDS.[Directory_InternalCargo] as curr_dir_int_cargo ON curr_dir_int_cargo.id = wimc_curr.[id_internal_cargo]
+		--> Груз(внутренний) подачи
+		Left JOIN IDS.[Directory_InternalCargo] as filing_dir_int_cargo ON filing_dir_int_cargo.id = wimc_filing.[id_internal_cargo]
 		--> Группа груза(внутреннего) текущий
 		Left JOIN IDS.[Directory_InternalCargoGroup] as curr_dir_group_int_cargo ON curr_dir_group_int_cargo.id = curr_dir_int_cargo.[id_group]
+		--> Группа груза(внутреннего) подачи
+		Left JOIN IDS.[Directory_InternalCargoGroup] as filing_dir_group_int_cargo ON filing_dir_group_int_cargo.id = filing_dir_int_cargo.[id_group]
 		-- Справочник Станция отправки
 		Left JOIN [IDS].[Directory_Station] as dir_station_from_amkr ON dir_station_from_amkr.id = wimc_curr.[id_station_from_amkr]
+		-- Справочник Станция отправки подачи
+		Left JOIN [IDS].[Directory_Station] as filing_dir_station_from_amkr ON filing_dir_station_from_amkr.id = wimc_filing.[id_station_from_amkr]
 		--> Справочник Подразделения (цех отправитель)
 		Left JOIN IDS.Directory_Divisions as dir_division_from ON dir_division_from.id = wimc_curr.[id_division_from]
+		--> Справочник Подразделения (цех отправитель) подачи
+		Left JOIN IDS.Directory_Divisions as filing_dir_division_from ON filing_dir_division_from.id = wimc_filing.[id_division_from]
 		--> Справочник Станция отправления (Внешняя станция получения)
 		Left JOIN IDS.Directory_ExternalStation as curr_dir_ext_station ON curr_dir_ext_station.code = wimc_curr.[code_external_station]
+		--> Справочник Станция отправления (Внешняя станция получения) подачи
+		Left JOIN IDS.Directory_ExternalStation as filing_dir_ext_station ON filing_dir_ext_station.code = wimc_filing.[code_external_station]
 		-- Справочник Станция отправки
 		Left JOIN [IDS].[Directory_Station] as dir_station_on_amkr ON dir_station_on_amkr.id = wimc_curr.[id_station_on_amkr]
+		-- Справочник Станция отправки подачи
+		Left JOIN [IDS].[Directory_Station] as filing_dir_station_on_amkr ON filing_dir_station_on_amkr.id = wimc_filing.[id_station_on_amkr]
 		--> Справочник Подразделения (цех отправитель)
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
+		--> Справочник Подразделения (цех отправитель) подачи
+		Left JOIN IDS.Directory_Divisions as filing_dir_division_on ON filing_dir_division_on.id = wimc_filing.[id_division_on]
+		--> Справочник Организация
+		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
+		--> Справочник Организация
+		Left JOIN [IDS].[Directory_OrganizationService] as filing_dir_org_service ON filing_dir_org_service.id = wio_filing.[id_organization_service]
 
 	where ((wf.[create] is not null and wf.[close] is null) or (wf.[create] >= @start and wf.[create]<=@stop))
 	and wim_filing.id_station = @id_station	
 	--and wir.num = 63664924
-	ORDER BY wf.[create], wim_filing.position 
+	ORDER BY wf.[create], wim_filing.position
+
+
 	
 
 
