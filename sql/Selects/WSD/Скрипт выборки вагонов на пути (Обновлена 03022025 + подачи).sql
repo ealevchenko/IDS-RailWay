@@ -30,7 +30,7 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		-- Подача  предыдущая 03-02-2025
 		,wf_pre.id as id_previous_filing 
 		,wf_pre.num_filing as num_previous_filing 
-		,wf_pre.type_filing as type_filing 
+		,wf_pre.type_filing as type_previous_filing 
 		,wf_pre.id_division as id_previous_division_filing
 		,wf_pre.vesg as vesg_previous_filing
 		,wf_pre.note as note_previous_filing
@@ -169,6 +169,9 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		,cur_dir_operation.[operation_name_en] as current_operation_name_en
 		,wio.[operation_start] as current_operation_start
 		,wio.[operation_end] as current_operation_end
+		,wio.[id_organization_service] as  current_id_organization_service
+		,curr_dir_org_service.[organization_service_ru] as current_organization_service_ru
+		,curr_dir_org_service.[organization_service_en] as current_organization_service_en
 		--++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		--> Текушая информация по перемещению груза на АМКР
 		,wimc_curr.[internal_doc_num]
@@ -339,6 +342,7 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
 		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
 		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
+		--into wagons_way
 	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
 		--> Текущее внетренее перемещение
 		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
@@ -460,7 +464,9 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		Left JOIN [IDS].[Directory_Station] as dir_station_on_amkr ON dir_station_on_amkr.id = wimc_curr.[id_station_on_amkr]
 		--> Справочник Подразделения (цех отправитель)
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
+		--> Справочник Организация
+		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
 
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
-	and wir.num = 56069024 
+	--and wir.num = 56069024 
 	--order by wim.position
