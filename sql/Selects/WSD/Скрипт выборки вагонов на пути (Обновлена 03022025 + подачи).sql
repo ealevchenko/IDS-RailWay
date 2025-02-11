@@ -1,3 +1,4 @@
+use [KRR-PA-CNT-Railway-Archive]
 declare @id_way int = 122
 
 select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481 
@@ -162,7 +163,13 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		WHEN (cur_load.id not in (0, 3) AND  wf_pre.id is not null AND wf_pre.type_filing = 2 AND (wimc_curr.[doc_received] is not null OR wf_pre.doc_received is not null))
 		THEN 1  
 		ELSE 0 
-		END	
+		END
+		,current_processing_busy = CASE 
+		--WHEN ((wio.operation_start is not null and wio.[operation_end] is null and wf.type_filing <> 3) OR (wf.[create] is not null and wf.[close] is null and wf.type_filing <> 3))
+		WHEN ((wio.operation_start is not null and wio.[operation_end] is null) OR (wf.[create] is not null and wf.[close] is null))
+		THEN 1  
+		ELSE 0 
+		END		
 		--> Текущая операция
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
