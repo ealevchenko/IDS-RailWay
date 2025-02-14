@@ -166,10 +166,9 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		END
 		,current_processing_busy = CASE 
 		--WHEN ((wio.operation_start is not null and wio.[operation_end] is null and wf.type_filing <> 3) OR (wf.[create] is not null and wf.[close] is null and wf.type_filing <> 3))
-		WHEN ((wio.operation_start is not null and wio.[operation_end] is null) OR (wf.[create] is not null and wf.[close] is null))
-		THEN 1  
+		WHEN ((wio.operation_start is not null and wio.[operation_end] is null AND wio.id_operation <> 9) OR (wf.[create] is not null and wf.[close] is null))		THEN 1  
 		ELSE 0 
-		END		
+		END	
 		--> Текущая операция
 		,cur_dir_operation.[id] as current_id_operation
 		,cur_dir_operation.[operation_name_ru] as current_operation_name_ru
@@ -361,7 +360,7 @@ select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481
 		 --> Текущая строка перевозки грузов 	
 		 LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
 		 --> Текущая операция
-		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes order by id desc)
+		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes and wio.operation_end is null order by id desc)
 		 --> Последнее отправление (обновил 26.03.2024)
 		--Left JOIN IDS.WagonInternalRoutes as wir_old ON wir_old.id = wir.parent_id
 		-- Правил 30-05-2024 (появились сылки на разные номера вагонов)
