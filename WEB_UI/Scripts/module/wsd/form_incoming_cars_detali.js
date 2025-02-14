@@ -29,7 +29,7 @@
     var gruzp_min_value = 0.0;                      // Минимальное значение
     var gruzp_max_value = 112.0;                    // Минимальное значение
     var ves_tary_arc_min_value = 0.0;               // Минимальное значение
-    var ves_tary_arc_max_value = 51.0;             // Минимальное значение
+    var ves_tary_arc_max_value = 51.0;             // Минимальное значение;   
     var u_tara_min_value = 0.0;                     // Минимальное значение
     var u_tara_max_value = 51.0;                   // Минимальное значение
     var select_uz_info = true;                     // Делать запрос в УЗ
@@ -2497,7 +2497,7 @@
                     label: langView('ficcd_label_ves_tary_arc', App.Langs),
                     label_class: 'mb-1',
                     input_size: null,
-                    input_class: 'inp-manual-epd',
+                    input_class: 'inp-manual-epd',//inp-manual-epd
                     input_title: langView('ficcd_title_ves_tary_arc', App.Langs),
                     input_placeholder: null,
                     input_required: null,
@@ -6608,7 +6608,14 @@
         valid = valid & this.form.validation_common.check_control_select_not_null(this.elements.select_condition_arrival, langView('ficcd_mess_valid_not_condition_arrival', App.Langs), '', true);
         // проверка данных с ЭПД
         valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_gruzp, gruzp_min_value, gruzp_max_value, langView('ficcd_mess_valid_range_gruzp', App.Langs).format(gruzp_min_value, gruzp_max_value), '', true);
-        valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
+
+        var val_ves_tary_arc = this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
+        if (!val_ves_tary_arc) {
+            this.elements.input_number_ves_tary_arc.enable();
+        } else {
+
+        }
+        valid = valid & val_ves_tary_arc
         valid = valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
         // Оплата
         if (this.mode_epd !== 7) {
@@ -6616,7 +6623,11 @@
             valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
         }
         // Грузы
-        valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
+        var val_name_etsng = this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
+        if (!val_name_etsng) {
+            this.elements.autocomplete_name_etsng.enable();
+        }
+        valid = valid & val_name_etsng;
         valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_group_cargo, langView('ficcd_mess_valid_not_group_cargo', App.Langs), '', true);
         if (this.ids_cargo_etsng && this.ids_cargo_etsng.id_group !== null) {
             var res = list_groups_cargo.indexOf(this.ids_cargo_etsng.id_group);
