@@ -14,6 +14,7 @@
             'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mi_init_main': 'Инициализация формы прибытие...',
             'mi_title_label_dropdown': 'Отчетная документация',
+            'mi_title_report_draft_fst': 'Натурная ведомость поезда (черновик)',
             'mi_title_report_fst': 'Натурная ведомость поезда (А4)',
             'mi_title_report_fst_landscape': 'Натурная ведомость поезда (А4-альбомный)',
             'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра (А4)',
@@ -37,6 +38,7 @@
             'mi_title_label_station': 'DEPARTURE STATION:',
             'mi_init_main': 'Initializing form arrival...',
             'mi_title_label_dropdown': 'Reporting documentation',
+            'mi_title_report_draft_fst': 'Натурная ведомость поезда(черновик)',
             'mi_title_report_fst': 'Train sheet',
             'mi_title_report_fsci': 'Commercial inspection sheet',
             'mi_title_report_aica_kr': 'Application for the issuance of a commercial act art. KR.',
@@ -216,6 +218,15 @@
                 label: langView('mi_title_label_dropdown', App.Langs),
                 title: 'отчеты',
                 list_menu: [
+                    {
+                        href: '#',
+                        id: 'report_fst', label: langView('mi_title_report_draft_fst', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status < 2) {
+                                //window.open("http://localhost:53848/idsrw_ui/areas/print/print.html?report=report_fst&id=" + table_incoming_sostav.id_sostav, "Print");
+                            };
+                        }.bind(this)
+                    },
                     {
                         href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
