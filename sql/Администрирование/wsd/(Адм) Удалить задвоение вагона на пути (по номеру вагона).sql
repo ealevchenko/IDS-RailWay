@@ -1,4 +1,4 @@
-declare @num int = 452
+declare @num int = 11274
 
 SELECT [id]
       ,[num]
@@ -38,4 +38,5 @@ SELECT [id]
       ,[num_sostav]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
   where [id_wagon_internal_routes] = (select top(1) [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num= @num)
-  and (([outer_way_start] is not null and [outer_way_end] is null) or ([way_start] is not null and [way_end] is null))
+  and (([outer_way_start] is not null and [outer_way_end] is null) or ([way_start] is not null and [way_end] is null) or [close] is null) 
+  order by 1 desc
