@@ -1465,7 +1465,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public DateTime? close_wim { get; set; }
         public string close_user_wim { get; set; }
         public long? parent_id_wim { get; set; }
-        public int id_operation_wagon { get; set; }
+        public int? id_operation_wagon { get; set; }
         public string operation_wagon_name_ru { get; set; }
         public string operation_wagon_name_en { get; set; }
         public DateTime? operation_wagon_start { get; set; }
