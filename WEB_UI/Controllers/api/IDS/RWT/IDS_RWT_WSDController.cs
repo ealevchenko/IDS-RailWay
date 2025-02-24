@@ -3,6 +3,8 @@ using IDS;
 using IDSLogs.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -579,9 +581,43 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long wir_id { get; set; }
         public long wim_id { get; set; }
         public long? wio_id { get; set; }
-        public DateTime sample_datetime { get; set; }
+        //public DateTime sample_datetime { get; set; }
         public int num { get; set; }
         public int position { get; set; }
+        //-------------------------------------
+        public long? id_filing { get; set; }
+        public string num_filing { get; set; }
+        public int? type_filing { get; set; }
+        public int? id_division_filing { get; set; }
+        public int? vesg_filing { get; set; }
+        public string note_filing { get; set; }
+        public DateTime? start_filing { get; set; }
+        public DateTime? end_filing { get; set; }
+        public DateTime? doc_received_filing { get; set; }
+        public DateTime? create_filing { get; set; }
+        public string create_user_filing { get; set; }
+        public DateTime? change_filing { get; set; }
+        public string change_user_filing { get; set; }
+        public DateTime? close_filing { get; set; }
+        public string close_user_filing { get; set; }
+        public long? id_previous_filing { get; set; }
+        public string num_previous_filing { get; set; }
+        public int? type_previous_filing { get; set; }
+        public int? id_division_previous_filing { get; set; }
+        public int? vesg_previous_filing { get; set; }
+        public string note_previous_filing { get; set; }
+        public DateTime? start_previous_filing { get; set; }
+        public DateTime? end_previous_filing { get; set; }
+        public DateTime? doc_received_previous_filing { get; set; }
+        public DateTime? create_previous_filing { get; set; }
+        public string create_user_previous_filing { get; set; }
+        public DateTime? change_previous_filing { get; set; }
+        public string change_user_previous_filing { get; set; }
+        public DateTime? close_previous_filing { get; set; }
+        public string close_user_previous_filing { get; set; }
+        public DateTime? way_filing_start { get; set; }
+        public DateTime? way_filing_end { get; set; }
+        //----------------------------------------------
         public int? id_operator { get; set; }
         public string operators_ru { get; set; }
         public string operators_en { get; set; }
@@ -663,39 +699,104 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public int? current_id_loading_status { get; set; }
         public string current_loading_status_ru { get; set; }
         public string current_loading_status_en { get; set; }
-        public int? current_wagon_busy { get; set; }
+        //------------------------------------
+        //public int? current_wagon_busy { get; set; }
+        public bool? current_wagon_busy { get; set; }
+        public bool? current_move_busy { get; set; }
+        public bool? current_load_busy { get; set; }
+        public bool? current_unload_busy { get; set; }
+        public bool? exist_load_document { get; set; }
+        public bool? current_processing_busy { get; set; }
+        //---------------------------------------------------------
         public int? current_id_operation { get; set; }
         public string current_operation_name_ru { get; set; }
         public string current_operation_name_en { get; set; }
         public DateTime? current_operation_start { get; set; }
         public DateTime? current_operation_end { get; set; }
+        //------------------------------------------------------------
+        public int? current_id_organization_service { get; set; }
+        public string current_organization_service_ru { get; set; }
+        public string current_organization_service_en { get; set; }
+        public string internal_doc_num { get; set; }
+        public int? id_weighing_num { get; set; }
+        public DateTime? move_cargo_doc_received { get; set; }
+        public int? current_cargo_id_group { get; set; }
+        public string current_cargo_group_name_ru { get; set; }
+        public string current_cargo_group_name_en { get; set; }
+        public int? current_cargo_id_cargo { get; set; }
+        public string current_cargo_name_ru { get; set; }
+        public string current_cargo_name_en { get; set; }
+        public int? current_internal_cargo_id_group { get; set; }
+        public string current_internal_cargo_group_name_ru { get; set; }
+        public string current_internal_cargo_group_name_en { get; set; }
+        public int? current_internal_cargo_id_internal_cargo { get; set; }
+        public string current_internal_cargo_name_ru { get; set; }
+        public string current_internal_cargo_name_en { get; set; }
+        public int? current_vesg { get; set; }
+        public int? id_station_from_amkr { get; set; }
+        public string current_station_from_amkr_name_ru { get; set; }
+        public string current_station_from_amkr_name_en { get; set; }
+        public string current_station_from_amkr_abbr_ru { get; set; }
+        public string current_station_from_amkr_abbr_en { get; set; }
+        public int? id_division_from { get; set; }
+        public string current_division_from_code { get; set; }
+        public string current_division_from_name_ru { get; set; }
+        public string current_division_from_name_en { get; set; }
+        public string current_division_from_abbr_ru { get; set; }
+        public string current_division_from_abbr_en { get; set; }
+        public long? id_wim_load { get; set; }
+        public long? id_wim_redirection { get; set; }
+        public int? code_external_station { get; set; }
+        public string current_external_station_on_name_ru { get; set; }
+        public string current_external_station_on_name_en { get; set; }
+        public int? id_station_on_amkr { get; set; }
+        public string current_station_on_amkr_name_ru { get; set; }
+        public string current_station_on_amkr_name_en { get; set; }
+        public string current_station_on_amkr_abbr_ru { get; set; }
+        public string current_station_on_amkr_abbr_en { get; set; }
+        public int? id_division_on { get; set; }
+        public string current_division_on_code { get; set; }
+        public string current_division_on_name_ru { get; set; }
+        public string current_division_on_name_en { get; set; }
+        public string current_division_on_abbr_ru { get; set; }
+        public string current_division_on_abbr_en { get; set; }
+
+        //[Column("id_wim_unload")]
+        //public long? IdWimUnload { get; set; }
+        public DateTime? move_cargo_create { get; set; }
+        public string move_cargo_create_user { get; set; }
+        public DateTime? move_cargo_change { get; set; }
+        public string move_cargo_change_user { get; set; }
+        public DateTime? move_cargo_close { get; set; }
+        public string move_cargo_close_user { get; set; }
+        //------------------------------------------------------------
         public int? arrival_duration { get; set; }
         public int? arrival_idle_time { get; set; }
         public decimal? arrival_usage_fee { get; set; }
-        public int current_id_station_amkr { get; set; }
-        public string current_station_amkr_name_ru { get; set; }
-        public string current_station_amkr_name_en { get; set; }
-        public string current_station_amkr_abbr_ru { get; set; }
-        public string current_station_amkr_abbr_en { get; set; }
+        //public int current_id_station_amkr { get; set; }
+        //public string current_station_amkr_name_ru { get; set; }
+        //public string current_station_amkr_name_en { get; set; }
+        //public string current_station_amkr_abbr_ru { get; set; }
+        //public string current_station_amkr_abbr_en { get; set; }
         public int? current_station_duration { get; set; }
         public int? current_way_duration { get; set; }
         public int? current_station_idle_time { get; set; }
-        public int current_id_way { get; set; }
-        public int? current_id_park { get; set; }
-        public string current_way_num_ru { get; set; }
-        public string current_way_num_en { get; set; }
-        public string current_way_name_ru { get; set; }
-        public string current_way_name_en { get; set; }
-        public string current_way_abbr_ru { get; set; }
-        public string current_way_abbr_en { get; set; }
-        public DateTime current_way_start { get; set; }
-        public DateTime? current_way_end { get; set; }
-        public string current_wim_note { get; set; }
-        public int? current_id_outer_way { get; set; }
-        public string current_outer_way_name_ru { get; set; }
-        public string current_outer_way_name_en { get; set; }
-        public DateTime? current_outer_way_start { get; set; }
-        public DateTime? current_outer_way_end { get; set; }
+        //public int current_id_way { get; set; }
+        //public int? current_id_park { get; set; }
+        //public string current_way_num_ru { get; set; }
+        //public string current_way_num_en { get; set; }
+        //public string current_way_name_ru { get; set; }
+        //public string current_way_name_en { get; set; }
+        //public string current_way_abbr_ru { get; set; }
+        //public string current_way_abbr_en { get; set; }
+        //public DateTime current_way_start { get; set; }
+        //public DateTime? current_way_end { get; set; }
+        //public string current_wim_note { get; set; }
+        //public int? current_id_outer_way { get; set; }
+        //public string current_outer_way_name_ru { get; set; }
+        //public string current_outer_way_name_en { get; set; }
+        //public DateTime? current_outer_way_start { get; set; }
+        //public DateTime? current_outer_way_end { get; set; }
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }
         public DateTime? sap_incoming_supply_date { get; set; }
