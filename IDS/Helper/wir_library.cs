@@ -244,8 +244,18 @@ namespace IDS.Helper
             {
                 WagonInternalOperation wio = wir.GetLastOperation();
                 if (wio == null) return null;
+                WagonInternalMovement wim = wir.GetLastMovement();
+                if (wim == null) return null;
+                WagonFiling wf = context.WagonFiling.Where(f => f.id == wim.id_filing).FirstOrDefault();
 
-                return wio.id_operation == 9 ? true : false;
+                if (wio.id_operation == 9 || (wio.operation_start != null && wio.operation_end == null) || (wf != null && wf.create != null && wf.close == null && (wim.filing_start == null || wim.filing_end == null)))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
