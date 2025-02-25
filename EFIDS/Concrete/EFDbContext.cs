@@ -60,6 +60,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<InstructionalLettersWagon> InstructionalLettersWagon { get; set; }
 
         // Внутренее перемещение
+        public virtual DbSet<WagonFiling> WagonFiling { get; set; }
+        public virtual DbSet<WagonInternalMoveCargo> WagonInternalMoveCargo { get; set; }
         public virtual DbSet<WagonInternalMovement> WagonInternalMovement { get; set; }
         public virtual DbSet<WagonInternalOperation> WagonInternalOperation { get; set; }
         public virtual DbSet<WagonInternalRoutes> WagonInternalRoutes { get; set; }
@@ -188,6 +190,26 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Внутренее перемещение
+
+            modelBuilder.Entity<WagonFiling>()
+                .HasMany(e => e.WagonInternalMovement)
+                .WithOptional(e => e.WagonFiling)
+                .HasForeignKey(e => e.id_filing);
+
+            modelBuilder.Entity<WagonInternalMoveCargo>()
+                .HasMany(e => e.WagonInternalMoveCargo1)
+                .WithOptional(e => e.WagonInternalMoveCargo2)
+                .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<WagonInternalMovement>()
+                .HasMany(e => e.WagonInternalMoveCargo)
+                .WithOptional(e => e.WagonInternalMovement)
+                .HasForeignKey(e => e.id_wim_load);
+
+            modelBuilder.Entity<WagonInternalMovement>()
+                .HasMany(e => e.WagonInternalMoveCargo1)
+                .WithOptional(e => e.WagonInternalMovement1)
+                .HasForeignKey(e => e.id_wim_redirection);
 
             modelBuilder.Entity<WagonInternalMovement>()
                 .HasMany(e => e.WagonInternalMovement1)

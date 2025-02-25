@@ -113,6 +113,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFWagonFiling.cs" />
     <Compile Include="Concrete\RWT\EFOut_Supply.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document_Pay.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document.cs" />
@@ -247,6 +248,8 @@
     <Compile Include="Entities\RWT\WagonUsageFee.cs" />
     <Compile Include="Entities\Directory\Directory_BankRate.cs" />
     <Compile Include="Entities\RWT\Usage_Fee_Period_Detali.cs" />
+    <Compile Include="Entities\RWT\WagonFiling.cs" />
+    <Compile Include="Entities\RWT\WagonInternalMoveCargo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
