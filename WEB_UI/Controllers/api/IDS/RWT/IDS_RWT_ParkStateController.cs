@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using EFIDS.Helper;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace WEB_UI.Controllers.api.IDS.RWT
 {
@@ -102,8 +104,85 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long? parent_id_wim { get; set; }
     }
 
+    //public class view_park_state_dislocation_wagon
+    //{
+    //    public int id { get; set; }
+    //    public int pss_id_station { get; set; }
+    //    public string pss_station_name_ru { get; set; }
+    //    public string pss_station_name_en { get; set; }
+    //    public string pss_station_abbr_ru { get; set; }
+    //    public string pss_station_abbr_en { get; set; }
+    //    public DateTime state_on { get; set; }
+    //    public string pss_note { get; set; }
+    //    public DateTime pss_create { get; set; }
+    //    public string pss_create_user { get; set; }
+    //    public DateTime? pss_change { get; set; }
+    //    public string pss_change_user { get; set; }
+    //    public DateTime? pss_delete { get; set; }
+    //    public string pss_delete_user { get; set; }
+    //    public DateTime? pss_applied { get; set; }
+    //    public string pss_applied_user { get; set; }
+    //    public int ps_way_id { get; set; }
+    //    public int ps_way_id_way { get; set; }
+    //    public string ps_way_way_num_ru { get; set; }
+    //    public string ps_way_way_num_en { get; set; }
+    //    public string ps_way_way_name_ru { get; set; }
+    //    public string ps_way_way_name_en { get; set; }
+    //    public string ps_way_way_abbr_ru { get; set; }
+    //    public string ps_way_way_abbr_en { get; set; }
+    //    public int ps_way_position { get; set; }
+    //    public int ps_wag_id { get; set; }
+    //    public int num { get; set; }
+    //    public int ps_wag_position { get; set; }
+    //    public DateTime ps_wag_create { get; set; }
+    //    public string ps_wag_create_user { get; set; }
+    //    public DateTime? ps_wag_change { get; set; }
+    //    public string ps_wag_change_user { get; set; }
+    //    public long? wir_id { get; set; }
+    //    public long? id_arrival_car { get; set; }
+    //    public long? id_sap_incoming_supply { get; set; }
+    //    public bool? doc_outgoing_car { get; set; }
+    //    public long? id_outgoing_car { get; set; }
+    //    public long? id_sap_outbound_supply { get; set; }
+    //    public string wir_note { get; set; }
+    //    public DateTime? wir_create { get; set; }
+    //    public string wir_create_user { get; set; }
+    //    public DateTime? wir_close { get; set; }
+    //    public string wir_close_user { get; set; }
+    //    public long? wir_parent_id { get; set; }
+    //    public long? wim_id { get; set; }
+    //    public long? id_wagon_internal_routes { get; set; }
+    //    public int? id_station { get; set; }
+    //    public string station_name_ru { get; set; }
+    //    public string station_name_en { get; set; }
+    //    public string station_abbr_ru { get; set; }
+    //    public string station_abbr_en { get; set; }
+    //    public int? id_way { get; set; }
+    //    public string way_num_ru { get; set; }
+    //    public string way_num_en { get; set; }
+    //    public string way_name_ru { get; set; }
+    //    public string way_name_en { get; set; }
+    //    public string way_abbr_ru { get; set; }
+    //    public string way_abbr_en { get; set; }
+    //    public DateTime? way_start { get; set; }
+    //    public DateTime? way_end { get; set; }
+    //    public int? id_outer_way { get; set; }
+    //    public string name_outer_way_ru { get; set; }
+    //    public string name_outer_way_en { get; set; }
+    //    public DateTime? outer_way_start { get; set; }
+    //    public DateTime? outer_way_end { get; set; }
+    //    public int? position { get; set; }
+    //    public string wim_note { get; set; }
+    //    public DateTime? wim_create { get; set; }
+    //    public string wim_create_user { get; set; }
+    //    public DateTime? wim_close { get; set; }
+    //    public string wim_close_user { get; set; }
+    //    public long? wim_parent_id { get; set; }
+    //}
+
     public class view_park_state_dislocation_wagon
     {
+        [Key]
         public int id { get; set; }
         public int pss_id_station { get; set; }
         public string pss_station_name_ru { get; set; }
@@ -116,9 +195,13 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string pss_create_user { get; set; }
         public DateTime? pss_change { get; set; }
         public string pss_change_user { get; set; }
+
         public DateTime? pss_delete { get; set; }
+
         public string pss_delete_user { get; set; }
+
         public DateTime? pss_applied { get; set; }
+
         public string pss_applied_user { get; set; }
         public int ps_way_id { get; set; }
         public int ps_way_id_way { get; set; }
@@ -139,22 +222,33 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public long? wir_id { get; set; }
         public long? id_arrival_car { get; set; }
         public long? id_sap_incoming_supply { get; set; }
+
         public bool? doc_outgoing_car { get; set; }
+
         public long? id_outgoing_car { get; set; }
+
         public long? id_sap_outbound_supply { get; set; }
         public string wir_note { get; set; }
+
         public DateTime? wir_create { get; set; }
+
         public string wir_create_user { get; set; }
+
         public DateTime? wir_close { get; set; }
         public string wir_close_user { get; set; }
+
         public long? wir_parent_id { get; set; }
+
         public long? wim_id { get; set; }
+
         public long? id_wagon_internal_routes { get; set; }
+
         public int? id_station { get; set; }
         public string station_name_ru { get; set; }
         public string station_name_en { get; set; }
         public string station_abbr_ru { get; set; }
         public string station_abbr_en { get; set; }
+
         public int? id_way { get; set; }
         public string way_num_ru { get; set; }
         public string way_num_en { get; set; }
@@ -162,20 +256,39 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string way_name_en { get; set; }
         public string way_abbr_ru { get; set; }
         public string way_abbr_en { get; set; }
+
         public DateTime? way_start { get; set; }
+
         public DateTime? way_end { get; set; }
+
         public int? id_outer_way { get; set; }
         public string name_outer_way_ru { get; set; }
         public string name_outer_way_en { get; set; }
+
         public DateTime? outer_way_start { get; set; }
+
         public DateTime? outer_way_end { get; set; }
+
         public int? position { get; set; }
         public string wim_note { get; set; }
+
         public DateTime? wim_create { get; set; }
         public string wim_create_user { get; set; }
+
         public DateTime? wim_close { get; set; }
         public string wim_close_user { get; set; }
+
         public long? wim_parent_id { get; set; }
+
+        public int? id_operation { get; set; }
+
+        public DateTime? operation_start { get; set; }
+
+        public DateTime? operation_end { get; set; }
+
+        public int? status { get; set; }
+        public int current_wagon_busy { get; set; }
+        public int current_move_busy { get; set; }
     }
 
     public class OperationCreateParkState
