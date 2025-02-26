@@ -4880,7 +4880,15 @@ namespace IDS
                 if (wagon == null) return (int)errors_base.not_open_wir;
                 // Получим текущее положение вагона
                 WagonInternalMovement wim = wagon.GetLastMovement();
-                if (wim == null) return (int)errors_base.not_open_wir;
+                if (wim == null) return (int)errors_base.not_wim_db;
+                WagonInternalOperation wio = wagon.GetLastOperation();
+                if (wio == null) return (int)errors_base.not_wio_db;
+                WagonFiling wf = context.WagonFiling.Where(f => f.id == wim.id_filing).FirstOrDefault();
+                // Будет пропускать вагоны предъявленные и с открытыми операциями и с подачами
+                if (wio.id_operation == 9 || (wio.operation_start != null && wio.operation_end == null) || (wf != null && wf.create != null && wf.close == null && (wim.filing_start == null || wim.filing_end == null)))
+                {
+                    return 0;
+                }
                 // Проверим вагон уже стоит ?
                 if (wim.id_station == id_station && wim.id_way == id_way && wim.position == position) return 0; // Вагон стоит на станции на пути и в позиции, пропустить операцию
                 string note = "Перенесён по состоянию парка";
