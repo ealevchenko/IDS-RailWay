@@ -1,4 +1,4 @@
-declare @num int = 47874
+declare @num int = 48100
 
 SELECT TOP (1000) [id]
       ,[num]
@@ -71,12 +71,12 @@ SELECT TOP (1000) [id]
 --       ,[note] = null
 --      ,[close] = null
 --      ,[close_user] = null
--- WHERE id = 11635670
+-- WHERE id = 13175821
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
 --   SET [operation_end] = null
 --      ,[close] = null
 --      ,[close_user] = null
--- WHERE id = 14277923
+-- WHERE id = 14277848
 --GO
