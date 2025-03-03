@@ -4,27 +4,27 @@ use [KRR-PA-CNT-Railway]
 Нужно добавить удаление отправки если есть  
 */
 
---SELECT [id]
---      ,[num]
---      ,[id_arrival_car]
---      ,[id_sap_incoming_supply]
---      ,[doc_outgoing_car]
---      ,[id_outgoing_car]
---      ,[id_sap_outbound_supply]
---      ,[note]
---      ,[create]
---      ,[create_user]
---      ,[close]
---      ,[close_user]
---      ,[parent_id]
---      ,[highlight_color]
---      ,[id_usage_fee]
---  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
---  where num=61808754
---  order by 1 desc
+SELECT [id]
+      ,[num]
+      ,[id_arrival_car]
+      ,[id_sap_incoming_supply]
+      ,[doc_outgoing_car]
+      ,[id_outgoing_car]
+      ,[id_sap_outbound_supply]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+      ,[highlight_color]
+      ,[id_usage_fee]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where num=24626814 
+  order by 1 desc
 
 
-declare @id_wir int = 1017656
+declare @id_wir int = 1028896
 
 delete
   FROM [IDS].[WagonInternalMovement]
