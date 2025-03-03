@@ -47,115 +47,348 @@ namespace WEB_UI.Controllers.api.IDS.RWT
     }
 
     ///TODO: УДАЛИТЬ СТАРОЕ ДЕТАЛЬНО ВАГОНЫ (Пока используется в дислокации и роспуске)
+    //public class view_wagons1
+    //{
+    //    public long wir_id { get; set; }
+    //    public long wim_id { get; set; }
+    //    public long? wio_id { get; set; }
+    //    public int position { get; set; }
+    //    public int num { get; set; }
+    //    public int? wagon_adm { get; set; }
+    //    public string wagon_adm_name_ru { get; set; }
+    //    public string wagon_adm_name_en { get; set; }
+    //    public string wagon_adm_abbr_ru { get; set; }
+    //    public string wagon_adm_abbr_en { get; set; }
+    //    public int? wagon_rod { get; set; }
+    //    public string wagon_rod_name_ru { get; set; }
+    //    public string wagon_rod_name_en { get; set; }
+    //    public string wagon_rod_abbr_ru { get; set; }
+    //    public string wagon_rod_abbr_en { get; set; }
+    //    public string wagon_type_ru { get; set; }
+    //    public string wagon_type_en { get; set; }
+    //    public string wagon_operators_name_ru { get; set; }
+    //    public string wagon_operators_name_en { get; set; }
+    //    public string wagon_operators_abbr_ru { get; set; }
+    //    public string wagon_operators_abbr_en { get; set; }
+    //    public bool? wagon_operators_paid { get; set; }
+    //    public string wagon_operators_color { get; set; }
+    //    public DateTime? wagon_operators_rent_start { get; set; }
+    //    public string wagon_limiting_name_ru { get; set; }
+    //    public string wagon_limiting_name_en { get; set; }
+    //    public string wagon_limiting_abbr_ru { get; set; }
+    //    public string wagon_limiting_abbr_en { get; set; }
+    //    public double? wagon_gruzp_doc { get; set; }
+    //    public double wagon_gruzp_uz { get; set; }
+    //    public int? wagon_tara_doc { get; set; }
+    //    public int? wagon_tara_arc_doc { get; set; }
+    //    public double? wagon_tara_uz { get; set; }
+    //    public DateTime? wagon_date_rem_uz { get; set; }
+    //    public DateTime? arrival_datetime { get; set; }
+    //    public long? arrival_duration { get; set; }
+    //    public string arrival_condition_name_ru { get; set; }
+    //    public string arrival_condition_name_en { get; set; }
+    //    public string arrival_condition_abbr_ru { get; set; }
+    //    public string arrival_condition_abbr_en { get; set; }
+    //    public bool? arrival_condition_red { get; set; }
+    //    public string arrival_cargo_group_name_ru { get; set; }
+    //    public string arrival_cargo_group_name_en { get; set; }
+    //    public string arrival_cargo_name_ru { get; set; }
+    //    public string arrival_cargo_name_en { get; set; }
+    //    public string arrival_certification_data_ru { get; set; }
+    //    public string arrival_certification_data_en { get; set; }
+    //    public int? arrival_vesg_doc { get; set; }
+    //    public double? arrival_vesg_reweighing { get; set; }
+    //    public int? arrival_station_from_code { get; set; }
+    //    public string arrival_station_from_name_ru { get; set; }
+    //    public string arrival_station_from_name_en { get; set; }
+    //    public string arrival_station_amkr_name_ru { get; set; }
+    //    public string arrival_station_amkr_name_en { get; set; }
+    //    public string arrival_station_amkr_abbr_ru { get; set; }
+    //    public string arrival_station_amkr_abbr_en { get; set; }
+    //    public string arrival_station_amkr_code { get; set; }
+    //    public string arrival_division_amkr_name_ru { get; set; }
+    //    public string arrival_division_amkr_name_en { get; set; }
+    //    public string arrival_division_amkr_abbr_ru { get; set; }
+    //    public string arrival_division_amkr_abbr_en { get; set; }
+    //    public int current_id_operation_wagon { get; set; }
+    //    public string current_operation_wagon_name_ru { get; set; }
+    //    public string current_operation_wagon_name_en { get; set; }
+    //    public DateTime? current_operation_wagon_start { get; set; }
+    //    public DateTime? current_operation_wagon_end { get; set; }
+    //    public bool? current_operation_wagon_busy { get; set; }
+    //    public DateTime? current_operation_wagon_create { get; set; }
+    //    public string current_operation_wagon_create_user { get; set; }
+    //    public DateTime? current_operation_wagon_close { get; set; }
+    //    public string current_operation_wagon_close_user { get; set; }
+    //    public string current_loading_status_ru { get; set; }
+    //    public string current_loading_status_en { get; set; }
+    //    public string current_condition_name_ru { get; set; }
+    //    public string current_condition_name_en { get; set; }
+    //    public string current_condition_abbr_ru { get; set; }
+    //    public string current_condition_abbr_en { get; set; }
+    //    public bool? current_condition_red { get; set; }
+    //    public string current_station_amkr_name_ru { get; set; }
+    //    public string current_station_amkr_name_en { get; set; }
+    //    public string current_station_amkr_abbr_ru { get; set; }
+    //    public string current_station_amkr_abbr_en { get; set; }
+    //    public int? current_station_amkr_idle_time { get; set; }
+    //    public DateTime? current_station_amkr_start { get; set; }
+    //    public int? current_station_amkr_duration { get; set; }
+    //    public string current_way_amkr_num_ru { get; set; }
+    //    public string current_way_amkr_num_en { get; set; }
+    //    public string current_way_amkr_name_ru { get; set; }
+    //    public string current_way_amkr_name_en { get; set; }
+    //    public string current_way_amkr_abbr_ru { get; set; }
+    //    public string current_way_amkr_abbr_en { get; set; }
+    //    public DateTime current_way_amkr_start { get; set; }
+    //    public int? current_way_amkr_duration { get; set; }
+    //    public DateTime current_wim_create { get; set; }
+    //    public string current_wim_create_user { get; set; }
+    //    public decimal usage_fee { get; set; }
+    //    public int? id_out_sostav { get; set; }
+    //    public int? out_sostav_status { get; set; }
+    //    public string instructional_letters_num { get; set; }
+    //    public DateTime? instructional_letters_datetime { get; set; }
+    //    public int? instructional_letters_station { get; set; }
+    //    public string instructional_letters_station_name { get; set; }
+    //    public string sap_is_num { get; set; }
+    //    public DateTime? sap_is_create_date { get; set; }
+    //    public TimeSpan? sap_is_create_time { get; set; }
+    //    public bool? sap_os_doc_outgoing_car { get; set; }
+    //}
+
     public class view_wagons1
     {
         public long wir_id { get; set; }
+        [Key]
         public long wim_id { get; set; }
         public long? wio_id { get; set; }
         public int position { get; set; }
         public int num { get; set; }
+
         public int? wagon_adm { get; set; }
         public string wagon_adm_name_ru { get; set; }
+
         public string wagon_adm_name_en { get; set; }
+
         public string wagon_adm_abbr_ru { get; set; }
+
         public string wagon_adm_abbr_en { get; set; }
+
         public int? wagon_rod { get; set; }
+
         public string wagon_rod_name_ru { get; set; }
+
         public string wagon_rod_name_en { get; set; }
+
         public string wagon_rod_abbr_ru { get; set; }
+
         public string wagon_rod_abbr_en { get; set; }
+
         public string wagon_type_ru { get; set; }
+
         public string wagon_type_en { get; set; }
+
         public string wagon_operators_name_ru { get; set; }
+
         public string wagon_operators_name_en { get; set; }
+
         public string wagon_operators_abbr_ru { get; set; }
+
         public string wagon_operators_abbr_en { get; set; }
+
         public bool? wagon_operators_paid { get; set; }
+
         public string wagon_operators_color { get; set; }
+
         public DateTime? wagon_operators_rent_start { get; set; }
+
         public string wagon_limiting_name_ru { get; set; }
+
         public string wagon_limiting_name_en { get; set; }
+
         public string wagon_limiting_abbr_ru { get; set; }
+
         public string wagon_limiting_abbr_en { get; set; }
+
         public double? wagon_gruzp_doc { get; set; }
-        public double wagon_gruzp_uz { get; set; }
+
+        public double? wagon_gruzp_uz { get; set; }
+
         public int? wagon_tara_doc { get; set; }
+
         public int? wagon_tara_arc_doc { get; set; }
+
         public double? wagon_tara_uz { get; set; }
+
         public DateTime? wagon_date_rem_uz { get; set; }
+
         public DateTime? arrival_datetime { get; set; }
+
         public int? arrival_duration { get; set; }
+
         public string arrival_condition_name_ru { get; set; }
+
         public string arrival_condition_name_en { get; set; }
+
         public string arrival_condition_abbr_ru { get; set; }
+
         public string arrival_condition_abbr_en { get; set; }
+
         public bool? arrival_condition_red { get; set; }
+
         public string arrival_cargo_group_name_ru { get; set; }
+
         public string arrival_cargo_group_name_en { get; set; }
+
         public string arrival_cargo_name_ru { get; set; }
+
         public string arrival_cargo_name_en { get; set; }
+
         public string arrival_certification_data_ru { get; set; }
+
         public string arrival_certification_data_en { get; set; }
+
         public int? arrival_vesg_doc { get; set; }
+
         public double? arrival_vesg_reweighing { get; set; }
+
         public int? arrival_station_from_code { get; set; }
+
         public string arrival_station_from_name_ru { get; set; }
+
         public string arrival_station_from_name_en { get; set; }
+
         public string arrival_station_amkr_name_ru { get; set; }
+
         public string arrival_station_amkr_name_en { get; set; }
+
         public string arrival_station_amkr_abbr_ru { get; set; }
+
         public string arrival_station_amkr_abbr_en { get; set; }
-        public string arrival_station_amkr_code { get; set; }
+
+        public string arrival_division_amkr_code { get; set; }
+
         public string arrival_division_amkr_name_ru { get; set; }
+
         public string arrival_division_amkr_name_en { get; set; }
+
         public string arrival_division_amkr_abbr_ru { get; set; }
+
         public string arrival_division_amkr_abbr_en { get; set; }
-        public int current_id_operation_wagon { get; set; }
+
+        public int? current_id_operation_wagon { get; set; }
+
         public string current_operation_wagon_name_ru { get; set; }
+
         public string current_operation_wagon_name_en { get; set; }
+
         public DateTime? current_operation_wagon_start { get; set; }
+
         public DateTime? current_operation_wagon_end { get; set; }
+
         public bool? current_operation_wagon_busy { get; set; }
+
         public DateTime? current_operation_wagon_create { get; set; }
+
         public string current_operation_wagon_create_user { get; set; }
+
         public DateTime? current_operation_wagon_close { get; set; }
+
         public string current_operation_wagon_close_user { get; set; }
+
         public string current_loading_status_ru { get; set; }
+
         public string current_loading_status_en { get; set; }
+
         public string current_condition_name_ru { get; set; }
+
         public string current_condition_name_en { get; set; }
+
         public string current_condition_abbr_ru { get; set; }
+
         public string current_condition_abbr_en { get; set; }
+
         public bool? current_condition_red { get; set; }
+
         public string current_station_amkr_name_ru { get; set; }
+
         public string current_station_amkr_name_en { get; set; }
+
         public string current_station_amkr_abbr_ru { get; set; }
+
         public string current_station_amkr_abbr_en { get; set; }
+
         public int? current_station_amkr_idle_time { get; set; }
-        public DateTime? current_station_amkr_start { get; set; }
-        public int? current_station_amkr_duration { get; set; }
+
+        public int? current_station_amkr_start { get; set; }
+
+        public int current_station_amkr_duration { get; set; }
+
         public string current_way_amkr_num_ru { get; set; }
+
         public string current_way_amkr_num_en { get; set; }
+
         public string current_way_amkr_name_ru { get; set; }
+
         public string current_way_amkr_name_en { get; set; }
+
         public string current_way_amkr_abbr_ru { get; set; }
+
         public string current_way_amkr_abbr_en { get; set; }
+
         public DateTime current_way_amkr_start { get; set; }
+
         public int? current_way_amkr_duration { get; set; }
+
         public DateTime current_wim_create { get; set; }
+
         public string current_wim_create_user { get; set; }
+
         public decimal usage_fee { get; set; }
-        public int? id_out_sostav { get; set; }
+
+        public long? id_out_sostav { get; set; }
+
         public int? out_sostav_status { get; set; }
+
         public string instructional_letters_num { get; set; }
+
         public DateTime? instructional_letters_datetime { get; set; }
+
         public int? instructional_letters_station { get; set; }
+
         public string instructional_letters_station_name { get; set; }
+
         public string sap_is_num { get; set; }
+
         public DateTime? sap_is_create_date { get; set; }
+
         public TimeSpan? sap_is_create_time { get; set; }
+
         public bool? sap_os_doc_outgoing_car { get; set; }
+
+        public long? old_arrival_car_id_outgoing_car { get; set; }
+
+        public long? old_arrival_car_id_outgoing_uz_vagon { get; set; }
+
+        public DateTime? old_date_outgoing { get; set; }
+
+        public DateTime? old_date_outgoing_act { get; set; }
+
+        public int? old_outgoing_uz_vagon_id_cargo { get; set; }
+
+        public string old_outgoing_uz_vagon_cargo_name_ru { get; set; }
+
+        public string old_outgoing_uz_vagon_cargo_name_en { get; set; }
+
+        public int? old_outgoingl_uz_document_code_stn_to { get; set; }
+
+        public string old_outgoing_uz_document_station_to_name_ru { get; set; }
+
+        public string old_outgoing_uz_document_station_to_name_en { get; set; }
     }
+
+
 
     #region TREE WAY (Для дерева путей - Обновленный АРМ)
 
