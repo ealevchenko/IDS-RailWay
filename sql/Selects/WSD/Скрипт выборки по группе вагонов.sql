@@ -1,18 +1,57 @@
-use [KRR-PA-CNT-Railway]--[KRR-PA-CNT-Railway-Archive]
-declare @id_way int = 122
+use [KRR-PA-CNT-Railway]
 
---select * from [IDS].[get_view_wagons_of_id_way](@id_way) --where num = 62389481 
+--DECLARE @nums sysname = '61236972;63679914;62853650;64053002;64175037;4772;4838;56968837;62976337;58583949;68026632'; -- список вагонов
+--DECLARE @nums nchar(1000) = '61236972'; -- список вагонов
+DECLARE @nums nchar(1000) = ''; -- список вагонов
+--SELECT LEN(@nums)
 
-	--> Получим уставку норма простоя
-	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+--SELECT CHARINDEX(',', @nums); 
+--select substring(@nums,1,9)
+--select substring(@nums,9,LEN(@nums))
 
-	select wir.id as wir_id
+
+declare @index int;
+DECLARE @list nchar(1000);
+declare @snum nchar(8);
+declare @num int
+
+declare @tnums TABLE (num int primary key)
+set @list = @nums;
+--set @index = CHARINDEX(';', @list);
+set @index = 1;
+WHILE @index>0
+BEGIN
+set @index = CHARINDEX(';', @list); 
+--select '@index',@index
+if (@index>0)
+begin
+--select substring(@list, 1, @index-1)
+--set @snum = substring(@list, 1, @index-1);
+--set @num = CONVERT(nchar(8), int , @snum);
+--set @num = CAST(substring(@list, 1, @index-1) AS INT)
+	insert into @tnums
+	select CAST(substring(@list, 1, @index-1) AS INT)
+--select @snum,@num
+end else begin
+	insert into @tnums
+	select CAST(@list AS INT)
+end
+
+set @list = substring(@list,@index+1,LEN(@list))  
+--select @list
+END
+
+--select * from @tnums
+
+declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+
+
+		select 
+	     wir.id as wir_id
 		,wim.id as wim_id
 		,wio.id as wio_id
 		--=============== ОСНОВНОЕ ОКНО ==================
 		,wir.num
-		,wim.position
-		--> Подача 03.12.2024
 		,wf.id as id_filing
 		,wf.num_filing
 		,wf.type_filing
@@ -28,7 +67,6 @@ declare @id_way int = 122
 		,wf.[change_user] as change_user_filing
 		,wf.[close] as close_filing
 		,wf.[close_user] as close_user_filing
-				-- Подача  предыдущая 03-02-2025
 		,wf_pre.id as id_previous_filing 
 		,wf_pre.num_filing as num_previous_filing 
 		,wf_pre.type_filing as type_previous_filing 
@@ -44,7 +82,32 @@ declare @id_way int = 122
 		,wf_pre.[change_user] as change_user_previous_filing
 		,wf_pre.[close] as close_previous_filing
 		,wf_pre.[close_user] as close_user_previous_filing
-		--
+		,wim.[id_station]
+		  ,dir_station.[station_name_ru]
+		  ,dir_station.[station_name_en]
+		  ,dir_station.[station_abbr_ru]
+		  ,dir_station.[station_abbr_en]
+		  ,wim.[id_way]
+		  ,dir_way.[way_num_ru]
+		  ,dir_way.[way_num_en]
+		  ,dir_way.[way_name_ru]
+		  ,dir_way.[way_name_en]
+		  ,dir_way.[way_abbr_ru]
+		  ,dir_way.[way_abbr_en]
+		  ,wim.[way_start]
+		  ,wim.[way_end]
+		  ,wim.[id_outer_way]
+		  ,dir_oway.[name_outer_way_ru]
+		  ,dir_oway.[name_outer_way_en]
+		  ,wim.[outer_way_start]
+		  ,wim.[outer_way_end]
+		  ,wim.[position]
+		  ,wim.[note] as note_wim
+		  ,wim.[create] as create_wim
+		  ,wim.[create_user] as create_user_wim
+		  ,wim.[close] as close_wim
+		  ,wim.[close_user] as close_user_wim
+		  ,wim.[parent_id] as parent_id_wim
 		,wim.filing_start as way_filing_start
 		,wim.filing_end as way_filing_end
 		--> Оператор
@@ -399,6 +462,10 @@ declare @id_way int = 122
 		,wir.note as wir_note									-- Примечание по ходу движения вагона
 		,wir.note2 as wir_note2									-- Примечание по ходу движения вагона
 		,wir.highlight_color as wir_highlight_color				-- Подсветка строки
+		,wir.[create]
+		,wir.[create_user]
+		,wir.[close]
+		,wir.[close_user]
 		 -- Добавил последнюю отправку 26-03-2024
 		,old_out_car.id as old_arrival_car_id_outgoing_car
 		,old_out_car.id_outgoing_uz_vagon as old_arrival_car_id_outgoing_uz_vagon
@@ -410,11 +477,9 @@ declare @id_way int = 122
 		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
 		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
 		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
-		--into view_wagons
-	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
-		--> Текущее внетренее перемещение
-		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
-		 --> Текущая подача 23.10.2024
+				--into wagons_nums
+  FROM  [IDS].[WagonInternalRoutes] as wir
+	Left JOIN IDS.WagonInternalMovement as wim ON wim.id = (SELECT top (1) id FROM IDS.WagonInternalMovement where [id_wagon_internal_routes] = wir.id order by 1 desc)
 		 Left JOIN IDS.WagonFiling as wf ON wf.id = wim.id_filing
 		 --> Предыдущая подача 23.10.2024
 		 Left JOIN IDS.WagonFiling as wf_pre ON wf_pre.id = (SELECT top(1) [id_filing] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes] = wir.id and [id_filing] is not null order by [id_filing] desc)
@@ -534,8 +599,10 @@ declare @id_way int = 122
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
 		--> Справочник Организация
 		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
+		Left JOIN [IDS].[Directory_Station] as dir_station ON dir_station.id = wim.[id_station] 
+		Left JOIN [IDS].[Directory_Ways] as dir_way ON dir_way.id = wim.[id_way] 
+		Left JOIN [IDS].[Directory_OuterWays] as dir_oway ON dir_oway.id = wim.[id_outer_way] 
+	where wir.[id] in (SELECT max(wir_grp.[id]) FROM [IDS].[WagonInternalRoutes] as wir_grp where wir_grp.num in (select num from @tnums) group by  wir_grp.[num])
 
-	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL)
 
-	--and wir.num = 56069024 
-	--order by wim.position
+--SELECT max([id]) as id FROM [IDS].[WagonInternalRoutes] as wir where wir.num in (select num from @tnums) group by [num]
