@@ -6615,12 +6615,18 @@
         } else {
 
         }
-        valid = valid & val_ves_tary_arc
+        valid = valid & val_ves_tary_arc;
         valid = valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
         // Оплата
         if (this.mode_epd !== 7) {
             valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_plat, langView('ficcd_mess_valid_name_plat', App.Langs), '', langView('ficcd_mess_valid_not_name_plat', App.Langs), true);
-            valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
+            var val_number_distance_way = this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
+            if (!val_number_distance_way) {
+                this.elements.input_number_distance_way.enable();
+            } else {
+
+            }
+            valid = valid & val_number_distance_way;
         }
         // Грузы
         var val_name_etsng = this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
