@@ -1,19 +1,23 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 12--31
-
---UPDATE [IDS].[WagonInternalMovement]
---	SET[filing_end] = '2025-03-04 02:10:00.000'
---where [id_filing] = @id
+declare @id int = 10485
 
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null
 --where [id_filing] = @id
 
---UPDATE [IDS].[WagonFiling]
---   SET [end_filing] = '2025-03-04 11:00:00.000'
---      ,[close] = '2025-03-04 11:00:00.000'
---      ,[close_user] = 'EUROPE\ealevchenko'
--- WHERE [id] = @id
+--UPDATE [IDS].[WagonInternalMovement]
+--	SET [id_filing] = null
+--where [id] in (13322309,13322310,13322312)
+
+--UPDATE [IDS].[WagonInternalMovement]
+--	SET [filing_end] = '2025-03-10 14:50:00.000'
+--where [id_filing] = @id
+
+UPDATE [IDS].[WagonFiling]
+   SET [end_filing] = '2025-03-10 14:41:00.000'
+      ,[close] = '2025-03-10 14:41:00.000'
+      ,[close_user] = 'EUROPE\ealevchenko'
+ WHERE [id] = @id
 
 
 
