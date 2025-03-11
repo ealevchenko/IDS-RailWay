@@ -195,6 +195,8 @@
     var App = window.App || {};
     var $ = window.jQuery;
 
+    var bt_enable = false;
+
     // Определим глобальные переменные
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
@@ -322,6 +324,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_send_cars.init({
@@ -345,6 +351,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_arrival_cars.init({
@@ -369,6 +379,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_return_cars.init({
@@ -394,6 +408,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.view_dislocation(current_id_station, current_id_way);
             }),
         // Выполнить роспуск
@@ -401,6 +419,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_way) {
                     if (current_option_way && current_option_way['output-dissolution'] === 1) {
                         operation_detali.view_dissolution(current_id_way);
@@ -416,7 +438,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
-
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_station && current_id_way) {
                     var station = ids_inc.ids_dir.list_station.find(function (o) {
                         return o.id === current_id_station;
@@ -456,6 +481,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_station && current_id_way) {
                     var station = ids_inc.ids_dir.list_station.find(function (o) {
                         return o.id === current_id_station;
