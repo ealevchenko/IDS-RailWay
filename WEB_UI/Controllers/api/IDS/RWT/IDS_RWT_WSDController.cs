@@ -3056,7 +3056,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
                 db.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter id = new System.Data.SqlClient.SqlParameter("@id_way", id_way);
                 //string sql = "select * from [IDS].[get_view_wagons_of_way](@id_way) order by position";
-                string sql = "select * from [IDS].[get_view_wagons_of_id_way](@id_way) order by position";
+                string sql = "select * from [IDS].[get_view_wagons_of_id_way_old](@id_way) order by position";
                 var list = db.Database.SqlQuery<view_wagons>(sql, id).ToList();
                 this.db.Database.CommandTimeout = null;
                 return Ok(list);
