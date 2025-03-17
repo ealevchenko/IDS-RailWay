@@ -1,18 +1,9 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-CNT-Railway]		
 
---0	Порожний --
---1	Груженый ПРИБ -
---2	Груженый В/З +
---3	Грязный --
---4	Мерзлый + 
---5	Тех. неисправность +
---6	Груженый УЗ +
---7	Перекантовка +
---8	Порожний ЧИСТ --
+declare @id_sostav int = 355835
 
-declare @id_way int = 602
-
-	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
+--> Получим уставку норма простоя
+		declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
 
 	select wir.id as wir_id
 		,wim.id as wim_id
@@ -149,7 +140,7 @@ declare @id_way int = 602
 		ELSE 0 
 		END		
 		,current_unload_busy = CASE 
-		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
+		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is not null ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
 		THEN 1  
 		ELSE 0 
 		END
@@ -437,24 +428,27 @@ declare @id_way int = 602
 		,old_out_uz_doc.[code_stn_to]  as old_outgoingl_uz_document_code_stn_to
 		,old_out_ext_station_to.[station_name_ru] as old_outgoing_uz_document_station_to_name_ru
 		,old_out_ext_station_to.[station_name_en] as old_outgoing_uz_document_station_to_name_en
-		--into view_wagons
-	FROM IDS.WagonInternalMovement as wim	--> Текущая дислокаци
+	FROM [IDS].[OutgoingSostav] as out_sost
+			--> Отправка вагона
+		INNER JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing
 		--> Текущее внетренее перемещение
-		 INNER JOIN IDS.WagonInternalRoutes as wir ON wim.id_wagon_internal_routes = wir.id
+		Left JOIN  IDS.WagonInternalRoutes as wir ON out_car.id = wir.id_outgoing_car
+		-- Добавил 10.12.2024
+		 --> Текущая строка перевозки грузов 	
+		 LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
+		-->
+		Left JOIN IDS.WagonInternalMovement as wim ON wim.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes]= wir.id order by id desc)
 		 --> Текущая подача 23.10.2024
 		 Left JOIN IDS.WagonFiling as wf ON wf.id = wim.id_filing
 		 --> предыдущий wim по предыдущей подаче 
 		 Left JOIN IDS.WagonInternalMovement as wim_wf_pre ON wim_wf_pre.id = (SELECT top(1) [id] FROM [IDS].[WagonInternalMovement] where [id_wagon_internal_routes] = wir.id and [id_filing] is not null order by [id_filing] desc)
 		 --> Предыдущая подача 23.10.2024
 		 Left JOIN IDS.WagonFiling as wf_pre ON wf_pre.id = wim_wf_pre.id_filing
-		 -- Добавил 10.12.2024
-		 --> Текущая строка перевозки грузов 	
-		 LEFT JOIN [IDS].[WagonInternalMoveCargo] as wimc_curr  ON wimc_curr.[id] = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalMoveCargo] where [id_wagon_internal_routes]= wir.id order by id desc) 
 		 --> Текущая операция
-		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wim.id_wagon_internal_routes order by id desc)
-		--> предыдущий wio по предыдущей подаче 
+		 Left JOIN IDS.WagonInternalOperation as wio ON wio.id = (SELECT TOP (1) [id] FROM [IDS].[WagonInternalOperation] where [id_wagon_internal_routes]= wir.id order by id desc)
+		 --> предыдущий wio по предыдущей подаче 
 		 Left JOIN IDS.WagonInternalOperation as wio_wf_pre ON wio_wf_pre.id = wim_wf_pre.id_wio
-		--> Последнее отправление (обновил 26.03.2024)
+		 --> Последнее отправление (обновил 26.03.2024)
 		--Left JOIN IDS.WagonInternalRoutes as wir_old ON wir_old.id = wir.parent_id
 		-- Правил 30-05-2024 (появились сылки на разные номера вагонов)
 		Left JOIN IDS.WagonInternalRoutes as wir_old ON wir_old.id = (select id from IDS.WagonInternalRoutes where id = wir.parent_id and num = wir.num)
@@ -477,10 +471,9 @@ declare @id_way int = 602
 		 --> Документы SAP Входящая поставка
 		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
 		 --==== СДАЧА ВАГОНА И ЗАДЕРЖАНИЯ ================================================================
-		--> Отправка вагона
-		Left JOIN [IDS].[OutgoingCars] as out_car ON wir.id_outgoing_car = out_car.id
+
 		--> Отправка состава
-		Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
+		--Left JOIN [IDS].[OutgoingSostav] as out_sost ON out_car.id_outgoing = out_sost.id
 				 --> Документы SAP Исходящая поставка
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
@@ -568,5 +561,5 @@ declare @id_way int = 602
 		--> Справочник Организация
 		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
 
-	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL) 
-	and wir.num in (48125)
+		WHERE (out_sost.id =@id_sostav and wir.id is not null) --AND out_car.position_outgoing is not null
+		ORDER bY out_car.position_outgoing	

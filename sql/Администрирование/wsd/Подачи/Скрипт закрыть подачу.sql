@@ -1,5 +1,7 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 10485
+declare @id int = 11059  --10617--10575--10544--10631--10703--10634
+declare @date_close datetime = '2025-03-11 14:00:00.000' 
+
 
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null
@@ -7,19 +9,18 @@ declare @id int = 10485
 
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null
---where [id] in (13322309,13322310,13322312)
+--where [id] in (13297453,13297454,13297455,13297456,13297457)
 
 --UPDATE [IDS].[WagonInternalMovement]
---	SET [filing_end] = '2025-03-10 14:50:00.000'
+--	SET [filing_end] = @date_close
 --where [id_filing] = @id
 
-UPDATE [IDS].[WagonFiling]
-   SET [end_filing] = '2025-03-10 14:41:00.000'
-      ,[close] = '2025-03-10 14:41:00.000'
-      ,[close_user] = 'EUROPE\ealevchenko'
- WHERE [id] = @id
-
-
+--UPDATE [IDS].[WagonFiling]
+--   SET [end_filing] = @date_close
+--	  ,[doc_received] = @date_close
+--      ,[close] = @date_close
+--      ,[close_user] = 'EUROPE\ealevchenko'
+-- WHERE [id] = @id
 
 SELECT TOP (1000) [id]
       ,[num_filing]
@@ -62,4 +63,30 @@ SELECT TOP (1000) [id]
       ,[id_filing]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
   where [id_filing] = @id
+
+  SELECT [id]
+      ,[id_wagon_internal_routes]
+      ,[internal_doc_num]
+      ,[id_weighing_num]
+      ,[doc_received]
+      ,[id_cargo]
+      ,[id_internal_cargo]
+      ,[empty]
+      ,[vesg]
+      ,[id_station_from_amkr]
+      ,[id_division_from]
+      ,[id_wim_load]
+      ,[id_wim_redirection]
+      ,[code_external_station]
+      ,[id_station_on_amkr]
+      ,[id_division_on]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
+  where [id_wagon_internal_routes] in (select [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
