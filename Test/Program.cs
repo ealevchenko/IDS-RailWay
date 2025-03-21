@@ -320,12 +320,14 @@ namespace Test
 
             #region Администрирование
             //tids.IDS_WIR_CloseWir();          // Административной функции закрыть внутренее перемещение
-            tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
+            //tids.IDS_WIR_DeleteDoubleWir();   // Административной функции закрыть задвоение операций и дислокаций внутренего перемещения
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
             //tids.IDS_Directory_ClearDirectory_Cargo();    // Административной функции очистить от дублей справочник грузов
             //tids.IDS_WIR_OperationUpdateEPDIncomingWagon();             // Административная функция исправить документ по прибытию
+            //tids.IDS_WIR_ReportBorderCrossingOfNumsEPD();                 // Административная 
+            tids.IDS_WIR_ReportBorderCrossingOfNumsEPD_DB();                // Административная           
             #endregion
 
             Console.WriteLine("Press any key to exit...");

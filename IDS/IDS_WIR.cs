@@ -2129,7 +2129,8 @@ namespace IDS
                                 if (epd_main == null) return (int)errors_base.not_main_uz_doc_db; // Ошибка в базе данных отсутсвует основной ЭПД 
                                 // Продолжим
                                 break;
-                            };
+                            }
+                            ;
                         case 1:
                             {
                                 // Проверим и создадим ручные но с номерами
@@ -2190,7 +2191,8 @@ namespace IDS
                                 }
                                 // Продолжим
                                 break;
-                            };
+                            }
+                            ;
                         case 2:
                             {
                                 // Основной оригинал, а досылка ручной
@@ -2228,7 +2230,8 @@ namespace IDS
                                     ef_uz_doc.Add(epd);
                                 }
                                 break;
-                            };
+                            }
+                            ;
                         case 3:
                             {
                                 // Основной ручной, а досылка оригинал
@@ -2265,7 +2268,8 @@ namespace IDS
                                 epd = ef_uz_doc.Context.Where(d => d.num_doc == arrival_doc.id_doc).FirstOrDefault();
                                 if (epd == null) return (int)errors_base.not_uz_doc_db; // Ошибка в базе данных отсутсвует досылочный ЭПД
                                 break;
-                            };
+                            }
+                            ;
                         case 4:
                             {
                                 // Основной ручной, а досылка оригинал
@@ -2319,9 +2323,12 @@ namespace IDS
 
                                 }
                                 break;
-                            };
-                    };
-                };
+                            }
+                            ;
+                    }
+                    ;
+                }
+                ;
                 // Привяжем к ArrivalCars правильную ссылку EFIDS.Entities.UZ_DOC
                 // Если нет ссылки на документ или ссылка не равна выбранному документу по № накладной переопределим ссылку на документ
                 if (car.num_doc == null || (car.num_doc != null && epd == null && car.num_doc != epd_main.num_doc) || (car.num_doc != null && epd != null && car.num_doc != epd.num_doc))
@@ -2374,7 +2381,8 @@ namespace IDS
                     if (arr_main_uz_doc.id == 0)
                     {
                         arr_uz_doc.Arrival_UZ_Document2 = arr_main_uz_doc;
-                    };
+                    }
+                    ;
                     ResultObject res_arr_uz_doc_vag = UpdateArrival_UZ_Vagon(ref context, arr_uz_doc.id, arrival_vagon_doc, uz_doc_manual, false, user);
                     if (res_arr_uz_doc_vag.result < 0 || res_arr_uz_doc_vag.obj == null) return res_arr_uz_doc_vag.result; // Была ошибка вернем код
                     arr_uz_doc_vag = (Arrival_UZ_Vagon)res_arr_uz_doc_vag.obj;
@@ -2512,7 +2520,8 @@ namespace IDS
                                 if (epd.ArrivalCars.Count() <= 1)
                                 {
                                     ef_uz_doc.Delete(epd.num_doc);
-                                };
+                                }
+                                ;
                             }
                         }
                         else
@@ -7016,7 +7025,8 @@ namespace IDS
                         }
                         result.SetUpdateResult(upd ? 1 : 0, vag.id, 1); //  Обновил информацию по вагону
                     }
-                };
+                }
+                ;
                 return result;
             }
             catch (Exception e)
@@ -7533,7 +7543,8 @@ namespace IDS
                 {
                     int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
                     if (searsh_vag > 0) return true;
-                };
+                }
+                ;
                 return false;
             }
             catch (Exception e)
@@ -7873,7 +7884,8 @@ namespace IDS
                         {
                             out_uz_vag.Outgoing_UZ_Vagon_Acts.Add(vag_act);
                             result.AddInsert();
-                        };
+                        }
+                        ;
                     }
                 }
                 else
@@ -7908,7 +7920,8 @@ namespace IDS
                             {
                                 out_uz_vag.Outgoing_UZ_Vagon_Acts.Add(vag_act);
                                 result.AddInsert();
-                            };
+                            }
+                            ;
                         }
                     }
                     // Удалим исключенные платежки
@@ -9005,7 +9018,8 @@ namespace IDS
                 if (context == null)
                 {
                     context = new EFIDS.Concrete.EFDbContext();
-                };
+                }
+                ;
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -9162,7 +9176,8 @@ namespace IDS
                 if (context == null)
                 {
                     context = new EFIDS.Concrete.EFDbContext();
-                };
+                }
+                ;
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -9274,7 +9289,8 @@ namespace IDS
                 if (context == null)
                 {
                     context = new EFIDS.Concrete.EFDbContext();
-                };
+                }
+                ;
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -9678,7 +9694,8 @@ namespace IDS
                 if (context == null)
                 {
                     context = new EFIDS.Concrete.EFDbContext();
-                };
+                }
+                ;
                 // Проверим и скорректируем пользователя
                 if (String.IsNullOrWhiteSpace(user))
                 {
@@ -10112,7 +10129,233 @@ namespace IDS
                 return null; // Глобальная ошибка
             }
         }
+
+        public List<ReportBorderCrossing> GetReportBorderCrossingOfNumsEPD(List<int> nums)
+        {
+            try
+            {
+                List<ReportBorderCrossing> list_report = new List<ReportBorderCrossing>();
+
+                EFDbContext context = new EFDbContext();
+                UZ.UZ_Convert convert = new UZ.UZ_Convert();
+                //EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+
+                foreach (int num in nums)
+                {
+                    DateTime? date_departure_amkr = null;
+                    int? status = null;
+                    DateTime? cross_time = null;
+                    string border_crossing_stn = null;
+                    string border_crossing_stn_name = null;
+                    string client_kod_on = null;
+                    string client_name_on = null;
+                    int? vesg = null;
+                    DateTime? epd_date_otpr = null;
+                    DateTime? epd_date_pr = null;
+                    int? epd_status = null;
+                    string num_doc = null;
+                    int? revision = null;
+                    int? num_uz = null;
+
+                    List<UZ_DOC_OUT> docs = context.UZ_DOC_OUT.Where(c => c.num_uz == num).ToList();
+
+                    foreach (UZ_DOC_OUT uz_doc_out in docs)
+                    {
+                        if (uz_doc_out != null)
+                        {
+                            num_doc = uz_doc_out.num_doc;
+                            revision = uz_doc_out.revision;
+                            num_uz = uz_doc_out.num_uz;
+                            epd_status = uz_doc_out.status;
+                            UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
+                            if (otpr != null)
+                            {
+                                epd_date_otpr = otpr.date_otpr;
+                                epd_date_pr = otpr.date_pr;
+
+                                if (otpr.frontier_mark != null && otpr.frontier_mark.Count() > 0) { 
+                                
+                                }
+                                // Погран переход
+                                if (otpr.route != null && otpr.route.Count() > 0)
+                                {
+                                    ROUTE route = otpr.route[otpr.route.Count() - 1];
+                                    if (route != null && route.joint != null && route.joint.Count() > 0)
+                                    {
+                                        foreach (JOINT jn in route.joint)
+                                        {
+                                            if (jn.admin == 22)
+                                            {
+                                                cross_time = jn.cross_time;
+                                                border_crossing_stn = jn.stn;
+                                                border_crossing_stn_name = jn.stn_name;
+                                            }
+                                        }
+                                    }
+                                }
+                                // Грузополучатель
+                                if (otpr.client != null && otpr.client.Count() > 0)
+                                {
+                                    foreach (CLIENT cl in otpr.client)
+                                    {
+                                        if (cl.type == "2")
+                                        {
+                                            client_kod_on = cl.kod;
+                                            client_name_on = cl.name;
+                                        }
+                                    }
+                                }
+                                // груз
+                                if (otpr.vagon != null && otpr.vagon.Count() > 0)
+                                {
+                                    VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
+                                    if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                                    {
+                                        vesg = vagon.collect_v[0].vesg;
+                                    }
+                                }
+                            }
+                        }
+
+                        ReportBorderCrossing rbc = new ReportBorderCrossing()
+                        {
+                            num = num,
+                            status = status,
+                            date_departure_amkr = date_departure_amkr,
+                            cross_time = cross_time,
+                            border_crossing_stn = border_crossing_stn,
+                            border_crossing_stn_name = border_crossing_stn_name,
+                            client_kod_on = client_kod_on,
+                            client_name_on = client_name_on,
+                            vesg = vesg,
+                            epd_status = epd_status,
+                            epd_date_otpr = epd_date_otpr,
+                            epd_date_pr = epd_date_pr,
+                            num_doc = num_doc,
+                            revision = revision,
+                            num_uz = num_uz,
+                        };
+                        list_report.Add(rbc);
+                    }
+                }
+
+                return list_report;
+            }
+
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetReportBorderCrossingOfNumsEPD(nums={0})", nums), servece_owner, eventID);
+                return null; // Глобальная ошибка
+            }
+        }
+        public List<ReportBorderCrossing> GetReportBorderCrossingOfNumsEPD_DB(List<int> nums, int depart_code, DateTime lower_date, DateTime upper_date)
+        {
+            try
+            {
+                List<ReportBorderCrossing> list_report = new List<ReportBorderCrossing>();
+
+                EFDbContext context = new EFDbContext();
+                UZ.UZ_Convert convert = new UZ.UZ_Convert();
+                UZ.UZ_SMS sms = new UZ.UZ_SMS();
+                List<UZ.OTPR> otprs = sms.GetDocumentsOfDB_Period(depart_code, lower_date, upper_date);
+
+                foreach (int num in nums)
+                {
+                    DateTime? date_departure_amkr = null;
+                    int? status = null;
+                    DateTime? cross_time = null;
+                    string border_crossing_stn = null;
+                    string border_crossing_stn_name = null;
+                    string client_kod_on = null;
+                    string client_name_on = null;
+                    int? vesg = null;
+                    DateTime? epd_date_otpr = null;
+                    DateTime? epd_date_pr = null;
+                    int? epd_status = null;
+                    string num_doc = null;
+                    int? revision = null;
+                    int? num_uz = null;
+
+                    UZ.OTPR otpr = otprs.Where(o => o.nom_doc == num).FirstOrDefault();
+                    if (otpr != null)
+                    {
+                        epd_date_otpr = otpr.date_otpr;
+                        epd_date_pr = otpr.date_pr;
+                        if (otpr.frontier_mark != null && otpr.frontier_mark.Count() > 0)
+                        {
+
+                        }
+                        // Погран переход
+                        if (otpr.route != null && otpr.route.Count() > 0)
+                        {
+                            ROUTE route = otpr.route[otpr.route.Count() - 1];
+                            if (route != null && route.joint != null && route.joint.Count() > 0)
+                            {
+                                foreach (JOINT jn in route.joint)
+                                {
+                                    if (jn.admin == 22)
+                                    {
+                                        cross_time = jn.cross_time;
+                                        border_crossing_stn = jn.stn;
+                                        border_crossing_stn_name = jn.stn_name;
+                                    }
+                                }
+                            }
+                        }
+                        // Грузополучатель
+                        if (otpr.client != null && otpr.client.Count() > 0)
+                        {
+                            foreach (CLIENT cl in otpr.client)
+                            {
+                                if (cl.type == "2")
+                                {
+                                    client_kod_on = cl.kod;
+                                    client_name_on = cl.name;
+                                }
+                            }
+                        }
+                        // груз
+                        if (otpr.vagon != null && otpr.vagon.Count() > 0)
+                        {
+                            VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
+                            if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                            {
+                                vesg = vagon.collect_v[0].vesg;
+                            }
+                        }
+                        ReportBorderCrossing rbc = new ReportBorderCrossing()
+                        {
+                            num = num,
+                            status = status,
+                            date_departure_amkr = date_departure_amkr,
+                            cross_time = cross_time,
+                            border_crossing_stn = border_crossing_stn,
+                            border_crossing_stn_name = border_crossing_stn_name,
+                            client_kod_on = client_kod_on,
+                            client_name_on = client_name_on,
+                            vesg = vesg,
+                            epd_status = epd_status,
+                            epd_date_otpr = epd_date_otpr,
+                            epd_date_pr = epd_date_pr,
+                            num_doc = null,
+                            revision = revision,
+                            num_uz = otpr.nom_doc,
+                        };
+                        list_report.Add(rbc);
+                    }
+                }
+                return list_report;
+            }
+
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetReportBorderCrossingOfNumsEPD_DB(nums={0}, depart_code={1}, lower_date={2}, upper_date={3})", nums, depart_code, lower_date, upper_date), servece_owner, eventID);
+                return null; // Глобальная ошибка
+            }
+        }
         #endregion
+
+
 
         #region Сервис "Коммерческое состояние (Разметка)"
         /// <summary>
@@ -10966,7 +11209,8 @@ namespace IDS
                                             calc_time = hour_calc; // округлим до целых суток
                                             calc_fee_amount = (rate_currency_hour * calc_time * (decimal)coefficient_route) * curr_rate.exchange_rate;
                                             break;
-                                        };
+                                        }
+                                        ;
                                     case 1:
                                         {
                                             // Первый период
@@ -10975,7 +11219,8 @@ namespace IDS
                                             calc_time = hour_calc;
                                             calc_fee_amount = (rate_currency_hour * hour_calc * (decimal)coefficient_route) * curr_rate.exchange_rate;
                                             break;
-                                        };
+                                        }
+                                        ;
                                     case 2:
                                         {
                                             // промежуточный период
