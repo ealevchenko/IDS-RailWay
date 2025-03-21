@@ -10,11 +10,43 @@ use [KRR-PA-CNT-Railway]
 --7	Перекантовка +
 --8	Порожний ЧИСТ --
 
-declare @id_way int = 602
+declare @id_way int = 78
 
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
 
 	select wir.id as wir_id
+
+			-- ТЕСТИМ-------------------------
+	 --   ,current_wagon_busy = CASE 
+		--WHEN (wio.operation_start is not null and wio.[operation_end] is null) or (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null)) 
+		--THEN 1  
+		--ELSE 0 
+		--END	
+	 --   ,current_move_busy = CASE 
+		--WHEN (out_sost.status > 0 OR cur_dir_operation.id in (9) OR (wio.operation_start is not null and wio.[operation_end] is null) OR (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null))) 
+		--THEN 1  
+		--ELSE 0 
+		--END		
+	 --   ,current_load_busy = CASE 
+		--WHEN ((cur_load.id in (1,2,4,5,6,7)) OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null AND cur_load.id not in (0,3))) 
+		--THEN 1  
+		--ELSE 0 
+		--END		
+		--,current_unload_busy = CASE 
+		--WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR(wf_pre.type_filing = 2 and wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null) ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
+		--THEN 1  
+		--ELSE 0 
+		--END
+		--,exist_load_document = CASE 
+		--WHEN (cur_load.id not in (0, 3) AND  wf_pre.id is not null AND wf_pre.type_filing = 2 AND (wimc_curr.[doc_received] is not null OR wf_pre.doc_received is not null))
+		--THEN 1  
+		--ELSE 0 
+		--END
+		--,wf_pre.id
+		--,wim_wf_pre.filing_end
+		--,wimc_curr.[doc_received]
+		--,wf_pre.doc_received
+		--,wf_pre.type_filing
 		,wim.id as wim_id
 		,wio.id as wio_id
 		,wir.num
@@ -149,7 +181,7 @@ declare @id_way int = 602
 		ELSE 0 
 		END		
 		,current_unload_busy = CASE 
-		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
+		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR(wf_pre.type_filing = 2 and wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null) ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
 		THEN 1  
 		ELSE 0 
 		END
@@ -569,4 +601,4 @@ declare @id_way int = 602
 		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
 
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL) 
-	and wir.num in (48125)
+	and wir.num in (23538)

@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 11059  --10617--10575--10544--10631--10703--10634
-declare @date_close datetime = '2025-03-11 14:00:00.000' 
+declare @id int = 21461 --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+declare @date_close datetime = '2025-03-13 21:00:00.000' 
 
 
 --UPDATE [IDS].[WagonInternalMovement]
@@ -40,6 +40,26 @@ SELECT TOP (1000) [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonFiling]
   where [id] = @id
 
+  SELECT [id]
+      ,[num]
+      ,[id_arrival_car]
+      ,[id_sap_incoming_supply]
+      ,[doc_outgoing_car]
+      ,[id_outgoing_car]
+      ,[id_sap_outbound_supply]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+      ,[highlight_color]
+      ,[id_usage_fee]
+      ,[note2]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  where id in (SELECT [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+  order by id 
+
 SELECT TOP (1000) [id]
       ,[id_wagon_internal_routes]
       ,[id_station]
@@ -63,6 +83,7 @@ SELECT TOP (1000) [id]
       ,[id_filing]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
   where [id_filing] = @id
+  order by [id_wagon_internal_routes]
 
   SELECT [id]
       ,[id_wagon_internal_routes]
@@ -89,4 +110,5 @@ SELECT TOP (1000) [id]
       ,[parent_id]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
   where [id_wagon_internal_routes] in (select [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+  order by [id_wagon_internal_routes], [id] desc
 
