@@ -1,5 +1,5 @@
 
-declare @num_doc int =  1777       
+declare @num_doc int =  505       
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[id_arrived]
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(64885544  )
+  and num in(55082119,61454880)
 
   SELECT TOP (1000) [id]
       --,[id_document]
@@ -97,7 +97,7 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(61820049,63589956,63091912,63091060,63361034,60928355,61852067,63091250,65289068,63261929,63178628,60042462,65886327,62929153,63273304,63093157,62532221,62461173,61808069,60040466))
+  and num in(55082119,61454880))
 
   /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
@@ -108,7 +108,7 @@ SELECT TOP (1000) [id]
       --,[code_stn_to]
       --,[code_border_checkpoint]
       --,[cross_time]
-      --,[code_shipper]
+      ,[code_shipper]
       ,[code_consignee]
       ,[klient]
       --,[code_payer_sender]
@@ -131,13 +131,20 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(61820049,63589956,63091912,63091060,63361034,60928355,61852067,63091250,65289068,63261929,63178628,60042462,65886327,62929153,63273304,63093157,62532221,62461173,61808069,60040466)))
+  and num in(55082119,61454880)))
 
   
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
---   SET [code_consignee] = 7932   
+--   SET  [code_shipper] = 3700   
+--		,[code_consignee] = 7932   
 --      ,[klient] = 0
--- WHERE id IN (785696,785697,785698,785699,785700,785701,785702,785703,785704,785705,785706,785707,785708,785709,785710,785711,785712,785713,785714,785715)
+-- WHERE id IN (895416)
+--GO
+
+--UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+--   SET  [code_consignee] = 9200    
+--      ,[klient] = 1
+-- WHERE id IN (916682,916683)
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
