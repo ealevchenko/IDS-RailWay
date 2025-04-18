@@ -1,4 +1,4 @@
-declare @num_doc int =10
+declare @num_doc int =198 
 
 SELECT TOP (1) [id]
       ,[num_doc]

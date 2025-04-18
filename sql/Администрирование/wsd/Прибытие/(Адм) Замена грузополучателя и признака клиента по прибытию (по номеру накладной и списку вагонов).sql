@@ -1,5 +1,5 @@
 
-declare @num_doc int =  505       
+declare @num_doc int =  608        
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[id_arrived]
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(55082119,61454880)
+  and num in(52305901 )
 
   SELECT TOP (1000) [id]
       --,[id_document]
@@ -59,13 +59,13 @@ SELECT TOP (1000) [id]
       --,[ves_tary_arc]
       --,[route]
       --,[note_vagon]
-      --,[id_cargo]
+      ,[id_cargo]
       --,[id_cargo_gng]
       --,[id_certification_data]
       --,[id_commercial_condition]
       --,[kol_pac]
       --,[pac]
-      --,[vesg]
+      ,[vesg]
       --,[vesg_reweighing]
       --,[nom_zpu]
       --,[danger]
@@ -97,7 +97,8 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(55082119,61454880))
+  and num in(53319240  )
+  )
 
   /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
@@ -131,7 +132,8 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(55082119,61454880)))
+  and num in(53319240  )
+  ))
 
   
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
@@ -142,12 +144,14 @@ SELECT TOP (1000) [id]
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
---   SET  [code_consignee] = 9200    
---      ,[klient] = 1
--- WHERE id IN (916682,916683)
+--   SET  [code_consignee] = 7932     
+--      ,[klient] = null
+-- WHERE id IN (918930)
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
---   SET [id_division_on_amkr] = 0
--- WHERE id in (1052368,1052369,1052370,1052371,1052372,1052373,1052374,1052375,1052376,1052377,1052378,1052379,1052380,1052381,1052382,1052383,1052384,1052385,1052386,1052387)
+--   --SET [id_division_on_amkr] = 0
+--   SET [id_cargo] = 1,
+--	 [vesg] = NULL
+-- WHERE id in (1213037,1213038,1213039,1213040,1213041,1213042,1213043,1213044,1213045,1213046,1213047,1213048,1213049,1213050,1213051,1213052,1213053,1213054,1213055,1213056,1213057,1213058,1213059,1213060,1213061,1213062,1213063,1213064,1213065,1213066,1213067,1213068,1213069,1213070,1213071,1213072,1213073,1213074,1213075,1213076,1213077,1213078,1213079,1213080,1213081,1213082,1213083,1213084,1213085,1213086,1213087,1213089)
 --GO

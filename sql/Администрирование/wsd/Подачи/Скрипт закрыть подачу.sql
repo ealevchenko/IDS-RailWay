@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 43760  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
-declare @date_close datetime = '2025-04-02 15:30:00.000' 
+declare @id int = 76504  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+declare @date_close datetime = '2025-04-18 11:00:00.000' 
 
 
 --UPDATE [IDS].[WagonInternalMovement]
@@ -17,6 +17,11 @@ declare @date_close datetime = '2025-04-02 15:30:00.000'
 
 --> «¿ –€“‹ œŒƒ¿◊”
 --UPDATE [IDS].[WagonFiling]
+--   SET [id_division] = 65
+-- WHERE [id] = @id
+
+-->!!!! »—œ–¿¬»“‹ ÷≈’ œŒ√–”« » œŒƒ¿◊”
+--UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
 --	  ,[doc_received] = @date_close
 --      ,[close] = @date_close
@@ -28,93 +33,118 @@ declare @date_close datetime = '2025-04-02 15:30:00.000'
 --   SET [id_operation] = 15
 -- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
-
-
-SELECT TOP (1000) [id]
-      ,[num_filing]
-      ,[type_filing]
-      ,[id_division]
-      ,[vesg]
-      ,[note]
-      ,[start_filing]
-      ,[end_filing]
+	SELECT N'=================WF==========================='
+	SELECT TOP (1000) [id]
+		  ,[num_filing]
+		  ,[type_filing]
+		  ,[id_division]
+		  ,[vesg]
+		  ,[note]
+		  ,[start_filing]
+		  ,[end_filing]
+		  ,[doc_received]
+		  ,[create]
+		  ,[create_user]
+		  ,[change]
+		  ,[change_user]
+		  ,[close]
+		  ,[close_user]
+	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonFiling]
+	  where [id] = @id
+	SELECT N'=================WIR==========================='
+	SELECT [id]
+		  ,[num]
+		  ,[id_arrival_car]
+		  ,[id_sap_incoming_supply]
+		  ,[doc_outgoing_car]
+		  ,[id_outgoing_car]
+		  ,[id_sap_outbound_supply]
+		  ,[note]
+		  ,[create]
+		  ,[create_user]
+		  ,[close]
+		  ,[close_user]
+		  ,[parent_id]
+		  ,[highlight_color]
+		  ,[id_usage_fee]
+		  ,[note2]
+	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+	  where id in (SELECT [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+	  order by id 
+	SELECT N'=================WIM==========================='
+	SELECT TOP (1000) [id]
+		  ,[id_wagon_internal_routes]
+		  ,[id_station]
+		  ,[id_way]
+		  ,[way_start]
+		  ,[way_end]
+		  ,[id_outer_way]
+		  ,[outer_way_start]
+		  ,[outer_way_end]
+		  ,[position]
+		  ,[note]
+		  ,[create]
+		  ,[create_user]
+		  ,[close]
+		  ,[close_user]
+		  ,[parent_id]
+		  ,[id_wio]
+		  ,[num_sostav]
+		  ,[filing_start]
+		  ,[filing_end]
+		  ,[id_filing]
+	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
+	  where [id_filing] = @id
+	  order by [id_wagon_internal_routes]
+	SELECT N'=================WIO==========================='
+	SELECT TOP (1000) [id]
+		  ,[id_wagon_internal_routes]
+		  ,[id_operation]
+		  ,[operation_start]
+		  ,[operation_end]
+		  ,[id_condition]
+		  ,[id_loading_status]
+		  ,[locomotive1]
+		  ,[locomotive2]
+		  ,[note]
+		  ,[create]
+		  ,[create_user]
+		  ,[close]
+		  ,[close_user]
+		  ,[parent_id]
+		  ,[con_change]
+		  ,[con_change_user]
+		  ,[id_organization_service]
+	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
+	  where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+	SELECT N'=================WagonInternalMoveCargo==========================='
+	SELECT [id]
+      ,[id_wagon_internal_routes]
+      ,[internal_doc_num]
+      ,[id_weighing_num]
       ,[doc_received]
+      ,[id_cargo]
+      ,[id_internal_cargo]
+      ,[empty]
+      ,[vesg]
+      ,[id_station_from_amkr]
+      ,[id_division_from]
+      ,[id_wim_load]
+      ,[id_wim_redirection]
+      ,[code_external_station]
+      ,[id_station_on_amkr]
+      ,[id_division_on]
       ,[create]
       ,[create_user]
       ,[change]
       ,[change_user]
       ,[close]
       ,[close_user]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonFiling]
-  where [id] = @id
-
-  SELECT [id]
-      ,[num]
-      ,[id_arrival_car]
-      ,[id_sap_incoming_supply]
-      ,[doc_outgoing_car]
-      ,[id_outgoing_car]
-      ,[id_sap_outbound_supply]
-      ,[note]
-      ,[create]
-      ,[create_user]
-      ,[close]
-      ,[close_user]
       ,[parent_id]
-      ,[highlight_color]
-      ,[id_usage_fee]
-      ,[note2]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
-  where id in (SELECT [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
-  order by id 
-
-SELECT TOP (1000) [id]
-      ,[id_wagon_internal_routes]
-      ,[id_station]
-      ,[id_way]
-      ,[way_start]
-      ,[way_end]
-      ,[id_outer_way]
-      ,[outer_way_start]
-      ,[outer_way_end]
-      ,[position]
-      ,[note]
-      ,[create]
-      ,[create_user]
-      ,[close]
-      ,[close_user]
-      ,[parent_id]
-      ,[id_wio]
-      ,[num_sostav]
-      ,[filing_start]
-      ,[filing_end]
-      ,[id_filing]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
-  where [id_filing] = @id
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
+  where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
   order by [id_wagon_internal_routes]
-
-  SELECT TOP (1000) [id]
-      ,[id_wagon_internal_routes]
-      ,[id_operation]
-      ,[operation_start]
-      ,[operation_end]
-      ,[id_condition]
-      ,[id_loading_status]
-      ,[locomotive1]
-      ,[locomotive2]
-      ,[note]
-      ,[create]
-      ,[create_user]
-      ,[close]
-      ,[close_user]
-      ,[parent_id]
-      ,[con_change]
-      ,[con_change_user]
-      ,[id_organization_service]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
-  where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
-
-  SELECT [id]
+	SELECT [id]
       ,[id_wagon_internal_routes]
       ,[internal_doc_num]
       ,[id_weighing_num]
@@ -140,4 +170,3 @@ SELECT TOP (1000) [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
   where [id_wagon_internal_routes] in (select [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id ) --and [close] is null
   order by [id_wagon_internal_routes], [id] desc
-
