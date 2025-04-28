@@ -1,10 +1,12 @@
 use [KRR-PA-CNT-Railway]
-declare @id int =  77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
-declare @date_close datetime = '2025-04-14 01:00:00.000' 
+declare @id int = 78001   --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+declare @date_close datetime = '2025-04-23 19:10:00.000' 
 
 
 --UPDATE [IDS].[WagonInternalMovement]
---	SET [id_filing] = null
+--	SET [id_filing] = null,
+--	[filing_start] = null,
+--	[filing_end] = null
 --where [id_filing] = @id
 
 --UPDATE [IDS].[WagonInternalMovement]
@@ -20,17 +22,18 @@ declare @date_close datetime = '2025-04-14 01:00:00.000'
 --   SET [id_division] = 65
 -- WHERE [id] = @id
 
+
 -->!!!! ИСПРАВИТЬ ЦЕХ ПОГРУЗКИ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
---	  ,[doc_received] = @date_close
+--	  --,[doc_received] = @date_close
 --      ,[close] = @date_close
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
 
 ---->!!!!! Исправить операцию
 --UPDATE [IDS].[WagonInternalOperation]
---   SET [id_operation] = 15
+--   SET [id_operation] = 16
 -- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
 	SELECT N'=================WF==========================='
