@@ -6612,11 +6612,15 @@
         var val_ves_tary_arc = this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
         if (!val_ves_tary_arc) {
             this.elements.input_number_ves_tary_arc.enable();
-        } else {
-
         }
         valid = valid & val_ves_tary_arc;
-        valid = valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
+
+        var val_ves_u_tara = this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
+        if (!val_ves_u_tara) {
+            this.elements.input_number_u_tara.enable();
+        }
+        valid = valid & val_ves_u_tara;
+
         // Оплата
         if (this.mode_epd !== 7) {
             valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_plat, langView('ficcd_mess_valid_name_plat', App.Langs), '', langView('ficcd_mess_valid_not_name_plat', App.Langs), true);
