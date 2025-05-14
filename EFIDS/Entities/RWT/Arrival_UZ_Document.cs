@@ -78,6 +78,37 @@ namespace EFIDS.Entities
 
         public DateTime? date_vid { get; set; }
 
+        [StringLength(20)]
+        public string code_payer_local { get; set; }
+
+        [Column(TypeName = "money")]
+        public decimal? tariff_contract { get; set; }
+
+        public DateTime? calc_payer { get; set; }
+
+        [StringLength(50)]
+        public string calc_payer_user { get; set; }
+
+        public int? IdActServices1 { get; set; }
+
+        [StringLength(50)]
+        public string NumActServices1 { get; set; }
+
+        public int? IdActServices2 { get; set; }
+
+        [StringLength(50)]
+        public string NumActServices2 { get; set; }
+
+        public int? IdActServices3 { get; set; }
+
+        [StringLength(50)]
+        public string NumActServices3 { get; set; }
+
+        public DateTime? Verification { get; set; }
+
+        [StringLength(50)]
+        public string VerificationUser { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Document_Acts> Arrival_UZ_Document_Acts { get; set; }
 

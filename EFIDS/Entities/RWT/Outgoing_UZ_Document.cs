@@ -78,6 +78,22 @@ namespace EFIDS.Entities
         [StringLength(50)]
         public string change_user { get; set; }
 
+        public int? tariff_contract { get; set; }
+
+        public DateTime? calc_payer { get; set; }
+
+        [StringLength(50)]
+        public string calc_payer_user { get; set; }
+
+        public int? num_list { get; set; }
+
+        public DateTime? date_list { get; set; }
+
+        public DateTime? Verification { get; set; }
+
+        [StringLength(50)]
+        public string VerificationUser { get; set; }
+
         public virtual Directory_BorderCheckpoint Directory_BorderCheckpoint { get; set; }
 
         public virtual Directory_Consignee Directory_Consignee { get; set; }
