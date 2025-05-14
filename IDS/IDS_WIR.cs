@@ -5840,7 +5840,8 @@ namespace IDS
                     laden = laden,
                     id_cargo = id_cargo,
                     id_cargo_gng = null,
-                    vesg = null,
+                    vesg = null, 
+                    kol_conductor = null,
                     //id_outgoing_detention_return = id_outgoing_detention_return,
                     code_stn_to = code_stn_to,
                     create = DateTime.Now,
@@ -8321,6 +8322,7 @@ namespace IDS
                                 out_uz_vag.u_tara = vagon.u_tara;
                                 out_uz_vag.ves_tary_arc = vagon.ves_tary_arc;
                                 out_uz_vag.vesg = vesg;
+                                out_uz_vag.kol_conductor = vagon.kol_conductor;
                                 out_uz_vag.change = DateTime.Now;
                                 out_uz_vag.change_user = user;
                                 // Добавим контейнера если есть
@@ -8652,7 +8654,7 @@ namespace IDS
                         name_gr = text != null ? text.name_gr : null,
                         note = null,
                         create = DateTime.Now,
-                        create_user = user,
+                        create_user = user, 
                     };
                 }
                 else
