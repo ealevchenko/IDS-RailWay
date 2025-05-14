@@ -1,4 +1,4 @@
-declare @num_doc int = 421
+declare @num_doc int = 785 
 
 SELECT TOP (1000) [id]
       ,[id_document]
