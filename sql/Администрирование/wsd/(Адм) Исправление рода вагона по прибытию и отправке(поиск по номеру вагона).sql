@@ -1,4 +1,4 @@
-declare @num int = 24433179        
+declare @num int = 63871263        
        
 SELECT TOP (1000) [num]
       ,[id_countrys]
@@ -29,7 +29,24 @@ SELECT TOP (1000) [num]
       ,[new_construction]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons]
   where num =@num
-  
+
+  declare @id_countrys int = (SELECT [id_countrys]FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons] where num =@num);
+  declare @id_genus int = (SELECT [id_genus] FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Wagons] where num =@num);
+
+  select @id_countrys,@id_genus
+
+--UPDATE [IDS].[Arrival_UZ_Vagon]
+--   SET [id_countrys] = @id_countrys
+--      ,[id_genus] = @id_genus
+--WHERE num=@num 
+
+--UPDATE [IDS].[Outgoing_UZ_Vagon]
+--   SET [id_countrys] = @id_countrys
+--      ,[id_genus] = @id_genus
+--WHERE num=@num 
+
+
+
   SELECT [id]
       ,[abbr_ru]
       ,[genus_ru]
