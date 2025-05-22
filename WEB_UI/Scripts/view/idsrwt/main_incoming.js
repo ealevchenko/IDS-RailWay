@@ -222,8 +222,9 @@
                         href: '#',
                         id: 'report_fst', label: langView('mi_title_report_draft_fst', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status <=2) {
-                                window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=report_fst&id=" + table_incoming_sostav.id_sostav, "Print");
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status <=3) {
+                                window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=arr_natural_statement_draft&format=A4&id=" + table_incoming_sostav.id_sostav, "Print");
+                                //window.open("http://localhost:53848//IDSRW_UI/areas/print/print.html?report=report_fst&id=" + table_incoming_sostav.id_sostav, "Print");
                             };
                         }.bind(this)
                     },
