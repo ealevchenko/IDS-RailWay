@@ -7621,7 +7621,7 @@ namespace IDS
                     EFUZ_DOC_OUT ef_uzdoc = new EFUZ_DOC_OUT(new EFDbContext());
                     UZ_DOC_OUT uz_doc_old = ef_uzdoc.Get(car.num_doc);
                     UZ.UZ_DOC uz_doc_new = uz_sms.GetDocumentOfDB_NumDoc(car.num_doc);
-                    if ((uz_doc_new != null && uz_doc_old != null && uz_doc_old.revision < uz_doc_new.revision) || (uz_doc_new != null && uz_doc_old == null))
+                    if ((uz_doc_new != null && uz_doc_old != null && uz_doc_old.revision <= uz_doc_new.revision) || (uz_doc_new != null && uz_doc_old == null))
                     {
                         return uz_doc_new; // Документ имеет новую ревизию
                     }
@@ -8525,7 +8525,7 @@ namespace IDS
                     // Сравнить
                     foreach (Outgoing_UZ_Document_Pay doc_pay in list_doc_pays)
                     {
-                        Outgoing_UZ_Document_Pay exist_doc_pay = ef_out_doc_pay.Context.Where(d => d.code_payer == doc_pay.code_payer && d.type_payer == doc_pay.type_payer && d.kod == doc_pay.kod).FirstOrDefault();
+                        Outgoing_UZ_Document_Pay exist_doc_pay = ef_out_doc_pay.Context.Where(d => d.id_document == document.id && d.code_payer == doc_pay.code_payer && d.type_payer == doc_pay.type_payer && d.kod == doc_pay.kod).FirstOrDefault();
                         if (exist_doc_pay != null)
                         {
                             // есть - обновить
@@ -9047,7 +9047,7 @@ namespace IDS
                             List<EPDOutgoingCar> list_update_epd = new List<EPDOutgoingCar>(); // Список для обновления
                             List<long> list_num = new List<long>();
                             // Обновим документы 
-                            foreach (OutgoingCars car in list_out_car)
+                            foreach (OutgoingCars car in list_out_car.ToList())
                             {
                                 int skip = list_num.IndexOf(car.id);
                                 if (skip == -1)
@@ -9421,6 +9421,7 @@ namespace IDS
                 int all_cars = 0; // Количество общее вагонов в составах
                                   // Пройдемся по составам
                 foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.OrderBy(c => c.Key))
+                //foreach (IGrouping<long, UZ_DOC_Sending> uz_doc_sostav in group_uz_doc.Where(s => s.Key == 396405))
                 {
                     List<UZ_DOC_Sending> list_cars = uz_doc_sostav.ToList();
                     all_cars += list_cars != null ? list_cars.Count() : 0; // Добавим общее количество вагонов
