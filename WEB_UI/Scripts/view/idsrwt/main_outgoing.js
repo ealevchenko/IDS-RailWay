@@ -13,6 +13,8 @@
             'mo_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
             'mo_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mo_init_main': 'Инициализация формы отправки...',
+            'mo_title_label_dropdown': 'Отчетная документация',
+            'mo_title_report_register_doc_transfer': 'Реєстр передач документів.',
         },
         'en':  //default language: English
         {
@@ -31,11 +33,11 @@
     var ids_dir = new IDS_DIRECTORY();
     // Модуль инициализаии компонентов формы
     var FC = App.form_control;
-/*    var FE = App.form_element;*/
+    var FE = App.form_element;
 
     var FIL = App.form_inline;
     var fc_ui = new FC();
-/*    var fe_ui = new FE();*/
+    var fe_ui = new FE();
     var alert = App.alert_form;
 
     var TOS = App.table_outgoing_sostav;
@@ -142,7 +144,29 @@
             // Отображение формы выбора 
             div.append(this.form_panel.$form);
             // Инициализация отчетных документов
-            var element_dropdown = new fc_ui.el_div_dropdown(null, 'mr-2 ml-auto', 'sm', 'btn-secondary', 'Отчетная документация');
+            //var element_dropdown = new fc_ui.el_div_dropdown(null, 'mr-2 ml-auto', 'sm', 'btn-secondary', 'Отчетная документация');
+            var element_dropdown = new fe_ui.bs_dropdown({
+                color: 'secondary',
+                size: 'sm',
+                class: 'mr-2 ml-auto dropleft',
+                id: 'dd-report',
+                label: langView('mo_title_label_dropdown', App.Langs),
+                title: 'отчеты',
+                list_menu: [
+                    {
+                        href: '#',
+                        id: 'register_doc_transfer', label: langView('mo_title_report_register_doc_transfer', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_outgoing_sostav.id_sostav && table_outgoing_sostav.select_rows_sostav.length > 0 && table_outgoing_sostav.select_rows_sostav[0].status >2) {
+                                window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=out_register_doc_transfer&format=A4&id=" + table_outgoing_sostav.id_sostav, "Print");
+                            };
+                        }.bind(this)
+                    },
+                ],
+            });
+
+
+
             if (element_dropdown && element_dropdown.$element && element_dropdown.$element.length > 0) {
                 this.form_panel.$form.append(element_dropdown.$element);
                 // Добавить отчеты
