@@ -15,6 +15,7 @@
             'mo_init_main': 'Инициализация формы отправки...',
             'mo_title_label_dropdown': 'Отчетная документация',
             'mo_title_report_register_doc_transfer': 'Реєстр передач документів.',
+            'mo_title_report_register_doc_transfer_amkr': 'Реєстр передач документів (АМКР).',
         },
         'en':  //default language: English
         {
@@ -157,8 +158,17 @@
                         href: '#',
                         id: 'register_doc_transfer', label: langView('mo_title_report_register_doc_transfer', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_outgoing_sostav.id_sostav && table_outgoing_sostav.select_rows_sostav.length > 0 && table_outgoing_sostav.select_rows_sostav[0].status >2) {
+                            if (table_outgoing_sostav.id_sostav && table_outgoing_sostav.select_rows_sostav.length > 0 && table_outgoing_sostav.select_rows_sostav[0].status >=2) {
                                 window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=out_register_doc_transfer&format=A4&id=" + table_outgoing_sostav.id_sostav, "Print");
+                            };
+                        }.bind(this)
+                    },
+                    {
+                        href: '#',
+                        id: 'register_doc_transfer_amkr', label: langView('mo_title_report_register_doc_transfer_amkr', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_outgoing_sostav.id_sostav && table_outgoing_sostav.select_rows_sostav.length > 0 && table_outgoing_sostav.select_rows_sostav[0].status >=2) {
+                                window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=out_register_doc_transfer_amkr&format=A4&id=" + table_outgoing_sostav.id_sostav, "Print");
                             };
                         }.bind(this)
                     },
