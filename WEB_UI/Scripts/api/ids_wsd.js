@@ -2601,6 +2601,29 @@
             },
         });
     };
+    // Получить оперативный остаток (Новый Отчет остаток вагонов (общий)) на определенную дату
+    ids_wsd.prototype.getReportViewRemainderWagonsOfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/remainder_wagons/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewRemainderWagonsOfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Получить остаток по операторам за период 
     ids_wsd.prototype.getReportViewOperators_OB_OfPeriod = function (start, stop, callback) {
         $.ajax({
