@@ -8,6 +8,7 @@
     var format_date = "YYYY-MM-DD";
     var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
+    var format_datetime_ru = "DD.MM.YYYY HH:mm:ss";
 
     // Определим язык
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
@@ -76,11 +77,13 @@
 
             'ttdr_field_current_wagons_rent_operators': 'Оператор по АМКР ТЕКУЩ',
             'ttdr_field_current_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
 
             'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Разм. ПРИБ',
             'ttdr_field_incoming_cars_uz_vagon_condition_abbr': 'Разм. по приб.',
             'ttdr_field_current_condition_name': 'Разм текущ.',
             'ttdr_field_current_condition_abbr': 'Разм текущ.',
+            'ttdr_field_condition_abbr': 'Разм текущ.',
 
             'ttdr_field_incoming_cars_uz_document_code_stn_from': 'Код ст. отпр.',
             'ttdr_field_incoming_cars_uz_document_station_from_name': 'Cт. отпр.',
@@ -103,10 +106,13 @@
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_abbr': 'Следует на ст.АМКР',
             'ttdr_field_current_station_amkr_name': 'Текущая станция',
             'ttdr_field_current_station_amkr_abbr': 'Текущая станция',
-            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
-            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
-            'ttdr_field_current_outer_way_name': 'Перегон',
+            'ttdr_field_station_amkr_abbr': 'Текущая станция',
 
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+
+            'ttdr_field_current_outer_way_name': 'Перегон',
 
             'ttdr_field_incoming_cars_uz_vagon_division_code': 'Шифр Цеха',
             'ttdr_field_incoming_cars_uz_vagon_name_division': 'Цех получатель',
@@ -115,6 +121,14 @@
             'ttdr_field_incoming_cars_uz_vagon_sertification_data': 'Серт. данные',
             'ttdr_field_incoming_cars_arrival_sostav_station_on_name': 'Станц. примыкания',
             'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
+
+            'ttdr_field_loading_status': 'Статус',
+            'ttdr_field_view_cargo_name': 'Груз ТЕКУЩ',
+            'ttdr_field_view_division_from_abbr': 'Цех погрузки ТЕКУЩ',
+            'ttdr_field_view_division_on_abbr': 'Цех выгрузки ТЕКУЩ',
+            'ttdr_field_view_external_station_on_name': 'Станция УЗ назначения ТЕКУЩ',
+            'ttdr_field_view_station_from_amkr_abbr': 'Станция АМКР отправки',
+            'ttdr_field_view_station_on_amkr_abbr': 'Станция АМКР прибытия',
 
             'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
             'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
@@ -360,12 +374,24 @@
             'ttdr_field_instructional_letters_datetime': 'Дата письма',
             'ttdr_field_instructional_letters_station_code': 'Код станции',
             'ttdr_field_instructional_letters_station_name': 'Станция назначения',
+            'ttdr_field_instructional_letters_note': 'Текст',
 
             'ttdr_field_genus_vagon': 'Род вагона',
             'ttdr_field_sap_incoming_supply_kod_r_10': 'Запрет ОТК',
             'ttdr_field_wir_note': 'Примечание',
+            'ttdr_field_wir_note2': 'Примечание2',
             'ttdr_field_idle_time': 'Простой УЗ',
             'ttdr_field_idle_time_act': 'Простой УЗ (акт)',
+
+            'ttdr_field_wim_unload_id_filing': '№ Подачи выгрузки',
+            'ttdr_field_wim_unload_filing_start': 'Дата начала выгрузки',
+            'ttdr_field_wim_unload_filing_end': 'Дата окончания выгрузки',
+            'ttdr_field_wim_load_id_filing': '№ Подачи погрузки',
+            'ttdr_field_wim_load_filing_start': 'Дата начала погрузки',
+            'ttdr_field_wim_load_filing_end': 'Дата окончания погрузки',
+            'ttdr_field_wim_clear_id_filing': '№ Подачи очистки',
+            'ttdr_field_wim_clear_filing_start': 'Дата начала очистки',
+            'ttdr_field_wim_clear_filing_end': 'Дата окончания очистки',
 
             'ttdr_field_residue_total_operators_operator': 'Оператор',
             'ttdr_field_residue_total_operators_start': 'Было',
@@ -909,6 +935,14 @@
             className: 'dt-body-left shorten mw-100 operator',
             title: langView('ttdr_field_current_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        {
+            field: 'wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         //Ограничение
         {
             field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_id_limiting',
@@ -967,6 +1001,14 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Станция отправления
         {
@@ -1113,6 +1155,144 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Груз на момент выборки (с учетом внутренего перемещения)
+        {
+            field: 'view_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['view_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Цех погрузки ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_division_from_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_division_from_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_division_from_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Цех выгрузки ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_division_on_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_division_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_division_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция УЗ назначения ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_external_station_on_name',
+            data: function (row, type, val, meta) {
+                return row['view_external_station_on_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_external_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция АМКР отправления ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_station_from_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_station_from_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_station_from_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция АМКР прибытия ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_station_on_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_station_on_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_station_on_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Статус вагона
+        {
+            field: 'loading_status',
+            data: function (row, type, val, meta) {
+                return row['loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Выгрузка (Подача )
+        {
+            field: 'wim_unload_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_unload_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_filing_start !== null ? moment(row.wim_unload_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_unload_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_filing_end !== null ? moment(row.wim_unload_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Загрузка (Подача )
+        {
+            field: 'wim_load_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_load_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_load_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_load_filing_start !== null ? moment(row.wim_load_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_load_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_load_filing_end !== null ? moment(row.wim_load_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Очистка (Подача )
+        {
+            field: 'wim_clear_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_clear_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_filing_start !== null ? moment(row.wim_clear_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_clear_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_filing_end !== null ? moment(row.wim_clear_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         // Станция назначения АМКР        
         {
             field: 'incoming_cars_arrival_uz_vagon_station_amkr_name',
@@ -1147,6 +1327,14 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        {
+            field: 'station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row.id_outer_way === null ? row.id_station_amkr !== null ? row['station_amkr_abbr_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // Текущий путь        
         {
             field: 'current_way_and_outer_way_name',
@@ -1156,6 +1344,15 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_current_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'way_and_outer_way_name',
+            data: function (row, type, val, meta) {
+
+                return row.id_outer_way !== null ? row['outer_way_name_' + App.Lang] : row['way_num_' + App.Lang] + '-' + row['way_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         //{
         //    field: 'current_way_abbr',
@@ -3089,6 +3286,16 @@
             className: 'dt-body-left shorten mw-50',
             title: langView('ttdr_field_instructional_letters_station_name', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        // Текст письма
+        {
+            field: 'instructional_letters_note',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_note;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_instructional_letters_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+
         {
             field: 'sap_incoming_supply_kod_r_10',
             data: function (row, type, val, meta) {
@@ -3112,6 +3319,14 @@
             },
             className: 'dt-body-left shorten mw-150',
             title: langView('ttdr_field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'wir_note2',
+            data: function (row, type, val, meta) {
+                return row.wir_note2;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_wir_note2', App.Langs), width: "150px", orderable: true, searchable: true
         },
         // Время простоя
         {
@@ -4167,7 +4382,7 @@
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
-    //
+    // Старый Отчет остаток вагонов (общий)
     table_td_report.prototype.init_columns_operation_balance = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
@@ -4211,6 +4426,71 @@
         collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
         collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
         collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
+
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // Новый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_columns_remainder_wagons = function () {
+        var collums = [];
+        collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'wagons_rent_operator_abbr', title: null, class: null }); //+
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_gruzp', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_destination_station_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_warehouse_name', title: null, class: 'sap' });
+        //....
+        collums.push({ field: 'loading_status', title: null, class: 'current' });
+        collums.push({ field: 'view_cargo_name', title: null, class: 'current' });
+        collums.push({ field: 'view_division_from_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_division_on_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_external_station_on_name', title: null, class: 'current' });
+        collums.push({ field: 'view_station_from_amkr_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_station_on_amkr_abbr', title: null, class: 'current' });
+        //....
+        collums.push({ field: 'wim_unload_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_end', title: null, class: 'current' });
+        // Груз ОТПР
+        // Станция назначения
+        // Цех ПОГР
+        //....
+        collums.push({ field: 'station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'way_and_outer_way_name', title: null, class: null });
+        //....
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        //....
+        collums.push({ field: 'idle_time', title: null, class: null });
+        collums.push({ field: 'idle_time_act', title: null, class: null });
+        //....
+        collums.push({ field: 'sap_incoming_supply_kod_r_10', title: null, class: null });
+        collums.push({ field: 'wir_note', title: null, class: null });
+        collums.push({ field: 'wir_note2', title: null, class: null });
+        collums.push({ field: 'instructional_letters_num', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_note', title: null, class: 'letter' });
 
         collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'old_date_outgoing', title: null, class: null });
@@ -4846,8 +5126,23 @@
         buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
-    //
+    // Старый Отчет остаток вагонов (общий)
     table_td_report.prototype.init_button_operation_balance = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // Новый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_button_remainder_wagons = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
         buttons.push({ name: 'print', action: null });
@@ -6229,6 +6524,7 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            // Старый (Отчет остаток вагонов (общий))
             case 'operation_balance': {
                 this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
                 this.pageLength = 10;
@@ -6249,6 +6545,28 @@
                 this.dom = 'Bfrtip';
                 break;
             };
+            // Новый (Отчет остаток вагонов (общий))
+            case 'remainder_wagons': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 2;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_remainder_wagons();
+                this.table_buttons = this.init_button_remainder_wagons();
+                this.dom = 'Bfrtip';
+                break;
+            };
+
             case 'residue_total_operators': {
                 //this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
                 //this.pageLength = 10;

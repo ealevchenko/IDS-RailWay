@@ -11516,11 +11516,11 @@
         }.bind(this);
         // Оперативный остаток на АМКР
         this.table_operation_balance = new TTDR('div#operation-balance');         // Создадим экземпляр
-        // Инициализация модуля "Оперативный остаток на АМКР"
+        // Инициализация модуля "Оперативный остаток на АМКР" (!! Перешел на новый)
         this.table_operation_balance.init({
             alert: null,
             detali_table: true,
-            type_report: 'operation_balance',     //
+            type_report: 'remainder_wagons',     //operation_balance
             link_num: false,
             ids_wsd: null,
             fn_init: function () {
@@ -11553,8 +11553,22 @@
         }.bind(this))
     };
     // Загрузить данные
+    //view_td_report.prototype.load_select_report_10_1 = function (date, callback) {
+    //    this.ids_wsd.getReportViewOperatingBalanceOfDate(date, function (result_operating_balance) {
+    //        this.operating_balance = result_operating_balance;
+    //        this.clone_operating_balance = JSON.parse(JSON.stringify(this.operating_balance));
+    //        // Обработать и показать данные
+    //        this.process_data_view_report_10_1(this.operating_balance, function () {
+    //            // Выход
+    //            if (typeof callback === 'function') {
+    //                callback();
+    //            }
+    //        }.bind(this));
+
+    //    }.bind(this));
+    //};
     view_td_report.prototype.load_select_report_10_1 = function (date, callback) {
-        this.ids_wsd.getReportViewOperatingBalanceOfDate(date, function (result_operating_balance) {
+        this.ids_wsd.getReportViewRemainderWagonsOfDate(date, function (result_operating_balance) {
             this.operating_balance = result_operating_balance;
             this.clone_operating_balance = JSON.parse(JSON.stringify(this.operating_balance));
             // Обработать и показать данные
@@ -11652,7 +11666,7 @@
 
             if (select && (!value_operation_amkr || value_operation_amkr.length > 0)) {
                 //var res = value_operation_amkr.indexOf(String(value.arrival_uz_vagon_arrival_wagons_rent_id_operator));
-                var res = value_operation_amkr.indexOf(value.current_wagons_rent_operator_abbr_ru);
+                var res = value_operation_amkr.indexOf(value.wagons_rent_operator_abbr_ru);
                 if (res === -1) select = false;
             }
             if (select && (!value_arr_condition || value_arr_condition.length > 0)) {
@@ -11660,7 +11674,7 @@
                 if (res === -1) select = false;
             }
             if (select && (!value_curr_condition || value_curr_condition.length > 0)) {
-                var res = value_curr_condition.indexOf(String(value.current_id_condition));
+                var res = value_curr_condition.indexOf(String(value.id_condition));
                 if (res === -1) select = false;
             }
             if (select && (!value_genus || value_genus.length > 0)) {
@@ -11703,26 +11717,26 @@
             // value_out_ext_station_to
             // value_out_division
             if (select && (!value_curr_station_amkr || value_curr_station_amkr.length > 0)) {
-                var res = value_curr_station_amkr.indexOf(String(value.current_id_station_amkr));
+                var res = value_curr_station_amkr.indexOf(String(value.id_station_amkr));
                 if (res === -1) select = false;
             }
             if (select && (!value_curr_way || value_curr_way.length > 0)) {
-                var res = value_curr_way.indexOf(String(value.current_id_way));
+                var res = value_curr_way.indexOf(String(value.id_way));
                 if (res === -1) select = false;
             }
             if (select) {
                 this.report_operating_balance.push(value);
-                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.current_wagons_rent_operator_abbr_ru }.bind(this));
+                var oa = this.list_operation_amkr.find(function (o) { return o.value === value.wagons_rent_operator_abbr_ru }.bind(this));
                 if (!oa) {
-                    this.list_operation_amkr.push({ value: value.current_wagons_rent_operator_abbr_ru, text: value['current_wagons_rent_operator_abbr_' + App.Lang] });
+                    this.list_operation_amkr.push({ value: value.wagons_rent_operator_abbr_ru, text: value['wagons_rent_operator_abbr_' + App.Lang] });
                 }
                 var ac = this.list_arrival_condition.find(function (o) { return o.value === value.arrival_uz_vagon_id_condition }.bind(this));
                 if (!ac) {
                     this.list_arrival_condition.push({ value: value.arrival_uz_vagon_id_condition, text: value['arrival_uz_vagon_condition_abbr_' + App.Lang] });
                 }
-                var cc = this.list_curr_condition.find(function (o) { return o.value === value.current_id_condition }.bind(this));
+                var cc = this.list_curr_condition.find(function (o) { return o.value === value.id_condition }.bind(this));
                 if (!cc) {
-                    this.list_curr_condition.push({ value: value.current_id_condition, text: value['current_condition_abbr_' + App.Lang] });
+                    this.list_curr_condition.push({ value: value.id_condition, text: value['condition_abbr_' + App.Lang] });
                 }
                 var lg = this.list_genus.find(function (o) { return o.value === value.arrival_uz_vagon_id_genus }.bind(this));
                 if (!lg) {
@@ -11763,13 +11777,13 @@
                 //this.list_out_cargo = [];
                 //this.list_out_ext_station_to = [];
                 //this.list_out_division = [];
-                var csa = this.list_curr_station_amkr.find(function (o) { return o.value === value.current_id_station_amkr }.bind(this));
+                var csa = this.list_curr_station_amkr.find(function (o) { return o.value === value.id_station_amkr }.bind(this));
                 if (!csa) {
-                    this.list_curr_station_amkr.push({ value: value.current_id_station_amkr, text: value['current_station_amkr_abbr_' + App.Lang] });
+                    this.list_curr_station_amkr.push({ value: value.id_station_amkr, text: value['station_amkr_abbr_' + App.Lang] });
                 }
-                var csa = this.list_curr_way.find(function (o) { return o.value === value.current_id_way }.bind(this));
+                var csa = this.list_curr_way.find(function (o) { return o.value === value.id_way }.bind(this));
                 if (!csa) {
-                    this.list_curr_way.push({ value: value.current_id_way, text: value['current_station_amkr_abbr_' + App.Lang] + ' : ' + value['current_way_num_' + App.Lang] + '-' + value['current_way_abbr_' + App.Lang] });
+                    this.list_curr_way.push({ value: value.id_way, text: value['station_amkr_abbr_' + App.Lang] + ' : ' + value['way_num_' + App.Lang] + '-' + value['way_abbr_' + App.Lang] });
                 }
             }
 
