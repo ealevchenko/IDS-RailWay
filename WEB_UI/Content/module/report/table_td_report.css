@@ -146,6 +146,10 @@ table.dataTable.display td.letter {
     background-color: #eed6fc;
 }
 
+table.dataTable.display td.current {
+    background-color: #d6f7fc;
+}
+
 td.details-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
