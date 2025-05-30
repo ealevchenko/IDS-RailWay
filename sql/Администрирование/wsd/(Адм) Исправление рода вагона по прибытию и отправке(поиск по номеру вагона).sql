@@ -1,4 +1,4 @@
-declare @num int = 63871263        
+declare @num int = 26050898        
        
 SELECT TOP (1000) [num]
       ,[id_countrys]
