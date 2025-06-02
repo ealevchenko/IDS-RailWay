@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime ='2025-05-01'
+declare @date datetime ='2025-06-02 20:00:00'
 
 SELECT 
 		 wir.id
@@ -187,12 +187,12 @@ SELECT
 		END)
 		,view_division_from_abbr_ru = (CASE 
 		WHEN (move_cargo.id is not null and load_status.id not in (0, 3, 8)) 
-		THEN dir_division_on.division_abbr_ru 
+		THEN dir_division_from.division_abbr_ru 
 		ELSE null 
 		END)
 		,view_division_from_abbr_en = (CASE 
 		WHEN (move_cargo.id is not null and load_status.id not in (0, 3, 8)) 
-		THEN dir_division_on.division_abbr_en 
+		THEN dir_division_from.division_abbr_en 
 		ELSE null 
 		END)
 		,view_division_on_abbr_ru = (CASE 
@@ -468,7 +468,7 @@ SELECT
 	WHERE wim_s.id_station <> 10 AND ((wim_s.[id_outer_way] is null and wim_s.[way_start]<=@date and (wim_s.[way_end] >= @date OR wim_s.[way_end] is null)) 
 	OR (wim_s.[id_outer_way] is not null and wim_s.[outer_way_start] <=@date and (wim_s.[outer_way_end] >= @date OR wim_s.[outer_way_end] is null)))
 	group by wim_s.id_wagon_internal_routes)
-
+	and wir.num = 52367661
 	AND (dir_rod.rod_uz <> 90 OR dir_rod.rod_uz is null)
 	AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
 	AND (NOT arr_doc_uz.[klient] = 1 OR arr_doc_uz.[klient] is null)
