@@ -3439,7 +3439,7 @@ namespace WEB_UI.Controllers.api.IDS.RWT
 
         // GET: api/ids/rwt/wsd/view/remainder_wagons/date/2023-07-21T00:00:00
         /// <summary>
-        /// Получить оперативный остаток на определенную дату
+        /// Получить оперативный остаток на определенную дату (Новая выборка)
         /// </summary>
         /// <returns></returns>
         [Route("view/remainder_wagons/date/{date:datetime}")]
