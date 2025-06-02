@@ -138,6 +138,8 @@
             'vtdr_title_curr_station_amkr': 'Станция нахождения вагона',
             'vtdr_label_curr_way': 'Ж.д. путь нахождения вагона:',
             'vtdr_title_curr_way': 'Ж.д. путь нахождения вагона',
+            'vtdr_label_loading_status': 'Статус:',
+            'vtdr_title_loading_status': 'Статус',
             'vtdr_label_sap_destination_station': 'Станция назначения SAP:',
             'vtdr_title_sap_destination_station': 'Станция назначения SAP',
             'vtdr_label_sap_warehouse_name': 'Цех SAP:',
@@ -11431,6 +11433,33 @@
         });
         row_setup_18.$row.append(select_curr_way.$element);
         this.select_curr_way = select_curr_way.element;
+        // Станция нахождения вагона
+        var row_setup_19 = new this.fe_ui.bs_row();
+        var select_loading_status = new this.fe_ui.bs_select_multiple({
+            id: 'loading_status',
+            form_group_size: 'xl',
+            form_group_col: 12,
+            form_group_class: 'text-left mb-0',
+            label: langView('vtdr_label_loading_status', App.Langs),
+            label_class: 'mb-1',
+            input_size: 'sm',
+            input_class: null,
+            input_title: langView('vtdr_title_loading_status', App.Langs),
+            input_placeholder: null,
+            input_required: null,
+            input_multiple: true,
+            input_group: true,
+            element_data: [],
+            element_default: null,
+            element_change: function (e) {
+                this.action_select_report_10_1();
+            }.bind(this),
+            element_check: function (value) {
+
+            }.bind(this),
+        });
+        row_setup_19.$row.append(select_loading_status.$element);
+        this.select_loading_status = select_loading_status.element;
         //..........
         // Операция с вагоном
         // Состояние вагона
@@ -11502,6 +11531,7 @@
             .append(row_setup_14.$row)
             .append(row_setup_15.$row)
             .append(row_setup_16.$row)
+            .append(row_setup_19.$row)
             .append(row_setup_17.$row)
             .append(row_setup_18.$row);
         this.$setup_select.append(this.$form_residue_setup_select);
@@ -11602,6 +11632,7 @@
         this.list_out_division = [];
         this.list_curr_station_amkr = [];
         this.list_curr_way = [];
+        this.list_loading_status = [];
 
         var value_operation_amkr = this.select_operation_amkr.val();
         var value_arr_condition = this.select_arr_condition.val();
@@ -11620,6 +11651,7 @@
         var value_out_division = this.select_out_division.val();
         var value_curr_station_amkr = this.select_curr_station_amkr.val();
         var value_curr_way = this.select_curr_way.val();
+        var value_loading_status = this.select_loading_status.val();
 
         $.each(operating_balance, function (key, value) {
             var select = true;
@@ -11714,14 +11746,30 @@
                 if (res === -1) select = false;
             }
             // value_out_cargo
-            // value_out_ext_station_to
+            if (select && (!value_out_cargo || value_out_cargo.length > 0)) {
+                var res = value_out_cargo.indexOf(value['view_cargo_name_' + App.Lang]!==null ? value['view_cargo_name_' + App.Lang]: '');
+                if (res === -1) select = false;
+            }
+            // value_out_ext_station_to , view_external_station_on_name_
+            if (select && (!value_out_ext_station_to || value_out_ext_station_to.length > 0)) {
+                var res = value_out_ext_station_to.indexOf(value['view_external_station_on_name_' + App.Lang] !== null ? value['view_external_station_on_name_' + App.Lang]: '');
+                if (res === -1) select = false;
+            }
             // value_out_division
+            if (select && (!value_out_division || value_out_division.length > 0)) {
+                var res = value_out_division.indexOf(value['view_division_from_abbr_' + App.Lang] !== null ? value['view_division_from_abbr_' + App.Lang]: '');
+                if (res === -1) select = false;
+            }
             if (select && (!value_curr_station_amkr || value_curr_station_amkr.length > 0)) {
                 var res = value_curr_station_amkr.indexOf(String(value.id_station_amkr));
                 if (res === -1) select = false;
             }
             if (select && (!value_curr_way || value_curr_way.length > 0)) {
                 var res = value_curr_way.indexOf(String(value.id_way));
+                if (res === -1) select = false;
+            }
+            if (select && (!value_loading_status || value_loading_status.length > 0)) {
+                var res = value_loading_status.indexOf(String(value.id_loading_status));
                 if (res === -1) select = false;
             }
             if (select) {
@@ -11775,8 +11823,21 @@
                     this.list_sap_destination_station.push({ value: value.sap_outgoing_supply_destination_station_code, text: value.sap_outgoing_supply_destination_station_name });
                 }
                 //this.list_out_cargo = [];
-                //this.list_out_ext_station_to = [];
-                //this.list_out_division = [];
+                var loc = this.list_out_cargo.find(function (o) { return o.value === value['view_cargo_name_' + App.Lang] }.bind(this));
+                if (!loc) {
+                    //value['view_cargo_name_' + App.Lang]
+                    this.list_out_cargo.push({ value: value['view_cargo_name_' + App.Lang], text: value['view_cargo_name_' + App.Lang] });
+                }
+                //this.list_out_ext_station_to = []; view_external_station_on_name_en
+                var loest = this.list_out_ext_station_to.find(function (o) { return o.value === value['view_external_station_on_name_' + App.Lang] }.bind(this));
+                if (!loest) {
+                    this.list_out_ext_station_to.push({ value: value['view_external_station_on_name_' + App.Lang], text: value['view_external_station_on_name_' + App.Lang] });
+                }
+                //this.list_out_division = []; view_division_from_abbr
+                var lodv = this.list_out_division.find(function (o) { return o.value === value['view_division_from_abbr_' + App.Lang] }.bind(this));
+                if (!lodv) {
+                    this.list_out_division.push({ value: value['view_division_from_abbr_' + App.Lang], text: value['view_division_from_abbr_' + App.Lang] });
+                }
                 var csa = this.list_curr_station_amkr.find(function (o) { return o.value === value.id_station_amkr }.bind(this));
                 if (!csa) {
                     this.list_curr_station_amkr.push({ value: value.id_station_amkr, text: value['station_amkr_abbr_' + App.Lang] });
@@ -11784,6 +11845,11 @@
                 var csa = this.list_curr_way.find(function (o) { return o.value === value.id_way }.bind(this));
                 if (!csa) {
                     this.list_curr_way.push({ value: value.id_way, text: value['station_amkr_abbr_' + App.Lang] + ' : ' + value['way_num_' + App.Lang] + '-' + value['way_abbr_' + App.Lang] });
+                }
+
+                var llst = this.list_loading_status.find(function (o) { return o.value === value.id_loading_status }.bind(this));
+                if (!llst) {
+                    this.list_loading_status.push({ value: value.id_loading_status, text: value['loading_status_' + App.Lang] });
                 }
             }
 
@@ -11843,6 +11909,9 @@
         }
         if (!value_curr_way || value_curr_way.length === 0) {
             this.select_curr_way.update(this.sort_text(this.list_curr_way, "text"), -1);
+        }
+        if (!value_loading_status || value_loading_status.length === 0) {
+            this.select_loading_status.update(this.sort_text(this.list_loading_status, "text"), -1);
         }
         // Выход
         if (typeof callback === 'function') {
