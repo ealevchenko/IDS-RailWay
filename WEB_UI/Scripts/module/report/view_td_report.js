@@ -11589,20 +11589,6 @@
         }.bind(this))
     };
     // Загрузить данные
-    //view_td_report.prototype.load_select_report_10_1 = function (date, callback) {
-    //    this.ids_wsd.getReportViewOperatingBalanceOfDate(date, function (result_operating_balance) {
-    //        this.operating_balance = result_operating_balance;
-    //        this.clone_operating_balance = JSON.parse(JSON.stringify(this.operating_balance));
-    //        // Обработать и показать данные
-    //        this.process_data_view_report_10_1(this.operating_balance, function () {
-    //            // Выход
-    //            if (typeof callback === 'function') {
-    //                callback();
-    //            }
-    //        }.bind(this));
-
-    //    }.bind(this));
-    //};
     view_td_report.prototype.load_select_report_10_1 = function (date, callback) {
         this.ids_wsd.getReportViewRemainderWagonsOfDate(date, function (result_operating_balance) {
             this.operating_balance = result_operating_balance;
@@ -11663,7 +11649,7 @@
             var select = true;
 
             if (select && this.switch_paid.val() === true) {
-                if (!value.current_wagons_rent_operator_paid) {
+                if (!value.wagons_rent_operator_paid) {
                     select = false;
                 }
             }
@@ -11678,17 +11664,17 @@
                 }
             }
             if (select && this.switch_amkr_outer_cars.val() === false) {
-                if (value.current_operators_wagons_group === 'amkr') {
+                if (value.operators_wagons_group === 'amkr') {
                     select = false;
                 }
             }
             if (select && this.switch_amkr_cisterns.val() === false) {
-                if (value.current_operators_wagons_group === 'cisterns') {
+                if (value.operators_wagons_group === 'cisterns') {
                     select = false;
                 }
             }
             if (select && this.switch_outer_cars.val() === false) {
-                if (value.current_operators_wagons_group !== 'amkr' && value.current_operators_wagons_group !== 'cisterns') {
+                if (value.operators_wagons_group !== 'amkr' && value.operators_wagons_group !== 'cisterns') {
                     select = false;
                 }
             }
