@@ -123,12 +123,19 @@
             'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
 
             'ttdr_field_loading_status': 'Статус',
+            'ttdr_field_current_loading_status': 'Статус',
             'ttdr_field_view_cargo_name': 'Груз ТЕКУЩ',
             'ttdr_field_view_division_from_abbr': 'Цех погрузки ТЕКУЩ',
             'ttdr_field_view_division_on_abbr': 'Цех выгрузки ТЕКУЩ',
             'ttdr_field_view_external_station_on_name': 'Станция УЗ назначения ТЕКУЩ',
             'ttdr_field_view_station_from_amkr_abbr': 'Станция АМКР отправки',
             'ttdr_field_view_station_on_amkr_abbr': 'Станция АМКР прибытия',
+            'ttdr_field_operation_name': 'Операция',
+            'ttdr_field_operation_start': 'Операция начата',
+            'ttdr_field_operation_end': 'Операция завершена',
+
+            'ttdr_field_outgoing_uz_vagon_pay_001': 'Тариф',
+            'ttdr_field_outgoing_uz_vagon_pay_add': 'Доп. сборы',
 
             'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
             'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
@@ -1218,6 +1225,15 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Статус вагона
+        {
+            field: 'current_loading_status',
+            data: function (row, type, val, meta) {
+                return row['current_loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // Выгрузка (Подача )
         {
             field: 'wim_unload_id_filing',
@@ -1353,6 +1369,31 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Операция на момент выборки
+        {
+            field: 'operation_name',
+            data: function (row, type, val, meta) {
+                return row['operation_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'operation_start',
+            data: function (row, type, val, meta) {
+                return row.operation_start !== null ? moment(row.operation_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'operation_end',
+            data: function (row, type, val, meta) {
+                return row.operation_end !== null ? moment(row.operation_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_end', App.Langs), width: "50px", orderable: true, searchable: true
         },
         //{
         //    field: 'current_way_abbr',
@@ -3558,6 +3599,24 @@
             className: 'dt-body-center shorten mw-50',
             title: langView('ttdr_field_grace_time', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        // Тариф и доп сборы по отправке
+        {
+            field: 'outgoing_uz_vagon_pay_001',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_pay_001 ? Number(Number(row.outgoing_uz_vagon_pay_001) / 100).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_uz_vagon_pay_001', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_uz_vagon_pay_add',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_pay_add ? Number(Number(row.outgoing_uz_vagon_pay_add) / 100).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_uz_vagon_pay_add', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -3905,11 +3964,8 @@
     table_td_report.prototype.init_columns_outgoing_common_detali = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
-        //
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption', title: null, class: null });
         collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
@@ -3921,42 +3977,25 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_wagon_adm', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_name_etsng', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_etsng_name', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_group_name', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_kod_etsng', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_etsng_code', title: null, class: 'epd' }); //
-        //collums.push({ field: 'outgoing_cars_epd_route_stn_to', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_route_name_to', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_stn_to', title: null, class: 'epd' });   //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_to_station_uz_name', title: null, class: 'epd' });  //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_name', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_joint_stn', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_joint_stn_name', title: null, class: 'epd' }); 
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_border_checkpoint', title: null, class: 'epd' });    //
-        collums.push({ field: 'outgoing_cars_outgoing_uz_document_border_checkpoint_station_name', title: null, class: 'epd' }); // 21
-        //21
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_vesg', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_document_border_checkpoint_station_name', title: null, class: 'epd' }); // 
+        //22
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_vesg', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_u_tara', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_u_tara', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_ves_tary_arc', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_ves_tary_arc', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_gruzp', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_gruzp', title: null, class: 'epd' });        //
         //
-        //collums.push({ field: 'outgoing_cars_epd_client_kod', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_client_name', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_u_tara', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_ves_tary_arc', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_gruzp', title: null, class: 'epd' });        //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_consignee', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_consignee_name', title: null, class: 'epd' }); //
-
-        //collums.push({ field: 'outgoing_cars_epd_pl_kod_plat', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_pl_name_plat', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_distance_way', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_payer', title: null, class: 'epd' }); // 
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_payer_name', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_distance_way', title: null, class: 'epd' }); //
-
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_num', title: null, class: 'sap' });
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_code', title: null, class: 'sap' });
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
@@ -3978,20 +4017,25 @@
         collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr', title: null, class: null });
-        //26
-        //
-        //collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        //52 (29)
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime_final', title: null, class: null });
         collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
-
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
         //
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
+        collums.push({ field: 'current_loading_status', title: null, class: 'current' });
+        //....
+        collums.push({ field: 'wim_unload_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_end', title: null, class: 'current' });
+
+        collums.push({ field: 'outgoing_uz_vagon_pay_001', title: null, class: 'current' });
+        collums.push({ field: 'outgoing_uz_vagon_pay_add', title: null, class: 'current' });
+
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery', title: null, class: null });
@@ -4470,6 +4514,10 @@
         collums.push({ field: 'wim_clear_id_filing', title: null, class: 'current' });
         collums.push({ field: 'wim_clear_filing_start', title: null, class: 'current' });
         collums.push({ field: 'wim_clear_filing_end', title: null, class: 'current' });
+
+        collums.push({ field: 'operation_name', title: null, class: 'current' });
+        collums.push({ field: 'operation_start', title: null, class: 'current' });
+        collums.push({ field: 'operation_end', title: null, class: 'current' });
         // Груз ОТПР
         // Станция назначения
         // Цех ПОГР
@@ -6926,17 +6974,16 @@
         }
         if (this.settings.type_report === 'outgoing_common_detali') {
             this.$table_report = table_report.$table.append($('<tfoot>' +
-                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="20" class="dt-right">ИТОГО:</th>' +
-                //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="25"></td>' +
+                '<tr>' +
+                '<th class="dt-right" > Всего:</th>' +
                 '<td class="dt-centr"></td>' +
-                //'<td class="dt-centr"></td>' +
+                '<th colspan="20" class="dt-right">ИТОГО:</th>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr" colspan="29"></td>' +
                 '<td class="dt-centr"></td>' +
                 '<td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="7"></td></tr > ' +
+                '<td class="dt-centr" colspan="18"></td>' +
+                '</tr> ' +
                 '</tfoot > '));
         }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
@@ -7464,9 +7511,9 @@
                 this.obj_t_report.columns('.fl-outgoing_cars_outgoing_uz_vagon_vesg').every(function () {
                     $(this.footer()).html(sum_vesg1 ? Number(sum_vesg1 / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
-                    $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
-                });
+                //this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
+                //    $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
+                //});
                 //this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
                 //    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
                 //});
