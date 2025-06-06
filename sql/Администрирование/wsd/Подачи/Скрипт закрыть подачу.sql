@@ -1,6 +1,7 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 125999   --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
-declare @date_close datetime = '2025-05-29 10:00:00.000' 
+declare @id int = 126495     --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+ select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
+declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
 
 --UPDATE [IDS].[WagonInternalMovement]
@@ -31,10 +32,10 @@ declare @date_close datetime = '2025-05-29 10:00:00.000'
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
 
----->!!!!! Исправить операцию
---UPDATE [IDS].[WagonInternalOperation]
---   SET [id_operation] = 15
--- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+-->!!!!! Исправить операцию
+UPDATE [IDS].[WagonInternalOperation]
+   SET [id_operation] = 15
+ where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
 	SELECT N'=================WF==========================='
 	SELECT TOP (1000) [id]
@@ -99,6 +100,7 @@ declare @date_close datetime = '2025-05-29 10:00:00.000'
 	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
 	  where [id_filing] = @id
 	  order by [id_wagon_internal_routes]
+
 	SELECT N'=================WIO==========================='
 	SELECT TOP (1000) [id]
 		  ,[id_wagon_internal_routes]
