@@ -2302,10 +2302,10 @@ namespace WEB_UI.Controllers.api
                 return BadRequest(e.Message);
             }
         }
-
+        //ViewOutgoingCars
         // GET: api/ids/rwt/outgoing_cars/view/start/2021-01-01T00:00:00/stop/2021-01-20T23:59:59/is_acts/True
         [Route("view/start/{start:datetime}/stop/{stop:datetime}/is_acts/{is_acts:bool}")]
-        [ResponseType(typeof(ViewOutgoingCars))]
+        [ResponseType(typeof(ViewOutgoingCarsNew))]
         public IHttpActionResult GetViewOutgoingCarsOfPeriod(DateTime start, DateTime stop, bool is_acts)
         {
             try
@@ -2315,7 +2315,7 @@ namespace WEB_UI.Controllers.api
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
                 System.Data.SqlClient.SqlParameter b_is_acts = new System.Data.SqlClient.SqlParameter("@IsActs", is_acts);
                 string sql = "select * from [IDS].[get_view_outgoing_cars_of_period](@start, @stop, @IsActs) order by outgoing_sostav_date_outgoing";
-                List<ViewOutgoingCars> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCars>(sql, p_start, p_stop, b_is_acts).ToList();
+                List<ViewOutgoingCarsNew> list = this.ef_ids.Database.SqlQuery<ViewOutgoingCarsNew>(sql, p_start, p_stop, b_is_acts).ToList();
                 this.ef_ids.Database.CommandTimeout = null;
                 return Ok(list);
             }
