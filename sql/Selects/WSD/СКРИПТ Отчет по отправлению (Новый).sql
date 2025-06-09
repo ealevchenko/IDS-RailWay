@@ -602,10 +602,10 @@ USE [KRR-PA-CNT-Railway]
 		,wim_clear.[filing_start] as wim_clear_filing_start
 		,wim_clear.[filing_end] as wim_clear_filing_end
 		,wim_clear.[id_wio] as wim_clear_id_wio
-		,outgoing_uz_vagon_pay_001 = (SELECT sum([summa]) FROM  [IDS].[Outgoing_UZ_Vagon_Pay] where [id_vagon]=out_doc_vag.[id] and [kod]='001')
-		,outgoing_uz_vagon_pay_add = (SELECT sum([summa]) FROM  [IDS].[Outgoing_UZ_Vagon_Pay] where [id_vagon]=out_doc_vag.[id] and not [kod]='001')
+		,outgoing_uz_vagon_pay_001 = (SELECT sum(pay.[summa]) FROM  [IDS].[Outgoing_UZ_Vagon_Pay] as pay where pay.[id_vagon]=out_doc_vag.[id] and pay.[kod]='001')
+		,outgoing_uz_vagon_pay_add = (SELECT sum(pay.[summa]) FROM  [IDS].[Outgoing_UZ_Vagon_Pay] as pay where pay.[id_vagon]=out_doc_vag.[id] and pay.[kod] <>'001')
 		
-		into view_outgoing_cars
+		--into view_outgoing_cars
 		FROM [IDS].[OutgoingCars] as out_car
 		--==== ТЕКУЩЕЕ ПЕРЕМЕЩЕНИЕ ================================================================
 		--> Текущее внетренее перемещение

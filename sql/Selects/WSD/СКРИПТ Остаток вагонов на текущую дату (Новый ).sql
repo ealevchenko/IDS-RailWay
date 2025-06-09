@@ -471,7 +471,7 @@ SELECT
 	WHERE wim_s.id_station <> 10 AND ((wim_s.[id_outer_way] is null and wim_s.[way_start]<=@date and (wim_s.[way_end] >= @date OR wim_s.[way_end] is null)) 
 	OR (wim_s.[id_outer_way] is not null and wim_s.[outer_way_start] <=@date and (wim_s.[outer_way_end] >= @date OR wim_s.[outer_way_end] is null)))
 	group by wim_s.id_wagon_internal_routes)
-	and wir.num = 62943709
+	--and wir.num = 62943709
 	AND (dir_rod.rod_uz <> 90 OR dir_rod.rod_uz is null)
 	AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
 	AND (NOT arr_doc_uz.[klient] = 1 OR arr_doc_uz.[klient] is null)
