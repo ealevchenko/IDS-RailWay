@@ -239,7 +239,7 @@ namespace Test
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
 
             //tids.IDS_WIR_UpdateArrivalEPD();                          // Тест функции сервиса обновления входящих документов
-            tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
+            //tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                    // Тест переноса вагона в левую сторону
             //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
@@ -253,9 +253,9 @@ namespace Test
             //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
             //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
             //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();          // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
-            ////tids.IDS_WIR_Update_Arrival_UZ_Doc();                   // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
+            //tids.IDS_WIR_Update_Arrival_UZ_Doc();                   // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
-            //tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
+            tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
 
             //tids.IDS_WIR_UpdateOutgoing_Async();
             //tids.IDS_WIR_UpdateOutgoing_Parallel();            

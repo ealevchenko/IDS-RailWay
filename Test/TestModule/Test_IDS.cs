@@ -398,12 +398,12 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(324809, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(1157522, @"EUROPE\ealevchenko"); //231984
         }
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingCar(884759, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(1159925, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
@@ -609,7 +609,8 @@ namespace Test.TestModule
         public void IDS_WIR_UpdateArrival_UZ_Documents()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
+            //ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
+            ResultUpdateID result = ids.UpdateArrival_UZ_Documents(null);
         }
         /// <summary>
         /// Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему) 
