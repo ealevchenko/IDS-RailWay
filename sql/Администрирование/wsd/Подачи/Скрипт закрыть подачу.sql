@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 126495     --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+declare @id int = 132090 --129069 --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 
@@ -24,7 +24,7 @@ declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railw
 -- WHERE [id] = @id
 
 
--->!!!! ИСПРАВИТЬ ЦЕХ ПОГРУЗКИ ПОДАЧУ
+-->!!!! ЗАКРЫТЬ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
 --	  --,[doc_received] = @date_close
@@ -32,10 +32,32 @@ declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railw
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
 
+--13	Выгрузка с УЗ	
+--14	Выгрузка В/З	
+--15	Погрузка на УЗ	
+--16	Погрузка В/З	
+--17	Очистка	
+--18	Обработка
+
 -->!!!!! Исправить операцию
-UPDATE [IDS].[WagonInternalOperation]
-   SET [id_operation] = 15
- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+--UPDATE [IDS].[WagonInternalOperation]
+--   SET [id_operation] = 15
+-- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+
+---->!!!!! Исправить цех погрузки
+	--update [IDS].[WagonInternalMoveCargo]
+	--set [id_division_from] = 65
+	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+
+---->!!!!! Исправить цех получатель
+	--update [IDS].[WagonInternalMoveCargo]
+	--set [id_division_on] = 54
+	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+
+-->!!!!! Исправить цех получатель
+	--update [IDS].[WagonInternalMoveCargo]
+	--set [id_internal_cargo] = 471
+	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	SELECT N'=================WF==========================='
 	SELECT TOP (1000) [id]
@@ -149,6 +171,8 @@ UPDATE [IDS].[WagonInternalOperation]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
   where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
   order by [id_wagon_internal_routes]
+	
+	
 	SELECT [id]
       ,[id_wagon_internal_routes]
       ,[internal_doc_num]

@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @date datetime ='2025-06-03 20:00:00'
+declare @date datetime ='2025-06-24 15:05:25'
 
 SELECT 
 		 wir.id
@@ -254,8 +254,7 @@ SELECT
 		,wim_clear.[filing_end] as wim_clear_filing_end
 		,wim_clear.[id_wio] as wim_clear_id_wio
 		--> Инструктивные письма
-		,instructional_letters_num = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN il.num ELSE null END
+		,instructional_letters_num = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN il.num ELSE null END
 		,instructional_letters_datetime = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
 			THEN il.dt ELSE null END
 		,instructional_letters_station_code = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
@@ -323,7 +322,10 @@ SELECT
 	FROM [IDS].[WagonInternalMovement] as wim
 	Left JOIN [IDS].[WagonInternalRoutes] as wir ON wir.id = wim.[id_wagon_internal_routes]
 	--> Операция на момент выборки
-	Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id AND [operation_end] <= @date order by [operation_end] desc)
+	--Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id AND ([operation_start] <= @date and ([operation_end] >= @date or [operation_end] is null)) order by [operation_end] desc)
+	--Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id AND [operation_end] <= @date order by [operation_end] desc)
+	Left JOIN [IDS].[WagonInternalOperation] as wio ON wio.id = (select top(1) [id] FROM [IDS].[WagonInternalOperation] WHERE [id_wagon_internal_routes] = wir.id AND ([operation_start] <= @date) order by [operation_end] desc)
+
 	--> Прибытие вагона
 	Left JOIN [IDS].[ArrivalCars] as arr_car ON arr_car.id = wir.id_arrival_car 
 	--> Прибытие состава
@@ -431,10 +433,24 @@ SELECT
 	Left JOIN [IDS].[Directory_OperatorsWagonsGroup] as dir_owg ON wag_rent.id_operator = dir_owg.[id_operator]
 
 	--> ПОДАЧИ последние
-	Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id = [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 1)
-	Left JOIN [IDS].[WagonInternalMovement] as wim_load ON wim_load.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 2)
-	Left JOIN [IDS].[WagonInternalMovement] as wim_clear ON wim_clear.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 3)
+	--Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id = [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 1)
+	--Left JOIN [IDS].[WagonInternalMovement] as wim_load ON wim_load.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 2)
+	--Left JOIN [IDS].[WagonInternalMovement] as wim_clear ON wim_clear.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 3)
 	
+	Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id = (SELECT top(1) wim_f1.[id] FROM [IDS].[WagonInternalMovement] as wim_f1 Left JOIN [IDS].[WagonFiling] as wf ON wf.id = wim_f1.[id_filing]
+		where wim_f1.[id_wagon_internal_routes]=wir.id and wim_f1.[id_filing] is not null and wim_f1.id <= wim.id and wf.type_filing = 1 
+		order by wim_f1.id desc)
+
+   Left JOIN [IDS].[WagonInternalMovement] as wim_load ON wim_load.id = (SELECT top(1) wim_f2.[id] FROM [IDS].[WagonInternalMovement] as wim_f2 Left JOIN [IDS].[WagonFiling] as wf ON wf.id = wim_f2.[id_filing]
+		where wim_f2.[id_wagon_internal_routes]=wir.id and wim_f2.[id_filing] is not null and wim_f2.id <= wim.id and wf.type_filing = 2 
+		order by wim_f2.id desc)
+
+	Left JOIN [IDS].[WagonInternalMovement] as wim_clear ON wim_clear.id = (SELECT top(1) wim_f3.[id] FROM [IDS].[WagonInternalMovement] as wim_f3 Left JOIN [IDS].[WagonFiling] as wf ON wf.id = wim_f3.[id_filing]
+		where wim_f3.[id_wagon_internal_routes]=wir.id and wim_f3.[id_filing] is not null and wim_f3.id <= wim.id and wf.type_filing = 3 
+		order by wim_f3.id desc)
+
+
+
 	--(SELECT top(1) wim_f.[id] FROM [IDS].[WagonInternalMovement] as wim_f Left JOIN [IDS].[WagonFiling] as wf ON wf.id = wim_f.[id_filing]
 	--	where wim_f.[id_wagon_internal_routes]=wir.id and wim_f.[id_filing] is not null and wim_f.id < wim.id and wf.type_filing = 1
 	--	order by wim_f.id desc)
@@ -450,7 +466,7 @@ SELECT
 	--> Перечень вагонов по письма
 	--Left JOIN [IDS].[InstructionalLettersWagon] as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
 	Left JOIN [IDS].[InstructionalLettersWagon] as ilw  ON ilw.id = (SELECT TOP (1) ilws.[id] FROM [IDS].[InstructionalLettersWagon] as ilws Left JOIN [IDS].[InstructionalLetters] as ils ON ils.id =  ilws.id_instructional_letters
-	where ilws.[num]=wir.num and ilws.[close] is null and ils.dt >  DATEADD(day, -30, @date)  )
+	where ilws.[num]=wir.num and ilws.[close] is null order by ilws.[id] desc) -- and ils.dt >  DATEADD(day, -90, @date) 
 	
 	--> Перечень писем
 	Left JOIN [IDS].[InstructionalLetters] as il ON ilw.id_instructional_letters = il.id
@@ -471,7 +487,7 @@ SELECT
 	WHERE wim_s.id_station <> 10 AND ((wim_s.[id_outer_way] is null and wim_s.[way_start]<=@date and (wim_s.[way_end] >= @date OR wim_s.[way_end] is null)) 
 	OR (wim_s.[id_outer_way] is not null and wim_s.[outer_way_start] <=@date and (wim_s.[outer_way_end] >= @date OR wim_s.[outer_way_end] is null)))
 	group by wim_s.id_wagon_internal_routes)
-	--and wir.num = 62943709
+	and wir.num = 63285050 
 	AND (dir_rod.rod_uz <> 90 OR dir_rod.rod_uz is null)
 	AND (NOT dir_owg.[group] in ('amkr_vz') OR dir_owg.[group] is null)
 	AND (NOT arr_doc_uz.[klient] = 1 OR arr_doc_uz.[klient] is null)
