@@ -3036,7 +3036,7 @@ namespace IDS
                 EFArrival_UZ_Vagon ef_arr_uz_doc_vag = new EFArrival_UZ_Vagon(context);
                 EFDirectory_Wagons ef_vag = new EFDirectory_Wagons(context);
                 List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.id_genus == 0 || v.id_countrys == 0 && v.num > 20000000).ToList();
-                //list_arr_uz_doc_vag = list_arr_uz_doc_vag.Where(v => v.num == 26246199).ToList();
+                //list_arr_uz_doc_vag = list_arr_uz_doc_vag.Where(v => v.num == 77259539).ToList();
                 //List<Arrival_UZ_Vagon> list_arr_uz_doc_vag = ef_arr_uz_doc_vag.Context.Where(v => v.num == 61298329).ToList();
                 result.count = list_arr_uz_doc_vag.Count();
                 foreach (Arrival_UZ_Vagon vag in list_arr_uz_doc_vag)
@@ -6822,7 +6822,7 @@ namespace IDS
                                 // Достигли конца обновления
 
                                 ResultUpdateID res_upd_arr = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user); // обновим документ прибытия в БД ИДС
-                                int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
+                                //int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
                                 res_upd = Update_UZ_DOC(ref context, doc, upd_doc_uz, DateTime.Now, "ЭПД найден в БД обновлен и закрыт.");
                                 res.SetCloseResult(res_upd, doc.num_doc);
                                 Console.WriteLine("ID документа {0}, № документа {1} - Найден в БД, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
@@ -6861,7 +6861,7 @@ namespace IDS
                                     {
                                         // Достигли конца обновления
                                         ResultUpdateID res_upd_arr = Update_Arrival_UZ_Doc(ref context, upd_doc_uz, user); // обновим документ прибытия в БД ИДС
-                                        int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
+                                        //int res_pdf = ids_arhiv.Update_UZ_DOC_PDF(upd_doc_uz, user); // Обновим документ PDF после раскредитовки
                                         res_upd = Update_UZ_DOC(ref context, doc, sms_doc_uz, DateTime.Now, "ЭПД найден на УЗ обновлен и закрыт.");
                                         res.SetCloseResult(res_upd, doc.num_doc);
                                         Console.WriteLine("ID документа {0}, № документа {1} - Найден на УЗ, обновлен и закрыт, код {2}", doc.num_doc, doc.num_uz, res_upd);
@@ -7729,7 +7729,7 @@ namespace IDS
             }
         }
         /// <summary>
-        /// Обновить пратежки по вагону
+        /// Обновить пплатежки по вагону
         /// </summary>
         /// <param name="context"></param>
         /// <param name="out_uz_vag"></param>
