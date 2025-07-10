@@ -1,8 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 133926    --129069 --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
+declare @id int = 129578          --129069 --122548--89377--89192 --77634-- 77650 --66242--66048--77004--66209--76344--77121--76363 --66209 --76699 --77650 --77897  --76941 --45009  --76590--44483 --65565  --44970  --22754  --43456  --22833 --22825 --43638--43680--22843--22843 --22443  --22561  --22467  --11260 --11276--11059  --10617--10575--10544--10631--10703--10634
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
+declare @date_start datetime = '2025-06-17 02:10:00.000';
+declare @date_end datetime = '2025-06-17 08:20:00.000';
 
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null,
@@ -18,9 +20,9 @@ declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railw
 --	SET [filing_end] = @date_close
 --where [id_filing] = @id
 
---> ЗАКРЫТЬ ПОДАЧУ
+--> ЦЕХ ПОДАЧИ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
---   SET [id_division] = 65
+--   SET [id_division] = 64
 -- WHERE [id] = @id
 
 
@@ -46,7 +48,7 @@ declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railw
 
 ---->!!!!! Исправить цех погрузки
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 65
+	--set [id_division_from] = 64
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 ---->!!!!! Исправить цех получатель
@@ -54,10 +56,32 @@ declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railw
 	--set [id_division_on] = 54
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
+---->!!!!! Исправить станции отпраки и прибытия
+	--update [IDS].[WagonInternalMoveCargo]
+	--set [id_station_from_amkr] = 25,
+	--[id_station_on_amkr] = 12
+	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+
 -->!!!!! Исправить цех получатель
 	--update [IDS].[WagonInternalMoveCargo]
 	--set [id_internal_cargo] = 471
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+
+-->!!!!! Исправить время начала и конца
+--UPDATE [IDS].[WagonInternalOperation]
+--   SET	[operation_start] = @date_start,
+--		[operation_end] = @date_end
+-- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+
+--UPDATE [IDS].[WagonInternalMovement]
+--	SET [filing_start] = @date_start,
+--		[filing_end] = @date_end
+--where [id_filing] = @id
+
+--UPDATE [IDS].[WagonFiling]
+--   SET [start_filing] = @date_start,
+--		[end_filing] = @date_end
+-- WHERE [id] = @id
 
 	SELECT N'=================WF==========================='
 	SELECT TOP (1000) [id]

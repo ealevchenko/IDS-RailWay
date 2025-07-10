@@ -13,7 +13,7 @@ SELECT TOP (1000) [id]
       ,[change]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where num in (57599243) 
+  where num in (62931761) 
   order by 1 desc
 
 
@@ -29,7 +29,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where id=115942
+  where id=116233
 
 
 
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where [id_instructional_letters] = 44445 
+  where [id_instructional_letters] = 44509 
 
 
   SELECT TOP (1000) [id]
@@ -60,4 +60,4 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLetters]
-  where [id]=44445
+  where [id]=44509

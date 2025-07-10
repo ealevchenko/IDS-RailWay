@@ -190,7 +190,8 @@ use [KRR-PA-CNT-Railway]
 		--,[current_way_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, wim.way_start, getdate()) ELSE null END)
 		--,[current_station_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_station_amkr.idle_time ELSE null END)
 		,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
-		,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
+		--,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
+		,[current_way_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_way_of_wim](wim.parent_id, wim.id_way, wim.way_start)), getdate())
 		,[current_station_idle_time] = dir_station_amkr.idle_time 
 		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
 		--> Инструктивные письма
