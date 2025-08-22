@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
 
-	declare @start datetime = convert(datetime,'2025-06-30 20:01:00',120) 
-	declare @stop datetime = convert(datetime,'2025-07-31 20:00:00',120)
+	declare @start datetime = convert(datetime,'2025-08-01 00:01:00',120) 
+	declare @stop datetime = convert(datetime,'2025-08-12 23:59:00',120)
 	declare @IsActs bit = 0
 
-	select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
+	--select * from [IDS].[get_view_outgoing_cars_of_period](@start,@stop,@IsActs)
 
 			SELECT
 		out_car.[id] as outgoing_car_id
@@ -777,7 +777,12 @@ use [KRR-PA-CNT-Railway]
 		--> Справочник платильщик local (по прибытию)
 		Left JOIN [IDS].[Directory_PayerSender] as arr_payer_local ON arr_payer_local.[code] = arr_doc_uz.[code_payer_local]
 		--> ПОДАЧИ последние
-		Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id = [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 1)
+		--Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id = [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 1)
+
+		Left JOIN [IDS].[WagonInternalMovement] as wim_unload ON wim_unload.id =(SELECT top(1) wim_f.[id] FROM [IDS].[WagonInternalMovement] as wim_f Left JOIN [IDS].[WagonFiling] as wf ON wf.id = wim_f.[id_filing] Left JOIN [IDS].[WagonInternalOperation] as wio_f ON wio_f.id = wim_f.id_wio 
+		where wim_f.[id_wagon_internal_routes]=wir.id and wim_f.[id_filing] is not null and wim_f.id < wim.id and wf.type_filing = 1 and wio_f.id_loading_status = 0
+		order by wim_f.id)
+
 		Left JOIN [IDS].[WagonInternalMovement] as wim_load ON wim_load.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 2)
 		Left JOIN [IDS].[WagonInternalMovement] as wim_clear ON wim_clear.id =  [IDS].get_last_id_wim_filing_of_type(wir.id, wim.id, 3)
 

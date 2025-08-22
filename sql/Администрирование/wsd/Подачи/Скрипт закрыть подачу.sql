@@ -1,37 +1,33 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 139565        
+declare @id int = 143655         --142583    --142028 --141996                        
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
-declare @date_start datetime = '2025-08-06 02:25:00.000';
-declare @date_end datetime = '2025-08-06 03:50:00.000';
+declare @date_start datetime = '2025-08-19 20:00:00.000';
+declare @date_end datetime = '2025-08-19 21:20:00.000';
 
+--=====================================================================================================
+--> Удалить вагон с подачи (!!! смотри WagonInternalMoveCargo там ссызка на wim + ссылка на операцию)
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null,
 --	[filing_start] = null,
 --	[filing_end] = null
 --where [id_filing] = @id
-
+--=====================================================================================================
+--> Удалить вагоны с подачи (!!! даты начало иконца +смотри WagonInternalMoveCargo там ссызка на wim + ссылка на операцию)
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [id_filing] = null
 --where [id] in (13297453,13297454,13297455,13297456,13297457)
-
---UPDATE [IDS].[WagonInternalMovement]
---	SET [filing_end] = @date_close
---where [id_filing] = @id
-
--->!!!!! Исправить цех погрузки
-
+--=====================================================================================================
+-->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 65
+	--set [id_division_from] = 99
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
---> ЦЕХ ПОДАЧИ ПОДАЧУ
---UPDATE [IDS].[WagonFiling]
---   SET [id_division] = 65
--- WHERE [id] = @id
-
-
+	--UPDATE [IDS].[WagonFiling]
+	--   SET [id_division] = 9
+	-- WHERE [id] = @id
+--=====================================================================================================
 -->!!!! ЗАКРЫТЬ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
@@ -47,15 +43,10 @@ declare @date_end datetime = '2025-08-06 03:50:00.000';
 --17	Очистка	
 --18	Обработка
 
--->!!!!! Исправить операцию
+-->!!!!! Исправить операцию (НЕЗАБЫВАЙ ПРАВИТЬ СТАТУС !!!!!)
 --UPDATE [IDS].[WagonInternalOperation]
 --   SET [id_operation] = 15
 -- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
-
----->!!!!! Исправить цех погрузки
-	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 64
-	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 ---->!!!!! Исправить цех получатель
 	--update [IDS].[WagonInternalMoveCargo]
@@ -64,13 +55,18 @@ declare @date_end datetime = '2025-08-06 03:50:00.000';
 
 ---->!!!!! Исправить станции отпраки и прибытия
 	--update [IDS].[WagonInternalMoveCargo]
-	--set --[id_station_from_amkr] = 25,
-	--[id_station_on_amkr] = 12
+	--set [id_station_from_amkr] = 33
+	----,[id_station_on_amkr] = 12
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить цех получатель
 	--update [IDS].[WagonInternalMoveCargo]
 	--set [id_internal_cargo] = 471
+	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+
+-->!!!!! Исправить Внешнюю станцию назначения
+	--UPDATE [IDS].[WagonInternalMoveCargo]
+	--SET [code_external_station] = 13538
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить время начала и конца
@@ -82,7 +78,7 @@ declare @date_end datetime = '2025-08-06 03:50:00.000';
 --UPDATE [IDS].[WagonInternalMovement]
 --	SET [filing_start] = @date_start,
 --		[filing_end] = @date_end
---where [id_filing] = @id
+--where [id_filing] = @id 
 
 --UPDATE [IDS].[WagonFiling]
 --   SET [start_filing] = @date_start,
