@@ -762,7 +762,7 @@ namespace UZ
                 // если Recieved', 'Uncredited тогда дата обновления больше или равна верхнему пределу
                 // если нет даты обновления тогда дата создания должна быть меньше или равна верхнему пределу
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] "+
-                "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') " +
+                "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8,'0') + "') " +
                 "and ([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') " +
                 "and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') "+
                 "and dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120) " +
@@ -847,7 +847,7 @@ namespace UZ
                         if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0 && otpr.date_otpr >= lower_date && otpr.date_otpr <= upper_date)
                         {
                             // Проверим вагон принадлежит документу
-                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
+                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString().PadLeft(8, '0'));
                             if (vagon != null)
                             {
                                 // Документ найден 
