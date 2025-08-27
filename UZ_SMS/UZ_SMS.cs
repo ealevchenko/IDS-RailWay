@@ -460,7 +460,7 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 //DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
-                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString().PadLeft(8, '0'), sender_code);
 
                 list = list.ToList().Where(d => d.status != uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
@@ -494,7 +494,7 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 //DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
-                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString().PadLeft(8, '0'), sender_code);
 
                 list = list.ToList().Where(d => d.status != uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr >= lower_date && d.otpr.date_otpr <= upper_date).OrderBy(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
@@ -560,7 +560,7 @@ namespace UZ
                 UZ_DOC doc = null;
                 EFUZ_VagonData ef_vagon = new EFUZ_VagonData(new EFSMSDbContext());
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
-                UZ_VagonData vagon = ef_vagon.Context.Where(v => v.nomer == num.ToString()).OrderByDescending(c => c.dt).FirstOrDefault();
+                UZ_VagonData vagon = ef_vagon.Context.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).OrderByDescending(c => c.dt).FirstOrDefault();
                 if (vagon != null)
                 {
                     // вагон найден. найдем документ
@@ -610,7 +610,7 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 if (dt_arrival == null) dt_arrival = DateTime.Now;
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 if (list_uz_data != null && list_uz_data.Count() > 0)
                 {
@@ -632,7 +632,7 @@ namespace UZ
                             // Проверим есть вагон в этом документе
                             if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                             {
-                                int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
                                 if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
                                 {
                                     if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
@@ -685,7 +685,7 @@ namespace UZ
                 DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
                     "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))    )) order by [dt] desc";
 
                 // and (([depart_code] in (0,7932,'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932'))
@@ -704,7 +704,7 @@ namespace UZ
                         if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                         {
                             // Проверим вагон принадлежит документу
-                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
+                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString().PadLeft(8, '0'));
                             if (vagon != null)
                             {
                                 // Документ найден 
@@ -928,7 +928,7 @@ namespace UZ
             {
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString().PadLeft(8, '0') + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 // Выберем все документы за указаный период
                 List<UZ_DOC> result = new List<UZ_DOC>();
@@ -1071,7 +1071,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num)";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
 
@@ -1117,7 +1117,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8,'0'));
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by [dt] desc";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
                 if (list_uz_data != null)
@@ -1137,7 +1137,7 @@ namespace UZ
                                 // Проверим есть вагон в этом документе
                                 if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                                 {
-                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
                                     if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
                                     {
                                         if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
@@ -1194,7 +1194,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by [dt] desc";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
                 if (list_uz_data != null)
@@ -1212,7 +1212,7 @@ namespace UZ
                                 // Проверим есть вагон в этом документе
                                 if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                                 {
-                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
                                     if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
                                     {
                                         if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
