@@ -13,7 +13,8 @@
     var list_railway_sng = [20, 21, 23, 24, 25, 26, 27, 28, 29, 57, 58, 59, 66, 67];               // Список кодов жд СНГ - 22 украина
 
     // Определим язык
-    App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+    //App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+    App.Lang = 'ru';
     // Массив текстовых сообщений 
     $.Text_View =
     {
