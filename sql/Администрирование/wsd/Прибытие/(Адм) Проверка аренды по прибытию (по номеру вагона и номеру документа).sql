@@ -1,7 +1,7 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num_doc int = 22  
-declare @num int = 60397817--61134227--
+declare @num_doc int = 1505  
+declare @num int = 61866885--61134227--
 
 
 SELECT [id]

@@ -1,5 +1,5 @@
 
-declare @num int = 62104435
+declare @num int = 55070650  
 --declare @num_letters int = 20102
 
 SELECT TOP (1000) [id]
@@ -13,7 +13,7 @@ SELECT TOP (1000) [id]
       ,[change]
       ,[change_user]
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where num in (57612400) 
+  where num in (55070650  ) 
   order by 1 desc
 
 
@@ -29,7 +29,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where id in (117708)
+  where id in (117633)
 
 
 
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLettersWagon]
-  where [id_instructional_letters] = 44847 
+  where [id_instructional_letters] = 44830 
 
 
   SELECT TOP (1000) [id]
@@ -60,7 +60,7 @@ SELECT TOP (1000) [id]
       ,[change_user]
 	  --delete
   FROM [KRR-PA-CNT-Railway].[IDS].[InstructionalLetters]
-  where [id]=44847
+  where [id]=44830
 
 
 
