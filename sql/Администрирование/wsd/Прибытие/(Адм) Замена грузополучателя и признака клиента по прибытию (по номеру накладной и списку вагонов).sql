@@ -1,5 +1,5 @@
 
-declare @num_doc int =  608        
+declare @num_doc int =  1616           
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[id_arrived]
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(52305901 )
+  and num in(63062509 )
 
   SELECT TOP (1000) [id]
       --,[id_document]
@@ -97,7 +97,7 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(53319240  )
+  and num in(63062509 )
   )
 
   /****** Script for SelectTopNRows command from SSMS  ******/
@@ -132,26 +132,25 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(53319240  )
+  and num in(63062509 )
   ))
 
-  
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
---   SET  [code_shipper] = 3700   
+--   SET  [code_shipper] = 0   
 --		,[code_consignee] = 7932   
 --      ,[klient] = 0
--- WHERE id IN (895416)
+-- WHERE id IN (982486)
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
---   SET  [code_consignee] = 7932     
---      ,[klient] = null
--- WHERE id IN (918930)
+--   SET  [code_consignee] = 7932       
+--      ,[klient] = 0
+-- WHERE id IN (983368)
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
---   --SET [id_division_on_amkr] = 0
---   SET [id_cargo] = 1,
---	 [vesg] = NULL
--- WHERE id in (1213037,1213038,1213039,1213040,1213041,1213042,1213043,1213044,1213045,1213046,1213047,1213048,1213049,1213050,1213051,1213052,1213053,1213054,1213055,1213056,1213057,1213058,1213059,1213060,1213061,1213062,1213063,1213064,1213065,1213066,1213067,1213068,1213069,1213070,1213071,1213072,1213073,1213074,1213075,1213076,1213077,1213078,1213079,1213080,1213081,1213082,1213083,1213084,1213085,1213086,1213087,1213089)
+--   SET [id_division_on_amkr] = 0
+--  -- SET [id_cargo] = 1,
+--	 --[vesg] = NULL
+-- WHERE id in (1300625,1300626,1300627)
 --GO
