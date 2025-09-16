@@ -30,6 +30,8 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // GET: Directory/Cars
         [AccessOfDB(LogVisit = true)]
+        [ViewAuthorize(Users = @"EUROPE\nabondarenko,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+
         public ActionResult Cars()
         {
             return View();
@@ -79,6 +81,7 @@ namespace WEB_UI.Areas.Directory.Controllers
 
         // Справочник операторы вагонов
         [AccessOfDB(LogVisit = true)]
+        [ViewAuthorize(Users = @"EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
         public ActionResult OperatorsWagons()
         {
             return View();
@@ -113,24 +116,32 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // Состояние парка
         [AccessOfDB(LogVisit = true)]
+        //[View(Roles = @"EUROPE\KRR-LG-PA-RailWay_Developers", Users = @"EUROPE\mpkulenko,EUROPE\vabelyaev,EUROPE\vabalbekin,EUROPE\lspolischuk,EUROPE\avshepeta,EUROPE\lvtverdohleb,EUROPE\tamalina,EUROPE\nnlavrenko")]
+        //[ViewOfDB(Name = "IDSMORS_Home_ElectronicCards_Edit")]
+        [ViewAuthorize(Users = @"EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
         public ActionResult ParkState()
         {
             return View();
         }
         // Коммерческое состояние
         [AccessOfDB(LogVisit = true)]
+        [ViewAuthorize(Users = @"EUROPE\nvbubleykin,EUROPE\iayanovska,EUROPE\vsyanovska,EUROPE\nabondarenko,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+
         public ActionResult ComCondition()
         {
             return View();
         }
         // Плата за пользование
         [AccessOfDB(LogVisit = true)]
+        [ViewAuthorize(Users = @"EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko,EUROPE\nykozhevnikova,EUROPE\lgcherepenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
         public ActionResult UsageFee()
         {
             return View();
         }
-        // Плата за пользование
+        // Заадресовка вагона
         [AccessOfDB(LogVisit = true)]
+        [ViewAuthorize(Users = @"EUROPE\sabubleykina,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+
         public ActionResult WagonAddressing()
         {
             return View();
