@@ -125,7 +125,7 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // Коммерческое состояние
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Users = @"EUROPE\nvbubleykin,EUROPE\iayanovska,EUROPE\vsyanovska,EUROPE\nabondarenko,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
+        [ViewAuthorize(Users = @"EUROPE\nvbubleykin,EUROPE\iayanovskaya,EUROPE\vsyanovska,EUROPE\nabondarenko,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
 
         public ActionResult ComCondition()
         {
