@@ -3,6 +3,7 @@
 
     var App = window.App || {};
     var $ = window.jQuery;
+    App.RoleAdm = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva']; 
     // Определим язык
     //App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
     App.Lang = 'ru';
@@ -22,6 +23,7 @@
     };
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
+
 
     //================================================================================
     // Класс для создания объектов контроля для элементов HTML

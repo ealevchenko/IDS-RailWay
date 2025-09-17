@@ -19,7 +19,7 @@
     var max_err_date_adoption = 3 * 24 * 60;    // TODO: Максимальная разница в минутах дата приема
     var min_err_date_adoption_act = -2 * 60;    // TODO: Минимальная разница в минутах дата приема по акту
     var max_err_date_arrival_act = 2 * 60;      // TODO: Максимальная разница в минутах дата приема по акту
-    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки ,
+    //var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки ,
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -67,7 +67,7 @@
             'fhiis_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
             'fhiis_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
-
+            'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         },
         'en':  //default language: English
         {
@@ -112,6 +112,7 @@
             'fhiis_mess_error_add_sostav': 'Error performing "Create arrival composition" operation, error code = ',
             'fhiis_mess_error_edit_sostav': 'Error performing "Update arrival composition" operation, error code = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Error performing operation "ACCEPT COMPOSITION TO AMCR", error code = ',
+            'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         }
     };
     // Определлим список текста для этого модуля
@@ -199,7 +200,8 @@
             var FIF = App.form_infield;
             this.form = new FIF();
 
-            var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+            //var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+            var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
 
             // Определим поля
             var fl_id = {
@@ -894,8 +896,15 @@
     // Уточняющая валидация данных 
     form_hi_incoming_sostav.prototype.validation = function (result) {
         var valid = true;
-        var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        //var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        //if (user_adm) return valid;
+        var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
         if (user_adm) return valid;
+        // если закрыто то правка запрещена
+        if (result.old.status >= 2) {
+            this.form.out_error(langView('fhiis_mess_error_edit_user', App.Langs).format(App.User_Name));
+            return false;
+        }
         //// Сдесь можно проверить дополнительно
         var current = moment();
         var current_date_arrival = result.old && result.old.date_arrival ? moment(result.old.date_arrival) : null;
