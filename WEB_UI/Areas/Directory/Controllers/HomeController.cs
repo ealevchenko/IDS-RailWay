@@ -30,7 +30,7 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // GET: Directory/Cars
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Users = @"EUROPE\nabondarenko,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+        [ViewAuthorize(Users = @"EUROPE\ykkozir,EUROPE\nabondarenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\tfivashina,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
 
         public ActionResult Cars()
         {
@@ -125,7 +125,7 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // Коммерческое состояние
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Users = @"EUROPE\nvbubleykin,EUROPE\iayanovska,EUROPE\vsyanovska,EUROPE\nabondarenko,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+        [ViewAuthorize(Users = @"EUROPE\nvbubleykin,EUROPE\iayanovska,EUROPE\vsyanovska,EUROPE\nabondarenko,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
 
         public ActionResult ComCondition()
         {
@@ -133,14 +133,14 @@ namespace WEB_UI.Areas.Directory.Controllers
         }
         // Плата за пользование
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Users = @"EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko,EUROPE\nykozhevnikova,EUROPE\lgcherepenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+        [ViewAuthorize(Users = @"EUROPE\nykozhevnikova,EUROPE\lgcherepenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
         public ActionResult UsageFee()
         {
             return View();
         }
         // Заадресовка вагона
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Users = @"EUROPE\sabubleykina,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lgcherepenko,EUROPE\nnlavrenko,EUROPE\osnechaeva")]
+        [ViewAuthorize(Users = @"EUROPE\nnlavrenko,EUROPE\sabubleykina,EUROPE\osnechaeva,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
 
         public ActionResult WagonAddressing()
         {
