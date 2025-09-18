@@ -901,7 +901,7 @@
         var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
         if (user_adm) return valid;
         // если закрыто то правка запрещена
-        if (result.old.status >= 2) {
+        if (result.old !== null && result.old.status >= 2) {
             this.form.out_error(langView('fhiis_mess_error_edit_user', App.Langs).format(App.User_Name));
             return false;
         }
