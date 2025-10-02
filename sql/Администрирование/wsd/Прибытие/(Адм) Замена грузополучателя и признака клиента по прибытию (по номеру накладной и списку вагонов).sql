@@ -1,5 +1,5 @@
 
-declare @num_doc int =  1616           
+declare @num_doc int =  1647            
 /****** Script for SelectTopNRows command from SSMS  ******/
 SELECT TOP (1000) [id]
       ,[id_arrived]
@@ -45,7 +45,7 @@ SELECT TOP (1000) [id]
       ,[id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(63062509 )
+  and num in(63771711  )
 
   SELECT TOP (1000) [id]
       --,[id_document]
@@ -97,7 +97,7 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(63062509 )
+  and num in(63771711  )
   )
 
   /****** Script for SelectTopNRows command from SSMS  ******/
@@ -132,7 +132,7 @@ SELECT TOP (1000) [id]
   where id in (SELECT [id_arrival_uz_vagon]
   FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
   where [id_arrival]=(SELECT TOP(1) ID FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav] where [num_doc]=@num_doc order by 1 desc)  
-  and num in(63062509 )
+  and num in(63771711  )
   ))
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
@@ -143,10 +143,10 @@ SELECT TOP (1000) [id]
 --GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
---   SET  [code_consignee] = 7932       
---      ,[klient] = 0
--- WHERE id IN (983368)
---GO
+--   SET  [code_consignee] = 9200        
+--      ,[klient] = 1
+-- WHERE id IN (984417)
+GO
 
 --UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
 --   SET [id_division_on_amkr] = 0
