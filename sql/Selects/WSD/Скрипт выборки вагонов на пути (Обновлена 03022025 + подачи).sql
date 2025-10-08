@@ -1,4 +1,4 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-CNT-Railway-Test]
 
 --0	Порожний --
 --1	Груженый ПРИБ -
@@ -10,43 +10,11 @@ use [KRR-PA-CNT-Railway]
 --7	Перекантовка +
 --8	Порожний ЧИСТ --
 
-declare @id_way int = 78
+declare @id_way int = 110
 
 	declare @arrival_idle_time int = CAST((select [value] from [IDS].[Settings] where area=N'wsd' and name = N'arrival_idle_time') AS INT);
 
 	select wir.id as wir_id
-
-			-- ТЕСТИМ-------------------------
-	 --   ,current_wagon_busy = CASE 
-		--WHEN (wio.operation_start is not null and wio.[operation_end] is null) or (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null)) 
-		--THEN 1  
-		--ELSE 0 
-		--END	
-	 --   ,current_move_busy = CASE 
-		--WHEN (out_sost.status > 0 OR cur_dir_operation.id in (9) OR (wio.operation_start is not null and wio.[operation_end] is null) OR (wf.[create] is not null and wf.[close] is null and (wim.filing_start is null  or wim.filing_end is null))) 
-		--THEN 1  
-		--ELSE 0 
-		--END		
-	 --   ,current_load_busy = CASE 
-		--WHEN ((cur_load.id in (1,2,4,5,6,7)) OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null AND cur_load.id not in (0,3))) 
-		--THEN 1  
-		--ELSE 0 
-		--END		
-		--,current_unload_busy = CASE 
-		--WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR(wf_pre.type_filing = 2 and wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null) ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
-		--THEN 1  
-		--ELSE 0 
-		--END
-		--,exist_load_document = CASE 
-		--WHEN (cur_load.id not in (0, 3) AND  wf_pre.id is not null AND wf_pre.type_filing = 2 AND (wimc_curr.[doc_received] is not null OR wf_pre.doc_received is not null))
-		--THEN 1  
-		--ELSE 0 
-		--END
-		--,wf_pre.id
-		--,wim_wf_pre.filing_end
-		--,wimc_curr.[doc_received]
-		--,wf_pre.doc_received
-		--,wf_pre.type_filing
 		,wim.id as wim_id
 		,wio.id as wio_id
 		,wir.num
@@ -100,11 +68,16 @@ declare @id_way int = 78
 		,dir_owner.[abbr_ru] as owner_wagon_abbr_ru
 		,dir_owner.[abbr_en] as owner_wagon_abbr_en
 		--> Администрация
-		,dir_countrys.code_sng as wagon_adm
-		,dir_countrys.countrys_name_ru as wagon_adm_name_ru
-		,dir_countrys.countrys_name_en as wagon_adm_name_en
-		,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
-		,dir_countrys.country_abbr_en as wagon_adm_abbr_en
+		,wagon_adm = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_countrys.code_sng ELSE null END)
+		,wagon_adm_name_ru = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_countrys.countrys_name_ru ELSE null END)
+		,wagon_adm_name_en = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_countrys.countrys_name_en ELSE null END)
+		,wagon_adm_abbr_ru = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_countrys.country_abbr_ru ELSE null END)
+		,wagon_adm_abbr_en = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN dir_countrys.country_abbr_en ELSE null END)	
+		--,dir_countrys.code_sng as wagon_adm		
+		--,dir_countrys.countrys_name_ru as wagon_adm_name_ru
+		--,dir_countrys.countrys_name_en as wagon_adm_name_en
+		--,dir_countrys.country_abbr_ru as wagon_adm_abbr_ru
+		--,dir_countrys.country_abbr_en as wagon_adm_abbr_en
 		--> Род вагона
 		,dir_rod.rod_uz as wagon_rod
 		,dir_rod.genus_ru as wagon_rod_name_ru
@@ -181,7 +154,7 @@ declare @id_way int = 78
 		ELSE 0 
 		END		
 		,current_unload_busy = CASE 
-		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR(wf_pre.type_filing = 2 and wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null) ))) --OR (cur_dir_operation.id in (15,16) AND wimc_curr.[doc_received] is null)
+		WHEN ((cur_load.id in (0, 3, 8)) OR (cur_load.id in (4,5,7) AND wf_pre.id is not null AND wim_wf_pre.filing_end is null) OR (cur_load.id in (2,6) AND wf_pre.id is not null AND (wim_wf_pre.filing_end is null OR (wf_pre.type_filing = 2 and wim_wf_pre.filing_end is not null AND wimc_curr.[doc_received] is null AND wf_pre.doc_received is null) )))
 		THEN 1  
 		ELSE 0 
 		END
@@ -367,13 +340,19 @@ declare @id_way int = 78
 		,wimc_curr.[close] as move_cargo_close
 		,wimc_curr.[close_user] as move_cargo_close_user
 		------------------------------------------------
-		,[arrival_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, arr_sost.date_adoption, getdate()) ELSE null END)
+		--,[arrival_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, arr_sost.date_adoption, getdate()) ELSE null END)
+		--,[arrival_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN @arrival_idle_time ELSE null END)		
+		,[arrival_duration] = (CASE WHEN ((dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null) ) THEN  (CASE WHEN out_sost.date_outgoing is null THEN DATEDIFF (minute, arr_sost.date_adoption, getdate()) ELSE DATEDIFF (minute, arr_sost.date_adoption, out_sost.date_outgoing) END) ELSE null END)
 		,[arrival_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN @arrival_idle_time ELSE null END)		
 		,[arrival_usage_fee] = 0.00
 		--=============== ПРОСТОЙ НА ЖД. СТАНЦИИ ==================
-		,[current_station_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate()) ELSE null END)
-		,[current_way_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, wim.way_start, getdate()) ELSE null END)
-		,[current_station_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN cur_dir_station_amkr.idle_time ELSE null END)
+		,[current_station_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate())
+		--,[current_way_duration] = DATEDIFF (minute, (select [IDS].[get_start_datetime_way_of_wim](wim.parent_id, wim.id_way, wim.way_start)), getdate())
+		,[current_way_duration] = DATEDIFF (minute, wim.way_start, getdate())
+		,[current_station_idle_time] = cur_dir_station_amkr.idle_time 
+		--,[current_station_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, (select [IDS].[get_start_datetime_station_of_wim](wim.id)), getdate()) ELSE null END)
+		--,[current_way_duration] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN DATEDIFF (minute, wim.way_start, getdate()) ELSE null END)
+		--,[current_station_idle_time] = (CASE WHEN dir_operator_group.[group] != 'amkr_vz' OR dir_operator_group.[group] is null THEN cur_dir_station_amkr.idle_time ELSE null END)
 		--=============== ВХОДЯЩАЯ ПОСТАВКА ==================
 		,sap_is.[VBELN] as sap_incoming_supply_num
 		,sap_is.[NUM_VBELN] as sap_incoming_supply_pos
@@ -406,16 +385,17 @@ declare @id_way int = 78
 		--> ....
 		--=============== ИНСТРУКТИВНЫЕ ПИСЬМИ ==================
 		--> Инструктивные письма
-		,instructional_letters_num = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN il.num ELSE null END
-		,instructional_letters_datetime = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN il.dt ELSE null END
-		,instructional_letters_station_code = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN il.destination_station ELSE null END
-		,instructional_letters_station_name = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN let_station_uz.station ELSE null END
-		,instructional_letters_note = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt)
-			THEN il.[note] ELSE null END
+		--,instructional_letters_num = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN il.num ELSE null END
+		--,instructional_letters_datetime = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN il.dt ELSE null END
+		--,instructional_letters_station_code = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN il.destination_station ELSE null END
+		--,instructional_letters_station_name = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN let_station_uz.station ELSE null END
+		--,instructional_letters_note = CASE WHEN old_out_sostav.date_outgoing is null OR (old_out_sostav.date_outgoing is not null AND old_out_sostav.date_outgoing < il.dt) THEN il.[note] ELSE null END
+		,instructional_letters_num = CASE WHEN ilw.status <3 THEN il.num ELSE null END
+		,instructional_letters_datetime = CASE WHEN ilw.status <3 THEN il.dt ELSE null END
+		,instructional_letters_station_code = CASE WHEN ilw.status <3 THEN il.destination_station ELSE null END
+		,instructional_letters_station_name = CASE WHEN ilw.status <3 THEN let_station_uz.station ELSE null END
+		,instructional_letters_note = CASE WHEN ilw.status <3 THEN il.note ELSE null END
+		
 		--=============== ВХОДЯЩЕЕ ВЗВЕШИВАНИЕ ==================
 		--> Брутто
 		--,wagon_brutto_doc = (CASE WHEN arr_doc_vag.ves_tary_arc is not null AND arr_doc_vag.vesg is not null THEN arr_doc_vag.ves_tary_arc+arr_doc_vag.vesg ELSE null END)	--Брутто по ЭПД, тн
@@ -517,7 +497,13 @@ declare @id_way int = 78
 		Left JOIN [IDS].[SAPOutgoingSupply] as sap_os ON wir.id_sap_outbound_supply = sap_os.id
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
-		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
+
+		--Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
+		--> Ограничил по времени на месяц от текущей даты
+		--Left JOIN [IDS].[InstructionalLettersWagon] as ilw  ON ilw.id = (SELECT TOP (1) ilws.[id] FROM [IDS].[InstructionalLettersWagon] as ilws Left JOIN [IDS].[InstructionalLetters] as ils ON ils.id =  ilws.id_instructional_letters
+			--where ilws.[num]=wir.num and ilws.[close] is null order by ilws.[id] desc)
+			--where ilws.[num]=wir.num and ilws.[close] is null and ils.dt >  DATEADD(day, -90, getdate())  )
+		Left JOIN [IDS].[InstructionalLettersWagon] as ilw ON ilw.id_wir = wir.id
 		--> Перечень писем
 		Left JOIN IDS.InstructionalLetters as il ON ilw.id_instructional_letters = il.id
 		--==== СПРАВОЧНИКИ ===================================================================================
@@ -601,4 +587,3 @@ declare @id_way int = 78
 		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
 
 	WHERE (wim.id_way = @id_way) AND (wim.way_end IS NULL) 
-	and wir.num in (23538)

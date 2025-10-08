@@ -188,7 +188,7 @@
         {
             field: 'searsh_sostav_arrival',
             data: function (row, type, val, meta) {
-                return row.car !== null ? row.car.ArrivalSostav.date_arrival : null;
+                return row.car !== null && row.car.ArrivalSostav != null ? row.car.ArrivalSostav.date_arrival : null;
             },
             className: 'dt-body-center shorten mw-150',
             title: langView('tmc_field_sostav_arrival', App.Langs), width: "150px", orderable: true, searchable: true
@@ -196,7 +196,7 @@
         {
             field: 'searsh_composition_index',
             data: function (row, type, val, meta) {
-                return row.car !== null ? row.car.ArrivalSostav.composition_index : null;
+                return row.car !== null && row.car.ArrivalSostav != null ? row.car.ArrivalSostav.composition_index : null;
             },
             className: 'dt-body-center shorten mw-150',
             title: langView('tmc_field_composition_index', App.Langs), width: "150px", orderable: true, searchable: true
@@ -204,7 +204,7 @@
         {
             field: 'searsh_train',
             data: function (row, type, val, meta) {
-                return row.car !== null ? row.car.ArrivalSostav.train : null;
+                return row.car !== null && row.car.ArrivalSostav != null ? row.car.ArrivalSostav.train : null;
             },
             className: 'dt-body-center',
             title: langView('tmc_field_train', App.Langs), width: "50px", orderable: true, searchable: true
@@ -212,7 +212,7 @@
         {
             field: 'searsh_sostav_status',
             data: function (row, type, val, meta) {
-                return row.car !== null ? get_status(row.car.ArrivalSostav.status) : null;
+                return row.car !== null && row.car.ArrivalSostav != null ? get_status(row.car.ArrivalSostav.status) : null;
             },
             className: 'dt-body-center shorten mw-100',
             title: langView('tmc_field_sostav_status', App.Langs), width: "100px", orderable: true, searchable: true

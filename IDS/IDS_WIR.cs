@@ -2850,40 +2850,48 @@ namespace IDS
                                         }
                                     }
                                 }
-                                if (car.arrival != null && car.ArrivalSostav.status == 2 && b_out_car)
+                                if (car.arrival != null && car.ArrivalSostav != null && car.ArrivalSostav.status == 2 && b_out_car)
                                 {
                                     type_update = 5; // Состав и вагон принят, запрет
                                 }
                                 else
                                 {
-                                    if (car.ArrivalSostav.status == 1)
+                                    if (car.ArrivalSostav != null)
                                     {
-                                        if (car.arrival != null)
+                                        if (car.ArrivalSostav.status == 1)
                                         {
-                                            // Состав в работе вагон принят
-                                            type_update = 4; // Состав в работе вагон принят, запрет
+                                            if (car.arrival != null)
+                                            {
+                                                // Состав в работе вагон принят
+                                                type_update = 4; // Состав в работе вагон принят, запрет
+                                            }
+                                            else
+                                            {
+                                                // Состав в работе вагон не принят принят
+                                                type_update = 3; // Состав в работе вагон не принят, выбор
+                                            }
                                         }
                                         else
                                         {
-                                            // Состав в работе вагон не принят принят
-                                            type_update = 3; // Состав в работе вагон не принят, выбор
+                                            if (car.ArrivalSostav.status != 2 && car.ArrivalSostav.status != 1)
+                                            {
+                                                if (car.arrival != null)
+                                                {
+                                                    type_update = 5; // Состав и вагон принят, запрет
+                                                }
+                                                else
+                                                {
+                                                    // Вагон свободен для переноса
+                                                    type_update = 2; // Состав не обработан или отклонен вагон можно переносить                                        
+                                                }
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        if (car.ArrivalSostav.status != 2 && car.ArrivalSostav.status != 1)
-                                        {
-                                            if (car.arrival != null)
-                                            {
-                                                type_update = 5; // Состав и вагон принят, запрет
-                                            }
-                                            else
-                                            {
-                                                // Вагон свободен для переноса
-                                                type_update = 2; // Состав не обработан или отклонен вагон можно переносить                                        
-                                            }
-                                        }
+                                        type_update = 2; // Состав не обработан или отклонен вагон можно переносить 
                                     }
+
                                 }
                             }
                         }
@@ -5840,7 +5848,7 @@ namespace IDS
                     laden = laden,
                     id_cargo = id_cargo,
                     id_cargo_gng = null,
-                    vesg = null, 
+                    vesg = null,
                     kol_conductor = null,
                     //id_outgoing_detention_return = id_outgoing_detention_return,
                     code_stn_to = code_stn_to,
@@ -8266,7 +8274,7 @@ namespace IDS
                         if (out_uz_vag != null)
                         {
                             // получим ЭПД на вагон
-                            UZ.VAGON vagon = epd_car.epd.otpr.vagon.ToList().Find(v => v.nomer == out_car.num.ToString());
+                            UZ.VAGON vagon = epd_car.epd.otpr.vagon.ToList().Find(v => v.nomer == out_car.num.ToString().PadLeft(8, '0'));
                             List<UZ.CONT> conts = epd_car.epd.otpr.cont.ToList().Where(c => c.nom_vag == out_car.num).ToList();
                             List<UZ.ACTS> acts = epd_car.epd.otpr.acts.ToList();
 
@@ -8654,7 +8662,7 @@ namespace IDS
                         name_gr = text != null ? text.name_gr : null,
                         note = null,
                         create = DateTime.Now,
-                        create_user = user, 
+                        create_user = user,
                     };
                 }
                 else
@@ -10176,8 +10184,9 @@ namespace IDS
                                 epd_date_otpr = otpr.date_otpr;
                                 epd_date_pr = otpr.date_pr;
 
-                                if (otpr.frontier_mark != null && otpr.frontier_mark.Count() > 0) { 
-                                
+                                if (otpr.frontier_mark != null && otpr.frontier_mark.Count() > 0)
+                                {
+
                                 }
                                 // Погран переход
                                 if (otpr.route != null && otpr.route.Count() > 0)

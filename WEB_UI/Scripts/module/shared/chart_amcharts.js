@@ -22,7 +22,7 @@
         },
         'en':  //default language: English
         {
-
+            'camc_mess_init_module': 'Инициализация модуля chart_amcharts...',
         }
     };
     // Определлим список текста для этого модуля

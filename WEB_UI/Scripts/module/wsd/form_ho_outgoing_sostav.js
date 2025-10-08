@@ -12,7 +12,7 @@
 
     var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
     var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
-    var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки
+    //var list_adm_user = ['EUROPE\\ealevchenk', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -54,6 +54,7 @@
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             'fhoogs_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", код ошибки = ',
             'fhoogs_mess_error_operation_return_present1': 'Ошибка расчета платы операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhoogs_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         },
         'en':  //default language: English
         {
@@ -92,6 +93,7 @@
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
             'fhoogs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
             'fhoogs_mess_error_operation_return_present1': 'Error calculating the fee for the operation "Present the train to the UZ", error code = ',
+            'fhoogs_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         }
     };
     // Определлим список текста для этого модуля
@@ -491,8 +493,13 @@
     // Уточняющая валидация данных 
     form_ho_outgoing_sostav.prototype.validation = function (result) {
         var valid = true;
-        var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
         if (user_adm) return valid;
+        // если закрыто то правка запрещена
+        if (result.old !== null && result.old.status >= 3) {
+            this.form.out_error(langView('fhoogs_mess_error_edit_user', App.Langs).format(App.User_Name));
+            return false;
+        }
         // Сдесь можно проверить дополнительно
         var current = moment();
         var date_readiness_amkr = moment(result.old.date_readiness_amkr);
