@@ -67,6 +67,7 @@
             'fhiis_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
             'fhiis_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
+            'fhiis_mess_error_operation_return_lts': 'Ошибка обнавления открытых писем, код ошибки = ',
             'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         },
         'en':  //default language: English
@@ -112,6 +113,7 @@
             'fhiis_mess_error_add_sostav': 'Error performing "Create arrival composition" operation, error code = ',
             'fhiis_mess_error_edit_sostav': 'Error performing "Update arrival composition" operation, error code = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Error performing operation "ACCEPT COMPOSITION TO AMCR", error code = ',
+            'fhiis_mess_error_operation_return_lts': 'Error refreshing open emails, error code =',
             'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         }
     };
@@ -1052,10 +1054,17 @@
             // Выполним операцию "Принять состав на АМКР"
             this.ids_wsd.postOperationIncomingSostav(operation, function (result) {
                 if (result > 0) {
-                    this.mf_edit.close(); // закроем форму
-                    if (typeof this.settings.fn_edit === 'function') {
-                        this.settings.fn_edit({ data: data, result: result });
-                    }
+                    // обновим письма
+                    this.ids_wsd.postUpdateOpenInstructionalLetters(function (result_lts) {
+
+                        this.mf_edit.close(); // закроем форму
+                        if (typeof this.settings.fn_edit === 'function') {
+                            this.settings.fn_edit({ data: data, result: result });
+                        }
+                        if (this.result_lts && this.result_lts.error > 0) {
+                            this.mf_edit.out_error(langView('fhiis_mess_error_operation_return_lts', App.Langs) + result_lts.error);
+                        }
+                    }.bind(this));
                     //LockScreenOff();
                 } else {
                     LockScreenOff();
