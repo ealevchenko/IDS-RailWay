@@ -2936,6 +2936,36 @@
             },
         });
     };
+    // Выполнить обновление писем привязка вагонов к прибытию и отправке
+    ids_wsd.prototype.postUpdateOpenInstructionalLetters = function (callback) {
+        $.ajax({
+            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/operation/open_instructional_letters/update/',
+            //url: 'https://localhost:7280/WSD/operation/open_instructional_letters/update/',
+            type: 'POST',
+            data: JSON.stringify([0]),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateOpenInstructionalLetters", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
     App.ids_wsd = ids_wsd;
 
     window.App = App;
