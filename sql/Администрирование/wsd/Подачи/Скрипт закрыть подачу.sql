@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 163029           --  162952                                                                                                                    
+declare @id int = 159089           --  162952                                                                                                                    
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
