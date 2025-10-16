@@ -6369,16 +6369,16 @@
             this.$input_current_condition_create.val(result_wagons_operation.current_condition_create ? moment(result_wagons_operation.current_condition_create).format(format_datetime) : '');
             this.$input_current_condition_create_user.val(result_wagons_operation.current_condition_create_user);
             //var d = moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing));
-            if ((result_wagons_operation.last_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.cur_date_adoption).subtract(5, 'days'))) || (result_wagons_operation.cur_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing)))) {
-                // Отображаем если несдан и инструкци я больше последней сдачи
-                this.$input_instructional_letters_num.val(result_wagons_operation.instructional_letters_num);
-                this.$input_instructional_letters_datetime.val(result_wagons_operation.instructional_letters_datetime ? moment(result_wagons_operation.instructional_letters_datetime).format(format_datetime) : '');
-                this.$input_instructional_letters_station_name.val(result_wagons_operation.instructional_letters_station_name);
-            } else {
-                this.$input_instructional_letters_num.val('');
-                this.$input_instructional_letters_datetime.val('');
-                this.$input_instructional_letters_station_name.val('');
-            }
+            //if ((result_wagons_operation.last_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.cur_date_adoption).subtract(5, 'days'))) || (result_wagons_operation.cur_date_outgoing === null && moment(result_wagons_operation.instructional_letters_datetime).isAfter(moment(result_wagons_operation.last_date_outgoing)))) {
+            // Отображаем если несдан и инструкци я больше последней сдачи
+            this.$input_instructional_letters_num.val(result_wagons_operation.instructional_letters_num);
+            this.$input_instructional_letters_datetime.val(result_wagons_operation.instructional_letters_datetime ? moment(result_wagons_operation.instructional_letters_datetime).format(format_datetime) : '');
+            this.$input_instructional_letters_station_name.val(result_wagons_operation.instructional_letters_station_name);
+            //} else {
+            //    this.$input_instructional_letters_num.val('');
+            //    this.$input_instructional_letters_datetime.val('');
+            //    this.$input_instructional_letters_station_name.val('');
+            //}
         } else {
             this.$input_last_date_outgoing.val('');
             //this.$input_instructional_letters_datetime.val('');
@@ -11987,17 +11987,17 @@
             }
             // value_out_cargo
             if (select && (!value_out_cargo || value_out_cargo.length > 0)) {
-                var res = value_out_cargo.indexOf(value['view_cargo_name_' + App.Lang]!==null ? value['view_cargo_name_' + App.Lang]: '');
+                var res = value_out_cargo.indexOf(value['view_cargo_name_' + App.Lang] !== null ? value['view_cargo_name_' + App.Lang] : '');
                 if (res === -1) select = false;
             }
             // value_out_ext_station_to , view_external_station_on_name_
             if (select && (!value_out_ext_station_to || value_out_ext_station_to.length > 0)) {
-                var res = value_out_ext_station_to.indexOf(value['view_external_station_on_name_' + App.Lang] !== null ? value['view_external_station_on_name_' + App.Lang]: '');
+                var res = value_out_ext_station_to.indexOf(value['view_external_station_on_name_' + App.Lang] !== null ? value['view_external_station_on_name_' + App.Lang] : '');
                 if (res === -1) select = false;
             }
             // value_out_division
             if (select && (!value_out_division || value_out_division.length > 0)) {
-                var res = value_out_division.indexOf(value['view_division_from_abbr_' + App.Lang] !== null ? value['view_division_from_abbr_' + App.Lang]: '');
+                var res = value_out_division.indexOf(value['view_division_from_abbr_' + App.Lang] !== null ? value['view_division_from_abbr_' + App.Lang] : '');
                 if (res === -1) select = false;
             }
             if (select && (!value_curr_station_amkr || value_curr_station_amkr.length > 0)) {
