@@ -1,0 +1,1 @@
+select * from [IDS].[get_view_outgoing_cars_of_period]('2024-06-09 20:01:00', '2024-06-10 20:00:00', 0) order by outgoing_sostav_date_outgoing
