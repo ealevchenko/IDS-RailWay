@@ -10673,25 +10673,27 @@
             var list_usage_fee_operator_amkr_derailment = [];   // сортировка по оператору тока сход
 
             var sum_amount = result_cars.filter(function (i) {
-                return i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0;
+                return (i.wagon_usage_fee_calc_fee_amount > 0 && i.wagon_usage_fee_manual_fee_amount === null) || i.wagon_usage_fee_manual_fee_amount > 0;
             }.bind(this)).reduce(function (a, b) {
                 return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
 
             var sum_amount_derailment = result_cars.filter(function (i) {
-                return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && i.wagon_usage_fee_derailment;
+                return ((i.wagon_usage_fee_calc_fee_amount > 0 && i.wagon_usage_fee_manual_fee_amount === null) || i.wagon_usage_fee_manual_fee_amount > 0) && i.wagon_usage_fee_derailment;
             }.bind(this)).reduce(function (a, b) {
                 return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
 
             var sum_amount_not_derailment = result_cars.filter(function (i) {
-                return (i.wagon_usage_fee_calc_fee_amount > 0 || i.wagon_usage_fee_manual_fee_amount > 0) && !i.wagon_usage_fee_derailment;
+                return ((i.wagon_usage_fee_calc_fee_amount > 0 && i.wagon_usage_fee_manual_fee_amount === null) || i.wagon_usage_fee_manual_fee_amount > 0) && !i.wagon_usage_fee_derailment;
             }.bind(this)).reduce(function (a, b) {
                 return a + (b.wagon_usage_fee_manual_fee_amount > 0 ? Number(b.wagon_usage_fee_manual_fee_amount) : Number(b.wagon_usage_fee_calc_fee_amount));
             }.bind(this), 0);
             // выборка для списков Отчет-Груз по Оператору АМКР
             $.each(result_cars, function (key, el_wag) {
-                if (el_wag.wagon_usage_fee_calc_fee_amount > 0 || el_wag.wagon_usage_fee_manual_fee_amount > 0) {
+                if ((el_wag.wagon_usage_fee_calc_fee_amount > 0 && el_wag.wagon_usage_fee_manual_fee_amount === null) || el_wag.wagon_usage_fee_manual_fee_amount > 0 || el_wag.outgoing_uz_vagon_outgoing_wagons_rent_operator_paid) {
+                    //if (el_wag.outgoing_uz_vagon_outgoing_wagons_rent_operator_paid) {
+
                     var op = list_usage_fee_operator_amkr.find(function (o) {
                         return o.id_operator === el_wag.outgoing_uz_vagon_outgoing_wagons_rent_group_id_operator &&
                             o.id_cargo === el_wag.arrival_uz_vagon_id_cargo
