@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 166461                    --  162952                                                                                                                    
+declare @id int = 166514                     --  162952                                                                                                                    
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
@@ -29,12 +29,12 @@ declare @date_end datetime = '2025-10-14 21:43:00.000';
 	-- WHERE [id] = @id
 --=====================================================================================================
 -->!!!! ЗАКРЫТЬ ПОДАЧУ
-UPDATE [IDS].[WagonFiling]
-   SET [end_filing] = @date_close
-	  --,[doc_received] = @date_close
-      ,[close] = @date_close
-      ,[close_user] = 'EUROPE\ealevchenko'
- WHERE [id] = @id
+--UPDATE [IDS].[WagonFiling]
+--   SET [end_filing] = @date_close
+--	  ,[doc_received] = @date_close
+--      ,[close] = @date_close
+--      ,[close_user] = 'EUROPE\ealevchenko'
+-- WHERE [id] = @id
 
 --13	Выгрузка с УЗ	
 --14	Выгрузка В/З	
