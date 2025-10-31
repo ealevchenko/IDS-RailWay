@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 166514                     --  162952                                                                                                                    
+declare @id int = 168255                                                 --  162952                                                                                                                    
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
-declare @date_start datetime = '2025-10-14 20:22:00.000';
-declare @date_end datetime = '2025-10-14 21:43:00.000';
+declare @date_start datetime = '2025-10-27 20:15:00.000';
+declare @date_end datetime = '2025-10-27 20:45:00.000';
 
 --=====================================================================================================
 --> Удалить вагон с подачи (!!! смотри WagonInternalMoveCargo там ссызка на wim + ссылка на операцию)
@@ -21,17 +21,17 @@ declare @date_end datetime = '2025-10-14 21:43:00.000';
 --=====================================================================================================
 -->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 39
+	--set [id_division_from] = 65
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 39
+	--   SET [id_division] = 65
 	-- WHERE [id] = @id
 --=====================================================================================================
 -->!!!! ЗАКРЫТЬ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
---	  ,[doc_received] = @date_close
+--	  --,[doc_received] = @date_close
 --      ,[close] = @date_close
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
@@ -58,7 +58,7 @@ declare @date_end datetime = '2025-10-14 21:43:00.000';
 	--set 
 	----[id_station_from_amkr] = 28
 	----,	
-	--[id_station_on_amkr] = 25
+	--[id_station_on_amkr] = 32
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить цех получатель
@@ -68,7 +68,7 @@ declare @date_end datetime = '2025-10-14 21:43:00.000';
 
 -->!!!!! Исправить Внешнюю станцию назначения
 	--UPDATE [IDS].[WagonInternalMoveCargo]
-	--SET [code_external_station] = 13538
+	--SET [code_external_station] = 352506
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить время начала и конца
