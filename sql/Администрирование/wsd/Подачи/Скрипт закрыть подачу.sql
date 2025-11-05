@@ -1,10 +1,26 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 168255                                                 --  162952                                                                                                                    
+declare @id int = 181459                                                                            --  162952                                                                                                                    
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
-declare @date_start datetime = '2025-10-27 20:15:00.000';
-declare @date_end datetime = '2025-10-27 20:45:00.000';
+declare @date_start datetime = '2025-11-05 00:00:00.000';
+declare @date_end datetime = '2025-11-05 01:40:00.000';
+
+-->!!!!! Исправить время начала и конца
+--UPDATE [IDS].[WagonInternalOperation]
+--   SET	[operation_start] = @date_start
+--		,[operation_end] = @date_end
+-- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+
+--UPDATE [IDS].[WagonInternalMovement]
+--	SET [filing_start] = @date_start
+--		,[filing_end] = @date_end
+--where [id_filing] = @id 
+
+--UPDATE [IDS].[WagonFiling]
+--   SET [start_filing] = @date_start
+--		,[end_filing] = @date_end
+-- WHERE [id] = @id
 
 --=====================================================================================================
 --> Удалить вагон с подачи (!!! смотри WagonInternalMoveCargo там ссызка на wim + ссылка на операцию)
@@ -21,11 +37,11 @@ declare @date_end datetime = '2025-10-27 20:45:00.000';
 --=====================================================================================================
 -->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 65
+	--set [id_division_from] = 8
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 65
+	--   SET [id_division] = 8
 	-- WHERE [id] = @id
 --=====================================================================================================
 -->!!!! ЗАКРЫТЬ ПОДАЧУ
@@ -56,9 +72,9 @@ declare @date_end datetime = '2025-10-27 20:45:00.000';
 ---->!!!!! Исправить станции отпраки и прибытия
 	--update [IDS].[WagonInternalMoveCargo]
 	--set 
-	----[id_station_from_amkr] = 28
+	--[id_station_from_amkr] = 4
 	----,	
-	--[id_station_on_amkr] = 32
+	----[id_station_on_amkr] = 32
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить цех получатель
@@ -71,21 +87,6 @@ declare @date_end datetime = '2025-10-27 20:45:00.000';
 	--SET [code_external_station] = 352506
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
--->!!!!! Исправить время начала и конца
---UPDATE [IDS].[WagonInternalOperation]
---   SET	[operation_start] = @date_start
---		,[operation_end] = @date_end
--- where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
-
---UPDATE [IDS].[WagonInternalMovement]
---	SET [filing_start] = @date_start
---		,[filing_end] = @date_end
---where [id_filing] = @id 
-
---UPDATE [IDS].[WagonFiling]
---   SET [start_filing] = @date_start
---		,[end_filing] = @date_end
--- WHERE [id] = @id
 
 	SELECT N'=================WF==========================='
 	SELECT TOP (1000) [id]

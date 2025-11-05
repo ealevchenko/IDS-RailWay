@@ -1,4 +1,4 @@
-declare @num int = 60624038    
+declare @num int = 60624038     
                      
        
 SELECT TOP (1000) [num]
