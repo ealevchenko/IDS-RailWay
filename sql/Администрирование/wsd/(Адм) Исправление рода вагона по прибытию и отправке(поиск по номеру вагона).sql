@@ -1,4 +1,4 @@
-declare @num int = 60624038     
+declare @num int = 52907953      
                      
        
 SELECT TOP (1000) [num]
@@ -45,8 +45,6 @@ SELECT TOP (1000) [num]
 --   SET [id_countrys] = @id_countrys
 --      ,[id_genus] = @id_genus
 --WHERE num=@num 
-
-
 
   SELECT [id]
       ,[abbr_ru]
