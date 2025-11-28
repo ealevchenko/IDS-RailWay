@@ -1,4 +1,5 @@
-declare @num int = 64330319
+declare @num int = 29137015 
+ 
    
                      
        
