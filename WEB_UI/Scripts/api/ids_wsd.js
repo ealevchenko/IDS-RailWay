@@ -2248,11 +2248,11 @@
     //                                  РАЗДЕЛ ОТЧЕТЫ ДЕПАРТАМЕНТ ПО ПРОДАЖАМ
     //=============================================================================================================
     //Добавить поставку
-    ids_wsd.prototype.postReportBorderCrossingOfNums = function (nums, callback) {
+    ids_wsd.prototype.postReportBorderCrossingOfNums = function (option, callback) {
         $.ajax({
             url: '../../api/ids/rwt/wsd/report/sd/border_crossing/',
             type: 'POST',
-            data: JSON.stringify(nums),
+            data: JSON.stringify(option),
             contentType: "application/json;charset=utf-8",
             async: true,
             beforeSend: function () {

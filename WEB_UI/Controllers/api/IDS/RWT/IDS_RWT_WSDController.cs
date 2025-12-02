@@ -2631,7 +2631,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         public string num_doc { get; set; }
         public string user { get; set; }
     }
-
+    public class OptionReportBorderCrossing
+    {
+        public DateTime start { get; set; }
+        public  DateTime stop { get; set; }
+        public  List<int> nums { get; set; }
+    }
     #endregion
 
     #region ОТЧЕТЫ Транспортный департамент (Обновленный АРМ)
@@ -3931,12 +3936,12 @@ namespace WEB_UI.Controllers.api.IDS.RWT
         [HttpPost]
         [Route("report/sd/border_crossing")]
         [ResponseType(typeof(ReportBorderCrossing))]
-        public IHttpActionResult PostReportBorderCrossingOfNums([FromBody] List<int> nums)
+        public IHttpActionResult PostReportBorderCrossingOfNums([FromBody] OptionReportBorderCrossing value)
         {
             try
             {
                 IDS_WIR ids_wir = new IDS_WIR(service.WebAPI_IDS);
-                List<ReportBorderCrossing> result = ids_wir.GetReportBorderCrossingOfNums(nums);
+                List<ReportBorderCrossing> result = ids_wir.GetReportBorderCrossingOfNums(value.start, value.stop, value.nums);
                 return Ok(result);
             }
             catch (Exception e)

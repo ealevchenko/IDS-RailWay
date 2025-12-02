@@ -31,6 +31,9 @@
             'vsdr_title_button_excel': 'Excel',
             'vsdr_title_excel_sheet_name': 'Погран переходы',
 
+            'vsdr_title_label_interval_date': 'Период сдачи на УЗ:',
+            'vsdr_title_button': 'Применить',
+
             'vsdr_field_border_crossing_num': '№ вагона',
             'vsdr_field_border_crossing_status': 'Статус вагона',
             'vsdr_field_border_crossing_date_departure_amkr': 'Вагон отправлен',
@@ -87,6 +90,7 @@
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
 
     var FE = App.form_element;
+    var FIL = App.form_inline;
     var alert = App.alert_form;
     var wsd = App.ids_wsd;
 
@@ -175,6 +179,50 @@
             this.obj_t_report.destroy(true);
             this.obj_t_report = null;
         }
+
+        this.form_panel = new FIL();
+        var fl_interval_date = {
+            type: 'interval_date',
+            id: 'interval_date',
+            prefix: 'sm',
+            title: langView('vsdr_title_label_interval_date', App.Langs),
+            start: this.start,
+            stop: this.stop,
+            select: function (interval) {
+                if (interval && interval.start && interval.stop) {
+                    this.start = moment(interval.start)._d;
+                    this.stop = moment(interval.stop)._d;
+                }
+            }.bind(this),
+        };
+        var fl_button = {
+            type: 'button',
+            id: 'button',
+            prefix: 'sm',
+            title: langView('vsdr_title_button', App.Langs),
+            icon: 'fas fa-retweet',
+            select: function (e, ui) {
+                e.preventDefault();
+                this.action_search_border_crossing();
+                /* this.view_report();*/
+            }.bind(this),
+        };
+        var fields = [];
+        fields.push(fl_interval_date);
+        fields.push(fl_button);
+        // Инициализация формы
+        this.form_panel.init({
+            fields: fields,
+            cl_form: 'd-flex w-100 mb-2'
+        });
+        this.div_interval_date = $('span#interval_date').closest("div").prev().closest("div");
+        this.$main_report.append(this.form_panel.$form);
+
+        this.start = moment().subtract(1, 'month').set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        //this.start = moment().set({ 'hour': 0, 'minute': 0, 'second': 0 })._d;
+        this.stop = moment().set({ 'hour': 23, 'minute': 59, 'second': 59 })._d;
+        this.form_panel.set('interval_date', { start: this.start, stop: this.stop });
+
         // Создадим форму поиска вагонов через погран переход
         var FDL = App.form_dialog;
         this.form = new FDL();
@@ -454,7 +502,13 @@
         var nums = is_valid_nums(list_cars, this.alert, true);
         if (nums) {
             LockScreen(langView('vsdr_mess_operation_run', App.Langs));
-            this.ids_wsd.postReportBorderCrossingOfNums(nums, function (result) {
+
+            var option = {
+                start: moment(this.start).format(format_datetime),
+                stop: moment(this.stop).format(format_datetime),
+                nums: nums
+            }
+            this.ids_wsd.postReportBorderCrossingOfNums(option, function (result) {
                 if (result !== null) {
                     if (this.obj_t_report) {
                         this.obj_t_report.clear();

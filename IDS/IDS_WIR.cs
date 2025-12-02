@@ -1,24 +1,25 @@
 ﻿using EFIDS.Concrete;
 using EFIDS.Entities;
-using IDSLogs;
-using IDSLogs.Enum;
-using IDS.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UZ;
-using System.Runtime.InteropServices;
-using System.Globalization;
 using EFIDS.Helper;
 using IDS;
-using System.Threading;
-using System.ComponentModel.DataAnnotations.Schema;
+using IDS.Helper;
+using IDSLogs;
+using IDSLogs.Enum;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Remoting.Contexts;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Globalization;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Contexts;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using UZ;
 
 namespace IDS
 {
@@ -10024,7 +10025,7 @@ namespace IDS
         #endregion
 
         #region Отчеты "Департамент по продажам"
-        public List<ReportBorderCrossing> GetReportBorderCrossingOfNums(List<int> nums)
+        public List<ReportBorderCrossing> GetReportBorderCrossingOfNums(DateTime start, DateTime stop, List<int> nums)
         {
             try
             {
@@ -10052,83 +10053,92 @@ namespace IDS
                     int? num_uz = null;
 
 
-                    OutgoingCars out_car = ef_out_car.Context.Where(c => c.num == num).OrderByDescending(c => c.id).FirstOrDefault();
-                    if (out_car != null)
+                    //OutgoingCars out_car = ef_out_car.Context.Where(c => c.num == num).OrderByDescending(c => c.id).FirstOrDefault();
+                    List<OutgoingCars> out_cars =
+                        ef_out_car.Context
+                        .Include(sostav => sostav.OutgoingSostav) // cars
+                        .Where(c => c.num == num && c.OutgoingSostav.date_outgoing >= start && c.OutgoingSostav.date_outgoing <= stop)
+                        .OrderByDescending(c => c.id).ToList();
+
+                    foreach (OutgoingCars out_car in out_cars)
                     {
-                        date_departure_amkr = out_car.OutgoingSostav.date_departure_amkr;
-                        status = out_car.OutgoingSostav.status;
-                        UZ_DOC_OUT uz_doc_out = out_car.UZ_DOC_OUT;
-                        if (uz_doc_out != null)
+                        if (out_car != null)
                         {
-                            num_doc = uz_doc_out.num_doc;
-                            revision = uz_doc_out.revision;
-                            num_uz = uz_doc_out.num_uz;
-                            epd_status = uz_doc_out.status;
-                            UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
-                            if (otpr != null)
+                            date_departure_amkr = out_car.OutgoingSostav.date_departure_amkr;
+                            status = out_car.OutgoingSostav.status;
+                            UZ_DOC_OUT uz_doc_out = out_car.UZ_DOC_OUT;
+                            if (uz_doc_out != null)
                             {
-                                epd_date_otpr = otpr.date_otpr;
-                                epd_date_pr = otpr.date_pr;
-                                // Погран переход
-                                if (otpr.route != null && otpr.route.Count() > 0)
+                                num_doc = uz_doc_out.num_doc;
+                                revision = uz_doc_out.revision;
+                                num_uz = uz_doc_out.num_uz;
+                                epd_status = uz_doc_out.status;
+                                UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
+                                if (otpr != null)
                                 {
-                                    ROUTE route = otpr.route[otpr.route.Count() - 1];
-                                    if (route != null && route.joint != null && route.joint.Count() > 0)
+                                    epd_date_otpr = otpr.date_otpr;
+                                    epd_date_pr = otpr.date_pr;
+                                    // Погран переход
+                                    if (otpr.route != null && otpr.route.Count() > 0)
                                     {
-                                        foreach (JOINT jn in route.joint)
+                                        ROUTE route = otpr.route[otpr.route.Count() - 1];
+                                        if (route != null && route.joint != null && route.joint.Count() > 0)
                                         {
-                                            if (jn.admin == 22)
+                                            foreach (JOINT jn in route.joint)
                                             {
-                                                cross_time = jn.cross_time;
-                                                border_crossing_stn = jn.stn;
-                                                border_crossing_stn_name = jn.stn_name;
+                                                if (jn.admin == 22)
+                                                {
+                                                    cross_time = jn.cross_time;
+                                                    border_crossing_stn = jn.stn;
+                                                    border_crossing_stn_name = jn.stn_name;
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                // Грузополучатель
-                                if (otpr.client != null && otpr.client.Count() > 0)
-                                {
-                                    foreach (CLIENT cl in otpr.client)
+                                    // Грузополучатель
+                                    if (otpr.client != null && otpr.client.Count() > 0)
                                     {
-                                        if (cl.type == "2")
+                                        foreach (CLIENT cl in otpr.client)
                                         {
-                                            client_kod_on = cl.kod;
-                                            client_name_on = cl.name;
+                                            if (cl.type == "2")
+                                            {
+                                                client_kod_on = cl.kod;
+                                                client_name_on = cl.name;
+                                            }
                                         }
                                     }
-                                }
-                                // груз
-                                if (otpr.vagon != null && otpr.vagon.Count() > 0)
-                                {
-                                    VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
-                                    if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                                    // груз
+                                    if (otpr.vagon != null && otpr.vagon.Count() > 0)
                                     {
-                                        vesg = vagon.collect_v[0].vesg;
+                                        VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
+                                        if (vagon != null && vagon.collect_v != null && vagon.collect_v.Count() > 0)
+                                        {
+                                            vesg = vagon.collect_v[0].vesg;
+                                        }
                                     }
                                 }
                             }
                         }
+                        ReportBorderCrossing rbc = new ReportBorderCrossing()
+                        {
+                            num = num,
+                            status = status,
+                            date_departure_amkr = date_departure_amkr,
+                            cross_time = cross_time,
+                            border_crossing_stn = border_crossing_stn,
+                            border_crossing_stn_name = border_crossing_stn_name,
+                            client_kod_on = client_kod_on,
+                            client_name_on = client_name_on,
+                            vesg = vesg,
+                            epd_status = epd_status,
+                            epd_date_otpr = epd_date_otpr,
+                            epd_date_pr = epd_date_pr,
+                            num_doc = num_doc,
+                            revision = revision,
+                            num_uz = num_uz,
+                        };
+                        list_report.Add(rbc);
                     }
-                    ReportBorderCrossing rbc = new ReportBorderCrossing()
-                    {
-                        num = num,
-                        status = status,
-                        date_departure_amkr = date_departure_amkr,
-                        cross_time = cross_time,
-                        border_crossing_stn = border_crossing_stn,
-                        border_crossing_stn_name = border_crossing_stn_name,
-                        client_kod_on = client_kod_on,
-                        client_name_on = client_name_on,
-                        vesg = vesg,
-                        epd_status = epd_status,
-                        epd_date_otpr = epd_date_otpr,
-                        epd_date_pr = epd_date_pr,
-                        num_doc = num_doc,
-                        revision = revision,
-                        num_uz = num_uz,
-                    };
-                    list_report.Add(rbc);
                 }
 
                 return list_report;
