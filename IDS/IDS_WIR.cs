@@ -10073,12 +10073,19 @@ namespace IDS
                                 revision = uz_doc_out.revision;
                                 num_uz = uz_doc_out.num_uz;
                                 epd_status = uz_doc_out.status;
+
+                                epd_date_otpr = null;
+                                epd_date_pr = null;
                                 UZ.OTPR otpr = convert.XMLToOTPR(uz_doc_out.xml_doc);
                                 if (otpr != null)
                                 {
                                     epd_date_otpr = otpr.date_otpr;
                                     epd_date_pr = otpr.date_pr;
                                     // Погран переход
+                                    cross_time = null;
+                                    border_crossing_stn = null;
+                                    border_crossing_stn_name = null;
+
                                     if (otpr.route != null && otpr.route.Count() > 0)
                                     {
                                         ROUTE route = otpr.route[otpr.route.Count() - 1];
@@ -10095,6 +10102,8 @@ namespace IDS
                                             }
                                         }
                                     }
+                                    client_kod_on = null;
+                                    client_name_on = null;
                                     // Грузополучатель
                                     if (otpr.client != null && otpr.client.Count() > 0)
                                     {
@@ -10108,6 +10117,7 @@ namespace IDS
                                         }
                                     }
                                     // груз
+                                    vesg = null;
                                     if (otpr.vagon != null && otpr.vagon.Count() > 0)
                                     {
                                         VAGON vagon = otpr.vagon.ToList().Where(w => w.nomer == num.ToString()).FirstOrDefault();
