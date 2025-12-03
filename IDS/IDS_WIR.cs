@@ -10057,7 +10057,7 @@ namespace IDS
                     List<OutgoingCars> out_cars =
                         ef_out_car.Context
                         .Include(sostav => sostav.OutgoingSostav) // cars
-                        .Where(c => c.num == num && c.OutgoingSostav.date_outgoing >= start && c.OutgoingSostav.date_outgoing <= stop)
+                        .Where(c => c.num == num && c.OutgoingSostav.date_outgoing >= start && c.OutgoingSostav.date_outgoing <= stop && c.position_outgoing != null)
                         .OrderByDescending(c => c.id).ToList();
 
                     foreach (OutgoingCars out_car in out_cars)
