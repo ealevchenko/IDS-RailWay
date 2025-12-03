@@ -103,43 +103,47 @@
                 </ul>
             </li>
             @*<li class="has-children">
-                <a href="#">Gallery</a>
-                <ul class="cd-nav-gallery is-hidden">
-                    <li class="go-back"><a href="#0">Menu</a></li>
-                    <li class="see-all"><a href="#">Browse Gallery</a></li>
-                    <li>
-                        <a class="cd-nav-item" href="#">
-                            <img src="img/img.jpg" alt="Product Image">
-                            <h3>Product #1</h3>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="cd-nav-item" href="#">
-                            <img src="img/img.jpg" alt="Product Image">
-                            <h3>Product #2</h3>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="cd-nav-item" href="#">
-                            <img src="img/img.jpg" alt="Product Image">
-                            <h3>Product #3</h3>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="cd-nav-item" href="#">
-                            <img src="img/img.jpg" alt="Product Image">
-                            <h3>Product #4</h3>
-                        </a>
-                    </li>
-                </ul>
-            </li>*@
+                    <a href="#">Gallery</a>
+                    <ul class="cd-nav-gallery is-hidden">
+                        <li class="go-back"><a href="#0">Menu</a></li>
+                        <li class="see-all"><a href="#">Browse Gallery</a></li>
+                        <li>
+                            <a class="cd-nav-item" href="#">
+                                <img src="img/img.jpg" alt="Product Image">
+                                <h3>Product #1</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="cd-nav-item" href="#">
+                                <img src="img/img.jpg" alt="Product Image">
+                                <h3>Product #2</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="cd-nav-item" href="#">
+                                <img src="img/img.jpg" alt="Product Image">
+                                <h3>Product #3</h3>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="cd-nav-item" href="#">
+                                <img src="img/img.jpg" alt="Product Image">
+                                <h3>Product #4</h3>
+                            </a>
+                        </li>
+                    </ul>
+                </li>*@
             <li class="has-children">
                 <a href="#">Сервисы</a>
                 <ul class="cd-nav-icons is-hidden">
                     <li class="go-back"><a href="#0">Меню</a></li>
                     <li class="see-all"><a href="#">Обзор сервисов</a></li>
                     <li>
-                        <a class="cd-nav-item item-1" href='@Url.Action("InstructionalLetters", "Home", new { Area = "Directory" })'>
+                        @*<a class="cd-nav-item item-1" href='@Url.Action("InstructionalLetters", "Home", new { Area = "Directory" })'>
+                                <h3>@DirectoryResource.instructional_letters_title</h3>
+                                <p>@DirectoryResource.instructional_letters_description</p>
+                            </a>*@
+                        <a class="cd-nav-item item-1" href='#'>
                             <h3>@DirectoryResource.instructional_letters_title</h3>
                             <p>@DirectoryResource.instructional_letters_description</p>
                         </a>
@@ -188,7 +192,7 @@
                     </li>
                 </ul>
             </li>
-            
+
         </ul> <!-- primary-nav -->
     </nav> <!-- cd-nav -->
     <div id="cd-search" class="cd-search">
@@ -207,9 +211,8 @@
     @Scripts.Render("~/bundles/modernizr")
 
     @*<script src="js/jquery.mobile.custom.min.js"></script>
-    <script src="js/main.js"></script>*@ 
+        <script src="js/main.js"></script>*@
     <!-- Resource jQuery -->
-
     <!-- Theme JavaScript -->
     <script src="~/Scripts/view/shared/_idsdirectory.js"></script>
 
