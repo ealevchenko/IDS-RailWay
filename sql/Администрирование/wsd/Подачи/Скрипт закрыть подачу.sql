@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 187357                                                                                                                     
+declare @id int = 184450                                                                                                                             
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
-declare @date_start datetime = '2025-11-27 01:20:00.000';
-declare @date_end datetime = '2025-11-27 02:45:00.000';
+declare @date_start datetime = '2025-12-03 12:50:00.000';
+declare @date_end datetime = '2025-12-03 14:25:00.000';
 
 -->!!!!! Исправить время начала и конца
 --UPDATE [IDS].[WagonInternalOperation]
@@ -37,11 +37,11 @@ declare @date_end datetime = '2025-11-27 02:45:00.000';
 --=====================================================================================================
 -->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 94
+	--set [id_division_from] = 30
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 94
+	--   SET [id_division] = 30
 	-- WHERE [id] = @id
 --=====================================================================================================
 ---->!!!! ЗАКРЫТЬ ПОДАЧУ
@@ -72,9 +72,9 @@ declare @date_end datetime = '2025-11-27 02:45:00.000';
 ---->!!!!! Исправить станции отпраки и прибытия
 	--update [IDS].[WagonInternalMoveCargo]
 	--set 
-	----[id_station_from_amkr] = 7
+	----[id_station_from_amkr] = 4
 	----,	
-	--[id_station_on_amkr] = 1
+	--[id_station_on_amkr] = 24
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить цех получатель
