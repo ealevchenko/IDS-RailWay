@@ -755,15 +755,15 @@ namespace UZ
                 //"and (update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120)))" +
                 //" order by [dt] "; //desc
 
-                // !Обновил 03-06-2025 
-                // убрал условие отправлять 7932 -> 7932
+                // !Обновил 05.12.2025 (смотри накл 45734811 ведомость 1571 здача 04-12-2025 04:30:00)
+                // убрал условие нельзя отправлять (с 7932 до 7932)
                 // дата создания документа отправки всегда больше даты принятия вагона
                 // если есть дата обновления дока тогда проверяем статус если Accepted','Recieved тогда дата обновления меньше или равна верхнему пределу
                 // если Recieved', 'Uncredited тогда дата обновления больше или равна верхнему пределу
                 // если нет даты обновления тогда дата создания должна быть меньше или равна верхнему пределу
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] "+
                 "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8,'0') + "') " +
-                "and ([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') " +
+                "and ([depart_code] in (0," + IntsToString(shipper, ',') + ",'none')  )" + //and [arrived_code] <> '7932' // Обновил 05.12.2025
                 "and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') "+
                 "and dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120) " +
                 "and "+ 
