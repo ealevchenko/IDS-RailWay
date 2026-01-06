@@ -231,7 +231,7 @@ namespace Test
 
             //tids.IDS_WIR_OperationClearEPDSendingSostav();             // Тест операции сброса ЭПД состава который отправили
             //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
-            tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
+            //tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
 
 
 
@@ -242,7 +242,7 @@ namespace Test
             //tids.IDS_WIR_UpdateSendingEPD();                          // Тест функции сервиса обновления исходящих документов
 
             //tids.IDS_WIR_OperationIncomingWagon();                    // Тест переноса вагона в левую сторону
-            //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
+            tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
             //tids.IDS_WIR_OperationUpdateUZ_DOC2();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC_Adp_Out();               // Тест поиска документа по номеру вагона грузополучателям , станциям и предыдущей отправки и приема
