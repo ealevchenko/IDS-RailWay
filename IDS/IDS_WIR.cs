@@ -7141,7 +7141,7 @@ namespace IDS
         /// <param name="add"></param>
         /// <param name="search_sms"></param>
         /// <returns></returns>
-        public ResultObject OperationUpdateUZ_DOC(string num_doc, int num, bool add, bool search_sms)
+        public ResultObject OperationUpdateUZ_DOC(string num_doc, int num, bool add, bool search_sms, bool select_close = true)
         {
             ResultObject result = new ResultObject();
             try
@@ -7158,7 +7158,16 @@ namespace IDS
 
                 int doc_num = int.Parse(num_doc);
                 // Найдем документ в БД ИДС
-                EFIDS.Entities.UZ_DOC uz_doc = ef_uz_doc.Context.Where(d => d.num_uz == doc_num).FirstOrDefault();
+                EFIDS.Entities.UZ_DOC uz_doc = null;
+                if (select_close == true)
+                {
+                    uz_doc = ef_uz_doc.Context.Where(d => d.num_uz == doc_num).FirstOrDefault();
+                }
+                else
+                {
+                    uz_doc = ef_uz_doc.Context.Where(d => d.num_uz == doc_num && d.close == null).FirstOrDefault();
+                }
+                //
                 if (uz_doc != null)
                 {
                     uz_doc = IsWagonOfUZ_DOC(num, uz_doc) ? uz_doc : null;
