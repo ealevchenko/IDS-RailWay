@@ -596,6 +596,8 @@ namespace UZ
         public PEREGR_V peregr_v { get; set; } // {0..1}
         public PAY_V[] pay_v = new PAY_V[] { }; // {~}
         public COLLECT_V[] collect_v = new COLLECT_V[] { }; // {0..99}
+        public FORWARD_DOC forward_doc { get; set; } // {0..1}
+
         public TOOLS[] tools = new TOOLS[] { }; // {~}
         public ZPU_V[] zpu_v = new ZPU_V[] { }; // {0..60}
     }
@@ -664,6 +666,18 @@ namespace UZ
         public int? weight_place_br_gr { get; set; }    //	Стандартна маса одного місця брутто (кг) (для збірних відправок)
         public int? weight_place_net_gr { get; set; }   //	Стандартна маса одного місця нетто (кг) (для збірних відправок)
         public string zvvt_num { get; set; }    //	Заводський номер засобу вагоно-вимірювальної техніки (для збірних відправок)
+    }
+
+    public class FORWARD_DOC
+    {
+        public int? act_adm { get; set; } // Адміністрація станції відчеплення
+        public DateTime? act_date { get; set; }  //	Дата акту про відчеплення
+        public int? act_emr { get; set; } // Станція відчеплення
+        public string act_num { get; set; } //	Номер акту про відчеплення
+        public string act_carrier_code { get; set; } // Код перевізника 
+        public string act_carrier_name { get; set; } // Назва перевізника
+        public string act_reason { get; set; } // Причина складання акту
+        public DateTime? doc_date { get; set; }  //	Дата досильного документу
     }
 
     public class TOOLS
@@ -1716,6 +1730,12 @@ namespace UZ
                     list.Add(collect_v);
                     tag.collect_v = list.ToArray();
                 }
+                if (chield_node.Name == "FORWARD_DOC")
+                {
+                    FORWARD_DOC forward_doc = new FORWARD_DOC();
+                    GetAttributes(chield_node, ref forward_doc);
+                    tag.forward_doc = forward_doc;
+                }
                 if (chield_node.Name == "TOOLS")
                 {
                     TOOLS tools = new TOOLS();
@@ -1823,6 +1843,29 @@ namespace UZ
                 tag.zvvt_num = getAttributes<string>(node, "zvvt_num");
             }
         }
+        /// <summary>
+        /// Заполнить атрибуты FORWARD_DOC
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref FORWARD_DOC tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.act_adm = getAttributes<int?>(node, "act_adm");
+                tag.act_date = getAttributes<DateTime?>(node, "act_date");
+                tag.act_emr = getAttributes<int?>(node, "act_emr");
+
+                tag.act_num = getAttributes<string>(node, "act_num");
+                tag.act_carrier_code = getAttributes<string>(node, "act_carrier_code");
+
+                tag.act_carrier_name = getAttributes<string>(node, "act_carrier_name");
+                tag.act_reason = getAttributes<string>(node, "act_reason");
+                tag.doc_date = getAttributes<DateTime?>(node, "doc_date");
+
+            }
+        }
+
         /// <summary>
         /// Заполнить атрибуты TOOLS
         /// </summary>
@@ -2280,7 +2323,8 @@ namespace UZ
                     List<XmlNode> list = result.ToList();
                     list.Add(chield_node);
                     result = list.ToArray();
-                };
+                }
+                ;
             }
             return result;
         }
@@ -2365,43 +2409,47 @@ namespace UZ
             }
             else
             {
-                foreach (XmlNode attr in edit_node.Attributes)
+                if (edit_node != null)
                 {
-
-                    if (mode == 0 || mode == 1)
+                    foreach (XmlNode attr in edit_node.Attributes)
                     {
-                        XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
-                        if (upd_attr != null)
-                        {
-                            upd_attr.Value = attr.Value;
-                        }
-                        else
-                        {
-                            XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
-                            new_attr.Value = attr.Value;
-                            node_searsh.Attributes.Append(new_attr);
-                        }
 
+                        if (mode == 0 || mode == 1)
+                        {
+                            XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
+                            if (upd_attr != null)
+                            {
+                                upd_attr.Value = attr.Value;
+                            }
+                            else
+                            {
+                                XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
+                                new_attr.Value = attr.Value;
+                                node_searsh.Attributes.Append(new_attr);
+                            }
+
+                        }
+                        if (mode == 2)
+                        {
+                            node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
+                            //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
+                            //at.RemoveAll();
+                        }
                     }
-                    if (mode == 2)
+                    foreach (XmlNode child_node_doc in edit_node.ChildNodes)
                     {
-                        node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
-                        //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
-                        //at.RemoveAll();
+                        if (mode == 0)
+                        {
+                            XmlElement new_node = doc.CreateElement(child_node_doc.Name);
+                            foreach (XmlNode attr in child_node_doc.Attributes)
+                            {
+                                new_node.SetAttribute(attr.Name, attr.Value);
+                            }
+                            node_searsh.AppendChild(new_node);
+                        }
                     }
                 }
-                foreach (XmlNode child_node_doc in edit_node.ChildNodes)
-                {
-                    if (mode == 0)
-                    {
-                        XmlElement new_node = doc.CreateElement(child_node_doc.Name);
-                        foreach (XmlNode attr in child_node_doc.Attributes)
-                        {
-                            new_node.SetAttribute(attr.Name, attr.Value);
-                        }
-                        node_searsh.AppendChild(new_node);
-                    }
-                }
+
             }
             // обновим
             xml = doc.OuterXml;
