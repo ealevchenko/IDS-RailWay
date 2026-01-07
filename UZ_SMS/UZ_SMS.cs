@@ -761,16 +761,16 @@ namespace UZ
                 // если есть дата обновления дока тогда проверяем статус если Accepted','Recieved тогда дата обновления меньше или равна верхнему пределу
                 // если Recieved', 'Uncredited тогда дата обновления больше или равна верхнему пределу
                 // если нет даты обновления тогда дата создания должна быть меньше или равна верхнему пределу
-                string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] "+
-                "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8,'0') + "') " +
+                string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') " +
                 "and ([depart_code] in (0," + IntsToString(shipper, ',') + ",'none')  )" + //and [arrived_code] <> '7932' // Обновил 05.12.2025
-                "and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') "+
+                "and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
                 "and dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120) " +
-                "and "+ 
-                "( "+
-                "(update_dt is not null and "+
+                "and " +
+                "( " +
+                "(update_dt is not null and " +
                 "(([doc_Status] in (N'Accepted', N'Recieved') and update_dt <= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120))  or ([doc_Status] in (N'Delivered', N'Uncredited') and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120))) " +
-                ") "+
+                ") " +
                 "or (update_dt is null and dt <= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)))";
                 List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 //List<UZ_Data> list_uzd_uncredited = list_uzd.Where(u => u.doc_Status == "Uncredited").ToList();
@@ -1117,14 +1117,14 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8,'0'));
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by [dt] desc";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
                 if (list_uz_data != null)
                 {
                     foreach (UZ_Data uz_data in list_uz_data)
                     {
-                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) ? int.Parse(uz_data.arrived_code) : -1) == true)
+                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) && uz_data.arrived_code != "none" ? int.Parse(uz_data.arrived_code) : -1) == true)
                         {
                             string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
                             OTPR otpr = convert.FinalXMLToOTPR(xml_final);
