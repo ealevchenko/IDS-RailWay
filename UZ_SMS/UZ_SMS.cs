@@ -143,12 +143,6 @@ namespace UZ
                 e.ExceptionMethodLog(String.Format("Connection(host={0}, port={1})", host, port), this.servece_owner, eventID);
                 return false;
             }
-
-
-
-
-
-
         }
         /// <summary>
         /// Подключится к модулю согласования
