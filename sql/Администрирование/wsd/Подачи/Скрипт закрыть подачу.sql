@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 170916          --195175                                                                                                                                                                                  
+declare @id int = 195089               --195175                                                                                                                                                                                  
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2025-07-05 13:45:00.000'
@@ -37,17 +37,17 @@ declare @date_end datetime = '2026-01-05 20:35:00.000';
 --=====================================================================================================
 -->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 7
+	--set [id_division_from] = 19
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 7
+	--   SET [id_division] = 19
 	-- WHERE [id] = @id
 --=====================================================================================================
 ---->!!!! ЗАКРЫТЬ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
---	 ,[doc_received] = @date_close
+--	 --,[doc_received] = @date_close
 --      ,[close] = @date_close
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
@@ -72,9 +72,9 @@ declare @date_end datetime = '2026-01-05 20:35:00.000';
 ---->!!!!! Исправить станции отпраки и прибытия
 	--update [IDS].[WagonInternalMoveCargo]
 	--set 
-	--[id_station_from_amkr] = 21
+	----[id_station_from_amkr] = 21
 	----,	
-	----[id_station_on_amkr] = 24
+	--[id_station_on_amkr] = 12
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить груз
