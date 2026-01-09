@@ -8662,7 +8662,7 @@ namespace IDS
                         vid = otpr != null ? otpr.vid : null,
                         code_payer = pl_from != null ? pl_from.kod_plat : null,
                         distance_way = otpr != null ? otpr.distance_way : null,
-                        osum = otpr != null ? otpr.osum : null,
+                        osum = otpr != null ? (long?)otpr.osum : null,
                         date_sozdan = otpr != null ? otpr.date_sozdan : null,
                         date_otpr = otpr != null ? otpr.date_otpr : null,
                         date_pr = otpr != null ? otpr.date_pr : null,
@@ -8688,7 +8688,7 @@ namespace IDS
                     uz_doc.vid = otpr != null ? otpr.vid : null;
                     uz_doc.code_payer = pl_from != null ? pl_from.kod_plat : null;
                     uz_doc.distance_way = otpr != null ? otpr.distance_way : null;
-                    uz_doc.osum = otpr != null ? otpr.osum : null;
+                    uz_doc.osum = otpr != null ? (long?)otpr.osum : null;
                     uz_doc.date_sozdan = otpr != null ? otpr.date_sozdan : null;
                     uz_doc.date_otpr = otpr != null ? otpr.date_otpr : null;
                     uz_doc.date_pr = otpr != null ? otpr.date_pr : null;
