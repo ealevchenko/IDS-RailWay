@@ -552,11 +552,11 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> consignees = new List<int>() { 7932, 6302, 659 };
             List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
-            DateTime? dt_arrival = new DateTime(2023, 11, 14, 16, 00, 00);
+            DateTime? dt_arrival = new DateTime(2026, 1, 07, 10, 44, 00);
             //2021-12-03 11:42:05.133
             //52830882
             // 2022-05-06 06:40:00
-            ids.OperationUpdateUZ_DOC(61337481, consignees, stations, dt_arrival, -36, true, true);
+            ids.OperationUpdateUZ_DOC(60633971, consignees, stations, dt_arrival, -36, true, true);
         }
         /// <summary>
         /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
@@ -861,6 +861,32 @@ namespace Test.TestModule
                     int result = ef_uz_doc.Save();
                     //foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
                     Console.WriteLine("num_doc = {0}, результат сохранения : {1}, осталось {2}", doc.num_doc, result, count);
+                    //}
+                }
+            }
+        }
+        /// <summary>
+        /// Тест преобразования документов ЭПД
+        /// </summary>
+        public void Get_ConvertEPD()
+        {
+            DateTime dt = new DateTime(2025, 1, 1, 0, 0, 0);
+
+
+            UZ.UZ_Convert convert = new UZ.UZ_Convert();
+            EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
+            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.Where(d => d.close == null).ToList();
+            int count = list_docs.Count();
+            foreach (EFIDS.Entities.UZ_DOC doc in list_docs)
+            {
+                count--;
+                string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                if (otpr != null && otpr.nom_doc != null)
+                {
+                    //doc.num_uz = otpr.nom_doc;
+                    //int result = ef_uz_doc.Save();
+                    Console.WriteLine("num_doc = {0}, осталось {1}", doc.num_doc, count);
                     //}
                 }
             }
