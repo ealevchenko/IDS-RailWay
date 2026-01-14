@@ -2914,7 +2914,8 @@
     ids_wsd.prototype.getCalcUsageFeeOfOutgoingSostav = function (id_sostav, callback) {
         $.ajax({
             type: 'GET',
-            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/view/calc_wagon/outgoing/sostav/' + id_sostav,
+            //url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/view/calc_wagon/outgoing/sostav/' + id_sostav,
+            url: App.URLApi + '/WSD/view/calc_wagon/outgoing/sostav/' + id_sostav,
             async: true,
             dataType: 'json',
             xhrFields: {
@@ -2939,7 +2940,8 @@
     // Выполнить обновление писем привязка вагонов к прибытию и отправке
     ids_wsd.prototype.postUpdateOpenInstructionalLetters = function (callback) {
         $.ajax({
-            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/operation/open_instructional_letters/update/',
+            //url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/operation/open_instructional_letters/update/',
+            url: App.URLApi + '/WSD/operation/open_instructional_letters/update/',
             //url: 'https://localhost:7280/WSD/operation/open_instructional_letters/update/',
             type: 'POST',
             data: JSON.stringify([0]),
