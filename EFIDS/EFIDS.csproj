@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EFIDS</RootNamespace>
     <AssemblyName>EFIDS</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>d73ac830</NuGetPackageImportStamp>
     <TargetFrameworkProfile />
@@ -59,6 +59,8 @@
     <Compile Include="Abstract\IWebAccess.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_BorderCheckpoint.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_CargoOutGroup.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_BankRate.cs" />
+    <Compile Include="Concrete\Directory\EFDirectory_Currency.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_OperatorsWagonsGroup.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_PayerArrival.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_Reason_Discrepancy.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Concrete\Directory\EFDirectory_WagonManufacturers.cs" />
     <Compile Include="Concrete\Directory\EFDirectory_GenusWagons.cs" />
     <Compile Include="Concrete\EFRepository.cs" />
+    <Compile Include="Concrete\RWT\EFWagonFiling.cs" />
     <Compile Include="Concrete\RWT\EFOut_Supply.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document_Pay.cs" />
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Document.cs" />
@@ -121,6 +124,8 @@
     <Compile Include="Concrete\RWT\EFOutgoing_UZ_Vagon.cs" />
     <Compile Include="Concrete\RWT\EFOutgoingDetentionReturn.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Wagon.cs" />
+    <Compile Include="Concrete\RWT\EFWagonUsageFee.cs" />
+    <Compile Include="Concrete\RWT\EFUsage_Fee_Period.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Way.cs" />
     <Compile Include="Concrete\RWT\EFParkState_Station.cs" />
     <Compile Include="Concrete\RWT\EFSAPOutgoingSupply.cs" />
@@ -238,6 +243,13 @@
     <Compile Include="Entities\RWT\Out_Supply.cs" />
     <Compile Include="Entities\RWT\SAPOutgoingSupply.cs" />
     <Compile Include="Entities\Directory\Directory_CargoOutGroup.cs" />
+    <Compile Include="Entities\Directory\Directory_Currency.cs" />
+    <Compile Include="Entities\RWT\Usage_Fee_Period.cs" />
+    <Compile Include="Entities\RWT\WagonUsageFee.cs" />
+    <Compile Include="Entities\Directory\Directory_BankRate.cs" />
+    <Compile Include="Entities\RWT\Usage_Fee_Period_Detali.cs" />
+    <Compile Include="Entities\RWT\WagonFiling.cs" />
+    <Compile Include="Entities\RWT\WagonInternalMoveCargo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
