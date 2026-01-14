@@ -20,7 +20,9 @@
             'vrrc_title_handed_cars': 'Сданные вагоны на УЗ',
             'vrrc_title_amkr_cisterns': 'Цистерны арендованные',
             'vrrc_title_select_day': 'Сверх суток:',
-            'vrrc_title_select_top': 'Топ:',
+            'vrrc_title_select_top': 'Не перемещается более, час:',
+            'vrrc_title_dislocations': 'Дислокация:',
+            'vrrc_title_current_ways': 'Ж.д. путь:',
             'vrrc_title_operators': 'Оператор:',
             'vrrc_title_limiting': 'Ограничение:',
             'vrrc_title_cargo_arrival': 'Груз по прибытию:',
@@ -41,7 +43,7 @@
             'vrrc_title_not_surrender_cars': 'Без учета сданных вагонов:',
 
             'vrrc_title_aplly_day': 'Применить выбрать свыше указанных дней',
-            'vrrc_title_aplly_top': 'Применить выбрать топ',
+            'vrrc_title_aplly_top': 'Применить выбрать не перемещается более, час',
             'vrrc_title_yes': 'Да',
 
 
@@ -74,7 +76,7 @@
             'vrrc_title_handed_cars': 'Handed cars at UZ',
             'vrrc_title_amkr_cisterns': 'Tanks rented',
             'vrrc_title_select_day': 'Over day:',
-            'vrrc_title_select_top': 'Top:',
+            'vrrc_title_select_top': 'Doesn`t move for more than an hour:',
             'vrrc_title_operators': 'Operator:',
             'vrrc_title_limiting': 'Limit:',
             'vrrc_title_cargo_arrival': 'Cargo on arrival:',
@@ -95,7 +97,7 @@
             'vrrc_title_not_surrender_cars': 'Excluding surrendered cars:',
 
             'vrrc_title_aplly_day': 'Apply select over specified days',
-            'vrrc_title_aplly_top': 'Apply select top',
+            'vrrc_title_aplly_top': 'Apply select does not move for more than an hour',
             'vrrc_title_yes': 'Yes',
 
             'vrrc_title_add_ok': 'UPDATE',
@@ -224,6 +226,8 @@
             id_destination_station: -1,     //Станция назначения
             paid: false,                    //Признак платности
             id_station_amkr: -1,            //Станция нахождения вагона
+            id_dislocation: -1,             //Дислокация
+            id_current_way: -1,             //Ж.Д.путь
         }
         // Сообщение
         LockScreen(langView('vrrc_mess_init_panel', App.Langs));
@@ -243,7 +247,7 @@
         this.load_db(['operators_wagons_group'], false, function (result) {
             // Подгрузили списки
             //this.list_operators_wagons_group = this.ids_dir.list_operators_wagons_group;
-            this.list_amkr = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'amkr'});
+            this.list_amkr = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'amkr' });
             this.list_amkr_vz = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'amkr_vz' });
             this.list_cisterns = this.ids_dir.list_operators_wagons_group.filter(function (i) { return i.group === 'cisterns' });
 
@@ -294,7 +298,7 @@
             var bt_plus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-plus');
             var bt_minus_top = new this.fc_ui.el_button('sm', 'btn-outline-dark', 'aplly-top', null, 'fas fa-minus');
             var bt_aplly_top = new this.fc_ui.el_button('sm', 'btn-primary ml-1', 'aplly-top', null, 'fas fa-retweet');
-            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 100, null, null, null);
+            var imp_top = new this.fc_ui.el_input('select_top', 'number', 'text-center form-control form-control-sm', null, false, 0, 1000, null, null, null);
             div_igp_top.$div.append(bt_minus_top.$button);
             div_iga_top.$div.append(bt_plus_top.$button).append(bt_aplly_top.$button.attr('title', langView('vrrc_title_aplly_top', App.Langs)));
             div_ig_top.$div.append(div_igp_top.$div).append(imp_top.$input.val('0')).append(div_iga_top.$div);
@@ -415,7 +419,20 @@
             var sel_current_station_amkr = new this.fc_ui.el_select('current_station_amkr', 'custom-select custom-select-sm', null, false);
             div_current_station_amkr_form_row.$div.append(col_current_station_amkr.$col.append(lab_current_station_amkr.$label).append(sel_current_station_amkr.$select));
             this.form_select.append(div_current_station_amkr_form_row.$div);
-
+            // Добавим выбор дислокация
+            var div_dislocation_form_row = new this.fc_ui.el_div_form_row();
+            var col_dislocation = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_dislocation = new this.fc_ui.el_label('dislocations', null, langView('vrrc_title_dislocations', App.Langs));
+            var sel_dislocation = new this.fc_ui.el_select('dislocations', 'custom-select custom-select-sm', null, false);
+            div_dislocation_form_row.$div.append(col_dislocation.$col.append(lab_dislocation.$label).append(sel_dislocation.$select));
+            this.form_select.append(div_dislocation_form_row.$div);
+            // Добавим выбор текущий путь
+            var div_current_way_form_row = new this.fc_ui.el_div_form_row();
+            var col_current_way = new this.fc_ui.el_col('md', 12, 'mb-1');
+            var lab_current_way = new this.fc_ui.el_label('current_ways', null, langView('vrrc_title_current_ways', App.Langs));
+            var sel_current_way = new this.fc_ui.el_select('current_ways', 'custom-select custom-select-sm', null, false);
+            div_current_way_form_row.$div.append(col_current_way.$col.append(lab_current_way.$label).append(sel_current_way.$select));
+            this.form_select.append(div_current_way_form_row.$div);
 
             // Отображение формы
             this.$setup_select.append(this.form_select);
@@ -445,6 +462,8 @@
             this.el_bt_minus_top = bt_minus_top.$button;
             this.el_bt_aplly_top = bt_aplly_top.$button;
             //
+            this.el_select_dislocation = sel_dislocation.$select;
+            this.el_select_current_way = sel_current_way.$select;
             this.el_select_operator = sel_operator.$select;
             this.el_select_limiting = sel_limiting.$select;
             this.el_arrival_cargo = inp_arrival_cargo.$input.autocomplete({
@@ -606,6 +625,7 @@
                 this.modal_confirm_form.view(langView('vrrc_title_confirm_clear', App.Langs), langView('vrrc_title_mesage_clear', App.Langs), function (res) {
                     if (res) {
                         this.clear_where();
+                        this.update_where(); // Обновим выборку
                     }
                 }.bind(this));
             }.bind(this));
@@ -662,7 +682,7 @@
                 this.where_option.amkr_cisterns = checked;
                 this.update_where(); // Обновим выборку
             }.bind(this));
-            // top
+            // top Сверх суток
             this.el_imp_day.on('keydown', function (event) {
                 if (event.keyCode == 13) {
                     $(event.currentTarget).change();
@@ -731,7 +751,7 @@
                 event.stopPropagation();
                 this.update_where(); // Обновим выборку
             }.bind(this));
-            // top
+            // top неперемещался более часа
             this.el_imp_top.on('keydown', function (event) {
                 if (event.keyCode == 13) {
                     $(event.currentTarget).change();
@@ -742,15 +762,15 @@
                 var value = $(event.currentTarget).val();
                 if (value !== '' && value !== null) {
 
-                    if (Number(value) > 100) {
-                        this.where_option.select_top = 100;
+                    if (Number(value) > 1000) {
+                        this.where_option.select_top = 1000;
                         $(event.currentTarget).val(this.where_option.select_top);
                     }
                     if (Number(value) < 0) {
                         this.where_option.select_top = 0;
                         $(event.currentTarget).val(this.where_option.select_top);
                     }
-                    if (Number(value) >= 0 && Number(value) <= 100) {
+                    if (Number(value) >= 0 && Number(value) <= 1000) {
                         this.where_option.select_top = Number(value);
                     }
                 } else {
@@ -764,7 +784,7 @@
                 var value = this.el_imp_top.val();
                 if (value !== '' && value !== null) {
                     this.where_option.select_top = Number(value);
-                    if (this.where_option.select_top < 100) {
+                    if (this.where_option.select_top < 1000) {
                         this.el_imp_top.val(++this.where_option.select_top);
                     } else {
                         this.where_option.select_top = 0;
@@ -785,7 +805,7 @@
                     if (this.where_option.select_top > 0) {
                         this.el_imp_top.val(--this.where_option.select_top);
                     } else {
-                        this.where_option.select_top = 100;
+                        this.where_option.select_top = 1000;
                         this.el_imp_top.val(this.where_option.select_top)
                     }
 
@@ -798,6 +818,13 @@
                 event.preventDefault();
                 event.stopPropagation();
                 this.update_where(); // Обновим выборку
+            }.bind(this));
+            //
+            this.el_select_dislocation.on('change', function (event) {
+                this.event_select_change(event, 'current_way_type');
+            }.bind(this));
+            this.el_select_current_way.on('change', function (event) {
+                this.event_select_change(event, 'current_way_full_name');
             }.bind(this));
             //
             this.el_select_operator.on('change', function (event) {
@@ -895,7 +922,7 @@
             this.el_destination_station.on('change', function (event) {
                 //this.event_select_change(event, '');
             }.bind(this));
-            // Выбор платноти
+            // Выбор платности
             this.el_paid.on('change', function (event) {
                 event.preventDefault();
                 var checked = $(event.currentTarget).prop('checked');
@@ -919,6 +946,10 @@
             var $div_table = $('<div></div>', {
                 'id': 'table-' + this.selector,
             });
+            var $tab_count = $('<table class="table table-bordered"><tbody><tr><th>Всего вагонов</th><td class="dt-centr" id="count_wagon"></td></tr></tbody></table>');
+            var $col_count = $('<div id="operation-balance-count" class="col-xl-2"></div>');
+
+            this.$table_select.append($col_count.append($tab_count));
             // Инициализация таблицы
             if ($div_table && $div_table.length > 0) {
                 this.$table_select.append($div_table);
@@ -970,6 +1001,8 @@
                 .search(val, true, false)
                 .draw();
         }
+        var info = this.tab_cars.obj_t_cars.page.info();
+        $('td#count_wagon').text(info.recordsDisplay);
     };
     // Обработка события списочных элементов Autocomplete
     view_report_remainder_cars.prototype.event_autocomplete_change = function (event, field) {
@@ -1016,6 +1049,8 @@
     };
     // Инициализировать элементов выбора
     view_report_remainder_cars.prototype.init_where = function () {
+        this.init_where_element(this.el_select_dislocation, 'current_way_type', 'select');
+        this.init_where_element(this.el_select_current_way, 'current_way_full_name', 'select');
         this.init_where_element(this.el_select_operator, 'operator_abbr', 'select');
         this.init_where_element(this.el_select_limiting, 'limiting_abbr', 'select');
         this.init_where_element(this.el_arrival_cargo, 'arrival_cargo_name', 'autocomplete');
@@ -1042,7 +1077,6 @@
             // Покажем вагоны
             LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
             this.tab_cars.view(wagons_where, null);
-
         }.bind(this));
     };
     // Загрузить вагоны на пути в внутрений массив
@@ -1057,6 +1091,9 @@
                 LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
                 //покажем вагоны 
                 this.tab_cars.view(wagons, null);
+                var info = this.tab_cars.obj_t_cars.page.info();
+                $('td#count_wagon').text(info.recordsDisplay);
+                /*                $('td#count_wagon').text(wagons.length);*/
                 this.init_where();
             }.bind(this));
         }.bind(this));
@@ -1074,6 +1111,12 @@
             column.search('', true, false);
         }.bind(this));
         // Проедемся по элементам выбора и сбросим выбор
+        this.el_imp_day.val(0);
+        this.where_option.select_day = 0;
+        this.el_imp_top.val(0);
+        this.where_option.select_top = 0;
+        this.el_select_dislocation.val('');
+        this.el_select_current_way.val('');
         this.el_select_operator.val('');
         this.el_select_limiting.val('');
         this.el_arrival_cargo.val('');
@@ -1090,7 +1133,6 @@
         this.el_loading_division_amkr.val('');
         this.el_paid.prop('checked', false);
         this.el_current_station_amkr.val('');
-
         this.tab_cars.obj_t_cars.search('').draw();
 
         LockScreenOff();
@@ -1102,32 +1144,35 @@
             LockScreen(langView('vrrc_mess_view_wagons', App.Langs));
             //покажем вагоны 
             this.tab_cars.view(wagons, null);
+            var info = this.tab_cars.obj_t_cars.page.info();
+            $('td#count_wagon').text(info.recordsDisplay);
+            /*            $('td#count_wagon').text(wagons.length);*/
         }.bind(this));
     };
-    // Пренадлежит внешним вагонам
+    // принадлежит внешним вагонам
     view_report_remainder_cars.prototype.is_outer_cars = function (i) {
         var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator });
         var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator });
         return !Boolean(amkr || amkr_vz);
         //return Boolean(i.id_operator !== 14 && i.id_operator !== 16 && i.id_operator !== 188);
     };
-    // Пренадлежит внешним вагонам АМКР
+    // принадлежит внешним вагонам АМКР
     view_report_remainder_cars.prototype.is_amkr_outer_cars = function (i) {
         //return Boolean(i.id_operator === 14 || i.id_operator === 16);
         var amkr = this.list_amkr.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(amkr);
     };
-    // Пренадлежит вагонам АМКР ВЗ
+    // принадлежит вагонам АМКР ВЗ
     view_report_remainder_cars.prototype.is_amkr_cars = function (i) {
         //return Boolean(i.id_operator === 188);
         var amkr_vz = this.list_amkr_vz.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(amkr_vz);
     };
-    // Пренадлежит сданным вагонам
+    // принадлежит сданным вагонам
     view_report_remainder_cars.prototype.is_handed_cars = function (i) {
         return i.outgoing_sostav_status !== null && Number(i.outgoing_sostav_status) === 2;
     };
-    // Пренадлежит цестернам
+    // принадлежит цестернам
     view_report_remainder_cars.prototype.is_amkr_cisterns = function (i) {
         //return Boolean((i.id_operator === 28
         //    || i.id_operator === 23
@@ -1145,7 +1190,7 @@
         var cisterns = this.list_cisterns.find(function (o) { return o.id_operator === i.id_operator })
         return Boolean(cisterns && i.wagon_rod === 70);
     };
-    // Пренадлежит контр-агенту
+    // принадлежит контр-агенту
     view_report_remainder_cars.prototype.is_client = function (i) {
         return i.arrival_klient === true;
     };
@@ -1157,7 +1202,7 @@
         if (where_option.handed_cars === false && where_option.amkr_cisterns === false && where_option.client === false) {
             return is_result & !(this.is_handed_cars(i) || this.is_amkr_cisterns(i) || this.is_client(i));
         } else {
-            if (where_option.handed_cars === true && where_option.amkr_cisterns === true && where_option.client === true ) {
+            if (where_option.handed_cars === true && where_option.amkr_cisterns === true && where_option.client === true) {
                 return is_result;
             } else {
                 var result = is_result;
@@ -1269,13 +1314,21 @@
                     }.bind(this));
                 };
             }
-            if (this.where_option.select_day > 0) {
-                wagons = wagons.filter(function (i) {
-                    return i.arrival_duration >= (this.where_option.select_day * (24*60));
-                }.bind(this)).sort(function (a, b) {
-                    return b.arrival_duration - a.arrival_duration
-                });
-            }
+
+            //if (this.where_option.select_day > 0) {
+            wagons = wagons.filter(function (i) {
+                return i.arrival_duration >= (this.where_option.select_day * (24 * 60));
+            }.bind(this)).sort(function (a, b) {
+                return b.arrival_duration - a.arrival_duration
+            });
+            //}
+            //if (this.where_option.select_top > 0) {
+            wagons = wagons.filter(function (i) {
+                return i.current_way_duration >= (this.where_option.select_top * 60);
+            }.bind(this)).sort(function (a, b) {
+                return b.current_way_duration - a.current_way_duration
+            });
+            //}
 
             // Выборка закончена вернем данные
             if (typeof fn_where === 'function') {

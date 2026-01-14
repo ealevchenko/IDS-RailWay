@@ -159,6 +159,9 @@
             'field_wagon_ban_uz': 'Запреты по УЗ',
             'field_wagon_closed_route': 'Замкнутый маршрут (кольцо)',
             'field_wir_note': 'Примечание',
+            'field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'field_old_date_outgoing': 'Дата последней сдачи',
+            'field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
 
             'title_yes': 'Да',
             'title_busy': 'Занят',
@@ -171,7 +174,7 @@
             'title_type_way': 'Путь станции',
             'title_type_outer_way': 'Перегон',
             'title_link_num': 'Показать историю по вагону...',
-            'title_select': 'Выбирите...',
+            'title_select': 'Выберите...',
 
             'title_button_export': 'Экспорт',
             'title_button_buffer': 'Буфер',
@@ -339,6 +342,9 @@
             'field_wagon_ban_uz': 'UZ bans',
             'field_wagon_closed_route': 'Closed route (ring)',
             'field_wir_note': 'Note',
+            'field_old_outgoing_uz_vagon_cargo_name': 'Cargo according to OTPR previous',
+            'field_old_date_outgoing': 'Last due date',
+            'field_old_outgoing_uz_document_station_to_name': 'OTPR station previous',
 
             'title_yes': 'Yes',
             'title_busy': 'Busy',
@@ -381,14 +387,25 @@
     var FC = App.form_control;
 
     // Получить часы из менут
+    //var getHoursFromMinuts = function (minutes) {
+    //    var hours = parseInt(minutes / 60);
+    //    hours = hours < 10 ? '0' + hours : hours;
+    //    var min = minutes % 60;
+    //    min = min < 10 ? '0' + min : min;
+    //    return hours + ':' + min;
+    //}
     var getHoursFromMinuts = function (minutes) {
-        var hours = parseInt(minutes / 60);
-        hours = hours < 10 ? '0' + hours : hours;
-        var min = minutes % 60;
-        min = min < 10 ? '0' + min : min;
-        return hours + ':' + min;
-    }
+        if (minutes && minutes > 0) {
+            var h = parseInt(minutes / 60);
+            h = h < 10 ? '0' + h : h;
+            var m = minutes % 60;
+            m = m < 10 ? '0' + m : m;
+            return `${h.toString().padStart(6, '0')}:${m.toString().padStart(2, '0')}`;
+        } else {
+            return null;
+        }
 
+    }
     // Перечень полей
     var list_collums = [
         {
@@ -1652,6 +1669,34 @@
             className: 'dt-body-nowrap text-left',
             title: langView('field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
         },
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -1933,6 +1978,9 @@
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
+        collums.push('old_outgoing_uz_vagon_cargo_name');                    // Последний груз
+        collums.push('old_date_outgoing');                    // дата последней здачи
+        collums.push('old_outgoing_uz_document_station_to_name');                    // Последняя станция отправления
         return init_columns(collums, list_collums);
     };
     // инициализация полей таблицы вагоны на пути (Отчет 0 - вагоны детально, дерево путей)
@@ -2097,6 +2145,9 @@
         collums.push('wagon_ban_uz');                    // Запреты по УЗ
         collums.push('wagon_closed_route');                    //Замкнутый маршрут(кольцо)
         collums.push('wir_note');                    // Примечание Вагонник ГС
+        collums.push('old_outgoing_uz_vagon_cargo_name');                    // Последний груз
+        collums.push('old_date_outgoing');                    // дата последней здачи
+        collums.push('old_outgoing_uz_document_station_to_name');                    // Последняя станция отправления
         return init_columns(collums, list_collums);
     };
     // инициализация полей таблицы вагоны на пути отправки (Отчет 1- вагоны детально, дерево путей)
@@ -2594,6 +2645,14 @@
                         $(row).addClass('wagon-ban');  // Отметим вагон заблокирован
                     }
                 }
+
+                if (this.settings.type_report === 4) {
+                    if (data.current_way_end !== null && data.current_outer_way_start !== null && data.current_outer_way_end === null) {
+                        $('td.fl-current_way_full_name', row).attr('title', data['current_outer_way_name_' + App.Lang]);
+                    } else {
+                        $('td.fl-current_way_full_name', row).attr('title', data['current_way_num_' + App.Lang] + '-' + data['current_way_name_' + App.Lang]);
+                    }
+                }
             }.bind(this),
             columns: this.table_columns,
             dom: 'Bfrtip',
@@ -2628,7 +2687,7 @@
                 var row = this.obj_t_cars.rows(indexes).data().toArray();
                 if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
                     e.preventDefault();
-                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
+                    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон принадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
                 }
             }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                 var index = this.obj_t_cars.rows({ selected: true });

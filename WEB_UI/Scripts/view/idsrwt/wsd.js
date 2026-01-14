@@ -195,6 +195,8 @@
     var App = window.App || {};
     var $ = window.jQuery;
 
+    var bt_enable = false;
+
     // Определим глобальные переменные
     App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_Common, App.Lang), getLanguages($.Text_Table, App.Lang));
@@ -322,6 +324,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_send_cars.init({
@@ -345,6 +351,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_arrival_cars.init({
@@ -361,13 +371,18 @@
                         view_arrival_cars.view(current_id_way) // Показать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                    });
+                    }
+                );
             }),
         // Выполнить операцию вернуть вагоны отправленного состава на АМКР (Обновление wsd)
         operation_return_cars = $('button#return-cars').on('click',
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.bit_update = false;
                 operation_detali.rows_update = [];
                 view_return_cars.init({
@@ -384,15 +399,19 @@
                         view_return_cars.view(current_id_way) // Показать
                         operation_detali.content.addClass('is-visible');
                         //$.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
-                    });
-            }),
-
-
+                    }
+                );
+            }
+        ),
         // Изменить дислокацию
         bt_dislocation = $('button#dislocation').on('click',
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 operation_detali.view_dislocation(current_id_station, current_id_way);
             }),
         // Выполнить роспуск
@@ -400,6 +419,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_way) {
                     if (current_option_way && current_option_way['output-dissolution'] === 1) {
                         operation_detali.view_dissolution(current_id_way);
@@ -410,40 +433,15 @@
                     alert.out_warning_message("Выберите путь, по которому нужно провести роспуск.");
                 }
             }),
-        //// Выполнить отправка
-        //bt_sending = $('button#sending').on('click',
-        //    function (event) {
-        //        alert.clear_message();
-        //        event.preventDefault();
-        //        if (current_id_way) {
-        //            operation_detali.view_sending(current_id_way);
-        //        } else {
-        //            alert.out_warning_message("Выберите путь, c которого будет произведена отправка.");
-        //        }
-        //    }),
-        // Прибытие вагона
-        //bt_arrival = $('button#arrival').on('click',
-        //    function (event) {
-        //        alert.clear_message();
-        //        event.preventDefault();
-        //        //// Определим выбранный путь
-        //        //var select_row = table_tree_way.html_table.find('tr.selected');
-        //        //// Определим станцию пути
-        //        //var id_station = null;
-        //        //var id_way = null;
-        //        //if (select_row && select_row.length > 0) {
-        //        //    id_station = Number($(select_row[0]).attr("station"));
-        //        //    id_way = Number($(select_row[0]).attr("way"));
-        //        //}
-        //        // Откроем окно
-        //        operation_detali.view_arrival(current_id_station, current_id_way);
-        //    }),
         // Предъявление состава на УЗ
         bt_provide = $('button#provide').on('click',
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
-
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_station && current_id_way) {
                     var station = ids_inc.ids_dir.list_station.find(function (o) {
                         return o.id === current_id_station;
@@ -483,6 +481,10 @@
             function (event) {
                 alert.clear_message();
                 event.preventDefault();
+                if (!bt_enable) {
+                    alert.out_warning_message("Данная операция заблокирована, перейдите на новую версию АРМа.");
+                    return;
+                }
                 if (current_id_station && current_id_way) {
                     var station = ids_inc.ids_dir.list_station.find(function (o) {
                         return o.id === current_id_station;
@@ -531,7 +533,8 @@
                             }
                         } else {
                             // Вагон вышел
-                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].way_end) + ' со станции ' + result_position[0]['station_name_' + lang];
+                            result_dislocation = 'Вагон сдан на УЗ ' + getReplaceTOfDT(result_position[0].date_outgoing) + '. Вагон убыл ' + (result_position[0].date_departure_amkr !== null ? getReplaceTOfDT(result_position[0].date_departure_amkr): ' - ')+ ' со станции ' + result_position[0]['station_name_' + lang]; 
+                            //Вагон сдан на УЗ 2023-07-06 11:00. Вагон убыл 2023-07-06 21:15 со станции Промышленная» // getReplaceTOfDT(result_position[0].date_outgoing)
                         }
                     }
                     LockScreenOff();

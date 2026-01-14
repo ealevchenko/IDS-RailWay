@@ -170,11 +170,11 @@ namespace Test
 
             //}
 
-
-
+            //double value = 11.94;
+            //Console.WriteLine(Math.Round(value, 1, MidpointRounding.AwayFromZero));
 
             #region Test_KIS Тест Кис
-            Test_KIS tkis = new Test_KIS();
+            //Test_KIS tkis = new Test_KIS();
             //tkis.EFKIS_Vagon_Sob();
             //tkis.EFKIS_GetCurrentVAGON_SOB();
             //tkis.KISDirectory_GetCurrent_KOMETA_VAGON_SOB();
@@ -197,8 +197,10 @@ namespace Test
             //tids.IDS_GetDirectory_UpdateOwnersWagonsOfDB_UZ();        // Тест обновления владельцев в карточке вагона по данным БД УЗ
             //tids.IDS_GetDirectory_ChangeNumWagon();                     // Тест перенумерации вагона
 
-            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();        // Админ. коррекция даты аренды по номеру вагона()
-            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();        // Админ. коррекция даты аренды  по всему спраочнику()
+            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf();      // Админ. коррекция даты аренды по номеру вагона()
+            //tids.IDS_GetDirectory_CorrectDateTime_Of_Directory_WagonsRenf_all();  // Админ. коррекция даты аренды  по всему спраочнику()
+            //tids.IDS_Directory_UpdateArrivalRentWagon();                            // Тест обновления входящей аренды после изменения операторов
+            //tids.IDS_Directory_UpdateArrivalRentWagons();                           // Тест обновления входящей аренды после изменения операторов на несколько вагонов
 
             //tids.IDSTransfer_GetNumDoc();
             //tids.IDSDirectory_IsCorrectNumCar();
@@ -227,7 +229,11 @@ namespace Test
             //tids.IDS_WIR_ArrivalWagonsOfStation();                    // Операция роспуск
             //tids.IDS_WIR_OperationReturnProvideWagons();              // Тест операции вернуть пръедявленый состав
 
-            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();           // Тест операции обновления ЭПД состава который отправили
+            //tids.IDS_WIR_OperationClearEPDSendingSostav();             // Тест операции сброса ЭПД состава который отправили
+            //tids.IDS_WIR_OperationUpdateEPDSendingSostav();             // Тест операции обновления ЭПД состава который отправили
+            //tids.IDS_WIR_OperationUpdateEPDSendingCar();                // Тест операции обновления ЭПД вагона который отправили по id
+
+
 
             //tids.IDS_WIR_GetWagonsOperationOfSend();                  // Тест формирования отчета операции отправки (вагоны)
             //tids.IDS_WIR_GetSostavWagonsOperationOfSend();            // Тест формирования отчета операции отправки (состав-вагоны)
@@ -239,13 +245,15 @@ namespace Test
             //tids.IDS_WIR_OperationUpdateUZ_DOC1();                    // Тест поиска документа по номеру накладной и номеру вагона
             //tids.IDS_WIR_OperationUpdateUZ_DOC2();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
             //tids.IDS_WIR_OperationUpdateUZ_DOC3();                    // Тест поиска документа по номеру вагона грузополучателям , станциям и времени
+            //tids.IDS_WIR_OperationUpdateUZ_DOC_Adp_Out();               // Тест поиска документа по номеру вагона грузополучателям , станциям и предыдущей отправки и приема
             //tids.IDS_WIR_OperationManualSearchIncomingWagon();        // Тест поиска вагонов введенных в ручную
 
             //tids.IDS_WIR_GetReportBorderCrossingOfNums();             // Тест поиска вагонов прошедших погран переход
 
             //tids.IDS_WIR_UpdateArrival_UZ_Vagon_Of_CardWagon();       //  Тест обновление принятого вагона по данным обновленного справочника
             //tids.IDS_WIR_UpdateArrival_UZ_Documents();                //  Тест обновление документов по принятым вагонам (род, адм...) после обновления справочника
-            //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();           // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
+            //tids.IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC();          // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
+            //tids.IDS_WIR_Update_Arrival_UZ_Doc();                   // Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему)
 
             //tids.IDS_WIR_UpdateOutgoing_UZ_Document();                //  Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
 
@@ -253,10 +261,17 @@ namespace Test
             //tids.IDS_WIR_UpdateOutgoing_Parallel();            
             //tids.IDS_WIR_UpdateOutgoing_Thread();
 
-            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                       // Тестируем обновление документов в архиве
+            //tids.IDS_Arhiv_Update_UZ_DOC_PDF();                           // Тестируем обновление документов в архиве
 
-            //tids.IDS_WIR_UpdateOperationOutgoingSostav();               // 
-            tids.IDS_WIR_UpdateOperationOutgoingSostav_date();               // 
+            //tids.IDS_WIR_UpdateOperationOutgoingSostav();                 // 
+            //tids.IDS_WIR_UpdateOperationOutgoingSostav_date();            // 
+
+            //tids.IDS_WIR_ServiceChangeUsageFeePeriod();                   //  Тест обновление периодов
+            //tids.IDS_WIR_GetExchangeRate();
+            //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
+            //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
+            tids.Get_ConvertEPD();
 
             #endregion
 
@@ -300,7 +315,7 @@ namespace Test
             //tuz.UZ_SMS_GetOutgoingDocumentOfDB_NumShipper(); //Получить ЭПД из промежуточной базы на вагон который отправили
             //tuz.UZ_SMS_GetDocumentOfDB_NumConsignees();
             //tuz.UZ_SMS_GetLastDTOfUZ_Data(); // тест получить время последней записи промежуточной базы
-
+            //tuz.UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date();
             //tuz.UZ_SMS_GetDocument_of_id_doc();
             //tuz.UZ_SMS_GetDocument_of_db_id_doc();
             #endregion
@@ -311,6 +326,10 @@ namespace Test
             //tids.IDS_WIR_ReturnWagons();      // Административной функции вернуть вагон из отправки
             //tids.IDS_WIR_Update_EPD();        // Административной Обновить ЭПД по составам (список id составов [KRR-PA-CNT-Railway].[IDS].[OutgoingSostav])
             //tids.IDS_WIR_IncomingWagon();    // Административной функции поставить вагон на путь ИДС (если была ошибка вставки)
+            //tids.IDS_Directory_ClearDirectory_Cargo();    // Административной функции очистить от дублей справочник грузов
+            //tids.IDS_WIR_OperationUpdateEPDIncomingWagon();             // Административная функция исправить документ по прибытию
+            //tids.IDS_WIR_ReportBorderCrossingOfNumsEPD();                 // Административная 
+            //tids.IDS_WIR_ReportBorderCrossingOfNumsEPD_DB();                // Административная           
             #endregion
 
             Console.WriteLine("Press any key to exit...");

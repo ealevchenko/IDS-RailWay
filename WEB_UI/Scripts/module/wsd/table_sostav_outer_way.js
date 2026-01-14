@@ -895,7 +895,7 @@
                 if ((data.count_wagons_arrival > 0 || data.count_wagons_accepted > 0) && data.count_wagons_send > data.count_wagons_accepted) {
                     $(row).addClass('yellow');// Отметим состав частично принят
                 }
-
+                $('td.fl-name_outer_way', row).attr('title', data['name_outer_way_' + App.Lang]);
                 if (data.count_wagons_accepted > 0 && data.count_wagons_send === data.count_wagons_accepted) {
                     // Вагоны приняты, проверим как
 
@@ -943,7 +943,7 @@
                     var row = this.obj_t_sostav.rows(indexes).data().toArray();
                     //if (row && row.length > 0 && row[0].outgoing_sostav_status && row[0].outgoing_sostav_status > 0) {
                     //    e.preventDefault();
-                    //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон пренадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
+                    //    this.out_warning('Вагон № ' + row[0].num + ' для операций заблокирован (вагон принадлежит составу который имеет статус - ' + row[0].outgoing_sostav_status + ')');
                     //}
                 }.bind(this)).on('select deselect', function (e, dt, type, indexes) {
                     var index = this.obj_t_sostav.rows({ selected: true });

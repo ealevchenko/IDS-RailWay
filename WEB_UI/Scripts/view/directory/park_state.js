@@ -357,8 +357,8 @@
                     pn_select.get_park_state_of_id(pn_select.id_park_status_select, function (patk_state) {
                         pn_select.park_state_info.text('Состояние парка на :' + getReplaceTOfDT(patk_state.state_on) + ', созданное : ' + patk_state.create_user + ' ')
                             //TODO:!!ВЕРНУТЬ
-                            //.append($('<label style="color:red;">' + (patk_state.applied ? '( п : ' + getReplaceTOfDT(patk_state.applied) + ' )' : '') + '</label>'))
-                            //.append($('<label style="color:#0026ff;">' + (patk_state.change ? ' - ( о : ' + getReplaceTOfDT(patk_state.change) + ' )' : '')  + '</label>'))
+                            .append($('<label style="color:red;">' + (patk_state.applied ? '( п : ' + getReplaceTOfDT(patk_state.applied) + ' )' : '') + '</label>'))
+                            .append($('<label style="color:#0026ff;">' + (patk_state.change ? ' - ( о : ' + getReplaceTOfDT(patk_state.change) + ' )' : '') + '</label>'))
                             .append(pn_select.bt_apply.on('click', function (event) {
                                 event.preventDefault();
                                 pn_select.apply();
@@ -513,14 +513,16 @@
                                         // Вагоны есть 
                                         $.each(list_wagon, function (i, el) {
                                             if (el.id === id_park_status) {
-                                                // пренадлежит текущему положению
+                                                // принадлежит текущему положению
                                                 list_internal.push(el);
                                             } else {
-                                                // не пренадлежит текущему положению
+                                                // не принадлежит текущему положению
                                                 list_external.push(el);
                                             }
                                         });
                                         // Разделили
+                                        var list_wagon_busy = [];   // список вагонов запрет операций
+                                        var list_move_busy = [];    // список вагонов запрет перемещений
                                         var wagons_not_arrival = []; // Вагоны которые не заходили
                                         var wagons_exit = []; // Вагоны которые вышли
                                         var wagons_amkr = []; // Вагоны которые на АМКР
@@ -534,9 +536,13 @@
                                                     if (el.wim_close !== null) {
                                                         wagons_exit.push(el);
                                                     } else {
-                                                        //if (el.num === 63663819) {
-                                                        //    var s = 1;
+                                                        //if (el.current_wagon_busy === 1) {
+                                                        //    list_wagon_busy.push(el);
                                                         //}
+                                                        //if (el.current_move_busy === 1) {
+                                                        //    list_move_busy.push(el);
+                                                        //}
+                                                        //if (el.current_wagon_busy !== 1 && el.current_move_busy !== 1) {
                                                         wagons_amkr.push(el);
                                                         var dublicat = list_external.find(function (o) {
                                                             return o.num === el.num;
@@ -545,6 +551,7 @@
                                                             valid = false;
                                                             pn_select.val_add_park_status.out_error_message('Ошибка, введеный номер :' + el.num + ' повторяется в положении парка по станции :' + dublicat['pss_station_name_' + lang]);
                                                         }
+                                                        //}
                                                     }
                                                 }
                                             });
@@ -559,6 +566,15 @@
                                                 valid = false;
                                                 pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + wagons_exit.length + ' вагонов которые уже сданы на УЗ');
                                             }
+                                            // проверим вагоны 
+                                            //if (list_wagon_busy && list_wagon_busy.length > 0) {
+                                            //    valid = false;
+                                            //    pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + list_wagon_busy.length + ' вагонов по которым запрет новых операций');
+                                            //}
+                                            //if (list_move_busy && list_move_busy.length > 0) {
+                                            //    valid = false;
+                                            //    pn_select.val_add_park_status.out_error_message('Ошибка, найдено :' + list_move_busy.length + ' вагонов по которым запрет перемещений');
+                                            //}
                                             // Есть вагоны на амкр, проверим на повтор
                                             if (wagons_amkr && wagons_amkr.length > 0) {
                                                 // Провкерка на повторяющиеся номера
@@ -1159,12 +1175,23 @@
                                             // Вагон на территории АМКР
                                             if (result_position[0].id_outer_way === null) {
                                                 // Вагон на станции
-                                                if (result_position[0].id_operation_wagon !== 9) {
-                                                    result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
-                                                } else {
+                                                if (result_position[0].current_move_busy === 1) {
                                                     tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
-                                                    result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                    if (result_position[0].id_operation_wagon === 9) {
+                                                        result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                    } else {
+                                                        result_dislocation = '!ВНМАНИЕ ПО ВАГОНУ ЗАПРЕТ ПЕРЕМЕЩЕНИЯ, последняя операция: ' + result_position[0]['operation_wagon_name_' + lang] + ' находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                    }
+                                                } else {
+                                                    result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+
                                                 }
+                                                //if (result_position[0].id_operation_wagon !== 9) {
+                                                //    result_dislocation = 'Вагон находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                //} else {
+                                                //    tr.removeClass('exist-amkr').addClass('exist-amkr-lock');
+                                                //    result_dislocation = '!ВНМАНИЕ ВАГОН ПРЕДЪЯВЛЕН, находится на станции : ' + result_position[0]['station_name_' + lang] + '; <br/>Путь станции : ' + result_position[0]['way_num_' + lang] + ' - ' + result_position[0]['way_name_' + lang] + '; <br/>Позиция на пути : ' + result_position[0].position + ', прибыл на путь : ' + getReplaceTOfDT(result_position[0].way_start);
+                                                //}
 
                                             } else {
                                                 // Вагон движется по территории.
@@ -1188,20 +1215,20 @@
                             title: langView('field_note', langs), width: "400px", orderable: false, searchable: false
                         },
                         //TODO:!!ВЕРНУТЬ
-                        //{
-                        //    //data: "create_wagon",
-                        //    data: function (row, type, val, meta) {
-                        //        return row.create ? row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
-                        //    },
-                        //    title: langView('field_create_wagon', langs), width: "150px", orderable: false, searchable: false
-                        //},
-                        //{
-                        //    //data: "change_wagon",
-                        //    data: function (row, type, val, meta) {
-                        //        return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
-                        //    },
-                        //    title: langView('field_change_wagon', langs), width: "150px", orderable: false, searchable: false
-                        //}
+                        {
+                            //data: "create_wagon",
+                            data: function (row, type, val, meta) {
+                                return row.create ? row.create_user + '</br> (' + getReplaceTOfDT(row.create) + ')' : null;
+                            },
+                            title: langView('field_create_wagon', langs), width: "150px", orderable: false, searchable: false
+                        },
+                        {
+                            //data: "change_wagon",
+                            data: function (row, type, val, meta) {
+                                return row.change ? row.change_user + '</br>(' + getReplaceTOfDT(row.change) + ')' : null;
+                            },
+                            title: langView('field_change_wagon', langs), width: "150px", orderable: false, searchable: false
+                        }
                     ],
                     dom: 'Bfrtip',
                     stateSave: false,

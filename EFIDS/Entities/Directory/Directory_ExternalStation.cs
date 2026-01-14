@@ -17,6 +17,8 @@ namespace EFIDS.Entities
             Outgoing_UZ_Document = new HashSet<Outgoing_UZ_Document>();
             Outgoing_UZ_Document1 = new HashSet<Outgoing_UZ_Document>();
             Outgoing_UZ_Vagon = new HashSet<Outgoing_UZ_Vagon>();
+            Usage_Fee_Period_Detali = new HashSet<Usage_Fee_Period_Detali>();
+            Usage_Fee_Period_Detali1 = new HashSet<Usage_Fee_Period_Detali>();
         }
 
         [Key]
@@ -60,5 +62,11 @@ namespace EFIDS.Entities
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Outgoing_UZ_Vagon> Outgoing_UZ_Vagon { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period_Detali> Usage_Fee_Period_Detali { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Usage_Fee_Period_Detali> Usage_Fee_Period_Detali1 { get; set; }
     }
 }

@@ -138,6 +138,18 @@ table.dataTable.display td.arrival {
     background-color: #FCE4D6;
 }
 
+table.dataTable.display td.common {
+    background-color: #d6fce4;
+}
+
+table.dataTable.display td.letter {
+    background-color: #eed6fc;
+}
+
+table.dataTable.display td.current {
+    background-color: #d6f7fc;
+}
+
 td.details-control {
     background: url('../../../Content/DataTables/media/images/details_open.png') no-repeat center center;
     width: 20px;
@@ -213,7 +225,6 @@ td.total-count {
     text-align: center;
     text-transform: uppercase;
 }
-
 td.total-count-type {
     color: #000000 !important;
     text-align: center;

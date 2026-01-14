@@ -196,12 +196,13 @@
         clear_edit_element();
         num = $num_vagon.val();
         if (num !== null && num !== '') {
-            if (is_valid_num_wagon(num)) {
-                view_info();
-            } else {
-                alert.out_warning_message(langView('maincc_not_system_num', App.Langs));
-                LockScreenOff();
-            }
+            view_info();
+            //if (is_valid_num_wagon(num)) {
+            //    view_info();
+            //} else {
+            //    alert.out_warning_message(langView('maincc_not_system_num', App.Langs));
+            //    LockScreenOff();
+            //}
         } else {
             alert.out_warning_message(langView('maincc_not_num', App.Langs));
             LockScreenOff();
@@ -268,7 +269,7 @@
                 elements.textarea_note.val(wir.note !== null ? wir.note : '');
                 open_edit_element();
                 edit_elements.select_new_condition_arrival.val(condition_current !== null ? condition_current.id : -1);
-                edit_elements.checkbox_distinguish.val(wir.highlight_color!==null);
+                edit_elements.checkbox_distinguish.val(wir.highlight_color !== null);
                 edit_elements.textarea_new_note.val(wir.note);
                 LockScreenOff();
             } else {

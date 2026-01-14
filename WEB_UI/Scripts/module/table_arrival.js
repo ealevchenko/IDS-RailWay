@@ -15,7 +15,7 @@
             'field_num': '№ вагона',
             'field_train': '№ поезда',
             'field_composition_index': 'Индекс поезда',
-            'field_date_arrival': 'Прибил в составе',
+            'field_date_arrival': 'Прибыл в составе',
             'field_date_adoption': 'Принят в составе',
             'field_date_adoption_act': 'Принят в составе по акту',
             'field_date_adoption_act_wagon': 'Вагон принят по акту',

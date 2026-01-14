@@ -19,6 +19,7 @@
     var max_err_date_adoption = 3 * 24 * 60;    // TODO: Максимальная разница в минутах дата приема
     var min_err_date_adoption_act = -2 * 60;    // TODO: Минимальная разница в минутах дата приема по акту
     var max_err_date_arrival_act = 2 * 60;      // TODO: Максимальная разница в минутах дата приема по акту
+    //var list_adm_user = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки ,
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -66,7 +67,8 @@
             'fhiis_mess_error_add_sostav': 'Ошибка выполнения операции "Создать состав прибытия", код ошибки = ',
             'fhiis_mess_error_edit_sostav': 'Ошибка выполнения операции "Обновить состав прибытия", код ошибки = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Ошибка выполнения операции "ПРИНЯТЬ СОСТАВ НА АМКР", код ошибки = ',
-
+            'fhiis_mess_error_operation_return_lts': 'Ошибка обнавления открытых писем, код ошибки = ',
+            'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         },
         'en':  //default language: English
         {
@@ -111,6 +113,8 @@
             'fhiis_mess_error_add_sostav': 'Error performing "Create arrival composition" operation, error code = ',
             'fhiis_mess_error_edit_sostav': 'Error performing "Update arrival composition" operation, error code = ',
             'fhiis_mess_error_operation_arrival_sostav': 'Error performing operation "ACCEPT COMPOSITION TO AMCR", error code = ',
+            'fhiis_mess_error_operation_return_lts': 'Error refreshing open emails, error code =',
+            'fhiis_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         }
     };
     // Определлим список текста для этого модуля
@@ -197,6 +201,9 @@
             // Создадим форму правки операторов
             var FIF = App.form_infield;
             this.form = new FIF();
+
+            //var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+            var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
 
             // Определим поля
             var fl_id = {
@@ -767,7 +774,7 @@
                 close: null,
                 add_validation: null,
                 edit_validation: null,
-                default: moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
+                default: null, //moment().format("YYYY-MM-DDThh:mm:ss"), //.utc().toISOString(),
                 row: null,
                 col: null,
                 col_prefix: null,
@@ -787,7 +794,7 @@
                 close: null,
                 add_validation: null,
                 edit_validation: null,
-                default: App.User_Name,
+                default: null, //App.User_Name,
                 row: null,
                 col: null,
                 col_prefix: null,
@@ -840,8 +847,8 @@
             fields.push(fl_train);
             fields.push(fl_composition_index);
             fields.push(fl_date_arrival);
-            fields.push(this.settings.mode === 0 ? fl_date_adoption : fl_date_adoption_1);
-            fields.push(this.settings.mode === 0 ? fl_date_adoption_act : fl_date_adoption_act_1);
+            fields.push(this.settings.mode === 0 ? (!user_adm ? fl_date_adoption : fl_date_adoption_1) : fl_date_adoption_1);
+            fields.push(this.settings.mode === 0 ? (!user_adm ? fl_date_adoption_act : fl_date_adoption_act_1) : fl_date_adoption_act_1);
             fields.push(fl_station_from);
             fields.push(this.settings.mode === 0 ? fl_station_on : fl_station_on_1);
             fields.push(this.settings.mode === 0 ? fl_way : fl_way_1);
@@ -891,6 +898,15 @@
     // Уточняющая валидация данных 
     form_hi_incoming_sostav.prototype.validation = function (result) {
         var valid = true;
+        //var user_adm = list_adm_user.indexOf(App.User_Name) >= 0;
+        //if (user_adm) return valid;
+        var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
+        if (user_adm) return valid;
+        // если закрыто то правка запрещена
+        if (result.old !== null && result.old.status >= 2) {
+            this.form.out_error(langView('fhiis_mess_error_edit_user', App.Langs).format(App.User_Name));
+            return false;
+        }
         //// Сдесь можно проверить дополнительно
         var current = moment();
         var current_date_arrival = result.old && result.old.date_arrival ? moment(result.old.date_arrival) : null;
@@ -983,6 +999,9 @@
         // Добавить или править состав
         if (this.settings.mode === 0) {
             if (data.old === null) {
+                //data.new.create = moment().format("YYYY-MM-DDThh:mm:ss");
+                data.new.create = moment().format();
+                data.new.create_user = App.User_Name;
                 // Добавить
                 this.ids_wsd.postIncomingSostav(data.new, function (result) {
                     if (result > 0) {
@@ -998,10 +1017,11 @@
                 }.bind(this));
             } else {
                 // Править
-                data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
+                //data.new.change = moment().format("YYYY-MM-DDThh:mm:ss");
+                data.new.change = moment().format();
                 data.new.change_user = App.User_Name;
                 this.ids_wsd.putIncomingSostav(data.new, function (result) {
-                    if (result > 0) {
+                    if (result >= 0) {
                         this.mf_edit.close(); // закроем форму
                         if (typeof this.settings.fn_edit === 'function') {
                             this.settings.fn_edit({ data: data, result: result });
@@ -1018,7 +1038,7 @@
         if (this.settings.mode === 1) {
             var operation = {
                 id_arrival_sostav: data.new.id,
-                num_doc : Number(data.new.num_doc),
+                num_doc: Number(data.new.num_doc),
                 train: data.new.train,
                 composition_index: data.new.composition_index,
                 date_arrival: data.new.date_arrival,
@@ -1034,10 +1054,17 @@
             // Выполним операцию "Принять состав на АМКР"
             this.ids_wsd.postOperationIncomingSostav(operation, function (result) {
                 if (result > 0) {
-                    this.mf_edit.close(); // закроем форму
-                    if (typeof this.settings.fn_edit === 'function') {
-                        this.settings.fn_edit({ data: data, result: result });
-                    }
+                    // обновим письма
+                    this.ids_wsd.postUpdateOpenInstructionalLetters(function (result_lts) {
+
+                        this.mf_edit.close(); // закроем форму
+                        if (typeof this.settings.fn_edit === 'function') {
+                            this.settings.fn_edit({ data: data, result: result });
+                        }
+                        if (this.result_lts && this.result_lts.error > 0) {
+                            this.mf_edit.out_error(langView('fhiis_mess_error_operation_return_lts', App.Langs) + result_lts.error);
+                        }
+                    }.bind(this));
                     //LockScreenOff();
                 } else {
                     LockScreenOff();
@@ -1045,8 +1072,6 @@
                 }
             }.bind(this));
         }
-
-
     };
     // Очистить сообщения
     form_hi_incoming_sostav.prototype.out_clear = function () {

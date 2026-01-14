@@ -1,4 +1,4 @@
-﻿/*Модуль Таблица "Прибываемые составы"*/
+﻿/*Модуль библиотека таблиц для отчета ТД*/
 (function (window) {
     'use strict';
 
@@ -8,10 +8,11 @@
     var format_date = "YYYY-MM-DD";
     var format_time = "HH:mm:ss";
     var format_datetime = "YYYY-MM-DD HH:mm:ss";
+    var format_datetime_ru = "DD.MM.YYYY HH:mm:ss";
 
     // Определим язык
-    App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
-
+    //App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+    App.Lang = 'ru';
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -42,10 +43,8 @@
             'ttdr_field_outgoing_sostav_detali_count_wagon': 'кол-во',
             'ttdr_field_outgoing_sostav_detali_count_account_balance': 'Уч. ваг.',
 
-            //'ttdr_field_incoming_cars_position_arrival': '№',
-            //'ttdr_field_incoming_cars_station_from_name': 'Станция отправления',
-
             'ttdr_field_incoming_cars_id': 'id вагона',
+            'ttdr_field_incoming_cars_arrival_sostav_num_doc': '№ ведомости прибытия',
             'ttdr_field_incoming_cars_position_arrival': '№ поз.',
             'ttdr_field_num': '№ вагона',
             'ttdr_field_incoming_cars_uz_document_nom_doc': '№ дос. накл.',
@@ -76,8 +75,16 @@
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. ПОГР',
             'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. ПОГР',
 
-            'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Огран. ПОГР',
+            'ttdr_field_current_wagons_rent_operators': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_current_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+
+            'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Разм. ПРИБ',
             'ttdr_field_incoming_cars_uz_vagon_condition_abbr': 'Разм. по приб.',
+            'ttdr_field_current_condition_name': 'Разм текущ.',
+            'ttdr_field_current_condition_abbr': 'Разм текущ.',
+            'ttdr_field_condition_abbr': 'Разм текущ.',
+
             'ttdr_field_incoming_cars_uz_document_code_stn_from': 'Код ст. отпр.',
             'ttdr_field_incoming_cars_uz_document_station_from_name': 'Cт. отпр.',
             'ttdr_field_incoming_cars_uz_document_code_stn_to': 'Код ст. приб.',
@@ -89,14 +96,24 @@
             'ttdr_field_incoming_cars_uz_document_shipper_name': 'Гр. отпр.',
             'ttdr_field_incoming_cars_uz_document_code_consignee': 'Код. гр. пол.',
             'ttdr_field_incoming_cars_uz_document_name_consignee': 'Гр. пол.',
-            'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код. пл. отпр.',
+            'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код плат. ПРИБ.(по отправке).',
             'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
             'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
             'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес ЭПД, тн.',
-            'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз',
+            'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_incoming_cars_uz_vagon_cargo_group_name': 'Группа груза',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_name': 'Следует на ст.АМКР',
             'ttdr_field_incoming_cars_uz_vagon_station_amkr_abbr': 'Следует на ст.АМКР',
+            'ttdr_field_current_station_amkr_name': 'Текущая станция',
+            'ttdr_field_current_station_amkr_abbr': 'Текущая станция',
+            'ttdr_field_station_amkr_abbr': 'Текущая станция',
+
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+
+            'ttdr_field_current_outer_way_name': 'Перегон',
+
             'ttdr_field_incoming_cars_uz_vagon_division_code': 'Шифр Цеха',
             'ttdr_field_incoming_cars_uz_vagon_name_division': 'Цех получатель',
             'ttdr_field_incoming_cars_uz_vagon_division_abbr': 'Цех получатель',
@@ -105,11 +122,27 @@
             'ttdr_field_incoming_cars_arrival_sostav_station_on_name': 'Станц. примыкания',
             'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
 
-            'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
-            'ttdr_field_outgoing_cars_num': '№ вагона',
-            //'ttdr_field_sostav_outgoing_naturka_num': '№ вагона',
-            'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
+            'ttdr_field_loading_status': 'Статус',
+            'ttdr_field_current_loading_status': 'Статус',
+            'ttdr_field_view_cargo_name': 'Груз ТЕКУЩ',
+            'ttdr_field_view_division_from_abbr': 'Цех погрузки ТЕКУЩ',
+            'ttdr_field_view_division_on_abbr': 'Цех выгрузки ТЕКУЩ',
+            'ttdr_field_view_external_station_on_name': 'Станция УЗ назначения ТЕКУЩ',
+            'ttdr_field_view_station_from_amkr_abbr': 'Станция АМКР отправки',
+            'ttdr_field_view_station_on_amkr_abbr': 'Станция АМКР прибытия',
+            'ttdr_field_operation_name': 'Операция',
+            'ttdr_field_operation_start': 'Операция начата',
+            'ttdr_field_operation_end': 'Операция завершена',
 
+            'ttdr_field_outgoing_uz_vagon_pay_001': 'Тариф',
+            'ttdr_field_outgoing_uz_vagon_pay_add': 'Доп. сборы',
+
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
+            'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
+            'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
 
             'ttdr_field_outgoing_cars_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
             'ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_name': 'Адм.',
@@ -172,10 +205,19 @@
             'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
             'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
             'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
-            'ttdr_field_outgoing_cars_pay': 'Плата, грн',
-            'ttdr_field_outgoing_cars_pay_act': 'Плата по Акту, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_downtime': 'Общий простой, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования (расчетное), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final': 'Плата, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата (расч.), грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_time': 'Время пользования (ручн.), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount': 'Плата (ручн.), грн',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
             'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_note': 'Примечание, плата за пользование',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create': 'Плата рассчитана',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create_user': 'Плату рассчитал',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change': 'Плата правка',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change_user': 'Плату правил',
 
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
@@ -190,6 +232,8 @@
             'ttdr_field_outgoing_cars_arrival_uz_document_station_from_name': 'Ст. ОТПР',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_name': 'Разметка ПРИБ',
             'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_name': 'Разметка ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_abbr': 'Разметка ОТПР',
             'ttdr_field_outgoing_cars_arrival_sostav_id_station_on': 'id Ст.примыкания ПРИБ',
             'ttdr_field_outgoing_cars_arrival_sostav_station_on_name': 'Ст.примыкания ПРИБ',
             'ttdr_field_outgoing_cars_arrival_sostav_station_on_abbr': 'Ст.примыкания ПРИБ',
@@ -221,8 +265,6 @@
             'ttdr_field_outgoing_cars_epd_pl_name_plat': 'Плательщик ОТПР (ЭПД)',
             'ttdr_field_outgoing_cars_epd_distance_way': 'Тар.расс. ОТПР (ЭПД)',
 
-            //'ttdr_field_adoption_wagon_not_operation_position': '№п.п.',
-            'ttdr_field_adoption_wagon_not_operation_num': '№ вагона',
             'ttdr_field_adoption_wagon_not_operation_date_adoption': 'Дата приема',
             'ttdr_field_adoption_wagon_not_operation_cargo_name': 'Груз ПРИБ.',
             'ttdr_field_adoption_wagon_not_operation_nom_main_doc': 'Осн. накл.',
@@ -248,8 +290,6 @@
             'ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr': 'Дата отправления на АМКР',
             'ttdr_field_incoming_cars_arrival_sostav_epd_date_vid': 'Дата раскредитовки',
 
-            //'ttdr_field_incoming_cars_number_in_sequence': '№ п.п',
-            //'ttdr_field_sostav_outgoing_naturka_number_in_sequence': '№ п.п',
             'ttdr_field_sostav_outgoing_naturka_arrival_uz_vagon_cargo_name': 'Груз по прибытию',
             'ttdr_field_sostav_outgoing_naturka_arrival_sostav_date_arrival': 'Дата приема с УЗ',
 
@@ -282,12 +322,48 @@
             'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
             'ttdr_field_total_station_inlandrailway': 'Станция назначения/Дорога',
             'ttdr_field_total_note': 'Примечание',
+            'ttdr_field_total_sum_idle_time': 'Общий простой, час',
+            'ttdr_field_total_wagon_idle_time': 'На 1 вагон, час',
+
+            'ttdr_field_usage_fee_sum_calc_time': 'Общий простой, час',
+            'ttdr_field_usage_fee_wagon_calc_time': 'На 1 вагон, час.',
+            'ttdr_field_usage_fee_sum_calc_fee_amount': 'Плата, грн',
+            'ttdr_field_usage_fee_wagon_calc_fee_amount': 'На 1 ваг.,грн',
+            'ttdr_field_usage_fee_wagon_persent_fee_amount': '% от общей платы',
+            'ttdr_field_usage_fee_wagon_persent_derailment_fee_amount': '% от общей платы',
+            'ttdr_field_usage_fee_wagon_persent_not_derailment_fee_amount': '% от общей платы',
+
+            'ttdr_field_usage_fee_period_status_input': '',
+            'ttdr_field_usage_fee_period_start': 'Начало периода',
+            'ttdr_field_usage_fee_period_stop': 'Окончание периода',
+            'ttdr_field_usage_fee_period_operator': 'Оператор',
+            'ttdr_field_usage_fee_period_operator_abbr': 'Оператор (аббр)',
+            'ttdr_field_usage_fee_period_genus_abbr': 'Род',
+            'ttdr_field_usage_fee_period_rate': 'Ставка',
+            'ttdr_field_usage_fee_period_rate_derailment': 'Ставка, сход',
+            'ttdr_field_usage_fee_period_grace_time_1': 'Льготное время 1',
+            'ttdr_field_usage_fee_period_grace_time_2': 'Льготное время 2',
+            'ttdr_field_usage_fee_period_coefficient_route': 'Коэф.маршрут',
+            'ttdr_field_usage_fee_period_coefficient_not_route': 'Коэф.не маршрут',
+            'ttdr_field_usage_fee_period_hour_after_30': 'Полный час после 30 мин.',
+
+            'ttdr_field_arrival_uz_document_nom_doc': '№ накладной',
+            'ttdr_field_arrival_uz_document_nom_main_doc': '№ накладной',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption': 'Дата приема.',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act': 'Дата приема (акт).',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата сдачи.',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата сдачи (акт)',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз ОТПР',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route': 'Маршрут/не маршрут',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_route_sign': 'Маршрут/не маршрут',
 
             'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
-            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи Акт',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
 
             'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
-            'ttdr_field_incoming_outgoing_car_pay_car': 'Плата , грн.',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Общий простой, час',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final': 'Плата , грн.',
 
             'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
 
@@ -301,14 +377,68 @@
             'ttdr_field_curr_wagons_rent_limiting_name': 'Ограничение',
             'ttdr_field_curr_wagons_rent_limiting_abbr': 'Ограничение',
 
+            'ttdr_field_instructional_letters_num': '№ письма',
+            'ttdr_field_instructional_letters_datetime': 'Дата письма',
+            'ttdr_field_instructional_letters_station_code': 'Код станции',
+            'ttdr_field_instructional_letters_station_name': 'Станция назначения',
+            'ttdr_field_instructional_letters_note': 'Текст',
+
+            'ttdr_field_genus_vagon': 'Род вагона',
+            'ttdr_field_sap_incoming_supply_kod_r_10': 'Запрет ОТК',
+            'ttdr_field_wir_note': 'Примечание',
+            'ttdr_field_wir_note2': 'Примечание2',
+            'ttdr_field_idle_time': 'Простой УЗ',
+            'ttdr_field_idle_time_act': 'Простой УЗ (акт)',
+
+            'ttdr_field_wim_unload_id_filing': '№ Подачи выгрузки',
+            'ttdr_field_wim_unload_filing_start': 'Дата начала выгрузки',
+            'ttdr_field_wim_unload_filing_end': 'Дата окончания выгрузки',
+            'ttdr_field_wim_load_id_filing': '№ Подачи погрузки',
+            'ttdr_field_wim_load_filing_start': 'Дата начала погрузки',
+            'ttdr_field_wim_load_filing_end': 'Дата окончания погрузки',
+            'ttdr_field_wim_clear_id_filing': '№ Подачи очистки',
+            'ttdr_field_wim_clear_filing_start': 'Дата начала очистки',
+            'ttdr_field_wim_clear_filing_end': 'Дата окончания очистки',
+
+            'ttdr_field_residue_total_operators_operator': 'Оператор',
+            'ttdr_field_residue_total_operators_start': 'Было',
+            'ttdr_field_residue_total_operators_arrival': 'Прибыло',
+            'ttdr_field_residue_total_operators_outgoing': 'Убыло',
+            'ttdr_field_residue_total_operators_stop': 'Остаток',
+
+            'ttdr_field_residue_total_common_date': 'Дата',
+            'ttdr_field_residue_total_common_total': 'Остаток общий',
+            'ttdr_field_residue_total_common_external': 'Внешние вагоны',
+            'ttdr_field_residue_total_common_paid': 'Оплатные',
+            'ttdr_field_residue_total_common_accounting': 'Учетные вагоны',
+            'ttdr_field_residue_total_common_amkr': 'Вагоны и цистерны АМКР + цистерны аренда АМКР',
+
+            'ttdr_field_residue_total_arrival_condition_abbr': 'Разметка по прибытию',
+            'ttdr_field_residue_total_current_condition_abbr': 'Разметка текущая',
+            'ttdr_field_total_group_name_condition': 'Группа разметка',
+            'ttdr_field_total_group_name_genus': 'Группа род вагона',
+            'ttdr_field_total_station_amkr_abbr': 'Станция',
+            'ttdr_field_total_cargo_group_name': 'Род груза',
+            'ttdr_field_total_group_ext_station_from': 'Группа станция отправления',
+
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
+            'ttdr_field_code_stn_from': 'Ст. отпр.',
+            'ttdr_field_from_station_name': 'Ст. отпр.',
+            'ttdr_field_arrival_cargo_name': 'Груз. приб.',
+            'ttdr_field_code_stn_to': 'Ст. прием.',
+            'ttdr_field_to_station_name': 'Ст. прием.',
+            'ttdr_field_outgoing_cargo_name': 'Груз. отпр.',
+            'ttdr_field_grace_time': 'Льгот. время',
+
             'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
-
             'ttdr_mess_load_sostav': 'Загружаю состав ...',
-
             'ttdr_mess_view_report': 'Показать отчет ...',
 
-
             'ttdr_title_all': 'Все',
+            'ttdr_title_yes': 'Да',
             'ttdr_title_not_epd': 'Без ЭПД',
             'ttdr_title_for_loading': 'Под погрузку',
             'ttdr_title_route': 'маршрут',
@@ -324,9 +454,450 @@
             'ttdr_title_button_field_select': 'Выбрать',
             'ttdr_title_button_field_view_all': 'Показать все',
             'ttdr_title_button_field_clear': 'Сбросить',
+            'ttdr_field_add_detali': 'Добавить',
+            'ttdr_field_edit_detali': 'Править',
+            'ttdr_field_delete_detali': 'Удалить',
         },
         'en':  //default language: English
         {
+            'ttdr_field_numeration': '№ п.п.',
+
+            'ttdr_field_adoption_sostav_station': 'ПРИБЫТИЕ',
+            'ttdr_field_adoption_count_wagon': 'Всего вагонов',
+            'ttdr_field_adoption_sostav_count_return_wagon': 'Возврат',
+            'ttdr_field_adoption_count_account_balance': 'Учетные вагоны',
+            'ttdr_field_adoption_count_not_operator': 'Без оператора',
+
+            'ttdr_field_outgoing_sostav_station': 'ОТПРАВЛЕНИЕ',
+            'ttdr_field_outgoing_sostav_count_wagon': 'Всего вагонов',
+            'ttdr_field_outgoing_sostav_count_return_wagon': 'Вернуло УЗ',
+            'ttdr_field_outgoing_sostav_account_balance': 'Учетные вагоны',
+
+            'ttdr_field_adoption_sostav_detali_num_doc': '№ ведомости',
+            'ttdr_field_adoption_sostav_detali_date_adoption': 'Дата приема',
+            'ttdr_field_adoption_sostav_detali_count_wagon': 'кол-во',
+            'ttdr_field_adoption_sostav_detali_count_account_balance': 'Уч. ваг.',
+            'ttdr_field_adoption_sostav_detali_count_not_operator': 'Без опер.',
+
+            'ttdr_field_outgoing_sostav_detali_num_doc': '№ ведомости',
+            'ttdr_field_outgoing_sostav_detali_date_outgoing': 'Дата сдачи',
+            'ttdr_field_outgoing_sostav_detali_count_wagon': 'кол-во',
+            'ttdr_field_outgoing_sostav_detali_count_account_balance': 'Уч. ваг.',
+
+            'ttdr_field_incoming_cars_id': 'id вагона',
+            'ttdr_field_incoming_cars_arrival_sostav_num_doc': '№ ведомости прибытия',
+            'ttdr_field_incoming_cars_position_arrival': '№ поз.',
+            'ttdr_field_num': '№ вагона',
+            'ttdr_field_incoming_cars_uz_document_nom_doc': '№ дос. накл.',
+            'ttdr_field_incoming_cars_uz_document_nom_main_doc': '№ осн. накл.',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_adm': 'Код Адм.',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_adm_name': 'Адм.',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_adm_abbr': 'Адм.',
+            'ttdr_field_incoming_cars_uz_vagon_rod': 'Код Род.',
+            'ttdr_field_incoming_cars_uz_vagon_rod_name': 'Род.',
+            'ttdr_field_incoming_cars_uz_vagon_rod_abbr': 'Род.',
+            'ttdr_field_incoming_cars_uz_vagon_gruzp': 'ГП,т.',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_kol_os': 'Кол.ос.',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_usl_tip': 'Тип цс',
+            'ttdr_field_incoming_cars_uz_vagon_u_tara': 'Тара (ут.),т.',
+            'ttdr_field_incoming_cars_uz_vagon_ves_tary_arc': 'Тара,т.',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_route': 'Маршрут',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_date_rem_uz': 'Рем. УЗ',
+            'ttdr_field_incoming_cars_uz_vagon_wagon_date_rem_vag': 'Рем. вагон',
+            'ttdr_field_incoming_cars_uz_vagon_owner_wagon': 'Собственник',
+            'ttdr_field_incoming_cars_uz_vagon_owner_wagon_abbr': 'Собственник',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_id_operator': 'id Опер. по отправке',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operators': 'Оператор по АМКР ПРИБ',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operator_abbr': 'Оператор по АМКР ПРИБ',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_start': 'Опер. по АМКР. нач. аренды',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_end': 'Опер. по АМКР. кон. аренды',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operator_paid': 'Опер. по АМКР. платный',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_id_limiting': 'id Огран. ПОГР',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_name': 'Огран. ПОГР',
+            'ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_limiting_abbr': 'Огран. ПОГР',
+
+            'ttdr_field_current_wagons_rent_operators': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_current_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+            'ttdr_field_wagons_rent_operator_abbr': 'Оператор по АМКР ТЕКУЩ',
+
+            'ttdr_field_incoming_cars_uz_vagon_condition_name': 'Разм. ПРИБ',
+            'ttdr_field_incoming_cars_uz_vagon_condition_abbr': 'Разм. по приб.',
+            'ttdr_field_current_condition_name': 'Разм текущ.',
+            'ttdr_field_current_condition_abbr': 'Разм текущ.',
+            'ttdr_field_condition_abbr': 'Разм текущ.',
+
+            'ttdr_field_incoming_cars_uz_document_code_stn_from': 'Код ст. отпр.',
+            'ttdr_field_incoming_cars_uz_document_station_from_name': 'Cт. отпр.',
+            'ttdr_field_incoming_cars_uz_document_code_stn_to': 'Код ст. приб.',
+            'ttdr_field_incoming_cars_uz_document_station_to_name': 'Cт. приб.',
+            'ttdr_field_incoming_cars_uz_document_code_border_checkpoint': 'Код погр. пер.',
+            'ttdr_field_incoming_cars_uz_document_border_checkpoint_station_name': 'Погр. пер.',
+            'ttdr_field_incoming_cars_uz_document_cross_time': 'Врем. погр. пер.',
+            'ttdr_field_incoming_cars_uz_document_code_shipper': 'Код гр. отпр.',
+            'ttdr_field_incoming_cars_uz_document_shipper_name': 'Гр. отпр.',
+            'ttdr_field_incoming_cars_uz_document_code_consignee': 'Код. гр. пол.',
+            'ttdr_field_incoming_cars_uz_document_name_consignee': 'Гр. пол.',
+            'ttdr_field_incoming_cars_uz_document_code_payer_sender': 'Код плат. ПРИБ.(по отправке).',
+            'ttdr_field_incoming_cars_uz_document_payer_sender_name': 'Пл. отпр.',
+            'ttdr_field_incoming_cars_uz_document_distance_way': 'Тар. расс.',
+            'ttdr_field_incoming_cars_uz_vagon_vesg': 'Вес ЭПД, тн.',
+            'ttdr_field_incoming_cars_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_incoming_cars_uz_vagon_cargo_group_name': 'Группа груза',
+            'ttdr_field_incoming_cars_uz_vagon_station_amkr_name': 'Следует на ст.АМКР',
+            'ttdr_field_incoming_cars_uz_vagon_station_amkr_abbr': 'Следует на ст.АМКР',
+            'ttdr_field_current_station_amkr_name': 'Текущая станция',
+            'ttdr_field_current_station_amkr_abbr': 'Текущая станция',
+            'ttdr_field_station_amkr_abbr': 'Текущая станция',
+
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_current_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+            'ttdr_field_way_and_outer_way_name': 'Ж.д. путь(перегон)',
+
+            'ttdr_field_current_outer_way_name': 'Перегон',
+
+            'ttdr_field_incoming_cars_uz_vagon_division_code': 'Шифр Цеха',
+            'ttdr_field_incoming_cars_uz_vagon_name_division': 'Цех получатель',
+            'ttdr_field_incoming_cars_uz_vagon_division_abbr': 'Цех получатель',
+            'ttdr_field_incoming_cars_uz_vagon_commercial_condition': 'Ком состояние',
+            'ttdr_field_incoming_cars_uz_vagon_sertification_data': 'Серт. данные',
+            'ttdr_field_incoming_cars_arrival_sostav_station_on_name': 'Станц. примыкания',
+            'ttdr_field_incoming_cars_arrival_sostav_station_on_abbr': 'Станц. примыкания',
+
+            'ttdr_field_loading_status': 'Статус',
+            'ttdr_field_current_loading_status': 'Статус',
+            'ttdr_field_view_cargo_name': 'Груз ТЕКУЩ',
+            'ttdr_field_view_division_from_abbr': 'Цех погрузки ТЕКУЩ',
+            'ttdr_field_view_division_on_abbr': 'Цех выгрузки ТЕКУЩ',
+            'ttdr_field_view_external_station_on_name': 'Станция УЗ назначения ТЕКУЩ',
+            'ttdr_field_view_station_from_amkr_abbr': 'Станция АМКР отправки',
+            'ttdr_field_view_station_on_amkr_abbr': 'Станция АМКР прибытия',
+            'ttdr_field_operation_name': 'Операция',
+            'ttdr_field_operation_start': 'Операция начата',
+            'ttdr_field_operation_end': 'Операция завершена',
+
+            'ttdr_field_outgoing_uz_vagon_pay_001': 'Тариф',
+            'ttdr_field_outgoing_uz_vagon_pay_add': 'Доп. сборы',
+
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
+            'ttdr_field_outgoing_cars_car_position_outgoing': '№ поз.',
+            'ttdr_field_outgoing_cars_uz_document_nom_doc': '№ накл.',
+
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_wagon_adm': 'Код Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_name': 'Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_adm_abbr': 'Адм.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod': 'Код Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_name': 'Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_rod_abbr': 'Род.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_division_code': 'Шифр Цех',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_name_division': 'Цех погр.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_division_abbr': 'Цех погр.',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon': 'Собственник',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_owner_wagon_abbr': 'Собственник',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_operator': 'id Опер. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators': 'Оператор по АМКР ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr': 'Оператор по АМКР ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_start': 'Опер. по отпр. нач. аренды',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_end': 'Опер. по отпр. кон. аренды',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_paid': 'Опер. по отпр. платный',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_id_limiting': 'id Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_name': 'Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_id_cargo': 'id Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_id_group': 'id Группы груза ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_group_name': 'Группа ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_id_out_group': 'id Группа ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_out_group_name': 'Группа ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_id_cargo_etsng': '(ЭПД) id ЕТСНГ ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_etsng_code': '(ЭПД) Код Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_etsng_name': '(ЭПД) Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_id_cargo_gng': 'id ГНГ ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_gng_code': 'Код Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_cargo_gng_name': 'Груз ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_vesg': '(ЭПД) Вес нетто ОТПР, тн',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_u_tara': '(ЭПД) Тара (ут) ОТПР, тн',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_ves_tary_arc': '(ЭПД) Тара ОТПР, тн',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_gruzp': '(ЭПД) ГП, тн',
+
+            'ttdr_field_outgoing_cars_outgoing_uz_document_code_stn_to': '(ЭПД) Код ст. назначения',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_to_station_uz_name': '(ЭПД) Станция назначения',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_code_inlandrailway': 'Код дороги ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_name': 'Дорога ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_to_inlandrailway_abbr': 'Дорога ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_code_border_checkpoint': '(ЭПД) Код погранперехода',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_border_checkpoint_station_name': '(ЭПД) Погранпереход',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_code_consignee': '(ЭПД) Код грузополучателя',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_consignee_name': '(ЭПД) Грузополучатель',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_code_payer': '(ЭПД) Код плат ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_payer_name': '(ЭПД) Плательщик ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_document_distance_way': '(ЭПД) Тар.расс. ОТПР',
+
+            'ttdr_field_outgoing_cars_outgoing_sostav_id_station_from': 'id Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_name': 'Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_sostav_from_station_amkr_abbr': 'Ст.примыкания ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_laden': 'Гр/пор',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_amkr': 'Время предъявления на УЗ',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery': 'Время  осмотра пр-сд',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_loader': 'Время осмотра грузчик',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_end_inspection_vagonnik': 'Время осмотра вагонник',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_readiness_uz': 'Время готовности к сдаче на УЗ',
+            'ttdr_field_outgoing_cars_idle_time': 'Общий простой, час',
+            'ttdr_field_outgoing_cars_idle_time_act': 'Общий простой Акт, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_downtime': 'Общий простой, час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_time': 'Время пользования (расчетное), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final': 'Плата, грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount': 'Плата (расч.), грн',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_time': 'Время пользования (ручн.), час',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount': 'Плата (ручн.), грн',
+            'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption': 'Дата приема',
+            'ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act': 'Дата приема по Акту',
+            'ttdr_field_outgoing_cars_wagon_usage_fee_note': 'Примечание, плата за пользование',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create': 'Плата рассчитана',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_create_user': 'Плату рассчитал',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change': 'Плата правка',
+            'ttdir_field_outgoing_cars_wagon_usage_fee_change_user': 'Плату правил',
+
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_sertification_data': 'Серт.данные',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_cargo_group_name': 'Группа ПРИБ.',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_division_code': 'Шифр цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_name_division': 'Цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_division_abbr': 'Цех получатель',
+            'ttdr_field_outgoing_cars_arrival_uz_document_nom_doc': '№ Дос. накладной ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_document_nom_main_doc': '№ Осн. накладной ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_document_code_stn_from': 'Код ст. ОТПР',
+            'ttdr_field_outgoing_cars_arrival_uz_document_station_from_name': 'Ст. ОТПР',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_name': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr': 'Разметка ПРИБ',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_name': 'Разметка ОТПР',
+            'ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_abbr': 'Разметка ОТПР',
+            'ttdr_field_outgoing_cars_arrival_sostav_id_station_on': 'id Ст.примыкания ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_sostav_station_on_name': 'Ст.примыкания ПРИБ',
+            'ttdr_field_outgoing_cars_arrival_sostav_station_on_abbr': 'Ст.примыкания ПРИБ',
+
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_num': 'SAP Исх. пост. №',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_code': 'SAP Код ЕТСНГ',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_cargo_name': 'SAP Груза ОТПР',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_code': 'SAP Код станции назначения',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_destination_station_name': 'SAP Станция назначения',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_code': 'код SAP склад',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_warehouse_name': 'SAP склад',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_netto': 'SAP вес нетто',
+            'ttdr_field_outgoing_cars_sap_outgoing_supply_responsible_fio': 'SAP бригадир',
+
+            'ttdr_field_outgoing_cars_epd_vagon_collect_v_name_etsng': 'Груз ОТПР (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_etsng': 'Код ЕТСНГ (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng': 'Код ГНГ (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_route_stn_to': 'Код ст. назначения (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_route_name_to': 'Станция назначения (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_joint_stn': 'Код погранперехода (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_joint_stn_name': 'Погранпереход (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_collect_v_vesg': 'Вес нетто ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_u_tara': 'Тара (ут) ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_ves_tary_arc': 'Тара ОТПР, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_vagon_gruzp': 'ГП, тн (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_client_kod': 'Код грузополучателя (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_client_name': 'Грузополучатель (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_pl_kod_plat': 'Код плат ОТПР (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_pl_name_plat': 'Плательщик ОТПР (ЭПД)',
+            'ttdr_field_outgoing_cars_epd_distance_way': 'Тар.расс. ОТПР (ЭПД)',
+
+            'ttdr_field_adoption_wagon_not_operation_date_adoption': 'Дата приема',
+            'ttdr_field_adoption_wagon_not_operation_cargo_name': 'Груз ПРИБ.',
+            'ttdr_field_adoption_wagon_not_operation_nom_main_doc': 'Осн. накл.',
+            'ttdr_field_adoption_wagon_not_operation_nom_doc': 'Дос. накл.',
+            'ttdr_field_adoption_wagon_not_operation_station_from_name': 'Станция отправления',
+            'ttdr_field_adoption_wagon_not_operation_division_abbr': 'Цех-получатель',
+
+            'ttdr_field_incoming_cars_arrival_sostav_date_arrival': 'Дата прибытия',
+            'ttdr_field_incoming_cars_arrival_sostav_date_adoption': 'Дата приема',
+            'ttdr_field_incoming_cars_arrival_sostav_date_adoption_act': 'Дата приема по акту',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_id_type': 'id тип вагона',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_type': 'Тип вагона',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_vesg_reweighing': 'Вес АМКР, тн',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_deff_vesg': 'Отклонение, тн',
+            'ttdr_field_incoming_cars_sap_incoming_supply_num': '№ Вх. поставки',
+            'ttdr_field_incoming_cars_sap_incoming_supply_cargo_code': 'Код груза ПРИБ SAP',
+            'ttdr_field_incoming_cars_sap_incoming_supply_cargo_name': 'Груз ПРИБ SAP',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_cargo_etsng_code': 'Код ЕТСНГ',
+
+            'ttdr_field_incoming_cars_arrival_uz_document_code_payer_arrival': 'Код плательщика ПРИБ',
+            'ttdr_field_incoming_cars_arrival_uz_document_payer_arrival_name': 'Платильщик ПРИБ',
+            'ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa': 'Тариф ПРИБ',
+            'ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr': 'Дата отправления на АМКР',
+            'ttdr_field_incoming_cars_arrival_sostav_epd_date_vid': 'Дата раскредитовки',
+
+            'ttdr_field_sostav_outgoing_naturka_arrival_uz_vagon_cargo_name': 'Груз по прибытию',
+            'ttdr_field_sostav_outgoing_naturka_arrival_sostav_date_arrival': 'Дата приема с УЗ',
+
+            'ttdr_field_incoming_cars_outgoing_uz_vagon_cargo_name': 'Груз по отправлению',
+            'ttdr_field_incoming_cars_outgoing_sostav_date_outgoing': 'Дата последней сдачи',
+
+            'ttdr_field_total_id': 'id',
+            'ttdr_field_total_id_type': 'id_type',
+            'ttdr_field_total_period': 'Период',
+            'ttdr_field_total_operator_abbr': 'Опер. АМКР',
+            'ttdr_field_total_limiting_abbr': 'Огран.',
+            'ttdr_field_total_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_total_cargo_name_out': 'Груз ОТПР',
+            'ttdr_field_total_group_name': 'Группа груз ПРИБ',
+            'ttdr_field_total_group_name_out': 'Группа груз ОТПР',
+            'ttdr_field_total_certification_data': 'Сертиф. данные',
+            'ttdr_field_total_count_wagon': 'Кол-во ваг.',
+            'ttdr_field_total_sum_vesg': 'Кол-во тн. по ЭПД',
+            'ttdr_field_total_sum_vesg_reweighing': 'Кол-во тн. по АМКР',
+            'ttdr_field_total_sum_vesg_deff': 'Откл., тн.',
+            'ttdr_field_total_rod_abbr': 'Род ПРИБ',
+            'ttdr_field_total_perent_wagon': '% от общего приб.',
+            'ttdr_field_total_sap_cargo_code': 'Код материала SAP',
+            'ttdr_field_total_sap_cargo_name': 'Груз ПРИБ SAP',
+            'ttdr_field_total_station_from_name': 'Станция отправления',
+            'ttdr_field_total_division_abbr': 'Цех-грузоп.',
+            'ttdr_field_total_out_division_abbr': 'Цех погрузки.',
+            'ttdr_field_total_station_on_name': 'Пункт погрузки',
+            'ttdr_field_total_out_station_name': 'Станция назначения',
+            'ttdr_field_total_cargo_out_group_name': 'Наименование груза',
+            'ttdr_field_total_station_inlandrailway': 'Станция назначения/Дорога',
+            'ttdr_field_total_note': 'Примечание',
+            'ttdr_field_total_sum_idle_time': 'Общий простой, час',
+            'ttdr_field_total_wagon_idle_time': 'На 1 вагон, час',
+
+            'ttdr_field_usage_fee_sum_calc_time': 'Общий простой, час',
+            'ttdr_field_usage_fee_wagon_calc_time': 'На 1 вагон, час.',
+            'ttdr_field_usage_fee_sum_calc_fee_amount': 'Плата, грн',
+            'ttdr_field_usage_fee_wagon_calc_fee_amount': 'На 1 ваг.,грн',
+            'ttdr_field_usage_fee_wagon_persent_fee_amount': '% от общей платы',
+            'ttdr_field_usage_fee_wagon_persent_derailment_fee_amount': '% от общей платы',
+            'ttdr_field_usage_fee_wagon_persent_not_derailment_fee_amount': '% от общей платы',
+
+            'ttdr_field_usage_fee_period_status_input': '',
+            'ttdr_field_usage_fee_period_start': 'Начало периода',
+            'ttdr_field_usage_fee_period_stop': 'Окончание периода',
+            'ttdr_field_usage_fee_period_operator': 'Оператор',
+            'ttdr_field_usage_fee_period_operator_abbr': 'Оператор (аббр)',
+            'ttdr_field_usage_fee_period_genus_abbr': 'Род',
+            'ttdr_field_usage_fee_period_rate': 'Ставка',
+            'ttdr_field_usage_fee_period_rate_derailment': 'Ставка, сход',
+            'ttdr_field_usage_fee_period_grace_time_1': 'Льготное время 1',
+            'ttdr_field_usage_fee_period_grace_time_2': 'Льготное время 2',
+            'ttdr_field_usage_fee_period_coefficient_route': 'Коэф.маршрут',
+            'ttdr_field_usage_fee_period_coefficient_not_route': 'Коэф.не маршрут',
+            'ttdr_field_usage_fee_period_hour_after_30': 'Полный час после 30 мин.',
+
+            'ttdr_field_arrival_uz_document_nom_doc': '№ накладной',
+            'ttdr_field_arrival_uz_document_nom_main_doc': '№ накладной',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption': 'Дата приема.',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act': 'Дата приема (акт).',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name': 'Груз ПРИБ',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата сдачи.',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата сдачи (акт)',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name': 'Груз ОТПР',
+            'ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route': 'Маршрут/не маршрут',
+            'ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_route_sign': 'Маршрут/не маршрут',
+
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing': 'Дата и время сдачи',
+            'ttdr_field_outgoing_cars_outgoing_sostav_date_outgoing_act': 'Дата и время сдачи, акт',
+
+            'ttdr_field_incoming_outgoing_car_simple_car': 'Простой УЗ, час.',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime': 'Общий простой, час',
+            'ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final': 'Плата , грн.',
+
+            'ttdr_field_incoming_outgoing_car_wir_note': 'Примечание',
+
+            'ttdr_field_curr_wagons_rent_id_operator': 'id_operator',
+            'ttdr_field_curr_wagons_rent_operators': 'Оператор АМКР',
+            'ttdr_field_curr_wagons_rent_operator_abbr': 'Оператор АМКР',
+            'ttdr_field_curr_wagons_rent_start': 'Начало аренды',
+            'ttdr_field_curr_wagons_rent_end': 'Окончание арены',
+            'ttdr_field_curr_wagons_rent_operator_paid': 'Платный',
+            'ttdr_field_curr_wagons_rent_id_limiting': 'id_limiting',
+            'ttdr_field_curr_wagons_rent_limiting_name': 'Ограничение',
+            'ttdr_field_curr_wagons_rent_limiting_abbr': 'Ограничение',
+
+            'ttdr_field_instructional_letters_num': '№ письма',
+            'ttdr_field_instructional_letters_datetime': 'Дата письма',
+            'ttdr_field_instructional_letters_station_code': 'Код станции',
+            'ttdr_field_instructional_letters_station_name': 'Станция назначения',
+            'ttdr_field_instructional_letters_note': 'Текст',
+
+            'ttdr_field_genus_vagon': 'Род вагона',
+            'ttdr_field_sap_incoming_supply_kod_r_10': 'Запрет ОТК',
+            'ttdr_field_wir_note': 'Примечание',
+            'ttdr_field_wir_note2': 'Примечание2',
+            'ttdr_field_idle_time': 'Простой УЗ',
+            'ttdr_field_idle_time_act': 'Простой УЗ (акт)',
+
+            'ttdr_field_wim_unload_id_filing': '№ Подачи выгрузки',
+            'ttdr_field_wim_unload_filing_start': 'Дата начала выгрузки',
+            'ttdr_field_wim_unload_filing_end': 'Дата окончания выгрузки',
+            'ttdr_field_wim_load_id_filing': '№ Подачи погрузки',
+            'ttdr_field_wim_load_filing_start': 'Дата начала погрузки',
+            'ttdr_field_wim_load_filing_end': 'Дата окончания погрузки',
+            'ttdr_field_wim_clear_id_filing': '№ Подачи очистки',
+            'ttdr_field_wim_clear_filing_start': 'Дата начала очистки',
+            'ttdr_field_wim_clear_filing_end': 'Дата окончания очистки',
+
+            'ttdr_field_residue_total_operators_operator': 'Оператор',
+            'ttdr_field_residue_total_operators_start': 'Было',
+            'ttdr_field_residue_total_operators_arrival': 'Прибыло',
+            'ttdr_field_residue_total_operators_outgoing': 'Убыло',
+            'ttdr_field_residue_total_operators_stop': 'Остаток',
+
+            'ttdr_field_residue_total_common_date': 'Дата',
+            'ttdr_field_residue_total_common_total': 'Остаток общий',
+            'ttdr_field_residue_total_common_external': 'Внешние вагоны',
+            'ttdr_field_residue_total_common_paid': 'Оплатные',
+            'ttdr_field_residue_total_common_accounting': 'Учетные вагоны',
+            'ttdr_field_residue_total_common_amkr': 'Вагоны и цистерны АМКР + цистерны аренда АМКР',
+
+            'ttdr_field_residue_total_arrival_condition_abbr': 'Разметка по прибытию',
+            'ttdr_field_residue_total_current_condition_abbr': 'Разметка текущая',
+            'ttdr_field_total_group_name_condition': 'Группа разметка',
+            'ttdr_field_total_group_name_genus': 'Группа род вагона',
+            'ttdr_field_total_station_amkr_abbr': 'Станция',
+            'ttdr_field_total_cargo_group_name': 'Род груза',
+            'ttdr_field_total_group_ext_station_from': 'Группа станция отправления',
+
+            'ttdr_field_old_outgoing_uz_vagon_cargo_name': 'Груз по ОТПР предыдущий',
+            'ttdr_field_old_date_outgoing': 'Дата последней сдачи',
+            'ttdr_field_old_outgoing_uz_document_station_to_name': 'Станция ОТПР предыдущая',
+
+            'ttdr_field_code_stn_from': 'Ст. отпр.',
+            'ttdr_field_from_station_name': 'Ст. отпр.',
+            'ttdr_field_arrival_cargo_name': 'Груз. приб.',
+            'ttdr_field_code_stn_to': 'Ст. прием.',
+            'ttdr_field_to_station_name': 'Ст. прием.',
+            'ttdr_field_outgoing_cargo_name': 'Груз. отпр.',
+            'ttdr_field_grace_time': 'Льгот. время',
+
+            'ttdr_mess_init_module': 'Инициализация модуля (table_td_report) ...',
+            'ttdr_mess_load_sostav': 'Загружаю состав ...',
+            'ttdr_mess_view_report': 'Показать отчет ...',
+
+            'ttdr_title_all': 'Все',
+            'ttdr_title_yes': 'Да',
+            'ttdr_title_not_epd': 'Без ЭПД',
+            'ttdr_title_for_loading': 'Под погрузку',
+            'ttdr_title_route': 'маршрут',
+            'ttdr_title_not_route': 'не маршрут',
+            'ttdr_title_laden': 'груженный',
+            'ttdr_title_not_laden': 'порожний',
+
+            'ttdr_title_button_export': 'Экспорт',
+            'ttdr_title_button_buffer': 'Буфер',
+            'ttdr_title_button_excel': 'Excel',
+            'ttdr_title_excel_sheet_name': 'Отчет',
+            'ttdr_title_button_field': 'Поля',
+            'ttdr_title_button_field_select': 'Выбрать',
+            'ttdr_title_button_field_view_all': 'Показать все',
+            'ttdr_title_button_field_clear': 'Сбросить',
+            'ttdr_field_add_detali': 'Добавить',
+            'ttdr_field_edit_detali': 'Править',
+            'ttdr_field_delete_detali': 'Удалить',
         }
     };
     // Определлим список текста для этого модуля
@@ -460,7 +1031,6 @@
             className: 'dt-body-center button-control',
             width: "20px"
         },
-
         {
             field: 'adoption_sostav_detali_num_doc',
             data: function (row, type, val, meta) {
@@ -554,14 +1124,6 @@
         },
         // НАТУРКА ПРИБЫТИЯ
         //// № п.п
-        //{
-        //    field: 'incoming_cars_number_in_sequence',
-        //    data: function (row, type, val, meta) {
-        //        return ++meta.row;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_incoming_cars_number_in_sequence', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
         {
             field: 'incoming_cars_id',
             data: function (row, type, val, meta) {
@@ -579,7 +1141,7 @@
             title: langView('ttdr_field_incoming_cars_position_arrival', App.Langs), width: "30px", orderable: true, searchable: true
         },
         {
-            field: 'incoming_cars_num',
+            field: 'num',
             data: function (row, type, val, meta) {
                 return row.num;
             },
@@ -801,6 +1363,31 @@
             title: langView('ttdr_field_incoming_cars_uz_vagon_arrival_wagons_rent_operator_paid', App.Langs), width: "30px", orderable: true, searchable: true
         },
         // field: 'operator_color'
+        // Оператор текущий
+        {
+            field: 'current_wagons_rent_operators',
+            data: function (row, type, val, meta) {
+                return row['current_wagons_rent_operators_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-150 operator',
+            title: langView('ttdr_field_current_wagons_rent_operators', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_current_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagons_rent_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['wagons_rent_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100 operator',
+            title: langView('ttdr_field_wagons_rent_operator_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         //Ограничение
         {
             field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_id_limiting',
@@ -842,6 +1429,31 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Разметка текущая
+        {
+            field: 'current_condition_name',
+            data: function (row, type, val, meta) {
+                return row['current_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['current_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Станция отправления
         {
@@ -988,6 +1600,153 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Груз на момент выборки (с учетом внутренего перемещения)
+        {
+            field: 'view_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['view_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Цех погрузки ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_division_from_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_division_from_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_division_from_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Цех выгрузки ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_division_on_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_division_on_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_division_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция УЗ назначения ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_external_station_on_name',
+            data: function (row, type, val, meta) {
+                return row['view_external_station_on_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_external_station_on_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция АМКР отправления ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_station_from_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_station_from_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_station_from_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция АМКР прибытия ТЕКУЩ (с учетом внутренего перемещения)
+        {
+            field: 'view_station_on_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row['view_station_on_amkr_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_view_station_on_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Статус вагона
+        {
+            field: 'loading_status',
+            data: function (row, type, val, meta) {
+                return row['loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Статус вагона
+        {
+            field: 'current_loading_status',
+            data: function (row, type, val, meta) {
+                return row['current_loading_status_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_loading_status', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Выгрузка (Подача )
+        {
+            field: 'wim_unload_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_unload_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_filing_start !== null ? moment(row.wim_unload_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_unload_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_unload_filing_end !== null ? moment(row.wim_unload_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_unload_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Загрузка (Подача )
+        {
+            field: 'wim_load_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_load_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_load_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_load_filing_start !== null ? moment(row.wim_load_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_load_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_load_filing_end !== null ? moment(row.wim_load_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_load_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Очистка (Подача )
+        {
+            field: 'wim_clear_id_filing',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_id_filing;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_id_filing', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_clear_filing_start',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_filing_start !== null ? moment(row.wim_clear_filing_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_filing_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wim_clear_filing_end',
+            data: function (row, type, val, meta) {
+                return row.wim_clear_filing_end !== null ? moment(row.wim_clear_filing_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_wim_clear_filing_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         // Станция назначения АМКР        
         {
             field: 'incoming_cars_arrival_uz_vagon_station_amkr_name',
@@ -1004,6 +1763,92 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_uz_vagon_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Текущая станция АМКР        
+        {
+            field: 'current_station_amkr_name',
+            data: function (row, type, val, meta) {
+                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null ? row['current_station_amkr_name_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_station_amkr_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row.current_id_outer_way === null ? row.current_id_station_amkr !== null ? row['current_station_amkr_abbr_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row.id_outer_way === null ? row.id_station_amkr !== null ? row['station_amkr_abbr_' + App.Lang] : langView('ttdr_title_for_loading', App.Langs) : '';
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Текущий путь        
+        {
+            field: 'current_way_and_outer_way_name',
+            data: function (row, type, val, meta) {
+
+                return row.current_id_outer_way !== null ? row['current_outer_way_name_' + App.Lang] : row['current_way_num_' + App.Lang] + '-' + row['current_way_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'way_and_outer_way_name',
+            data: function (row, type, val, meta) {
+
+                return row.id_outer_way !== null ? row['outer_way_name_' + App.Lang] : row['way_num_' + App.Lang] + '-' + row['way_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_way_and_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Операция на момент выборки
+        {
+            field: 'operation_name',
+            data: function (row, type, val, meta) {
+                return row['operation_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'operation_start',
+            data: function (row, type, val, meta) {
+                return row.operation_start !== null ? moment(row.operation_start).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_start', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'operation_end',
+            data: function (row, type, val, meta) {
+                return row.operation_end !== null ? moment(row.operation_end).format(format_datetime_ru) : null;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_operation_end', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //{
+        //    field: 'current_way_abbr',
+        //    data: function (row, type, val, meta) {
+        //        return row.current_id_way !== null ? row['current_way_abbr_' + App.Lang] : '';
+        //    },
+        //    className: 'dt-body-left shorten mw-100',
+        //    title: langView('ttdr_field_current_way_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        //},
+        // Перегон      
+        {
+            field: 'current_outer_way_name',
+            data: function (row, type, val, meta) {
+                return row.current_id_outer_way !== null ? row['current_outer_way_name_' + App.Lang] + '-' + row['current_outer_way_name_' + App.Lang] : '';
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_current_outer_way_name', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Цех получатель
         {
@@ -1065,32 +1910,35 @@
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_station_on_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
         // НАТУРКА ОТПРАВКА
         // № п.п
-        //{
-        //    field: 'sostav_outgoing_naturka_number_in_sequence',
-        //    data: function (row, type, val, meta) {
-        //        return ++meta.row;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_sostav_outgoing_naturka_number_in_sequence', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        {
-            field: 'outgoing_cars_num',
-            data: function (row, type, val, meta) {
-                return row.num;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_num', App.Langs), width: "50px", orderable: true, searchable: true
-        },
-        //{
-        //    field: 'sostav_outgoing_naturka_num',
-        //    data: function (row, type, val, meta) {
-        //        return row.num;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_sostav_outgoing_naturka_num', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
         {
             field: 'outgoing_cars_car_position_outgoing',
             data: function (row, type, val, meta) {
@@ -1543,22 +2391,6 @@
         },
         //----------------------------------------------------
         // ВАГОНЫ БЕЗ ОПЕРАТОРОВ
-        //{
-        //    field: 'adoption_wagon_not_operation_position',
-        //    data: function (row, type, val, meta) {
-        //        return ++meta.row;
-        //    },
-        //    className: 'dt-body-center',
-        //    title: langView('ttdr_field_adoption_wagon_not_operation_position', App.Langs), width: "50px", orderable: true, searchable: true
-        //},
-        {
-            field: 'adoption_wagon_not_operation_num',
-            data: function (row, type, val, meta) {
-                return row.num;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_adoption_wagon_not_operation_num', App.Langs), width: "50px", orderable: true, searchable: true
-        },
         {
             field: 'adoption_wagon_not_operation_date_adoption',
             data: function (row, type, val, meta) {
@@ -1578,7 +2410,7 @@
         {
             field: 'adoption_wagon_not_operation_nom_main_doc',
             data: function (row, type, val, meta) {
-                return row.nom_main_doc;
+                return row.nom_main_doc < 0 ? langView('ttdr_title_not_epd', App.Langs) : row.nom_main_doc;
             },
             className: 'dt-body-center',
             title: langView('ttdr_field_adoption_wagon_not_operation_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
@@ -1609,6 +2441,15 @@
         },
         //----------------------------------------------------
         // ПРИБЫТИЕ ДЕТАЛЬНО
+        //
+        {
+            field: 'incoming_cars_arrival_sostav_num_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_num_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_cars_arrival_sostav_num_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         {
             field: 'incoming_cars_arrival_sostav_date_arrival',
             data: function (row, type, val, meta) {
@@ -1698,8 +2539,8 @@
             data: function (row, type, val, meta) {
                 return row.sap_incoming_supply_cargo_name;
             },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_incoming_cars_sap_incoming_supply_cargo_name', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_incoming_cars_sap_incoming_supply_cargo_name', App.Langs), width: "150px", orderable: true, searchable: true
         },
         // Платильщик
         {
@@ -1726,10 +2567,12 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_incoming_cars_arrival_uz_vagon_pay_summa', App.Langs), width: "50px", orderable: true, searchable: true
         },
+        //
         {
             field: 'incoming_cars_arrival_sostav_epd_date_otpr',
             data: function (row, type, val, meta) {
-                return row.otpr && row.otpr.date_otpr ? moment(row.otpr.date_otpr).format(format_datetime) : null;
+                //return row.otpr && row.otpr.date_otpr ? moment(row.otpr.date_otpr).format(format_datetime) : null;
+                return row.arrival_uz_document_date_otpr ? moment(row.arrival_uz_document_date_otpr).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_epd_date_otpr', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1737,7 +2580,8 @@
         {
             field: 'incoming_cars_arrival_sostav_epd_date_vid',
             data: function (row, type, val, meta) {
-                return row.otpr && row.otpr.date_vid ? moment(row.otpr.date_vid).format(format_datetime) : null;
+                //return row.otpr && row.otpr.date_vid ? moment(row.otpr.date_vid).format(format_datetime) : null;
+                return row.arrival_uz_document_date_vid ? moment(row.arrival_uz_document_date_vid).format(format_datetime) : null;
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_incoming_cars_arrival_sostav_epd_date_vid', App.Langs), width: "100px", orderable: true, searchable: true
@@ -1955,6 +2799,23 @@
             className: 'dt-body-center mw-100',
             title: langView('ttdr_field_total_note', App.Langs), width: "100px", orderable: true, searchable: true
         },
+        // Общий простой
+        {
+            field: 'total_sum_idle_time',
+            data: function (row, type, val, meta) {
+                return row.sum_idle_time !== null ? getTimeFromMins(row.sum_idle_time) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_total_sum_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_wagon_idle_time',
+            data: function (row, type, val, meta) {
+                return row.sum_idle_time !== null ? getTimeFromMins(Number(Number(row.sum_idle_time / row.count_wagon).toFixed(0))) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_total_wagon_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
         //----------------------------------------------------
         // ОТПРАВКА ДЕТАЛЬНО
         {
@@ -1985,12 +2846,20 @@
         },
         // Оплата
         {
-            field: 'incoming_outgoing_car_pay_car',
+            field: 'incoming_outgoing_car_wagon_usage_fee_downtime',
             data: function (row, type, val, meta) {
-                return row.pay_car;
+                return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
             },
-            className: 'dt-body-right',
-            title: langView('ttdr_field_incoming_outgoing_car_pay_car', App.Langs), width: "50px", orderable: true, searchable: true
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : (row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
         },
         //----------------------------------------------------
         {
@@ -2183,50 +3052,6 @@
             title: langView('ttdr_field_outgoing_cars_epd_vagon_collect_v_kod_gng', App.Langs), width: "50px", orderable: true, searchable: true
         }, // Код ГНГ 
         {
-            field: 'outgoing_cars_epd_route_stn_to',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
-                    return row.otpr.route[0].stn_to;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_route_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код станции назначения  
-        {
-            field: 'outgoing_cars_epd_route_name_to',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].name_to) {
-                    return row.otpr.route[0].name_to;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_route_name_to', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // станция назначения 
-        {
-            field: 'outgoing_cars_epd_joint_stn',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn) {
-                    return row.otpr.route[0].joint[0].stn;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_joint_stn', App.Langs), width: "500px", orderable: true, searchable: true
-        }, // Код погранперехода
-        {
-            field: 'outgoing_cars_epd_joint_stn_name',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.route && row.otpr.route.length > 0 && row.otpr.route[0].joint && row.otpr.route[0].joint.length > 0 && row.otpr.route[0].joint[0].stn_name) {
-                    return row.otpr.route[0].joint[0].stn_name;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_joint_stn_name', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // погранперехода
-        {
             field: 'outgoing_cars_epd_vagon_collect_v_vesg',
             data: function (row, type, val, meta) {
                 if (row && row.vagon && row.vagon != null > 0 && row.vagon.collect_v && row.vagon.collect_v.length > 0 && row.vagon.collect_v[0].vesg) {
@@ -2270,75 +3095,6 @@
             className: 'dt-body-center',
             title: langView('ttdr_field_outgoing_cars_epd_vagon_gruzp', App.Langs), width: "50px", orderable: true, searchable: true
         }, // ГП, тн
-        {
-            field: 'outgoing_cars_epd_client_kod',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].kod) {
-                    return row.otpr.client[1].kod;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_client_kod', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код грузополучателя
-        {
-            field: 'outgoing_cars_epd_client_name',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.client && row.otpr.client.length > 1 && row.otpr.client[1].name) {
-                    return row.otpr.client[1].name;
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_client_name', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // Грузополучатель
-        {
-            field: 'outgoing_cars_epd_pl_kod_plat',
-            data: function (row, type, val, meta) {
-                //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].kod_plat) {
-                //    return row.otpr.pl[1].kod_plat;
-                //}
-                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
-                    $.each(row.otpr.pl, function (key, el) {
-                        if (el.type == "0") {
-                            return row.otpr.pl[key].kod_plat;
-                        }
-                    }.bind(this));
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_pl_kod_plat', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Код плат ОТПР
-        {
-            field: 'outgoing_cars_epd_pl_name_plat',
-            data: function (row, type, val, meta) {
-                //if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1 && row.otpr.pl[1].name_plat) {
-                //    return row.otpr.pl[1].name_plat;
-                //}
-                if (row && row.otpr && row.otpr.pl && row.otpr.pl.length > 1) {
-                    $.each(row.otpr.pl, function (key, el) {
-                        if (el.type == "0") {
-                            return row.otpr.pl[key].name_plat;
-                        }
-                    }.bind(this));
-                }
-                return null;
-            },
-            className: 'dt-body-left shorten mw-100',
-            title: langView('ttdr_field_outgoing_cars_epd_pl_name_plat', App.Langs), width: "100px", orderable: true, searchable: true
-        }, // Плательщик ОТПР
-        {
-            field: 'outgoing_cars_epd_distance_way',
-            data: function (row, type, val, meta) {
-                if (row && row.otpr && row.otpr.distance_way) {
-                    return row.otpr.distance_way;
-                }
-                return null;
-            },
-            className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_epd_distance_way', App.Langs), width: "50px", orderable: true, searchable: true
-        }, // Тар.расс. ОТПР
         // Груз по прибытию вагона
         {
             field: 'outgoing_cars_arrival_uz_vagon_cargo_name',
@@ -2448,6 +3204,23 @@
             },
             className: 'dt-body-left shorten mw-100',
             title: langView('ttdr_field_outgoing_cars_arrival_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Разметка по отправке
+        {
+            field: 'outgoing_cars_outgoing_uz_vagon_condition_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_condition_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_condition_abbr_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_outgoing_uz_vagon_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
         },
         // Станция примыкания по прибытию
         {
@@ -2572,20 +3345,63 @@
         },
         // Оплата
         {
-            field: 'outgoing_cars_pay',
+            field: 'outgoing_cars_wagon_usage_fee_downtime',
             data: function (row, type, val, meta) {
-                return row.pay !== null ? Number(row.pay).toFixed(2) : null;
+                return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_pay', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
-            field: 'outgoing_cars_pay_act',
+            field: 'outgoing_cars_wagon_usage_fee_downtime_final',
             data: function (row, type, val, meta) {
-                return row.pay_act !== null ? Number(row.pay_act).toFixed(2) : null;
+                //return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
+                return row.wagon_usage_fee_manual_time !== null ? getTimeFromMins(row.wagon_usage_fee_manual_time) : (row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null);
+
             },
             className: 'dt-body-center',
-            title: langView('ttdr_field_outgoing_cars_pay_act', App.Langs), width: "50px", orderable: true, searchable: true
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_calc_time',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null
+                //return row.wagon_usage_fee_manual_time !== null ? getTimeFromMins(row.wagon_usage_fee_manual_time) : (row.wagon_usage_fee_calc_time !== null ? getTimeFromMins(row.wagon_usage_fee_calc_time * 60) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : (row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_calc_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_manual_time',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_time !== null ? getTimeFromMins(row.wagon_usage_fee_manual_time) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_manual_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_manual_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
             field: 'outgoing_cars_arrival_sostav_old_date_adoption',
@@ -2602,6 +3418,641 @@
             },
             className: 'dt-body-nowrap operator',
             title: langView('ttdr_field_outgoing_cars_arrival_sostav_old_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_note',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_note;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cars_wagon_usage_fee_note', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_create',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_create ? moment(row.wagon_usage_fee_create).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_create', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_create_user',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_create_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_create_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_change',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_change ? moment(row.wagon_usage_fee_change).format(format_datetime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_change', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        {
+            field: 'outgoing_cars_wagon_usage_fee_change_user',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_change_user;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdir_field_outgoing_cars_wagon_usage_fee_change_user', App.Langs), width: "100px", orderable: false, searchable: false
+        },
+        // 
+        {
+            field: 'usage_fee_sum_calc_time',
+            data: function (row, type, val, meta) {
+                return row.sum_calc_time != null ? getRoundingHourFromMins(row.sum_calc_time) : 0; // округление в большую сторону
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_sum_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_wagon_calc_time',
+            data: function (row, type, val, meta) {
+                return row.sum_calc_time !== null && row.count_wagon ? getRoundingHourFromMins(Number(row.sum_calc_time / row.count_wagon)).toFixed(0) : 0;
+                //return row.sum_calc_time !== null && row.count_wagon ? getHourFromMins(Number(row.sum_calc_time / row.count_wagon)).toFixed(0) : 0;
+
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_sum_calc_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.sum_calc_fee_amount !== null ? Number(row.sum_calc_fee_amount).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_sum_calc_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_wagon_calc_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.sum_calc_fee_amount !== null && row.count_wagon ? Number(row.sum_calc_fee_amount / row.count_wagon).toFixed(2) : 0.00;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_calc_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_wagon_persent_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.persent !== null ? Number(row.persent).toFixed(2) : 0.00;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_persent_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_wagon_persent_derailment_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.persent_derailment !== null ? Number(row.persent_derailment).toFixed(2) : 0.00;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_persent_derailment_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_wagon_persent_not_derailment_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.persent_not_derailment !== null ? Number(row.persent_not_derailment).toFixed(2) : 0.00;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_wagon_persent_not_derailment_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        //
+        {
+            field: 'usage_fee_period_status_input',
+            data: function (row, type, val, meta) {
+                if (row.usage_fee_period_stop != null) {
+                    if (moment().isBefore(row.usage_fee_period_stop)) {
+                        return '<i class="fa-solid fa-thumbs-up" style="color:#008000"></i>';
+                    } else {
+                        return '<i class="fa-solid fa-square-xmark" style="color:#ff6868"></i>';
+                    }
+                } else {
+                    return '<i class="fa-sharp fa-solid fa-cart-plus" style="color:#1b1bff"></i>';
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_period_status_input', App.Langs), width: "20px", orderable: false, searchable: false
+        },
+        {
+            field: 'usage_fee_period_start',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_start ? moment(row.usage_fee_period_start).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_usage_fee_period_start', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_stop',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_stop ? moment(row.usage_fee_period_stop).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_usage_fee_period_stop', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_operator',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_operator_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-200',
+            title: langView('ttdr_field_usage_fee_period_operator', App.Langs), width: "200px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_operator_abbr',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_operator_abbr_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_operator_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_genus_abbr',
+            data: function (row, type, val, meta) {
+                return row['usage_fee_period_genus_abbr_' + App.Lang];
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_genus_abbr', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_rate !== null ? Number(row.usage_fee_period_rate).toFixed(2) + ' ' + row['usage_fee_period_derailment_currency_' + App.Lang] : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_usage_fee_period_rate', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_rate_derailment',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_rate_derailment !== null ? Number(row.usage_fee_period_rate_derailment).toFixed(2) + ' ' + row['usage_fee_period_derailment_currency_' + App.Lang] : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_usage_fee_period_rate_derailment', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_1',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_grace_time_1;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_grace_time_1', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_grace_time_2',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_grace_time_2;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_grace_time_2', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_route',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_coefficient_route;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_coefficient_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_coefficient_not_route',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_coefficient_not_route;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_coefficient_not_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_period_hour_after_30',
+            data: function (row, type, val, meta) {
+                return row.usage_fee_period_hour_after_30 ? langView('ttdr_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_usage_fee_period_hour_after_30', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Документ по прибытию
+        {
+            field: 'arrival_uz_document_nom_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_arrival_uz_document_nom_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'arrival_uz_document_nom_main_doc',
+            data: function (row, type, val, meta) {
+                return row.arrival_uz_document_nom_main_doc < 0 ? langView('ttdr_title_not_epd', App.Langs) : row.arrival_uz_document_nom_main_doc;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_arrival_uz_document_nom_main_doc', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // usage_fee_outgoing_cars
+        {
+            field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption ? moment(row.arrival_sostav_date_adoption).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act',
+            data: function (row, type, val, meta) {
+                return row.arrival_sostav_date_adoption_act ? moment(row.arrival_sostav_date_adoption_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing ? moment(row.outgoing_sostav_date_outgoing).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act',
+            data: function (row, type, val, meta) {
+                return row.outgoing_sostav_date_outgoing_act ? moment(row.outgoing_sostav_date_outgoing_act).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap operator',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route',
+            data: function (row, type, val, meta) {
+                if (row.arrival_uz_vagon_route !== null) {
+                    if (row.arrival_uz_vagon_route) {
+                        return langView('ttdr_title_route', App.Langs);
+                    } else {
+                        return langView('ttdr_title_not_route', App.Langs);
+                    }
+                } else {
+                    return null;
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_arrival_uz_vagon_route', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign',
+            data: function (row, type, val, meta) {
+                if (row.outgoing_sostav_route_sign !== null) {
+                    if (row.outgoing_sostav_route_sign) {
+                        return langView('ttdr_title_route', App.Langs);
+                    } else {
+                        return langView('ttdr_title_not_route', App.Langs);
+                    }
+                } else {
+                    return null;
+                }
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_usage_fee_outgoing_cars_outgoing_sostav_route_sign', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // № Письма
+        {
+            field: 'instructional_letters_num',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_num;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_instructional_letters_num', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        // Дата письма
+        {
+            field: 'instructional_letters_datetime',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_datetime ? moment(row.instructional_letters_datetime).format(format_datetime) : null;
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_instructional_letters_datetime', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Код станции
+        {
+            field: 'instructional_letters_station_code',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_station_code;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_instructional_letters_station_code', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        // Станция назначения
+        {
+            field: 'instructional_letters_station_name',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_station_name;
+            },
+            className: 'dt-body-left shorten mw-50',
+            title: langView('ttdr_field_instructional_letters_station_name', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Текст письма
+        {
+            field: 'instructional_letters_note',
+            data: function (row, type, val, meta) {
+                return row.instructional_letters_note;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_instructional_letters_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+
+        {
+            field: 'sap_incoming_supply_kod_r_10',
+            data: function (row, type, val, meta) {
+
+                switch (row.sap_incoming_supply_kod_r_10) {
+                    case '@5A@':
+                    case '@5C@': return "<i class='fas fa-ban' style='color:#ff4d4d;'></i>";
+                    case '@5B@': return "<i class='fas fa-check' style='color:#00ce00;'></i>";
+                    default: return null;
+                }
+
+                //return row.sap_incoming_supply_kod_r_10 != null ? outSAP_KOD_R_10(row.sap_incoming_supply_kod_r_10) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_sap_incoming_supply_kod_r_10', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'wir_note',
+            data: function (row, type, val, meta) {
+                return row.wir_note;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_wir_note', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        {
+            field: 'wir_note2',
+            data: function (row, type, val, meta) {
+                return row.wir_note2;
+            },
+            className: 'dt-body-left shorten mw-150',
+            title: langView('ttdr_field_wir_note2', App.Langs), width: "150px", orderable: true, searchable: true
+        },
+        // Время простоя
+        {
+            field: 'idle_time',
+            data: function (row, type, val, meta) {
+                return row.idle_time !== null ? getTimeFromMins(row.idle_time) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_idle_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'idle_time_act',
+            data: function (row, type, val, meta) {
+                return row.idle_time_act !== null ? getTimeFromMins(row.idle_time_act) : null;
+            },
+            className: 'dt-body-right',
+            title: langView('ttdr_field_idle_time_act', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // остатки Операторы за период
+        {
+            field: 'residue_total_operators_operator',
+            data: function (row, type, val, meta) {
+                return row.operator;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_residue_total_operators_operator', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'residue_total_operators_start',
+            data: function (row, type, val, meta) {
+                return row.start;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_start', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_arrival',
+            data: function (row, type, val, meta) {
+                return row.arrival;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_arrival', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_outgoing',
+            data: function (row, type, val, meta) {
+                return row.outgoing;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_outgoing', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_operators_stop',
+            data: function (row, type, val, meta) {
+                return row.stop;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_operators_stop', App.Langs), width: "30px", orderable: true, searchable: false
+        },
+        // остаток посуточно
+        {
+            field: 'residue_total_common_date',
+            data: function (row, type, val, meta) {
+                return row.date !== null ? moment(row.date).format(format_date) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_date', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_total',
+            data: function (row, type, val, meta) {
+                return row.total;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_total', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_external',
+            data: function (row, type, val, meta) {
+                return row.external;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_external', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_paid',
+            data: function (row, type, val, meta) {
+                return row.paid;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_paid', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_accounting',
+            data: function (row, type, val, meta) {
+                return row.accounting;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_accounting', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        {
+            field: 'residue_total_common_amkr',
+            data: function (row, type, val, meta) {
+                return row.amkr;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_residue_total_common_amkr', App.Langs), width: "50px", orderable: true, searchable: false
+        },
+        //
+        // Разметка по прибытию
+        {
+            field: 'residue_total_arrival_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row.arrival_condition_abbr;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_residue_total_arrival_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Разметка по прибытию
+        {
+            field: 'residue_total_current_condition_abbr',
+            data: function (row, type, val, meta) {
+                return row.current_condition_abbr;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_residue_total_current_condition_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_station_amkr_abbr',
+            data: function (row, type, val, meta) {
+                return row.station_amkr_abbr;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_total_station_amkr_abbr', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'total_cargo_group_name',
+            data: function (row, type, val, meta) {
+                return row.cargo_group_name;
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_total_cargo_group_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+
+        // Груз по отправке предыдущий
+        {
+            field: 'old_outgoing_uz_vagon_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_vagon_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_vagon_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Дата последней здачи
+        {
+            field: 'old_date_outgoing',
+            data: function (row, type, val, meta) {
+                return row.old_date_outgoing_act ? moment(row.old_date_outgoing_act).format(format_datetime) : (row.old_date_outgoing ? moment(row.old_date_outgoing).format(format_datetime) : null);
+            },
+            className: 'dt-body-nowrap',
+            title: langView('ttdr_field_old_date_outgoing', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция ОТПР предыдущая
+        {
+            field: 'old_outgoing_uz_document_station_to_name',
+            data: function (row, type, val, meta) {
+                return row['old_outgoing_uz_document_station_to_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_old_outgoing_uz_document_station_to_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Ставки детали
+        // Станция отправления
+        {
+            field: 'code_stn_from',
+            data: function (row, type, val, meta) {
+                return row.code_stn_from;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_code_stn_from', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'from_station_name',
+            data: function (row, type, val, meta) {
+                return row['from_station_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_from_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // Станция прибытия
+        {
+            field: 'code_stn_to',
+            data: function (row, type, val, meta) {
+                return row.code_stn_to;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_code_stn_to', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'to_station_name',
+            data: function (row, type, val, meta) {
+                return row['to_station_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_to_station_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        // груз прибытия
+        {
+            field: 'arrival_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['arrival_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_arrival_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_cargo_name',
+            data: function (row, type, val, meta) {
+                return row['outgoing_cargo_name_' + App.Lang];
+            },
+            className: 'dt-body-left shorten mw-100',
+            title: langView('ttdr_field_outgoing_cargo_name', App.Langs), width: "100px", orderable: true, searchable: true
+        },
+        {
+            field: 'grace_time',
+            data: function (row, type, val, meta) {
+                return row.grace_time;
+            },
+            className: 'dt-body-center shorten mw-50',
+            title: langView('ttdr_field_grace_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Тариф и доп сборы по отправке
+        {
+            field: 'outgoing_uz_vagon_pay_001',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_pay_001 ? Number(Number(row.outgoing_uz_vagon_pay_001) / 100).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_uz_vagon_pay_001', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'outgoing_uz_vagon_pay_add',
+            data: function (row, type, val, meta) {
+                return row.outgoing_uz_vagon_pay_add ? Number(Number(row.outgoing_uz_vagon_pay_add) / 100).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_outgoing_uz_vagon_pay_add', App.Langs), width: "50px", orderable: true, searchable: true
         },
 
     ];
@@ -2652,6 +4103,10 @@
             autoClose: true
         },
         {
+            button: 'print',
+            extend: 'print',
+        },
+        {
             button: 'refresh',
             text: '<i class="fas fa-retweet"></i>',
         },
@@ -2659,15 +4114,46 @@
             button: 'page_length',
             extend: 'pageLength',
         },
+        {
+            button: 'add_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_add_detali', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'edit_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_edit_detali', App.Langs),
+            enabled: false
+        },
+        {
+            button: 'delete_detali',
+            //className: 'buttons-error',
+            text: langView('ttdr_field_delete_detali', App.Langs),
+            enabled: false
+        },
     ];
 
     var pageTotal = 0;
+    var id_select = null;          // выбранная строка
 
     // Показать правильную дату
     function getTimeFromMins(mins) {
         let hours = Math.trunc(mins / 60);
         let minutes = mins % 60;
         return hours + ':' + minutes;
+    };
+    // Показать Часы
+    function getHourFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        return hours;
+    };
+    // Показать Часы с округлением
+    function getRoundingHourFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        let minutes = mins % 60;
+        if (minutes > 30) hours++;
+        return hours;
     };
 
     //-----------------------------------------------------------------------------------------
@@ -2689,6 +4175,7 @@
     // инициализация полей по умолчанию
     table_td_report.prototype.init_columns_detali = function () {
         var collums = [];
+        collums.push({ field: 'numeration', title: null, class: null });
         return init_columns(collums, list_collums);
     };
     // инициализация полей adoption_sostav
@@ -2738,7 +4225,7 @@
     table_td_report.prototype.init_columns_sostav_arrival_naturka = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: null });
-        collums.push({ field: 'incoming_cars_num', title: null, class: null });
+        collums.push({ field: 'num', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_document_code_stn_from', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_station_from_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
@@ -2757,7 +4244,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: null });
-        collums.push({ field: 'incoming_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });    //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_outgoing_sostav_date_outgoing', title: null, class: null });
 
         //collums.push({ field: 'incoming_cars_arrival_uz_vagon_wagon_adm_name', title: null, class: null });
@@ -2809,7 +4296,7 @@
     table_td_report.prototype.init_columns_sostav_outgoing_naturka = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_num', title: null, class: null });
+        collums.push({ field: 'num', title: null, class: null });
         collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
@@ -2844,7 +4331,7 @@
     table_td_report.prototype.init_columns_adoption_wagon_not_operation = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: null });
-        collums.push({ field: 'adoption_wagon_not_operation_num', title: null, class: null });
+        collums.push({ field: 'num', title: null, class: null });
         collums.push({ field: 'adoption_wagon_not_operation_date_adoption', title: null, class: null });
         collums.push({ field: 'adoption_wagon_not_operation_cargo_name', title: null, class: null });
         collums.push({ field: 'adoption_wagon_not_operation_nom_main_doc', title: null, class: null });
@@ -2857,14 +4344,15 @@
     table_td_report.prototype.init_columns_adoption_common_detali = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
-        collums.push({ field: 'incoming_cars_num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'incoming_cars_arrival_sostav_num_doc', title: null, class: 'fixed-column' }); // +
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_main_doc', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_nom_doc', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР
+        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_otpr', title: null, class: null });    // дата отправления на АМКР //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_arrival_sostav_date_arrival', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_vid', title: null, class: null });     // дата раскредитования
+        collums.push({ field: 'incoming_cars_arrival_sostav_epd_date_vid', title: null, class: null });     // дата раскредитования //TODO: Переделать (убрать otpr)
         collums.push({ field: 'incoming_cars_arrival_uz_document_name_consignee', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: null });
@@ -2883,6 +4371,7 @@
         collums.push({ field: 'incoming_cars_arrival_uz_document_cross_time', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_code_stn_to', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_station_to_name', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_etsng_code', title: null, class: null }); // +
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: null });
         collums.push({ field: 'incoming_cars_sap_incoming_supply_cargo_code', title: null, class: null });
@@ -2897,21 +4386,24 @@
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_commercial_condition', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_sender', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_code_payer_arrival', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_document_distance_way', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_pay_summa', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_sostav_station_on_abbr', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
+
+
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_common_detali
     table_td_report.prototype.init_columns_outgoing_common_detali = function () {
         var collums = [];
         collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
-        //
-        collums.push({ field: 'outgoing_cars_num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_cars_uz_document_nom_doc', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
-        //collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption', title: null, class: null });
         collums.push({ field: 'outgoing_cars_arrival_sostav_old_date_adoption_act', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
@@ -2923,42 +4415,25 @@
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_wagon_adm', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_name_etsng', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_etsng_name', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_group_name', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_kod_etsng', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_cargo_etsng_code', title: null, class: 'epd' }); //
-        //collums.push({ field: 'outgoing_cars_epd_route_stn_to', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_route_name_to', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_stn_to', title: null, class: 'epd' });   //
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_to_station_uz_name', title: null, class: 'epd' });  //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_to_inlandrailway_name', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_joint_stn', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_joint_stn_name', title: null, class: 'epd' }); 
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_border_checkpoint', title: null, class: 'epd' });    //
-        collums.push({ field: 'outgoing_cars_outgoing_uz_document_border_checkpoint_station_name', title: null, class: 'epd' }); // 21
-        //21
-        //collums.push({ field: 'outgoing_cars_epd_vagon_collect_v_vesg', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_document_border_checkpoint_station_name', title: null, class: 'epd' }); // 
+        //22
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_vesg', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_u_tara', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_u_tara', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_ves_tary_arc', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_ves_tary_arc', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_vagon_gruzp', title: null, class: 'epd' });
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_gruzp', title: null, class: 'epd' });        //
         //
-        //collums.push({ field: 'outgoing_cars_epd_client_kod', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_client_name', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_u_tara', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_ves_tary_arc', title: null, class: 'epd' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_gruzp', title: null, class: 'epd' });        //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_consignee', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_consignee_name', title: null, class: 'epd' }); //
-
-        //collums.push({ field: 'outgoing_cars_epd_pl_kod_plat', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_pl_name_plat', title: null, class: 'epd' });
-        //collums.push({ field: 'outgoing_cars_epd_distance_way', title: null, class: 'epd' });
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_code_payer', title: null, class: 'epd' }); // 
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_payer_name', title: null, class: 'epd' }); //
         collums.push({ field: 'outgoing_cars_outgoing_uz_document_distance_way', title: null, class: 'epd' }); //
-
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_num', title: null, class: 'sap' });
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_code', title: null, class: 'sap' });
         collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
@@ -2978,14 +4453,27 @@
         collums.push({ field: 'outgoing_cars_arrival_uz_document_code_stn_from', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
         collums.push({ field: 'outgoing_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'arrival' });
-        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' }); //25
+        collums.push({ field: 'outgoing_cars_arrival_sostav_station_on_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_condition_abbr', title: null, class: null });
+        //52 (29)
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime_final', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
         //
-        collums.push({ field: 'outgoing_cars_idle_time', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_idle_time_act', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_pay', title: null, class: null });
-        collums.push({ field: 'outgoing_cars_pay_act', title: null, class: null });
-        //
-        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_laden', title: null, class: null });
+        collums.push({ field: 'current_loading_status', title: null, class: 'current' });
+        //....
+        collums.push({ field: 'wim_unload_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_end', title: null, class: 'current' });
+
+        collums.push({ field: 'outgoing_uz_vagon_pay_001', title: null, class: 'current' });
+        collums.push({ field: 'outgoing_uz_vagon_pay_add', title: null, class: 'current' });
+
         collums.push({ field: 'outgoing_cars_outgoing_sostav_from_station_amkr_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_readiness_amkr', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_end_inspection_acceptance_delivery', title: null, class: null });
@@ -2998,33 +4486,33 @@
     // инициализация полей adoption_cargo_operation_amkr
     table_td_report.prototype.init_columns_adoption_cargo_operation_amkr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_deff', title: null, class: null });
-
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_operator_to_ar
     table_td_report.prototype.init_columns_adoption_operator_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_limiting_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей adoption_cargo_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_group_name', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name', App.Langs), class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3036,7 +4524,7 @@
     // инициализация полей adoption_group_cargo_to_arr
     table_td_report.prototype.init_columns_adoption_group_cargo_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_group_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3048,16 +4536,17 @@
     // инициализация полей adoption_genus_to_arr
     table_td_report.prototype.init_columns_adoption_genus_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_rod_abbr', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
+        collums.push({ field: 'total_rod_abbr', title: langView('ttdr_field_genus_vagon', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: null, class: null });
         return init_columns_detali(collums, list_collums);
+
     };
     // инициализация полей adoption_cargo_sap_to_arr
     table_td_report.prototype.init_columns_adoption_cargo_sap_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_sap_cargo_code', title: null, class: null });
         collums.push({ field: 'total_sap_cargo_name', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3069,9 +4558,9 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_station_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_station_from_name', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_sum_vesg_reweighing', title: null, class: null });
@@ -3081,9 +4570,9 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_division_to_arr = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_certification_data', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
@@ -3094,8 +4583,8 @@
     // инициализация полей adoption_station_to_arr
     table_td_report.prototype.init_columns_adoption_to_gs = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
-        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: langView('ttdr_field_total_cargo_name', App.Langs), class: null });
         collums.push({ field: 'total_station_on_name', title: null, class: null });
         collums.push({ field: 'total_division_abbr', title: null, class: null });
         collums.push({ field: 'total_count_wagon', title: null, class: null });
@@ -3107,7 +4596,7 @@
     // инициализация полей incoming_outgoing_car
     table_td_report.prototype.init_columns_incoming_outgoing_car = function () {
         var collums = [];
-        collums.push({ field: 'incoming_cars_num', title: null, class: null });
+        collums.push({ field: 'num', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: null });
         collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: null });
@@ -3122,10 +4611,14 @@
         collums.push({ field: 'outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
         //collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operators', title: null, class: null });
         collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_outgoing_wagons_rent_operator_abbr', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
-        collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
-        collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_simple_car', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_pay_car', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'incoming_outgoing_car_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
+        //collums.push({ field: 'incoming_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_outgoing_uz_vagon_division_abbr', title: null, class: null });
+        //collums.push({ field: 'incoming_outgoing_car_wir_note', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -3142,7 +4635,7 @@
     // инициализация полей outgoing_cargo_operator
     table_td_report.prototype.init_columns_outgoing_cargo_operator = function () {
         var collums = [];
-        collums.push({ field: 'total_period', title: null, class: null });
+        //collums.push({ field: 'total_period', title: null, class: null });
         collums.push({ field: 'total_operator_abbr', title: null, class: null });
         collums.push({ field: 'total_cargo_out_group_name', title: null, class: null });
         //collums.push({ field: 'total_cargo_name', title: null, class: null });
@@ -3170,6 +4663,8 @@
         collums.push({ field: 'total_count_wagon', title: null, class: null });
         collums.push({ field: 'total_sum_vesg', title: null, class: null });
         collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        collums.push({ field: 'total_sum_idle_time', title: null, class: null });
+        collums.push({ field: 'total_wagon_idle_time', title: null, class: null });
         return init_columns_detali(collums, list_collums);
     };
     // инициализация полей _outgoing_total_operators_cargo
@@ -3227,19 +4722,354 @@
 
         return init_columns_detali(collums, list_collums);
     };
+    //
+    table_td_report.prototype.init_columns_usage_fee_cargo = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_cargo_not_derailment = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_not_derailment_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_operator_amkr = function () {
+        var collums = [];
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_operator_amkr_derailment = function () {
+        var collums = [];
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_cargo_name', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_time', title: null, class: null });
+        collums.push({ field: 'usage_fee_sum_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'usage_fee_wagon_persent_fee_amount', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_period = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_period_start', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_hour_after_30', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate_derailment', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_1', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_2', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_not_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_period_select = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_period_status_input', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_start', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_stop', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_operator_abbr', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_hour_after_30', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_rate_derailment', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_1', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_grace_time_2', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_coefficient_not_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_period_genus_abbr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_period_detali = function () {
+        var collums = [];
+        collums.push({ field: 'code_stn_from', title: null, class: null });
+        collums.push({ field: 'arrival_cargo_name', title: null, class: null });
+        collums.push({ field: 'code_stn_to', title: null, class: null });
+        collums.push({ field: 'outgoing_cargo_name', title: null, class: null });
+        collums.push({ field: 'grace_time', title: null, class: null });
+
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_usage_fee_outgoing_cars = function () {
+        var collums = [];
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        //collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        //collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_create', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_create_user', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_manual_usage_fee = function () {
+        var collums = [];
+
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_date_outgoing_act', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        //collums.push({ field: 'usage_fee_outgoing_cars_arrival_uz_vagon_route', title: null, class: null });
+        collums.push({ field: 'usage_fee_outgoing_cars_outgoing_sostav_route_sign', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_time', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_manual_fee_amount', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_note', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change', title: null, class: null });
+        collums.push({ field: 'outgoing_cars_wagon_usage_fee_change_user', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // Старый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_columns_operation_balance = function () {
+        var collums = [];
+        collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'current_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'current_condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_gruzp', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_destination_station_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_warehouse_name', title: null, class: 'sap' });
+        //....
+        // Груз ОТПР
+        // Станция назначения
+        // Цех ПОГР
+        //....
+        collums.push({ field: 'current_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'current_way_and_outer_way_name', title: null, class: null });
+        //collums.push({ field: 'current_outer_way_name', title: null, class: null });
+        //....
+        // Операция с ваг.
+        // Состояние ваг.
+        //....
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        //....
+        collums.push({ field: 'idle_time', title: null, class: null });
+        collums.push({ field: 'idle_time_act', title: null, class: null });
+        //....
+        collums.push({ field: 'sap_incoming_supply_kod_r_10', title: null, class: null });
+        collums.push({ field: 'wir_note', title: null, class: null });
+        collums.push({ field: 'instructional_letters_num', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
+
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // Новый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_columns_remainder_wagons = function () {
+        var collums = [];
+        collums.push({ field: 'numeration', title: null, class: 'fixed-column' });
+        collums.push({ field: 'num', title: null, class: 'fixed-column' });
+        collums.push({ field: 'arrival_uz_document_nom_main_doc', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_arrival_wagons_rent_operator_abbr', title: null, class: null });
+        collums.push({ field: 'wagons_rent_operator_abbr', title: null, class: null }); //+
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'condition_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_rod_abbr', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_gruzp', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_type', title: null, class: 'common' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_cargo_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_sertification_data', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_document_station_from_name', title: null, class: 'arrival' });
+        collums.push({ field: 'incoming_cars_arrival_uz_vagon_division_abbr', title: null, class: 'arrival' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_cargo_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_destination_station_name', title: null, class: 'sap' });
+        collums.push({ field: 'outgoing_cars_sap_outgoing_supply_warehouse_name', title: null, class: 'sap' });
+        //....
+        collums.push({ field: 'loading_status', title: null, class: 'current' });
+        collums.push({ field: 'view_cargo_name', title: null, class: 'current' });
+        collums.push({ field: 'view_division_from_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_division_on_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_external_station_on_name', title: null, class: 'current' });
+        collums.push({ field: 'view_station_from_amkr_abbr', title: null, class: 'current' });
+        collums.push({ field: 'view_station_on_amkr_abbr', title: null, class: 'current' });
+        //....
+        collums.push({ field: 'wim_unload_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_unload_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_load_filing_end', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_id_filing', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_start', title: null, class: 'current' });
+        collums.push({ field: 'wim_clear_filing_end', title: null, class: 'current' });
+
+        collums.push({ field: 'operation_name', title: null, class: 'current' });
+        collums.push({ field: 'operation_start', title: null, class: 'current' });
+        collums.push({ field: 'operation_end', title: null, class: 'current' });
+        // Груз ОТПР
+        // Станция назначения
+        // Цех ПОГР
+        //....
+        collums.push({ field: 'station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'way_and_outer_way_name', title: null, class: null });
+        //....
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption', title: null, class: null });
+        collums.push({ field: 'incoming_cars_arrival_sostav_date_adoption_act', title: null, class: null });
+        //....
+        collums.push({ field: 'idle_time', title: null, class: null });
+        collums.push({ field: 'idle_time_act', title: null, class: null });
+        //....
+        collums.push({ field: 'sap_incoming_supply_kod_r_10', title: null, class: null });
+        collums.push({ field: 'wir_note', title: null, class: null });
+        collums.push({ field: 'wir_note2', title: null, class: null });
+        collums.push({ field: 'instructional_letters_num', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_datetime', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_code', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_station_name', title: null, class: 'letter' });
+        collums.push({ field: 'instructional_letters_note', title: null, class: 'letter' });
+
+        collums.push({ field: 'old_outgoing_uz_vagon_cargo_name', title: null, class: null });
+        collums.push({ field: 'old_date_outgoing', title: null, class: null });
+        collums.push({ field: 'old_outgoing_uz_document_station_to_name', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_residue_total_operators = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_operators_operator', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_start', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_arrival', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_outgoing', title: null, class: null });
+        collums.push({ field: 'residue_total_operators_stop', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    //
+    table_td_report.prototype.init_columns_residue_total_common = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_common_date', title: null, class: null });
+        collums.push({ field: 'residue_total_common_total', title: null, class: null });
+        collums.push({ field: 'residue_total_common_external', title: null, class: null });
+        collums.push({ field: 'residue_total_common_paid', title: null, class: null });
+        collums.push({ field: 'residue_total_common_accounting', title: null, class: null });
+        collums.push({ field: 'residue_total_common_amkr', title: null, class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_markup_arr
+    table_td_report.prototype.init_columns_residue_total_markup_arr = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_arrival_condition_abbr', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_markup_curr
+    table_td_report.prototype.init_columns_residue_total_markup_curr = function () {
+        var collums = [];
+        collums.push({ field: 'residue_total_current_condition_abbr', title: null, class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей _outgoing_total_operators_cargo
+    table_td_report.prototype.init_columns_residue_total_markup_arr_operator = function () {
+        var collums = [];
+        collums.push({ field: 'total_operator_abbr', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_condition', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_genus
+    table_td_report.prototype.init_columns_residue_total_genus = function () {
+        var collums = [];
+        collums.push({ field: 'total_rod_abbr', title: langView('ttdr_field_genus_vagon', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_genus_station_amkr
+    table_td_report.prototype.init_columns_residue_total_genus_station_amkr = function () {
+        var collums = [];
+        collums.push({ field: 'total_station_amkr_abbr', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_name_genus', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
+    // инициализация полей residue_total_station_out
+    table_td_report.prototype.init_columns_residue_total_station_out = function () {
+        var collums = [];
+        collums.push({ field: 'total_cargo_group_name', title: null, class: null });
+        collums.push({ field: 'total_group_name', title: langView('ttdr_field_total_group_ext_station_from', App.Langs), class: null });
+        collums.push({ field: 'total_count_wagon', title: null, class: null });
+        collums.push({ field: 'total_perent_wagon', title: '%', class: null });
+        return init_columns_detali(collums, list_collums);
+    };
     //------------------------------- КНОПКИ ----------------------------------------------------
     // инициализация кнопок по умолчанию
     table_td_report.prototype.init_button_detali = function () {
         var buttons = [];
-        buttons.push({ name: 'export', action: null });
-        buttons.push({ name: 'field', action: null });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'export', action: null });
+        //buttons.push({ name: 'field', action: null });
+        /*        buttons.push({ name: 'page_length', action: null });*/
         return init_buttons(buttons, list_buttons);
     };
     // инициализация кнопок adoption_sostav
     table_td_report.prototype.init_button_adoption_sostav = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3254,6 +5084,7 @@
     table_td_report.prototype.init_button_outgoing_sostav = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3268,6 +5099,7 @@
     table_td_report.prototype.init_button_adoption_sostav_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3282,6 +5114,7 @@
     table_td_report.prototype.init_button_outgoing_sostav_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3296,6 +5129,7 @@
     table_td_report.prototype.init_button_sostav_arrival_naturka = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3310,6 +5144,7 @@
     table_td_report.prototype.init_button_sostav_outgoing_naturka = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3324,6 +5159,7 @@
     table_td_report.prototype.init_button_adoption_wagon_not_operation = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3338,6 +5174,7 @@
     table_td_report.prototype.init_button_adoption_common_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3352,6 +5189,7 @@
     table_td_report.prototype.init_button_outgoing_common_detali = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3366,6 +5204,7 @@
     table_td_report.prototype.init_button_adoption_cargo_operation_amkr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3373,13 +5212,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_operator_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3387,13 +5227,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_cargo_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3401,13 +5242,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_group_cargo_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3415,13 +5257,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_genus_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3429,13 +5272,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_cargo_sap_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3443,13 +5287,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_station_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3457,13 +5302,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_division_to_arr = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3471,13 +5317,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_adoption_to_gs = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3485,13 +5332,14 @@
                 //this.action_refresh();
             }.bind(this)
         });
-        buttons.push({ name: 'page_length', action: null });
+        //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
     //
     table_td_report.prototype.init_button_incoming_outgoing_car = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3506,6 +5354,7 @@
     table_td_report.prototype.init_button_list_wagons_rent = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3520,6 +5369,7 @@
     table_td_report.prototype.init_button_outgoing_cargo_operator = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3534,6 +5384,7 @@
     table_td_report.prototype.init_button_outgoing_cargo_ext_station = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3548,6 +5399,7 @@
     table_td_report.prototype.init_button_outgoing_total_operators = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3562,6 +5414,7 @@
     table_td_report.prototype.init_button_outgoing_total_operators_cargo = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3576,6 +5429,7 @@
     table_td_report.prototype.init_button_outgoing_total_division_metall = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3590,6 +5444,7 @@
     table_td_report.prototype.init_button_outgoing_total_division_cargo = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3604,6 +5459,7 @@
     table_td_report.prototype.init_button_outgoing_total_cargo_metall = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3618,6 +5474,7 @@
     table_td_report.prototype.init_button_outgoing_total_ext_station = function () {
         var buttons = [];
         buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
         buttons.push({ name: 'field', action: null });
         buttons.push({
             name: 'refresh',
@@ -3628,6 +5485,284 @@
         //buttons.push({ name: 'page_length', action: null });
         return init_buttons(buttons, list_buttons);
     };
+    //
+    table_td_report.prototype.init_button_usage_fee_cargo = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_cargo_not_derailment = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_operator_amkr = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period_select = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_period_detali = function () {
+        var buttons = [];
+        buttons.push({
+            name: 'add_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'edit_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
+        buttons.push({
+            name: 'delete_detali',
+            action: function (e, dt, node, config) {
+                this.action(e, dt, node, config);
+            }.bind(this)
+        });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_usage_fee_outgoing_cars = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_manual_usage_fee = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // Старый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_button_operation_balance = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    // Новый Отчет остаток вагонов (общий)
+    table_td_report.prototype.init_button_remainder_wagons = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_residue_total_operators = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    };
+    //
+    table_td_report.prototype.init_button_residue_total_common = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_markup_arr = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_markup_curr = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_markup_arr_operator = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_genus = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_genus_station_amkr = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
+    //
+    table_td_report.prototype.init_button_residue_total_station_out = function () {
+        var buttons = [];
+        buttons.push({ name: 'export', action: null });
+        buttons.push({ name: 'print', action: null });
+        buttons.push({ name: 'field', action: null });
+        buttons.push({
+            name: 'refresh',
+            action: function (e, dt, node, config) {
+                //this.action_refresh();
+            }.bind(this)
+        });
+        //buttons.push({ name: 'page_length', action: null });
+        return init_buttons(buttons, list_buttons);
+    }
     //-------------------------------------------------------------------------------------------
     // Инициализация тип отчета
     table_td_report.prototype.init_type_report = function () {
@@ -3781,10 +5916,10 @@
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = true;            // вкл. фикс. заголовка
-                this.leftColumns = 2;
+                this.leftColumns = 3;
                 this.columnDefs = null;
                 this.order_column = [0, 'asc'];
-                this.type_select_rows = 0; // Выбирать одну
+                this.type_select_rows = 0;          // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = false;
                 this.table_columns = this.init_columns_adoption_common_detali();
@@ -3813,17 +5948,17 @@
                 break;
             };
             case 'adoption_cargo_operation_amkr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                this.paging = false;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -3833,17 +5968,17 @@
                 break;
             };
             case 'adoption_operator_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [3, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -3853,17 +5988,17 @@
                 break;
             };
             case 'adoption_cargo_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
-                this.columnDefs = [{ visible: false, targets: 1 }];
-                this.order_column = [1, 'asc'];
+                this.columnDefs = [{ visible: false, targets: 0 }];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -3892,12 +6027,12 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td colspan="7">' + group.group_name + '</td></tr>');
+                                    .before('<tr class="group"><td colspan="6">' + group.group_name + '</td></tr>');
                                 last = group.group_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
@@ -3915,23 +6050,23 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td><td class="total-value">' + sum_vesg_reweighing.toFixed(2) + '</td><td class="total-value">' + sum_vesg_deff.toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
             };
             case 'adoption_group_cargo_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -3941,17 +6076,17 @@
                 break;
             };
             case 'adoption_genus_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = false;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [3, 'desc'];
+                this.order_column = [2, 'desc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -3983,17 +6118,17 @@
                 break;
             };
             case 'adoption_cargo_sap_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4003,17 +6138,17 @@
                 break;
             };
             case 'adoption_station_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4023,17 +6158,17 @@
                 break;
             };
             case 'adoption_division_to_arr': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4043,17 +6178,17 @@
                 break;
             };
             case 'adoption_to_gs': {
-                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
-                this.pageLength = 10;
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
                 this.deferRender = true;
-                this.paging = true;
+                //this.paging = true;
                 this.searching = false;
                 this.ordering = true;
                 this.info = true;
                 this.fixedHeader = false;            // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 this.columnDefs = null;
-                this.order_column = [1, 'asc'];
+                this.order_column = [0, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4113,7 +6248,7 @@
                 this.fixedHeader = false;   // вкл. фикс. заголовка
                 this.leftColumns = 0;
                 //this.columnDefs = [{ visible: false, targets: 3 }];
-                this.order_column = [2, 'asc'];
+                this.order_column = [1, 'asc'];
                 this.type_select_rows = 0; // Выбирать одну
                 this.table_select = false;
                 this.autoWidth = true;
@@ -4140,12 +6275,12 @@
                                 if (last !== null) {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
                                 }
                                 // Заглавие новой группы
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td colspan="5">' + group.cargo_out_group_name + '</td></tr>');
+                                    .before('<tr class="group"><td colspan="4">' + group.cargo_out_group_name + '</td></tr>');
                                 last = group.cargo_out_group_name;
                                 count = group.count_wagon;
                                 sum_vesg = group.sum_vesg > 0 ? group.sum_vesg / 1000 : 0;
@@ -4158,7 +6293,7 @@
                     if (last !== null) {
                         $(rows)
                             .last()
-                            .after('<tr class="group-total"><td class="total-text" colspan="3">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text" colspan="2">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="total-value">' + sum_vesg.toFixed(2) + '</td></tr>');
                     };
                 };
                 break;
@@ -4595,6 +6730,605 @@
                 };
                 break;
             };
+            case 'usage_fee_cargo': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [6, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_cargo();
+                this.table_buttons = this.init_button_usage_fee_cargo();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'usage_fee_cargo_not_derailment': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [6, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_cargo_not_derailment();
+                this.table_buttons = this.init_button_usage_fee_cargo_not_derailment();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'usage_fee_operator_amkr': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_operator_amkr();
+                this.table_buttons = this.init_button_usage_fee_operator_amkr();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.cargo_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        //.before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getRoundingHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getRoundingHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="7">' + group.cargo_name + '</td></tr>');
+                                last = group.cargo_name;
+                                count = group.count_wagon;
+                                sum_usage_fee_sum_calc_time = group.sum_calc_time;
+                                sum_usage_fee_sum_calc_fee_amount = group.sum_calc_fee_amount;
+                                sum_usage_fee_wagon_persent_fee_amount = group.persent;
+                            } else {
+                                count += group.count_wagon;
+                                sum_usage_fee_sum_calc_time += group.sum_calc_time;
+                                sum_usage_fee_sum_calc_fee_amount += group.sum_calc_fee_amount;
+                                sum_usage_fee_wagon_persent_fee_amount += group.persent;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            //.after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getRoundingHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getRoundingHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                    };
+                };
+                break;
+            };
+            case 'usage_fee_operator_amkr_derailment': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = -1;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_operator_amkr_derailment();
+                this.table_buttons = this.init_button_usage_fee_operator_amkr();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+
+
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.cargo_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        //.before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                                        .before('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getRoundingHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getRoundingHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="7">' + group.cargo_name + '</td></tr>');
+                                last = group.cargo_name;
+                                count = group.count_wagon;
+                                sum_usage_fee_sum_calc_time = group.sum_calc_time;
+                                sum_usage_fee_sum_calc_fee_amount = group.sum_calc_fee_amount;
+                                sum_usage_fee_wagon_persent_fee_amount = group.persent;
+                            } else {
+                                count += group.count_wagon;
+                                sum_usage_fee_sum_calc_time += group.sum_calc_time;
+                                sum_usage_fee_sum_calc_fee_amount += group.sum_calc_fee_amount;
+                                sum_usage_fee_wagon_persent_fee_amount += group.persent;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            //.after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+                            .after('<tr class="group-total"><td class="total-text">' + last + ':</td><td class="total-count">' + count + '</td><td class="total-count">' + getRoundingHourFromMins(sum_usage_fee_sum_calc_time) + '</td><td class="total-count">' + getRoundingHourFromMins(Number(sum_usage_fee_sum_calc_time / count)).toFixed(0) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_sum_calc_fee_amount / count).toFixed(2) + '</td><td class="total-count">' + Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(2) + '</td></tr>');
+
+                    };
+                };
+                break;
+            };
+            case 'usage_fee_period': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period();
+                this.table_buttons = this.init_button_usage_fee_period();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'usage_fee_period_select': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false; // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 2; // Выбирать одну
+                this.table_select = {
+                    style: 'multi ',
+                };
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period_select();
+                this.table_buttons = this.init_button_usage_fee_period_select();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'usage_fee_period_detali': {
+                //this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false; // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_period_detali();
+                this.table_buttons = this.init_button_usage_fee_period_detali();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'usage_fee_outgoing_cars': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [3, 'desc'];
+                this.type_select_rows = 1; // Выбирать одну
+                this.table_select = true;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_usage_fee_outgoing_cars();
+                this.table_buttons = this.init_button_usage_fee_outgoing_cars();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'manual_usage_fee': {
+                this.lengthMenu = [[10, 20, -1], [10, 20, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 1;
+                this.columnDefs = null;
+                this.order_column = [3, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_manual_usage_fee();
+                this.table_buttons = this.init_button_manual_usage_fee();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            // Старый (Отчет остаток вагонов (общий))
+            case 'operation_balance': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 2;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_operation_balance();
+                this.table_buttons = this.init_button_operation_balance();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            // Новый (Отчет остаток вагонов (общий))
+            case 'remainder_wagons': {
+                this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = true;
+                this.searching = true;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = true;            // вкл. фикс. заголовка
+                this.leftColumns = 2;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_remainder_wagons();
+                this.table_buttons = this.init_button_remainder_wagons();
+                this.dom = 'Bfrtip';
+                break;
+            };
+
+            case 'residue_total_operators': {
+                //this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_operators();
+                this.table_buttons = this.init_button_residue_total_operators();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_common': {
+                //this.lengthMenu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, langView('ttdr_title_all', App.Langs)]];
+                //this.pageLength = 10;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = true;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [0, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_common();
+                this.table_buttons = this.init_button_residue_total_common();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_markup_arr': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_markup_arr();
+                this.table_buttons = this.init_button_residue_total_markup_arr();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_markup_curr': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_markup_curr();
+                this.table_buttons = this.init_button_residue_total_markup_curr();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_markup_operator': {
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_residue_total_markup_arr_operator();
+                this.table_buttons = this.init_button_residue_total_markup_arr_operator();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_vesg = 0;
+                    var sum_persent = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="4">' + group.group_name + '</td></tr>');
+                                last = group.group_name;
+                                count = group.count_wagon;
+                                sum_persent = group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_persent += group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                    };
+                };
+                break;
+            };
+            case 'residue_total_genus': {
+                this.lengthMenu = null;
+                this.pageLength = null;
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = true;
+                this.info = false;
+                this.fixedHeader = false;            // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = null;
+                this.order_column = [1, 'desc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = false;
+                this.table_columns = this.init_columns_residue_total_genus();
+                this.table_buttons = this.init_button_residue_total_genus();
+                this.dom = 'Bfrtip';
+                break;
+            };
+            case 'residue_total_genus_station_amkr': {
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_residue_total_genus_station_amkr();
+                this.table_buttons = this.init_button_residue_total_genus_station_amkr();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_persent = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="4">' + group.group_name + '</td></tr>');
+                                last = group.group_name;
+                                count = group.count_wagon;
+                                sum_persent = group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_persent += group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                    };
+                };
+                break;
+            };
+            case 'residue_total_station_out': {
+                this.deferRender = true;
+                this.paging = false;
+                this.searching = false;
+                this.ordering = false;
+                this.info = true;
+                this.fixedHeader = false;   // вкл. фикс. заголовка
+                this.leftColumns = 0;
+                this.columnDefs = [{ visible: false, targets: 1 }];
+                this.order_column = [1, 'asc'];
+                this.type_select_rows = 0; // Выбирать одну
+                this.table_select = false;
+                this.autoWidth = true;
+                this.table_columns = this.init_columns_residue_total_station_out();
+                this.table_buttons = this.init_button_residue_total_station_out();
+                this.dom = 'Bfrtip';
+                this.drawCallback = function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    var count = 0;
+                    var sum_persent = 0;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                    };
+
+                    api
+                        //.column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group.group_name) {
+                                // Подведем итог
+                                if (last !== null) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                                }
+                                // Заглавие новой группы
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td colspan="4">' + group.group_name + '</td></tr>');
+                                last = group.group_name;
+                                count = group.count_wagon;
+                                sum_persent = group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            } else {
+                                count += group.count_wagon;
+                                sum_persent += group.perent_wagon ? Number(group.perent_wagon) : 0;
+                            }
+                        });
+                    // Последнее итого
+                    if (last !== null) {
+                        $(rows)
+                            .last()
+                            .after('<tr class="group-total"><td class="total-text" colspan="1">' + last + ' ИТОГО:</td><td class="total-count">' + count + '</td><td class="persent-value">' + sum_persent.toFixed(1) + '</td></tr>');
+                    };
+                };
+                break;
+            };
             // Таблица составы по умолчанию (если не выставят тип отчета)
             default: {
                 this.fixedHeader = false;            // вкл. фикс. заголовка
@@ -4623,6 +7357,7 @@
             fn_init: null,
             fn_select_rows: null,
             fn_action_view_wagons: null,
+            fn_action: null,
         }, options);
         //
         this.ids_wsd = this.settings.ids_wsd ? this.settings.ids_wsd : new wsd();
@@ -4672,49 +7407,53 @@
         }
         if (this.settings.type_report === 'adoption_common_detali') {
             this.$table_report = table_report.$table.append($('<tfoot>' +
-                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
-                //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="12" class="dt-right">СТАТ.НАГРУЗКА:</th><td id="avg_vesg" class="dt-centr"></td><th colspan="2" class="dt-right">:</th><td id="avg_gruzp" class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
-                '</tfoot > '));
+                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="16" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="26"></td></tr>' +
+                //'<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="15" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="25"></td></tr>' +
+                '</tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_common_detali') {
             this.$table_report = table_report.$table.append($('<tfoot>' +
-                '<tr><th class="dt-right">Всего:</th><td class="dt-centr"></td><th colspan="20" class="dt-right">ИТОГО:</th>' +
-                //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                //'<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr"></td><td class="dt-centr"></td>' +
-                '<td class="dt-centr" colspan="25"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr" colspan="7"></td></tr>' +
+                '<tr>' +
+                '<th class="dt-right" > Всего:</th>' +
+                '<td class="dt-centr"></td>' +
+                '<th colspan="20" class="dt-right">ИТОГО:</th>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr" colspan="29"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr"></td>' +
+                '<td class="dt-centr" colspan="18"></td>' +
+                '</tr> ' +
                 '</tfoot > '));
         }
         if (this.settings.type_report === 'adoption_cargo_operation_amkr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_operator_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right"></th><th class="dt-right"></th><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_group_cargo_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_genus_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="1" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_cargo_sap_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_station_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_division_to_arr') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'adoption_to_gs') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="4" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_cargo_operator') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="3" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_cargo_ext_station') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
@@ -4729,16 +7468,50 @@
             this.$table_report = table_report.$table.append($('<tfoot><tr><td></td><th class="dt-right">ЧЕРНЫЕ МЕТАЛЛЫ:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_operators') {
-            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td></tr></tfoot>'));
         }
         if (this.settings.type_report === 'outgoing_total_operators_cargo') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td><td></td></tr></tfoot>'));
         }
-
         if (this.settings.type_report === 'outgoing_total_ext_station') {
             this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-right"></td></tr></tfoot>'));
         }
-
+        if (this.settings.type_report === 'usage_fee_cargo') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'usage_fee_cargo_not_derailment') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'usage_fee_operator_amkr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right" colspan="2">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'usage_fee_operator_amkr_derailment') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right" colspan="2">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-right"></td><td class="dt-right"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_operators') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_common') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">Ср. остаток:</th><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_markup_arr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_markup_curr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_markup_operator') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_genus') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_genus_station_amkr') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
+        if (this.settings.type_report === 'residue_total_station_out') {
+            this.$table_report = table_report.$table.append($('<tfoot><tr><th colspan="2" class="dt-right">ИТОГО:</th><td class="dt-centr"></td><td class="dt-centr"></td></tr></tfoot>'));
+        }
         this.$table_report = table_report.$table;
         this.$td_report.addClass('table-report').append(this.$table_report);
         // Инициализируем таблицу
@@ -4789,8 +7562,13 @@
                         break;
                     };
                     case 'incoming_outgoing_car': {
+
+                        if (data.arrival_uz_vagon_cargo_returns) {
+                            $(row).addClass('blue');
+                        }
                         if (data.wir_highlight_color !== null) {
-                            $(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
+                            $(row).addClass('red');
+                            //$(row).attr('style', 'background-color:' + data.wir_highlight_color + ' !important;');
                         }
                         break;
                     };
@@ -4798,6 +7576,10 @@
                         if (data.arrival_uz_vagon_cargo_returns) {
                             $(row).addClass('red');
                         }
+                        break;
+                    };
+                    case 'usage_fee_outgoing_cars': {
+                        $(row).attr('id', data.outgoing_car_id);
                         break;
                     };
                 };
@@ -4905,6 +7687,39 @@
                 }.bind(this));
                 break;
             };
+            case 'usage_fee_outgoing_cars': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'usage_fee_period_select': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
+            case 'usage_fee_period_detali': {
+                this.obj_t_report.on('select deselect', function (e, dt, type, indexes) {
+                    this.select_rows(); // определим строку
+                    this.enable_button();
+                    // Обработать событие выбрана строка
+                    if (typeof this.settings.fn_select_rows === 'function') {
+                        this.settings.fn_select_rows(this.selected_rows);
+                    }
+                }.bind(this));
+                break;
+            };
         };
         // На проверку окончания инициализации
         //----------------------------------
@@ -4913,6 +7728,12 @@
         }
         //----------------------------------
     };
+    // Нажата кнопка
+    table_td_report.prototype.action = function(e, dt, node, config){
+        if (typeof this.settings.fn_action === 'function') {
+            this.settings.fn_action(e, dt, node, config);
+        }
+    }
     // Выбрано
     table_td_report.prototype.select_rows = function () {
         var index = this.obj_t_report.rows({ selected: true });
@@ -4923,38 +7744,34 @@
     // Отображение кнопки добавить
     table_td_report.prototype.enable_button = function () {
         switch (this.settings.type_report) {
-            //case 'adoption_sostav': {
-            //    if (this.select_rows_sostav && this.select_rows_sostav.length > 0) {
-            //        this.obj_t_sostav.button(5).enable(true);
-            //        if (this.select_rows_sostav[0].status < 1) {
-            //            this.obj_t_sostav.button(3).enable(true);
-            //            this.obj_t_sostav.button(4).enable(true); // отмена сдачи состава
-            //            this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_accept', App.Langs));
-            //        } else {
-            //            // Если статус в работе принят или удален 
-            //            this.obj_t_sostav.button(3).enable(true);
-            //            this.obj_t_sostav.button(4).enable(false);
-            //            //if (this.select_rows_sostav[0].status === 2) { this.obj_t_sostav.button(4).enable(true); } else { this.obj_t_sostav.button(4).enable(false); }
-            //            this.obj_t_sostav.button(5).text(langView('tis_title_button_wagon_view', App.Langs));
-            //        }
-            //    } else {
-            //        this.obj_t_sostav.button(3).enable(false);
-            //        this.obj_t_sostav.button(4).enable(false);
-            //        this.obj_t_sostav.button(5).enable(false);
-            //    }
-            //    break;
-            //};
+            case 'usage_fee_period_detali': {
+                if (this.selected_rows && this.selected_rows.length > 0) {
+                    this.obj_t_report.button(1).enable(true);
+                    this.obj_t_report.button(2).enable(true);
+                } else {
+                    this.obj_t_report.button(1).enable(false);
+                    this.obj_t_report.button(2).enable(false);
+                }
+                break;
+            };
         };
     };
     // Показать данные
-    table_td_report.prototype.view = function (data) {
+    table_td_report.prototype.view = function (data, id_select) {
         this.data = data;
+        this.id_select = id_select;
         this.out_clear();
         LockScreen(langView('ttdr_mess_view_report', App.Langs));
         this.obj_t_report.clear();
         this.obj_t_report.rows.add(data);
         this.obj_t_report.order(this.order_column);
         this.obj_t_report.draw();
+        if (id_select !== null) {
+            this.id_select = id_select
+            this.obj_t_report.row('#' + this.id_select).select();
+        } else {
+            this.id_select = null;
+        }
         this.view_footer(data);
         this.select_rows();
         this.enable_button();
@@ -4983,7 +7800,7 @@
                         sum_count_wagon_all += el.count_wagon;
                         sum_count_account_balance_all += el.count_account_balance;
                         sum_count_not_operator_all += el.count_not_operator;
-                        sum_count_return_wagon += el.count_return_wagon;
+                        sum_count_return_wagon_all += el.count_return_wagon;
                     });
                 }
                 this.obj_t_report.columns('.sum_count_wagon').every(function () {
@@ -5088,7 +7905,7 @@
                     //var avg_vesg = sum_vesg / sum_count_wagon;
                     //var avg_gruzp = sum_gruzp / sum_count_wagon;
                 }
-                this.obj_t_report.columns('.fl-incoming_cars_num').every(function () {
+                this.obj_t_report.columns('.fl-num').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
                 this.obj_t_report.columns('.fl-incoming_cars_arrival_uz_vagon_vesg').every(function () {
@@ -5105,44 +7922,48 @@
             case 'outgoing_common_detali': {
                 if (data) {
                     var sum_count_wagon = 0;
-                    var sum_vesg = 0;
+                    //var sum_vesg = 0;
                     var sum_vesg1 = 0;
                     var sum_idle_time = 0;
-                    var sum_idle_time_act = 0;
-                    var sum_pay = 0;
-                    var sum_pay_act = 0;
+                    //var sum_idle_time_act = 0;
+                    var downtime = 0;
+                    var fee_amount = 0;
                     $.each(data, function (i, el) {
                         sum_vesg1 += el.outgoing_uz_vagon_vesg;
                         sum_count_wagon++;
-                        if (el && el.otpr && el.otpr.vagon && el.otpr.vagon.length > 0 && el.otpr.vagon[0].collect_v && el.otpr.vagon[0].collect_v.length > 0 && el.otpr.vagon[0].collect_v[0].vesg) {
-                            sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
-                        }
+                        //if (el && el.otpr && el.otpr.vagon && el.otpr.vagon.length > 0 && el.otpr.vagon[0].collect_v && el.otpr.vagon[0].collect_v.length > 0 && el.otpr.vagon[0].collect_v[0].vesg) {
+                        //    sum_vesg += el.otpr.vagon[0].collect_v[0].vesg;
+                        //}
                         sum_idle_time += el.idle_time !== null ? el.idle_time : 0;
-                        sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
-                        sum_pay += el.pay !== null ? el.pay : 0;
-                        sum_pay_act += el.pay_act !== null ? el.pay_act : 0;
+                        //sum_idle_time_act += el.idle_time_act !== null ? el.idle_time_act : 0;
+                        //downtime += el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0;
+                        downtime += el.wagon_usage_fee_manual_time !== null ? el.wagon_usage_fee_manual_time : (el.wagon_usage_fee_downtime !== null ? el.wagon_usage_fee_downtime : 0);
+                        fee_amount += el.wagon_usage_fee_manual_fee_amount !== null ? el.wagon_usage_fee_manual_fee_amount : (el.wagon_usage_fee_calc_fee_amount !== null ? el.wagon_usage_fee_calc_fee_amount : 0);
                     });
                 }
-                this.obj_t_report.columns('.fl-outgoing_cars_num').every(function () {
+                this.obj_t_report.columns('.fl-num').every(function () {
                     $(this.footer()).html(sum_count_wagon);
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_epd_vagon_collect_v_vesg').every(function () {
-                    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
-                });
+                //this.obj_t_report.columns('.fl-outgoing_cars_epd_vagon_collect_v_vesg').every(function () {
+                //    $(this.footer()).html(sum_vesg ? Number(sum_vesg / 1000).toFixed(2) : Number(0).toFixed(2));
+                //});
                 this.obj_t_report.columns('.fl-outgoing_cars_outgoing_uz_vagon_vesg').every(function () {
                     $(this.footer()).html(sum_vesg1 ? Number(sum_vesg1 / 1000).toFixed(2) : Number(0).toFixed(2));
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
-                    $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
+                //this.obj_t_report.columns('.fl-outgoing_cars_idle_time').every(function () {
+                //    $(this.footer()).html(sum_idle_time ? getTimeFromMins(sum_idle_time) : '00:00');
+                //});
+                //this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
+                //    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
+                //});
+                //this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime').every(function () {
+                //    $(this.footer()).html(downtime ? getTimeFromMins(downtime) : '0:00');
+                //});
+                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_downtime_final').every(function () {
+                    $(this.footer()).html(downtime ? getTimeFromMins(downtime) : '0:00');
                 });
-                this.obj_t_report.columns('.fl-outgoing_cars_idle_time_act').every(function () {
-                    $(this.footer()).html(sum_idle_time_act ? getTimeFromMins(sum_idle_time_act) : '00:00');
-                });
-                this.obj_t_report.columns('.fl-outgoing_cars_pay').every(function () {
-                    $(this.footer()).html(sum_pay ? Number(sum_pay).toFixed(2) : Number(0).toFixed(2));
-                });
-                this.obj_t_report.columns('.fl-outgoing_cars_pay_act').every(function () {
-                    $(this.footer()).html(sum_pay_act ? Number(sum_pay_act).toFixed(2) : Number(0).toFixed(2));
+                this.obj_t_report.columns('.fl-outgoing_cars_wagon_usage_fee_calc_fee_amount_final').every(function () {
+                    $(this.footer()).html(fee_amount ? Number(fee_amount).toFixed(2) : Number(0).toFixed(2));
                 });
                 break;
             };
@@ -5178,12 +7999,17 @@
             case 'adoption_operator_to_arr': {
                 if (data) {
                     var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
                 });
                 break;
             };
@@ -5246,13 +8072,18 @@
             case 'adoption_genus_to_arr': {
                 if (data) {
                     var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
                     //var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
                     $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
                 });
                 break;
             };
@@ -5463,11 +8294,13 @@
                     var sum_count_wagon = 0;
                     var sum_vesg = 0;
                     var sum_perent_wagon = 0;
+                    var sum_idle_time = 0;
                     //var sum_count_account_balance = 0;
                     $.each(data, function (i, el) {
                         sum_count_wagon += el.count_wagon;
                         sum_vesg += el.sum_vesg;
                         sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+                        sum_idle_time += (el.sum_idle_time ? Number(el.sum_idle_time) : 0);
                     });
                 }
                 this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
@@ -5478,6 +8311,12 @@
                 });
                 this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
                     $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-total_sum_idle_time').every(function () {
+                    $(this.footer()).html(getTimeFromMins(sum_idle_time));
+                });
+                this.obj_t_report.columns('.fl-total_wagon_idle_time').every(function () {
+                    $(this.footer()).html(getTimeFromMins(Number(Number(sum_idle_time / sum_count_wagon).toFixed(0))));
                 });
                 break;
             };
@@ -5504,7 +8343,6 @@
                 //});
                 break;
             };
-
             case 'outgoing_total_ext_station': {
                 if (data) {
                     var sum_count_wagon = 0;
@@ -5523,7 +8361,285 @@
                 });
                 break;
             };
+            case 'usage_fee_cargo': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var usage_fee_wagon_calc_time = 0;
+                    var usage_fee_wagon_calc_fee_amount = 0;
 
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        //sum_usage_fee_sum_calc_time += el.sum_calc_time;
+                        sum_usage_fee_sum_calc_time += getRoundingHourFromMins(el.sum_calc_time);
+                        sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent;
+                    });
+                }
+                //usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                //this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                //    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
+                //});
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_time));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'usage_fee_cargo_not_derailment': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var usage_fee_wagon_calc_time = 0;
+                    var usage_fee_wagon_calc_fee_amount = 0;
+
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        //sum_usage_fee_sum_calc_time += el.sum_calc_time;
+                        sum_usage_fee_sum_calc_time += getRoundingHourFromMins(el.sum_calc_time);
+                        sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent_not_derailment;
+                    });
+                }
+                //usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                //this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                //    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
+                //});
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_time));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_not_derailment_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'usage_fee_operator_amkr': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var usage_fee_wagon_calc_time = 0;
+                    var usage_fee_wagon_calc_fee_amount = 0;
+
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        //sum_usage_fee_sum_calc_time += el.sum_calc_time;
+                        sum_usage_fee_sum_calc_time += getRoundingHourFromMins(el.sum_calc_time);
+                        sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent;
+                    });
+                }
+                //usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                //this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                //    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
+                //});
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_time));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'usage_fee_operator_amkr_derailment': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_usage_fee_sum_calc_time = 0;
+                    var sum_usage_fee_sum_calc_fee_amount = 0;
+                    var sum_usage_fee_wagon_persent_fee_amount = 0;
+                    var usage_fee_wagon_calc_time = 0;
+                    var usage_fee_wagon_calc_fee_amount = 0;
+
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        //sum_usage_fee_sum_calc_time += el.sum_calc_time;
+                        sum_usage_fee_sum_calc_time += getRoundingHourFromMins(el.sum_calc_time);
+                        sum_usage_fee_sum_calc_fee_amount += el.sum_calc_fee_amount;
+                        sum_usage_fee_wagon_persent_fee_amount += el.persent;
+                    });
+                }
+                //usage_fee_wagon_calc_time = sum_count_wagon > 0 ? getHourFromMins(Number(sum_usage_fee_sum_calc_time / sum_count_wagon)).toFixed(0) : 0;
+                usage_fee_wagon_calc_time = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_time / sum_count_wagon).toFixed(0) : 0;
+                usage_fee_wagon_calc_fee_amount = sum_count_wagon > 0 ? Number(sum_usage_fee_sum_calc_fee_amount / sum_count_wagon).toFixed(2) : 0.00;
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                //this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                //    $(this.footer()).html(getHourFromMins(sum_usage_fee_sum_calc_time));
+                //});
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_time').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_time));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_time').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_time);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_sum_calc_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_sum_calc_fee_amount).toFixed(2));
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_calc_fee_amount').every(function () {
+                    $(this.footer()).html(usage_fee_wagon_calc_fee_amount);
+                });
+                this.obj_t_report.columns('.fl-usage_fee_wagon_persent_fee_amount').every(function () {
+                    $(this.footer()).html(Number(sum_usage_fee_wagon_persent_fee_amount).toFixed(0));
+                });
+                break;
+            };
+            case 'residue_total_operators': {
+                if (data) {
+                    var sum_start = 0;
+                    var sum_arrival = 0;
+                    var sum_outgoing = 0;
+                    var sum_stop = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_start += el.start;
+                        sum_arrival += el.arrival;
+                        sum_outgoing += el.outgoing;
+                        sum_stop += el.stop;
+                    });
+                }
+                this.obj_t_report.columns('.fl-residue_total_operators_start').every(function () {
+                    $(this.footer()).html(sum_start);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_arrival').every(function () {
+                    $(this.footer()).html(sum_arrival);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_outgoing').every(function () {
+                    $(this.footer()).html(sum_outgoing);
+                });
+                this.obj_t_report.columns('.fl-residue_total_operators_stop').every(function () {
+                    $(this.footer()).html(sum_stop);
+                });
+                break;
+            };
+            case 'residue_total_common': {
+                if (data) {
+                    var sum_total = 0;
+                    var sum_external = 0;
+                    var sum_paid = 0;
+                    var sum_accounting = 0;
+                    var sum_amkr = 0;
+                    var count = 0
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_total += el.total;
+                        sum_external += el.external;
+                        sum_paid += el.paid;
+                        sum_accounting += el.accounting;
+                        sum_amkr += el.amkr;
+                        count++;
+                    });
+                }
+                this.obj_t_report.columns('.fl-residue_total_common_total').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_total / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_external').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_external / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_paid').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_paid / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_accounting').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_accounting / count).toFixed(0) : 0);
+                });
+                this.obj_t_report.columns('.fl-residue_total_common_amkr').every(function () {
+                    $(this.footer()).html(count > 0 ? Number(sum_amkr / count).toFixed(0) : 0);
+                });
+                break;
+            };
+
+            case 'residue_total_markup_arr':
+            case 'residue_total_markup_curr':
+            case 'residue_total_genus': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon ? Number(el.perent_wagon) : 0);
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(sum_perent_wagon ? Number(sum_perent_wagon).toFixed(1) : Number(0).toFixed(2));
+                });
+                break;
+            };
+            case 'residue_total_markup_operator':
+            case 'residue_total_genus_station_amkr':
+            case 'residue_total_station_out': {
+                if (data) {
+                    var sum_count_wagon = 0;
+                    var sum_perent_wagon = 0;
+                    //var sum_count_account_balance = 0;
+                    $.each(data, function (i, el) {
+                        sum_count_wagon += el.count_wagon;
+                        sum_perent_wagon += (el.perent_wagon !== null ? Number(el.perent_wagon) : 0);
+                    });
+                }
+                this.obj_t_report.columns('.fl-total_count_wagon').every(function () {
+                    $(this.footer()).html(sum_count_wagon);
+                });
+                this.obj_t_report.columns('.fl-total_perent_wagon').every(function () {
+                    $(this.footer()).html(Number(sum_perent_wagon).toFixed(0));
+                });
+                break;
+            };
         };
     };
     // Инициализация таблицы детально
@@ -5673,9 +8789,9 @@
                         }
                     }
                 }.bind(this);
-                // Получить прерырущие отправки с АМКР
+                // Получить предыдущие отправки с АМКР
                 $.each(this.wagons, function (i, el) {
-                    this.ids_wsd.getViewPreviousOutgoingCarsOfIDWIR(el.id_wir, function (outgoing_car) {
+                    this.ids_wsd.getViewPreviousOutgoingCarsOfIDWIR(el.id_wir, el.num, function (outgoing_car) {
                         el['previous_outgoing_car'] = outgoing_car;
                         process_load--;
                         out_load(process_load);

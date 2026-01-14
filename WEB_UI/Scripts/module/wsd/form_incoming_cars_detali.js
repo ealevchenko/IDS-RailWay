@@ -29,7 +29,7 @@
     var gruzp_min_value = 0.0;                      // Минимальное значение
     var gruzp_max_value = 112.0;                    // Минимальное значение
     var ves_tary_arc_min_value = 0.0;               // Минимальное значение
-    var ves_tary_arc_max_value = 51.0;             // Минимальное значение
+    var ves_tary_arc_max_value = 51.0;             // Минимальное значение;   
     var u_tara_min_value = 0.0;                     // Минимальное значение
     var u_tara_max_value = 51.0;                   // Минимальное значение
     var select_uz_info = true;                     // Делать запрос в УЗ
@@ -1976,10 +1976,40 @@
                     element_check: function (value) {
                         if (value && Number(value) >= 0) {
                             this.elements.input_number_consignee_code.val(value);
+                            this.ids_consignee = this.get_ids_consignee(value);
+                            if (this.ids_consignee && this.ids_consignee.id_division) {
+                                this.ids_divisions = this.get_ids_divisions(this.ids_consignee.id_division, null, null);
+                                this.view_element(this.ids_divisions,
+                                    function (value) {
+                                        // Получили ответ
+                                        this.elements.input_text_division_code.val(this.ids_divisions.code);
+                                        this.elements.autocomplete_division_name.text(this.ids_divisions.name);
+                                        this.form.set_validation_object_ok(null, 'division_name', "Ок", true);
+                                    }.bind(this),
+                                    function (value) {
+                                        // нет данных в ИДС
+                                        this.elements.input_text_division_code.val('');
+                                        this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_add_division_name', App.Langs), true);
+
+                                    }.bind(this),
+                                    function (value) {
+                                        // нет входных данных данных 
+                                        this.elements.input_text_division_code.val('');
+                                        this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
+                                    }.bind(this)
+                                );
+                            } else {
+                                this.elements.input_text_division_code.val('');
+                                this.elements.autocomplete_division_name.text('');
+                                this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
+                            }
                             this.form.set_validation_object_ok(null, 'consignee_name', "Ок", true);
                         } else {
-                            this.elements.input_number_consignee_code.val("");
+                            this.elements.input_number_consignee_code.val('');
                             this.form.set_validation_object_error(null, 'consignee_name', langView('ficcd_mess_valid_not_consignee_name', App.Langs), true);
+                            this.elements.input_text_division_code.val('');
+                            this.elements.autocomplete_division_name.text('');
+                            this.form.set_validation_object_error(null, 'division_name', langView('ficcd_mess_valid_not_division_name', App.Langs), true);
                         }
                     }.bind(this),
                 },
@@ -2467,7 +2497,7 @@
                     label: langView('ficcd_label_ves_tary_arc', App.Langs),
                     label_class: 'mb-1',
                     input_size: null,
-                    input_class: 'inp-manual-epd',
+                    input_class: 'inp-manual-epd',//inp-manual-epd
                     input_title: langView('ficcd_title_ves_tary_arc', App.Langs),
                     input_placeholder: null,
                     input_required: null,
@@ -3033,7 +3063,7 @@
                     textarea_rows: 4,
                     textarea_cols: null,
                     input_size: null,
-                    input_class: 'inp-manual-epd',
+                    input_class: 'inp-manual-epd', //inp-manual-epd'
                     input_title: langView('ficcd_title_name_etsng', App.Langs),
                     input_placeholder: null,
                     input_required: null,
@@ -4394,8 +4424,8 @@
         this.elements.button_add_shipper.hide();
         this.elements.button_add_payer_sender.hide();
         this.elements.button_add_cargo_etsng.hide();
+        //this.elements.button_add_cargo_etsng.show();
         this.elements.button_add_cargo_gng.hide();
-
         // деактивировать элементы ЭПД (Общая)
         this.form.obj_form.validations[0].$elements.each(function () {
             if (this.is('.inp-manual-epd')) {
@@ -5044,7 +5074,7 @@
             // Общая информация
             this.elements.input_number_num_car.val(wagon.num);
             this.elements.input_number_position_arrival.val(this.wagon_settings.type === 1 ? this.wagon_settings.position : wagon.arrival_car_position_arrival);
-            this.elements.input_datetime_date_adoption_act.val(wagon.arrival_sostav_date_adoption_act);
+            this.elements.input_datetime_date_adoption_act.val(wagon.arrival_car_date_adoption_act);
             // Сделать не активным окно номер основной накладной
             //
             this.elements.input_text_document_nom_main_doc.val(nom_main_doc);
@@ -5497,7 +5527,7 @@
                         //this.form.set_validation_object_ok(null, 'name_operator', "ok", true);
                     }.bind(this), null, null
                 );
-                // Оператор на вагон
+                // Ограничение
                 this.ids_limiting_loading = this.get_ids_limiting_loading(this.ids_current_rent ? this.ids_current_rent.id_limiting : null);
                 this.view_element(this.ids_limiting_loading,
                     function (value) {
@@ -6013,6 +6043,7 @@
         if (obj_db) {
             result.code = obj_db.code;
             result.name = obj_db.name;
+            result.id_division = obj_db.id_division;
             return result;
         } else return null; // Объект не найден
     };
@@ -6193,6 +6224,28 @@
             return result;
         } else return null; // Объект не найден
     };
+    // Получить информацию по грузополучателю из базы данных ИДС
+    //form_incoming_cars_detali.prototype.get_ids_consignee = function (code, name) {
+    //    var obj_db = null;
+    //    var result = {};
+    //    if (code !== null) {
+    //        var obj = this.ids_dir.getConsignee_Of_ID(code);
+    //        obj_db = obj ? obj : null;
+    //    } else {
+    //        if (name && name !== '') {
+    //            var obj = this.ids_dir.getListConsignee_Of_Name('name', name);
+    //            obj_db = obj && obj.length > 0 ? obj[0] : 0;
+    //        } else {
+    //            return undefined; // Не один параметр не задан
+    //        }
+    //    }
+    //    if (obj_db) {
+    //        result.code = obj_db.code;
+    //        result.name = obj_db.name;
+    //        result.id_division = obj_db.id_division;
+    //        return result;
+    //    } else return null; // Объект не найден
+    //};
     // Получить информацию по платильщику по прибытию из базы данных ИДС
     form_incoming_cars_detali.prototype.get_ids_payer_sender = function (code, name) {
         var obj_db = null;
@@ -6223,8 +6276,11 @@
             obj_db = obj ? obj : null;
         } else {
             if (name && name !== '') {
-                var obj = this.ids_dir.getCargoETSNG_Of_CultureName('cargo_etsng_name', name);
-                obj_db = obj && obj.length > 0 ? obj[0] : 0;
+                //var obj = this.ids_dir.getCargoETSNG_Of_CultureName('cargo_etsng_name', name);
+                //obj_db = obj && obj.length > 0 ? obj[0] : 0;
+                var obj = this.ids_dir.getCargoETSNG_Of_Name_find('cargo_etsng_name', name, App.Lang);
+                obj_db = obj ? obj : null;
+
             } else {
                 return undefined; // Не один параметр не задан
             }
@@ -6552,15 +6608,36 @@
         valid = valid & this.form.validation_common.check_control_select_not_null(this.elements.select_condition_arrival, langView('ficcd_mess_valid_not_condition_arrival', App.Langs), '', true);
         // проверка данных с ЭПД
         valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_gruzp, gruzp_min_value, gruzp_max_value, langView('ficcd_mess_valid_range_gruzp', App.Langs).format(gruzp_min_value, gruzp_max_value), '', true);
-        valid = valid & this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
-        valid = valid & this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
+
+        var val_ves_tary_arc = this.form.validation_common.checkInputOfRange(this.elements.input_number_ves_tary_arc, ves_tary_arc_min_value, ves_tary_arc_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(ves_tary_arc_min_value, ves_tary_arc_max_value), '', true);
+        if (!val_ves_tary_arc) {
+            this.elements.input_number_ves_tary_arc.enable();
+        }
+        valid = valid & val_ves_tary_arc;
+
+        var val_ves_u_tara = this.form.validation_common.checkInputOfRange_IsNull(this.elements.input_number_u_tara, u_tara_min_value, u_tara_max_value, langView('ficcd_mess_valid_range_ves_tary', App.Langs).format(u_tara_min_value, u_tara_max_value), '', true);
+        if (!val_ves_u_tara) {
+            this.elements.input_number_u_tara.enable();
+        }
+        valid = valid & val_ves_u_tara;
+
         // Оплата
         if (this.mode_epd !== 7) {
             valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_plat, langView('ficcd_mess_valid_name_plat', App.Langs), '', langView('ficcd_mess_valid_not_name_plat', App.Langs), true);
-            valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
+            var val_number_distance_way = this.form.validation_common.check_control_input_not_null(this.elements.input_number_distance_way, langView('ficcd_mess_valid_not_distance_way', App.Langs), '', true);
+            if (!val_number_distance_way) {
+                this.elements.input_number_distance_way.enable();
+            } else {
+
+            }
+            valid = valid & val_number_distance_way;
         }
         // Грузы
-        valid = valid & this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
+        var val_name_etsng = this.form.validation_common.check_control_autocomplete(this.elements.autocomplete_name_etsng, langView('ficcd_mess_valid_name_etsng', App.Langs), '', langView('ficcd_mess_valid_not_name_etsng', App.Langs), true);
+        if (!val_name_etsng) {
+            this.elements.autocomplete_name_etsng.enable();
+        }
+        valid = valid & val_name_etsng;
         valid = valid & this.form.validation_common.check_control_input_not_null(this.elements.input_text_group_cargo, langView('ficcd_mess_valid_not_group_cargo', App.Langs), '', true);
         if (this.ids_cargo_etsng && this.ids_cargo_etsng.id_group !== null) {
             var res = list_groups_cargo.indexOf(this.ids_cargo_etsng.id_group);
@@ -7055,7 +7132,12 @@
                             note: null,//this.elements.textarea_wagon_note.val(),
                             doc_pays: this.epd.main_doc_pay,
                             doc_acts: this.epd.main_doc_acts,
-                            doc_docs: this.epd.main_doc_docs
+                            doc_docs: this.epd.main_doc_docs,
+                            date_otpr: this.epd.date_otpr,
+                            srok_end: this.epd.srok_end,
+                            date_grpol: this.epd.date_grpol,
+                            date_pr: this.epd.date_pr,
+                            date_vid: this.epd.date_vid,
                         };
                         //
                         var id_cargo = this.ids_cargo_etsng && this.ids_cargo_etsng.id_cargo !== null ? this.ids_cargo_etsng.id_cargo : null;
@@ -7116,6 +7198,7 @@
                             conts: this.epd.main_doc_conts,
                             pays: this.epd.main_doc_vagon_pay,
                             acts: this.epd.main_doc_vagon_acts,
+                            id_wagons_rent_arrival: this.ids_current_rent && this.ids_current_rent.id ? this.ids_current_rent.id : null,
                         };
                         //---------------------------------------------------------------
                         var arrival_doc = null;         // Досылочный документ 
@@ -7140,7 +7223,13 @@
                                 note: this.elements.textarea_wagon_note.val(),
                                 doc_pays: this.epd.doc_pay,
                                 doc_acts: this.epd.doc_acts,
-                                doc_docs: this.epd.doc_docs
+                                doc_docs: this.epd.doc_docs,
+
+                                date_otpr: this.epd.date_otpr,
+                                srok_end: this.epd.srok_end,
+                                date_grpol: this.epd.date_grpol,
+                                date_pr: this.epd.date_pr,
+                                date_vid: this.epd.date_vid,
                             };
                             // Вагон, досылочный документ
                             arrival_vagon_doc = {
@@ -7185,6 +7274,7 @@
                                 conts: this.epd.doc_conts,
                                 pays: this.epd.doc_vagon_pay,
                                 acts: this.epd.doc_vagon_acts,
+                                id_wagons_rent_arrival: this.ids_current_rent && this.ids_current_rent.id ? this.ids_current_rent.id : null,
                             };
                         }
                         //------------------------------------------------------------------

@@ -11,6 +11,21 @@ using System.Web.Http.Description;
 
 namespace WEB_UI.Controllers.api
 {
+    public class OperatorsAndGenus
+    {
+        public int id_operator { get; set; }
+        public int? parent_id  { get; set; }
+        public int? id_genus { get; set; }
+        public string operators_ru { get; set; }
+        public string operators_en{ get; set; }
+        public string operators_abbr_ru { get; set; }
+        public string operators_abbr_en { get; set; }
+        public int? rod_uz { get; set; }
+        public string genus_ru { get; set; }
+        public string genus_en { get; set; }
+        public string genus_abbr_ru { get; set; }
+        public string genus_abbr_en { get; set; }
+    }
 
     /// <summary>
     /// Оперативное управление
@@ -67,6 +82,22 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+        // GET: api/ids/directory/operators_wagons/genus/all
+        [Route("genus/all")]
+        [ResponseType(typeof(OperatorsAndGenus))]
+        public IHttpActionResult GetOperatorsWagonsOfGenus()
+        {
+            try
+            {
+                string sql = "select * from [IDS].[get_operators_and_genus]()";
+                List<OperatorsAndGenus> sostav = this.ef_ow.Database.SqlQuery<OperatorsAndGenus>(sql).ToList();
+                return Ok(sostav);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
         // POST api/ids/directory/operators_wagons/
         [HttpPost]
         [Route("")]

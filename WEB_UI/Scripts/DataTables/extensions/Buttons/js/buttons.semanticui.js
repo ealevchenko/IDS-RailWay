@@ -11,21 +11,37 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-se')(root, $).$;
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-se')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
 				require('datatables.net-buttons')(root, $);
 			}
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -36,6 +52,7 @@
 var DataTable = $.fn.dataTable;
 
 
+
 $.extend( true, DataTable.Buttons.defaults, {
 	dom: {
 		container: {
@@ -43,11 +60,29 @@ $.extend( true, DataTable.Buttons.defaults, {
 		},
 		button: {
 			tag: 'button',
-			className: 'ui button'
+			className: 'dt-button ui button',
+			spacerClass: 'dt-button ui button'
 		},
 		collection: {
 			tag: 'div',
-			className: 'ui basic vertical buttons'
+			className: 'ui basic vertical buttons',
+			closeButton: false
+		},
+		splitWrapper: {
+			tag: 'div',
+			className: 'dt-btn-split-wrapper buttons',
+			closeButton: false
+		},
+		splitDropdown: {
+			tag: 'button',
+			text: '&#x25BC;',
+			className: 'ui floating button dt-btn-split-drop dropdown icon',
+			closeButton: false
+		},
+		splitDropdownButton: {
+			tag: 'button',
+			className: 'dt-btn-split-drop-button ui button',
+			closeButton: false
 		}
 	}
 } );
@@ -65,5 +100,5 @@ $(document).on('buttons-popover.dt', function () {
 });
 
 
-return DataTable.Buttons;
+return DataTable;
 }));

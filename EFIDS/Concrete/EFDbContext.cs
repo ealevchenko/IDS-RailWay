@@ -14,6 +14,11 @@ namespace EFIDS.Concrete
         {
         }
 
+        // Расчет платы за пользование
+        public virtual DbSet<Usage_Fee_Period> Usage_Fee_Period { get; set; }
+        public virtual DbSet<Usage_Fee_Period_Detali> Usage_Fee_Period_Detali { get; set; }
+        public virtual DbSet<Directory_BankRate> Directory_BankRate { get; set; }
+
         // SAP Входящая поставка
         public virtual DbSet<SAPIncomingSupply> SAPIncomingSupply { get; set; }
         // SAP Исходящая поставка
@@ -55,9 +60,12 @@ namespace EFIDS.Concrete
         public virtual DbSet<InstructionalLettersWagon> InstructionalLettersWagon { get; set; }
 
         // Внутренее перемещение
+        public virtual DbSet<WagonFiling> WagonFiling { get; set; }
+        public virtual DbSet<WagonInternalMoveCargo> WagonInternalMoveCargo { get; set; }
         public virtual DbSet<WagonInternalMovement> WagonInternalMovement { get; set; }
         public virtual DbSet<WagonInternalOperation> WagonInternalOperation { get; set; }
         public virtual DbSet<WagonInternalRoutes> WagonInternalRoutes { get; set; }
+        public virtual DbSet<WagonUsageFee> WagonUsageFee { get; set; }
 
         // MORS
         public virtual DbSet<CardsWagons> CardsWagons { get; set; }
@@ -83,6 +91,8 @@ namespace EFIDS.Concrete
         public virtual DbSet<Directory_CargoETSNG> Directory_CargoETSNG { get; set; }
         public virtual DbSet<Directory_CargoGNG> Directory_CargoGNG { get; set; }
         public virtual DbSet<Directory_CargoGroup> Directory_CargoGroup { get; set; }
+
+        public virtual DbSet<Directory_Currency> Directory_Currency { get; set; }
 
         public virtual DbSet<Directory_CargoOutGroup> Directory_CargoOutGroup { get; set; }
         public virtual DbSet<Directory_Consignee> Directory_Consignee { get; set; }
@@ -135,6 +145,35 @@ namespace EFIDS.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            #region Расчет платы за пользование
+            modelBuilder.Entity<Directory_Currency>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithOptional(e => e.Directory_Currency)
+                .HasForeignKey(e => e.id_currency);
+
+            modelBuilder.Entity<Directory_Currency>()
+                .HasMany(e => e.Usage_Fee_Period1)
+                .WithOptional(e => e.Directory_Currency1)
+                .HasForeignKey(e => e.id_currency_derailment);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .Property(e => e.rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .Property(e => e.rate_derailment)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .HasMany(e => e.Usage_Fee_Period1)
+                .WithOptional(e => e.Usage_Fee_Period2)
+                .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<Usage_Fee_Period>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Usage_Fee_Period)
+                .HasForeignKey(e => e.id_usage_fee_period);
+            #endregion
 
             #region СОСТОЯНИЕ ПАРКА
             modelBuilder.Entity<ParkState_Station>()
@@ -151,6 +190,26 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Внутренее перемещение
+
+            modelBuilder.Entity<WagonFiling>()
+                .HasMany(e => e.WagonInternalMovement)
+                .WithOptional(e => e.WagonFiling)
+                .HasForeignKey(e => e.id_filing);
+
+            modelBuilder.Entity<WagonInternalMoveCargo>()
+                .HasMany(e => e.WagonInternalMoveCargo1)
+                .WithOptional(e => e.WagonInternalMoveCargo2)
+                .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<WagonInternalMovement>()
+                .HasMany(e => e.WagonInternalMoveCargo)
+                .WithOptional(e => e.WagonInternalMovement)
+                .HasForeignKey(e => e.id_wim_load);
+
+            modelBuilder.Entity<WagonInternalMovement>()
+                .HasMany(e => e.WagonInternalMoveCargo1)
+                .WithOptional(e => e.WagonInternalMovement1)
+                .HasForeignKey(e => e.id_wim_redirection);
 
             modelBuilder.Entity<WagonInternalMovement>()
                 .HasMany(e => e.WagonInternalMovement1)
@@ -184,6 +243,31 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.WagonInternalRoutes1)
                 .WithOptional(e => e.WagonInternalRoutes2)
                 .HasForeignKey(e => e.parent_id);
+
+            modelBuilder.Entity<WagonInternalRoutes>()
+                .Property(e => e.highlight_color)
+                .IsFixedLength();
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.exchange_rate)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.calc_fee_amount)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                .Property(e => e.manual_fee_amount)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<WagonUsageFee>()
+                 .HasMany(e => e.WagonInternalRoutes)
+                 .WithOptional(e => e.WagonUsageFee)
+                 .HasForeignKey(e => e.id_usage_fee);
 
             #endregion
 
@@ -487,6 +571,12 @@ namespace EFIDS.Concrete
 
             #region СПРАВОЧНИКИ ИДС
 
+            #region Валюта Directory_Currency
+            modelBuilder.Entity<Directory_Currency>()
+                .Property(e => e.code_cc)
+                .IsFixedLength();
+            #endregion
+
             #region Погран переходы Directory_BorderCheckpoint
             modelBuilder.Entity<Directory_BorderCheckpoint>()
                 .HasMany(e => e.Arrival_UZ_Document)
@@ -519,6 +609,18 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Vagon)
                 .WithOptional(e => e.Directory_Cargo)
                 .HasForeignKey(e => e.id_cargo);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Directory_Cargo)
+                .HasForeignKey(e => e.id_cargo_arrival);
+
+            modelBuilder.Entity<Directory_Cargo>()
+                .HasMany(e => e.Usage_Fee_Period_Detali1)
+                .WithOptional(e => e.Directory_Cargo1)
+                .HasForeignKey(e => e.id_cargo_outgoing);
+
+
             #endregion
 
             #region Грузы Directory_CargoETSNG
@@ -653,6 +755,12 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_Divisions
+
+            modelBuilder.Entity<Directory_Divisions>()
+                .HasMany(e => e.Directory_Consignee)
+                .WithOptional(e => e.Directory_Divisions)
+                .HasForeignKey(e => e.id_division);
+
             modelBuilder.Entity<Directory_Divisions>()
                 .HasMany(e => e.Directory_Divisions1)
                 .WithOptional(e => e.Directory_Divisions2)
@@ -700,9 +808,25 @@ namespace EFIDS.Concrete
                 .WithOptional(e => e.Directory_ExternalStation)
                 .HasForeignKey(e => e.code_stn_to);
 
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Usage_Fee_Period_Detali)
+                .WithOptional(e => e.Directory_ExternalStation)
+                .HasForeignKey(e => e.code_stn_from);
+
+            modelBuilder.Entity<Directory_ExternalStation>()
+                .HasMany(e => e.Usage_Fee_Period_Detali1)
+                .WithOptional(e => e.Directory_ExternalStation1)
+                .HasForeignKey(e => e.code_stn_to);
             #endregion
 
             #region Directory_GenusWagons
+
+            modelBuilder.Entity<Directory_GenusWagons>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithRequired(e => e.Directory_GenusWagons)
+                .HasForeignKey(e => e.id_genus)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Directory_GenusWagons>()
                 .HasMany(e => e.CardsWagons)
                 .WithRequired(e => e.Directory_GenusWagons)
@@ -787,6 +911,18 @@ namespace EFIDS.Concrete
             #endregion
 
             #region Directory_OperatorsWagons
+
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Usage_Fee_Period)
+                .WithRequired(e => e.Directory_OperatorsWagons)
+                .HasForeignKey(e => e.id_operator)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Directory_OperatorsWagons>()
+                .HasMany(e => e.Directory_OperatorsWagons1)
+                .WithOptional(e => e.Directory_OperatorsWagons2)
+                .HasForeignKey(e => e.parent_id);
+
             // Морс
             modelBuilder.Entity<Directory_OperatorsWagons>()
                 .HasMany(e => e.CardsWagons)
@@ -1058,6 +1194,11 @@ namespace EFIDS.Concrete
                 .HasMany(e => e.Outgoing_UZ_Vagon1)
                 .WithOptional(e => e.Directory_WagonsRent1)
                 .HasForeignKey(e => e.id_wagons_rent_outgoing);
+
+            modelBuilder.Entity<Directory_WagonsRent>()
+                .HasMany(e => e.Arrival_UZ_Vagon)
+                .WithOptional(e => e.Directory_WagonsRent)
+                .HasForeignKey(e => e.id_wagons_rent_arrival);
             #endregion
 
             #region Directory_Ways

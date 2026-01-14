@@ -40,7 +40,7 @@
     //=============================================================================================================
     //======= WagonInternalRoutes (Внутреннее перемещение вагона на АМКР) =========================================================================
     // Вернуть строки внутренего перемещения указанного вагона
-    ids_wsd.prototype.getWagonInternalRoutesOfNum= function (num, callback) {
+    ids_wsd.prototype.getWagonInternalRoutesOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/wir/wagon/num/' + num,
@@ -63,7 +63,7 @@
         });
     };
     // Вернуть открытую последнюю строку внутреннего перемещения вагона
-    ids_wsd.prototype.getOpenWagonInternalRoutesOfNum= function (num, callback) {
+    ids_wsd.prototype.getOpenWagonInternalRoutesOfNum = function (num, callback) {
         $.ajax({
             type: 'GET',
             url: '../../api/ids/rwt/wir/open/wagon/num/' + num,
@@ -163,6 +163,31 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postChangeCommercialCondition", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //АРМ, сервис "Заадресовка вагонов"
+    ids_wsd.prototype.postChangeWagonAddressing = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/wagon_addressing/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeWagonAddressing", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
@@ -695,6 +720,29 @@
             },
         });
     };
+    // Получить все грузы по вагонам пришедших с ШУ за период
+    ids_wsd.prototype.getMineCargoIncomingCarsOfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/arrival_cars/mine_cargo/car/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getMineCargoIncomingCarsOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     // Операция принять вагон (перенести в левую часть)
     ids_wsd.prototype.postOperationIncomingWagon = function (operation, callback) {
         $.ajax({
@@ -1089,10 +1137,10 @@
         });
     };
     // Получить информацию по отправленному вагону предыдущего прибытия вагона на АМКР(по id_wir текущего прибытия)
-    ids_wsd.prototype.getViewPreviousOutgoingCarsOfIDWIR = function (id, callback) {
+    ids_wsd.prototype.getViewPreviousOutgoingCarsOfIDWIR = function (id, num, callback) {
         $.ajax({
             type: 'GET',
-            url: '../../api/ids/rwt/outgoing_cars/view/car/previous/wir/id/' + id,
+            url: '../../api/ids/rwt/outgoing_cars/view/car/previous/wir/id/' + id + "/num/" + num,
             async: true,
             dataType: 'json',
             beforeSend: function () {
@@ -1445,7 +1493,7 @@
                 AJAXBeforeSend();
             },
             success: function (data) {
-                
+
                 if (typeof callback === 'function') {
                     callback(data);
                 }
@@ -2200,11 +2248,11 @@
     //                                  РАЗДЕЛ ОТЧЕТЫ ДЕПАРТАМЕНТ ПО ПРОДАЖАМ
     //=============================================================================================================
     //Добавить поставку
-    ids_wsd.prototype.postReportBorderCrossingOfNums = function (nums, callback) {
+    ids_wsd.prototype.postReportBorderCrossingOfNums = function (option, callback) {
         $.ajax({
             url: '../../api/ids/rwt/wsd/report/sd/border_crossing/',
             type: 'POST',
-            data: JSON.stringify(nums),
+            data: JSON.stringify(option),
             contentType: "application/json;charset=utf-8",
             async: true,
             beforeSend: function () {
@@ -2436,6 +2484,29 @@
             },
         });
     };
+    // Получить отчет по текущему оператору АМКР (Информация по вагону и собственнику) номеру вагона
+    ids_wsd.prototype.getReportCurrentOperationWagonOfID_Wir = function (id_wir, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/report/td/current_operation_wagon/id_wir/' + id_wir,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportCurrentOperationWagonOfID_Wir", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
     //Получить отправленные вагоны по условию выбора
     ids_wsd.prototype.postReportOutgoingWagonOfWhere = function (where, callback) {
         $.ajax({
@@ -2455,6 +2526,439 @@
             error: function (x, y, z) {
                 LockScreenOff();
                 OnAJAXError("ids_wsd.postReportOutgoingWagonOfWhere", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить отправленные вагоны за период (для отчетов)
+    ids_wsd.prototype.getReportViewOutgoingCarsOfPeriod = function (start, stop, is_acts, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString() + '/is_acts/' + is_acts,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOutgoingCarsOfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить отправленные вагоны по номеру вагона (для отчетов)
+    ids_wsd.prototype.getViewOutgoingCarsOfNum = function (num, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/outgoing_cars/view/num/' + num,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getViewOutgoingCarsOfNum", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить оперативный остаток на определенную дату
+    ids_wsd.prototype.getReportViewOperatingBalanceOfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/operating_balance/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOperatingBalanceOfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить оперативный остаток (Новый Отчет остаток вагонов (общий)) на определенную дату
+    ids_wsd.prototype.getReportViewRemainderWagonsOfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/remainder_wagons/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewRemainderWagonsOfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить остаток по операторам за период 
+    ids_wsd.prototype.getReportViewOperators_OB_OfPeriod = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/operators/operating_balance/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewOperators_OB_OfPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить текущий оперативный остаток на указанную дату
+    ids_wsd.prototype.getReportViewCurrent_OB_OfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/current/operating_balance/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data, date);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewCurrent_OB_OfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить текущий оперативный остаток (для отчетов) на указанную дату
+    ids_wsd.prototype.getReportViewReport_OB_OfDate = function (date, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/wsd/view/report/operating_balance/date/' + moment.utc(date).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data, date);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportViewReport_OB_OfDate", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+
+    //=============================================================================================================
+    //                                  РАЗДЕЛ ПЛАТА ЗА ПОЛЬЗОВАНИЕ
+    //=============================================================================================================
+    //Получить все периоды
+    ids_wsd.prototype.getUsageFeePeriod = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить все периоды
+    ids_wsd.prototype.getUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/operator/' + id_operator + '/genus/' + id_genus,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriodOfOperatorGenus", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить все периоды
+    ids_wsd.prototype.getLastUsageFeePeriodOfOperatorGenus = function (id_operator, id_genus, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/last/operator/' + id_operator + '/genus/' + id_genus,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getLastUsageFeePeriodOfOperatorGenus", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Добавить обновить периоды
+    ids_wsd.prototype.postChangeUsageFeePeriod = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/usage_fee_period/change/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeUsageFeePeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получить ставки на вагоны за период (для отчетов)
+    ids_wsd.prototype.getReportUsage_Fee_PeriodOfDateTime = function (start, stop, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/start/' + moment.utc(start).toISOString() + '/stop/' + moment.utc(stop).toISOString(),
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getReportUsage_Fee_PeriodOfDateTime", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Обновить плату за пользование
+    ids_wsd.prototype.postUpdateManualFeeAmount = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/usage_fee/manual_fee_amount/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateManualFeeAmount", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    //Получить детали по выбраному периоду
+    ids_wsd.prototype.getUsageFeePeriodDetaliOfIDPeriod = function (id_usage_fee_period, callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/rwt/usage_fee/period/detali/id_period/' + id_usage_fee_period,
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getUsageFeePeriodDetaliOfIDPeriod", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Добавить обновить детали периода
+    ids_wsd.prototype.postChangeUsageFeePeriodDetali = function (operation, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/usage_fee_period_detali/change/',
+            type: 'POST',
+            data: JSON.stringify(operation),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postChangeUsageFeePeriodDetali", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Удалить детали периода
+    ids_wsd.prototype.deleteUsageFeePeriodDetali = function (id, callback) {
+        $.ajax({
+            url: '../../api/ids/rwt/wsd/service/operation/delete/usage_fee_period_detali/id/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.deleteUsageFeePeriodDetali", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Выполнить расчет платы за пользование по сданному составу
+    ids_wsd.prototype.getCalcUsageFeeOfOutgoingSostav = function (id_sostav, callback) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/view/calc_wagon/outgoing/sostav/' + id_sostav,
+            async: true,
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_wsd.getCalcUsageFeeOfOutgoingSostav", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Выполнить обновление писем привязка вагонов к прибытию и отправке
+    ids_wsd.prototype.postUpdateOpenInstructionalLetters = function (callback) {
+        $.ajax({
+            url: 'https://krr-app-paweb01.europe.mittalco.com/IDSRW_API/WSD/operation/open_instructional_letters/update/',
+            //url: 'https://localhost:7280/WSD/operation/open_instructional_letters/update/',
+            type: 'POST',
+            data: JSON.stringify([0]),
+            contentType: "application/json;charset=utf-8",
+            async: true,
+            xhrFields: {
+                withCredentials: true
+            },
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                LockScreenOff();
+                OnAJAXError("ids_wsd.postUpdateOpenInstructionalLetters", x, y, z);
             },
             complete: function () {
                 AJAXComplete();

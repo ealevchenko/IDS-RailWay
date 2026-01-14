@@ -32,7 +32,8 @@ namespace Test.TestModule
         {
 
             IDSTransfer ids = new IDSTransfer(service.Test);
-            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(64566136, null);
+            DateTime dt_arrival = new DateTime(2023, 11, 14, 16, 10, 0);
+            string res = ids.AddUpdateUZ_DOC_To_DB_IDS(61337481, dt_arrival);
             Console.WriteLine("num_doc = {0}", res);
         }
         /// <summary>
@@ -44,13 +45,13 @@ namespace Test.TestModule
         //    IDSTransfer ids = new IDSTransfer(service.Test);
         //    ids.InsertOutgoingSostavOfKis();
         //}
+        //TODO: Удалил
+        //public void IDSTransfer_IncomingArrivalSostav()
+        //{
 
-        public void IDSTransfer_IncomingArrivalSostav()
-        {
-
-            IDSTransfer ids = new IDSTransfer(service.Test);
-            int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
-        }
+        //    IDSTransfer ids = new IDSTransfer(service.Test);
+        //    int res = ids.IncomingArrivalSostav(42407, new List<int> { 63664767 }, @"EUROPE\ealevchenko");
+        //}
 
         //public void IDSTransfer_IncomingArrivalSostav_All()
         //{
@@ -122,7 +123,6 @@ namespace Test.TestModule
         #endregion
 
         #region IDSDirectory
-
         public void IDSDirectory_GetID_Directory_StationOfCodeCS()
         {
 
@@ -139,13 +139,13 @@ namespace Test.TestModule
 
         }
 
-        public void IDSDirectory_IsCorrectNumCar()
-        {
+        //public void IDSDirectory_IsCorrectNumCar()
+        //{
 
-            IDSDirectory ids = new IDSDirectory(service.Test);
-            bool res = ids.IsCorrectNumCar(12345678);
+        //    IDSDirectory ids = new IDSDirectory(service.Test);
+        //    bool res = ids.IsCorrectNumCar(12345678);
 
-        }
+        //}
 
         public void IDSDirectory_OperationAutoPositionWayOfPark()
         {
@@ -180,6 +180,13 @@ namespace Test.TestModule
 
         #region IDS_Directory
 
+        public void IDS_Directory_ClearDirectory_Cargo()
+        {
+
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int res = ids.ClearDirectory_Cargo();
+
+        }
         /// <summary>
         /// Тест считования и создания внешней станции
         /// </summary>
@@ -204,7 +211,7 @@ namespace Test.TestModule
         public void IDS_GetDirectory_ChangeNumWagon()
         {
             IDS_Directory ids = new IDS_Directory(service.Test);
-            int result = ids.ChangeNumWagon(27015, 22012, @"EUROPE\ealevchenko");
+            int result = ids.ChangeNumWagon(41551862, 2246, @"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result);
         }
 
@@ -219,6 +226,21 @@ namespace Test.TestModule
             IDS_Directory ids = new IDS_Directory(service.Test);
             ResultUpdateWagon result = ids.CorrectDateTime_Of_Directory_WagonsRenf(@"EUROPE\ealevchenko");
             Console.WriteLine("result = {0}", result.result);
+        }
+        public void IDS_Directory_UpdateArrivalRentWagon()
+        {
+            //2024-01-05 00:00:00.000
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            int result = ids.UpdateArrivalRentWagon(61138012, new DateTime(2024, 1, 5, 0, 0, 0), @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
+        }
+
+        public void IDS_Directory_UpdateArrivalRentWagons()
+        {
+            IDS_Directory ids = new IDS_Directory(service.Test);
+            List<int> nums = new List<int>() { 56868052 };
+            int result = ids.UpdateArrivalRentWagons(nums, new DateTime(2023, 3, 11, 0, 0, 0), @"EUROPE\ealevchenko");
+            Console.WriteLine("result = {0}", result);
         }
 
         #endregion
@@ -366,15 +388,22 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             ResultUpdateWagon res = ids.OperationReturnProvideWagons(62606, "TEST");
         }
-
+        // Тест операции сброса ЭПД 
+        public void IDS_WIR_OperationClearEPDSendingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            OperationResultID res = ids.OperationClearEPDSendingSostav(232033, @"EUROPE\ealevchenko"); //231984
+        }
         // Тест операции обновления ЭПД 
         public void IDS_WIR_OperationUpdateEPDSendingSostav()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64117, "TEST");
-            //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64339, "TEST");
-            //OperationResultID res = ids.OperationUpdateEPDSendingSostav(64208, "TEST");
-            OperationResultID res = ids.OperationUpdateEPDSendingSostav(149626, "TEST");
+            OperationResultID res = ids.OperationUpdateEPDSendingSostav(398167, @"EUROPE\ealevchenko"); //231984
+        }
+        public void IDS_WIR_OperationUpdateEPDSendingCar()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(1235313, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
@@ -384,7 +413,7 @@ namespace Test.TestModule
         public void IDS_WIR_CloseWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 377878, 448015, 468761, 469337, 482173, 469338, 482821, 482526, 482527, 482529, 468715, 480427, 482177, 482178, 482030, 482028, 482027, 482033, 482162, 482160 };
+            List<int> list = new List<int>() { 957259, 957260, 957261, 957581, 957585, 957615, 957616, 957618, 957964, 957965, 957966, 957967, 957968, 958012, 958286, 958287, 958288, 958289, 958290, 958291, 958292, 958293, 958294, 958295, 958296, 958297, 958298, 958299, 958300, 958301, 958302, 958303, 958304, 958305, 958306, 958307 };
             int res = ids.CloseWir(list, DateTime.Now, "Запись закрыта принудительно (очистка согласно положению парка)", @"EUROPE\ealevchenko");
         }
         /// <summary>
@@ -393,7 +422,7 @@ namespace Test.TestModule
         public void IDS_WIR_DeleteDoubleWir()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            List<int> list = new List<int>() { 647535, 647536, 647538, 647539, 647541, 647543, 647544, 647547, 647549, 647108, 647109, 647110, 647111, 647115, 647332, 647333, 647501, 647502, 647503, 647504, 647508, 647514, 647515, 647531, 647532, 647533, 647534 };
+            List<int> list = new List<int>() { 343801, 438772, 423374, 343860, 423305, 343814, 343827, 466263, 423375, 343961, 343993, 344007, 535163, 545025, 343990, 343992, 343919, 343962, 343947, 343948, 344016, 423358, 343950 };
             int res = ids.DeleteDoubleWir(list);
         }
         /// <summary>
@@ -421,18 +450,54 @@ namespace Test.TestModule
             }
         }
         /// <summary>
-        ///  Поставить вагон в систему ИДС
+        /// Административная функция исправить документ по прибытию
         /// </summary>
-        public void IDS_WIR_IncomingWagon()
+        //public void IDS_WIR_OperationUpdateEPDIncomingWagon()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    ids.OperationUpdateEPDIncomingWagon(1666409, @"EUROPE\ealevchenko");
+        //}
+
+        public void IDS_WIR_ReportBorderCrossingOfNumsEPD()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            EFDbContext context = new EFDbContext();
-            EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
-            ArrivalCars wagon = ef_car.Context.Where(c => c.id == 1120017).FirstOrDefault();
-            int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021, 08, 30, 15, 50, 00), 113, wagon, @"EUROPE\ealevchenko");
-            int res_sava = context.SaveChanges();
-            //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
+            List<int> list = new List<int>() { 851717, 851725, 851733, 851741, 851758, 852301, 852319, 852327, 852632, 43302066, 43302074, 43302082, 43302090, 43302108, 43302116, 43302124, 43302132, 43302157, 43302165, 43302173, 43302181, 43302199, 43302207, 43302215, 43302223, 43302231, 43302249, 43302256, 43302264, 43302272, 43302280, 43302298, 43302306, 43302314, 43302322, 43302330, 43302348, 43302355, 43302363, 43302371, 43302389, 43302397, 43302405, 43302413, 43302421, 43302439, 43302447, 43302454, 43302462, 43302470, 43302488, 43302496, 43302504, 43302512, 43302520, 43302538, 43302546, 43302553, 43302561, 43302579, 43302587, 43302595, 43315613, 43315621, 43315639, 43315647, 43315662, 43315670, 43315688, 43315696, 43315704, 43315712, 43315720, 43315738, 43315746, 43315753, 43315761, 43315779, 43315787, 43315795, 43315803, 43315811, 43315829, 43315837, 43315845, 43315852, 43315860, 43315878, 43315886, 43315894, 43315902, 43315910, 43315928, 43315936, 43315944, 43315951, 43315969, 43315977, 43315985, 43315993, 43316009, 43316017, 43316025, 43316033, 43316041, 43316058, 43316066, 43316074, 43316082, 43316090, 43316108, 43316116, 43316124, 43316132, 43316140, 43333913, 43333921, 43333939, 43333947, 43333954, 43333962, 43333970, 43333988, 43333996, 43334002, 43334010, 43334028, 43334036, 43334044, 43334051, 43334069, 43334077, 43334085, 43334093, 43334101, 43334119, 43334127, 43334135, 43334143, 43334150, 43334168, 43334176, 43334184, 43334192, 43334200, 43334218, 43334226, 43334234, 43334242, 43334259, 43334275, 43334283, 43334291, 43334309, 43334317, 43334325, 43334333, 43334358, 43334366, 43334374, 43334382, 43334390, 43334408, 43334416, 43334424, 43334432, 43334440, 43334457 };
+            List<ReportBorderCrossing> res = ids.GetReportBorderCrossingOfNumsEPD(list);
+            foreach (ReportBorderCrossing rep in res)
+            {
+                Console.WriteLine("{0};{1};{2};{3};{4};{5};{6}", rep.num_doc, rep.num_uz, rep.cross_time, rep.border_crossing_stn, rep.border_crossing_stn_name, rep.epd_date_otpr, rep.epd_date_pr);
+            }
         }
+        public void IDS_WIR_ReportBorderCrossingOfNumsEPD_DB()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            List<int> list = new List<int>() { 851717, 851725, 851733, 851741, 851758, 852301, 852319, 852327, 852632, 43302066, 43302074, 43302082, 43302090, 43302108, 43302116, 43302124, 43302132, 43302157, 43302165, 43302173, 43302181, 43302199, 43302207, 43302215, 43302223, 43302231, 43302249, 43302256, 43302264, 43302272, 43302280, 43302298, 43302306, 43302314, 43302322, 43302330, 43302348, 43302355, 43302363, 43302371, 43302389, 43302397, 43302405, 43302413, 43302421, 43302439, 43302447, 43302454, 43302462, 43302470, 43302488, 43302496, 43302504, 43302512, 43302520, 43302538, 43302546, 43302553, 43302561, 43302579, 43302587, 43302595, 43315613, 43315621, 43315639, 43315647, 43315662, 43315670, 43315688, 43315696, 43315704, 43315712, 43315720, 43315738, 43315746, 43315753, 43315761, 43315779, 43315787, 43315795, 43315803, 43315811, 43315829, 43315837, 43315845, 43315852, 43315860, 43315878, 43315886, 43315894, 43315902, 43315910, 43315928, 43315936, 43315944, 43315951, 43315969, 43315977, 43315985, 43315993, 43316009, 43316017, 43316025, 43316033, 43316041, 43316058, 43316066, 43316074, 43316082, 43316090, 43316108, 43316116, 43316124, 43316132, 43316140, 43333913, 43333921, 43333939, 43333947, 43333954, 43333962, 43333970, 43333988, 43333996, 43334002, 43334010, 43334028, 43334036, 43334044, 43334051, 43334069, 43334077, 43334085, 43334093, 43334101, 43334119, 43334127, 43334135, 43334143, 43334150, 43334168, 43334176, 43334184, 43334192, 43334200, 43334218, 43334226, 43334234, 43334242, 43334259, 43334275, 43334283, 43334291, 43334309, 43334317, 43334325, 43334333, 43334358, 43334366, 43334374, 43334382, 43334390, 43334408, 43334416, 43334424, 43334432, 43334440, 43334457 };
+            DateTime dt_start = new DateTime(2023, 11, 1, 00, 00, 00);
+            DateTime dt_stop = new DateTime(2024, 1, 1, 00, 00, 00);
+            List<ReportBorderCrossing> res = ids.GetReportBorderCrossingOfNumsEPD_DB(list, 7932, dt_start, dt_stop);
+            foreach (ReportBorderCrossing rep in res)
+            {
+                if (rep.num_uz != null)
+                {
+                    Console.WriteLine("{0};{1};{2};{3};{4}", rep.num_doc, rep.num_uz, rep.cross_time, rep.border_crossing_stn, rep.border_crossing_stn_name);
+
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Поставить вагон в систему ИДС
+        /// </summary>
+        //public void IDS_WIR_IncomingWagon()
+        //{
+        //    IDS_WIR ids = new IDS_WIR(service.Test);
+        //    EFDbContext context = new EFDbContext();
+        //    EFArrivalCars ef_car = new EFArrivalCars(new EFDbContext());
+        //    ArrivalCars wagon = ef_car.Context.Where(c => c.id == 1120017).FirstOrDefault();
+        //    int result = ids.IncomingWagon(ref context, 6, 109, new DateTime(2021, 08, 30, 15, 50, 00), 113, wagon, @"EUROPE\ealevchenko");
+        //    int res_sava = context.SaveChanges();
+        //    //Ошибка выполнения метода IncomingWagon(context=EFIDS.Concrete.EFDbContext, id_station=6, id_way=109, date_start=30.08.2021 15:50:00, position=113, wagon=System.Data.Entity.DynamicProxies.ArrivalCars_274B60BC2D59FA04CEDD4289498D58C1EE9453D9D01127990A0A0D4D3044D283, user=EUROPE\svnovikova)
+        //}
         // Тест формирования отчета операции отправки (вагоны)
         public void IDS_WIR_GetWagonsOperationOfSend()
         {
@@ -477,7 +542,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateUZ_DOC1()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            ids.OperationUpdateUZ_DOC("500512", 62073481, true, true);
+            ids.OperationUpdateUZ_DOC("46053179", 55113211, true, true, false);
         }
         /// <summary>
         /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
@@ -487,11 +552,11 @@ namespace Test.TestModule
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> consignees = new List<int>() { 7932, 6302, 659 };
             List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
-            DateTime? dt_arrival = new DateTime(2022, 5, 26, 10, 33, 00);
+            DateTime? dt_arrival = new DateTime(2026, 1, 07, 10, 44, 00);
             //2021-12-03 11:42:05.133
             //52830882
             // 2022-05-06 06:40:00
-            ids.OperationUpdateUZ_DOC(56460728, consignees, stations, dt_arrival, -36, true, true);
+            ids.OperationUpdateUZ_DOC(60633971, consignees, stations, dt_arrival, -36, true, true);
         }
         /// <summary>
         /// Тест поиска документа по номеру вагона грузополучателям , станциям и времени
@@ -504,6 +569,14 @@ namespace Test.TestModule
             //52830882
             // 2022-05-06 06:40:00
             ids.OperationUpdateUZ_DOC(52926623, dt_arrival, true, true);
+        }
+        public void IDS_WIR_OperationUpdateUZ_DOC_Adp_Out()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime? dt_old_outgoing = new DateTime(2023, 09, 15, 17, 50, 00); // 2023-09-15 17:50:00.000
+            DateTime dt_adoption = new DateTime(2023, 10, 28, 07, 30, 00);     // 2023-10-28 07:30:00.000
+            int num = 51553246; //61337481
+            ids.OperationUpdateUZ_DOC(num, dt_old_outgoing, dt_adoption, true, true);
         }
 
         public void IDS_WIR_OperationManualSearchIncomingWagon()
@@ -518,7 +591,7 @@ namespace Test.TestModule
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
             List<int> nums = new List<int>() { 64072010, 67277707, 60807781 };
-            ids.GetReportBorderCrossingOfNums(nums);
+            //ids.GetReportBorderCrossingOfNums(nums);
 
         }
         /// <summary>
@@ -536,14 +609,15 @@ namespace Test.TestModule
         public void IDS_WIR_UpdateArrival_UZ_Documents()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
+            //ResultUpdateID result = ids.UpdateArrival_UZ_Documents(@"EUROPE\ealevchenko");
+            ResultUpdateID result = ids.UpdateArrival_UZ_Documents(null);
         }
         /// <summary>
         /// Обновим базу данных по входящим вагонам из ЭПД найденного по id_doc (внутренему) 
         /// </summary>
         public void IDS_WIR_Update_Arrival_UZ_Doc_Of_ID_DOC()
         {
-            string id_doc = "85960095";
+            string id_doc = "35000000000533640749";
 
             IDS_WIR ids = new IDS_WIR(service.Test);
             EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
@@ -557,6 +631,48 @@ namespace Test.TestModule
             }
             if (upd_doc_uz == null) return;
             ResultUpdateID res = ids.Update_Arrival_UZ_Doc(ref context, upd_doc_uz, @"EUROPE\ealevchenko");
+            int res_ = context.SaveChanges();
+        }
+        public void IDS_WIR_Update_Arrival_UZ_Doc()
+        {
+            try
+            {
+                IDS_WIR ids = new IDS_WIR(service.Test);
+                EFIDS.Concrete.EFDbContext context = new EFIDS.Concrete.EFDbContext();
+                EFArrival_UZ_Document ef_arr_uz_doc = new EFArrival_UZ_Document(context);
+                UZ.UZ_Convert convert = new UZ.UZ_Convert(service.Test);
+                EFUZ_DOC uz_doc = new EFUZ_DOC(context);
+
+                DateTime dt = new DateTime(2023, 1, 1, 0, 0, 0);
+                List<Arrival_UZ_Document> docs = ef_arr_uz_doc.Context.Where(d => d.id_doc_uz != null && d.create > dt && d.date_otpr == null).ToList();
+                int count = docs.Count();
+                foreach (Arrival_UZ_Document arr_uz_doc in docs)
+                {
+
+                    UZ_DOC doc = uz_doc.Context.Where(d => d.num_doc == arr_uz_doc.id_doc_uz).FirstOrDefault();
+                    if (doc != null)
+                    {
+                        string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                        UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        if (otpr != null)
+                        {
+                            arr_uz_doc.date_otpr = otpr.date_otpr;
+                            arr_uz_doc.srok_end = otpr.srok_end;
+                            arr_uz_doc.date_grpol = otpr.date_grpol;
+                            arr_uz_doc.date_pr = otpr.date_pr;
+                            arr_uz_doc.date_vid = otpr.date_vid;
+                            ef_arr_uz_doc.Update(arr_uz_doc);
+                            int res = context.SaveChanges();
+
+                            Console.WriteLine(String.Format("Doc - {0}, Result - {1}, Count - {2} ", arr_uz_doc.id_doc_uz, res, count--));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         /// <summary>
         /// Тест обновление документов по отправленным вагонам (род, адм...) после обновления справочника
@@ -597,6 +713,61 @@ namespace Test.TestModule
         //    IDS_WIR ids = new IDS_WIR(service.Test);
         //    ids.UpdateOutgoing_Thread(new int[] {63447106, 62649314, 62975651 }, @"EUROPE\ealevchenko");
         //}
+        public void IDS_WIR_ServiceChangeUsageFeePeriod()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime start = new DateTime(2023, 1, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2023, 12, 31, 0, 0, 0);
+            List<ListUsageFee> list_period = new List<ListUsageFee>();
+            list_period.Add(new ListUsageFee() { id = 1, id_operator = 14, id_genus = 2 });
+            list_period.Add(new ListUsageFee() { id = 2, id_operator = 14, id_genus = 3 });
+            list_period.Add(new ListUsageFee() { id = 0, id_operator = 14, id_genus = 4 });
+            int result = ids.ServiceChangeUsageFeePeriod(start, stop, true, (int?)1, (decimal?)50.0f, (int?)2, (decimal?)10.3f, (float?)0.75f, (float?)1.0f, (int?)24, (int?)36, "тест", list_period, @"EUROPE\ealevchenko");
+        }
+        /// <summary>
+        /// Расчет платы за пользование по сданному составу
+        /// </summary>
+        public void IDS_WIR_CalcUsageFeeOfOutgoingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            //210779 //200473 // 210834 // 242289
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfOutgoingSostav(292944, @"EUROPE\ealevchenko");
+        }
+        public void IDS_WIR_CalcUsageFeeOfIncomingSostav()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            //210779 //200473 // 210834
+            ResultUpdateIDWagon result = ids.CalcUsageFeeOfIncomingSostav(263194, @"EUROPE\ealevchenko");
+        }
+        public void IDS_WIR_GetExchangeRate()
+        {
+            try
+            {
+                WebAPIClientBank client_bank = new WebAPIClientBank(service.Test);
+                List<ExchangeRate> list_exchange_rate = client_bank.GetExchangeRate();
+                Console.WriteLine(String.Format("Count :{0}", list_exchange_rate.Count()));
+                foreach (ExchangeRate er in list_exchange_rate)
+                {
+                    Console.WriteLine(er.cc);
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        /// <summary>
+        /// Расчет платы за пользование по сданным составам за выбранный период
+        /// </summary>
+        public void IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod()
+        {
+            IDS_WIR ids = new IDS_WIR(service.Test);
+            DateTime start = new DateTime(2024, 1, 1, 0, 0, 0);
+            DateTime stop = new DateTime(2024, 2, 6, 23, 59, 59);
+            List<ResultUpdateIDWagon> res = ids.CalcUsageFeeOfOutgoingSostav(start, stop, @"EUROPE\ealevchenko");
+        }
 
         #endregion
 
@@ -690,6 +861,32 @@ namespace Test.TestModule
                     int result = ef_uz_doc.Save();
                     //foreach (UZ.SENDER_DOC sd in otpr.sender_doc.ToList()) { 
                     Console.WriteLine("num_doc = {0}, результат сохранения : {1}, осталось {2}", doc.num_doc, result, count);
+                    //}
+                }
+            }
+        }
+        /// <summary>
+        /// Тест преобразования документов ЭПД
+        /// </summary>
+        public void Get_ConvertEPD()
+        {
+            DateTime dt = new DateTime(2025, 1, 1, 0, 0, 0);
+
+
+            UZ.UZ_Convert convert = new UZ.UZ_Convert();
+            EFIDS.Concrete.EFUZ_DOC ef_uz_doc = new EFIDS.Concrete.EFUZ_DOC(new EFIDS.Concrete.EFDbContext());
+            List<EFIDS.Entities.UZ_DOC> list_docs = ef_uz_doc.Context.Where(d => d.close == null).ToList();
+            int count = list_docs.Count();
+            foreach (EFIDS.Entities.UZ_DOC doc in list_docs)
+            {
+                count--;
+                string xml_final = convert.XMLToFinalXML(doc.xml_doc);
+                UZ.OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                if (otpr != null && otpr.nom_doc != null)
+                {
+                    //doc.num_uz = otpr.nom_doc;
+                    //int result = ef_uz_doc.Save();
+                    Console.WriteLine("num_doc = {0}, осталось {1}", doc.num_doc, count);
                     //}
                 }
             }

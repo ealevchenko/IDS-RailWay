@@ -3572,30 +3572,30 @@ IDS_RWT.prototype.postOutgoingReturnPresentWagon = function (operation_return, c
 };
 //TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция предъявить состав на УЗ
-IDS_RWT.prototype.postOperationPresentSostav = function (operation_present, callback) {
-    $.ajax({
-        url: '../../api/ids/rwt/wsd/operation/present/sostav/',
-        type: 'POST',
-        data: JSON.stringify(operation_present),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            LockScreenOff();
-            OnAJAXError("IDS_RWT.postOperationPresentSostav", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+//IDS_RWT.prototype.postOperationPresentSostav = function (operation_present, callback) {
+//    $.ajax({
+//        url: '../../api/ids/rwt/wsd/operation/present/sostav/',
+//        type: 'POST',
+//        data: JSON.stringify(operation_present),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            LockScreenOff();
+//            OnAJAXError("IDS_RWT.postOperationPresentSostav", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};
 //TODO: Отключить после переделки outgoing.js перенесен в ids_wsd.js
 //Операция отменить сдачу состава на УЗ
 IDS_RWT.prototype.postOperationReturnPresentSostav = function (operation_present, callback) {

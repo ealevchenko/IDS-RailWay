@@ -3,9 +3,10 @@
 
     var App = window.App || {};
     var $ = window.jQuery;
+    App.RoleAdm = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva']; 
     // Определим язык
-    App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
-
+    //App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
+    App.Lang = 'ru';
     // Массив текстовых сообщений 
     $.Text_View =
     {
@@ -22,6 +23,7 @@
     };
     // Определлим список текста для этого модуля
     App.Langs = $.extend(true, App.Langs, getLanguages($.Text_View, App.Lang));
+
 
     //================================================================================
     // Класс для создания объектов контроля для элементов HTML
@@ -1441,6 +1443,16 @@
         }.bind(this));
         return result;
     };
+    // Получить элемент
+    form_inline.prototype.get_element = function (id) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) return field.element
+        }
+        return null;
+    };
     // Установит значение компонента
     form_inline.prototype.set = function (id, value) {
         if (this.settings.fields) {
@@ -1463,6 +1475,22 @@
                     };
                     case 'input_number': {
                         field.element.val(value)
+                        break;
+                    };
+                }
+            }
+        }
+    };
+
+    form_inline.prototype.update = function (id, list, value) {
+        if (this.settings.fields) {
+            var field = this.settings.fields.find(function (o) {
+                return o.id === id
+            });
+            if (field && field.element) {
+                switch (field.type) {
+                    case 'select': {
+                        field.element.update(list, value, null)
                         break;
                     };
                 }
@@ -2575,6 +2603,7 @@
             this.$el.multiselect('enable');
         };
         this.disable = function (clear) {
+            if (clear) this.$el.multiselect('deselectAll', false);
             this.$el.multiselect('disable');
         };
         this.destroy = function () {
@@ -5154,6 +5183,28 @@
             }
         }
         return undefined;
+    };
+    // Активировать компонент
+    form_dialog.prototype.enable = function (id) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                element.element.enable();
+            }
+        }
+    };
+    // Деактивировать компонент
+    form_dialog.prototype.disable = function (id) {
+        if (this.obj_form.views) {
+            var element = this.obj_form.views.find(function (o) {
+                return o.name === id;
+            });
+            if (element && element.element) {
+                element.element.disable();
+            }
+        }
     };
     // Установить или обновить значение компонента
     form_dialog.prototype.val = function (id, value) {

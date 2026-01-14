@@ -25,7 +25,7 @@ namespace IDS
         not_input_list_wagons = -101,               // Ошибка, нет списка вагонов
         error_date = -102,                          // Ошибка, дата не прошла валидацию
         input_position_error = -103,                // Ошибка, позиция указана не правильно
-
+        not_input_list_change = -104,               // Ошибка, нет списка для изменения
 
         // таблица wir -200...
         not_wir_db = -201,                          // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
@@ -113,10 +113,19 @@ namespace IDS
         error_delete_park_station_apply = -705,             // Отмена удаления, состояние парка уже применили
         error_change_park_station_lock_wagon = -706,        // Отмена изменения положения парка, вагоны имеют отметку заблокирован (операция предъявления)
 
+        // Таблицы платы за пользование -750...
+        not_usage_fee_period_of_db = -751,                  // Ошибка, в базе данных нет строки периода платы за пользования
+        error_usage_fee_date_start_stop = -760,             // Ошибка, периода платы за пользования-ошибка обновления даты начало и конца
+        not_list_exchange_rate = -761,                      // Ошибка, нет данных по курсу валют
+        not_usage_fee_period_detali_of_db = -771,           // Ошибка, в базе данных нет строки детального периода платы за пользования
+        exists_usage_fee_period_detali_of_db = -772,        // Ошибка, в базе данных уже сущестует строка детального периода платы за пользования
+
         // Таблицы SAP -800..
         not_sap_is_db = -801,                               // В базе данных нет записи по SAPIncomingSupply (SAP Входящая поставка)
         not_sap_os_db = -802,                               // В базе данных нет записи по SAPOutgoingSupply (SAP Исходящая поставка)
-
+        // Плата за пользование
+        error_calc_usage_fee = -851,                        // Ошибка выполнения расчета платы за пользование
+        not_dt_calc_usage_fee = -852,                       // Ошибка (нет даты начала или конца периода) выполнения расчета платы за пользование
         // СМС
         error_connect_sms = -900,                           // Ошибка Подкллючения к модулю согласования
 
@@ -149,9 +158,10 @@ namespace IDS
         // Directory_OuterWays -1500..
         not_dir_outerways_of_db = -1501,                    // В базе данных нет записи указаного перегона
 
+        // Directory_Cargo -1600..
+        not_dir_cargo_of_db = -1601,                    // В базе данных нет записи указаного груза
 
     }
-
     public class ChangeID
     {
         public long id_old { get; set; }
@@ -188,6 +198,12 @@ namespace IDS
     /// </summary>
     public class ResultWagon
     {
+        public int num { get; set; }
+        public int result { get; set; }
+    }
+    public class ResultIDWagon
+    {
+        public long id { get; set; }
         public int num { get; set; }
         public int result { get; set; }
     }
@@ -386,6 +402,124 @@ namespace IDS
             this.add++;
         }
     }
+    public class ResultUpdateIDWagon
+    {
+        public int result { get; set; } // Глобальный ресурс выполнения всего переноса
+        public int count { get; set; }
+        public int update { get; set; }
+        public int skip { get; set; }
+        public int error { get; set; }
+        public int close { get; set; }
+        public int add { get; set; }
+
+        public long id { get; set; }
+
+        public List<ResultIDWagon> listResult = new List<ResultIDWagon>();
+
+        public ResultUpdateIDWagon(long id, int count)
+        {
+            this.count = count;
+            this.result = 0;
+            this.update = 0;
+            this.skip = 0;
+            this.error = 0;
+            this.close = 0;
+            this.add = 0;
+            this.id = id;
+            this.listResult.Clear();
+        }
+
+        public void SetUpdateResult(int result)
+        {
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip();
+            return;
+        }
+        public void SetUpdateResult(long id, int result, int num)
+        {
+            listResult.Add(new ResultIDWagon() {id = id, num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddUpdate(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetInsertResult(long id, int result, int num)
+        {
+            listResult.Add(new ResultIDWagon() {id = id,  num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            if (result > 0)
+            {
+                AddInsert(); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetSkipResult(long id, int result, int num)
+        {
+            listResult.Add(new ResultIDWagon() {id = id,  num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetErrorResult(long id, int result, int num)
+        {
+            listResult.Add(new ResultIDWagon() {id = id,  num = num, result = result });
+
+            if (result < 0)
+            {
+                AddError(result); return;
+            }
+            AddSkip(); return;
+        }
+        public void SetResult(int code)
+        {
+            this.result = code;
+        }
+        public void AddUpdate()
+        {
+            this.update++;
+        }
+        public void AddSkip()
+        {
+            this.skip++;
+        }
+        public void AddError(int err_code)
+        {
+            this.error++;
+        }
+        public void AddError()
+        {
+            this.error++;
+        }
+        public void AddClose()
+        {
+            this.close++;
+        }
+        public void AddInsert()
+        {
+            this.add++;
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -777,7 +911,6 @@ namespace IDS
             this.close++;
         }
     }
-
     public class ResultUpdateStringID
     {
         public int result { get; set; } // Глобальный ресурс выполнения всего переноса

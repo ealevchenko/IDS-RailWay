@@ -77,6 +77,7 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+        public int? kol_conductor { get; set; }
 
         public virtual Directory_Cargo Directory_Cargo { get; set; }
 

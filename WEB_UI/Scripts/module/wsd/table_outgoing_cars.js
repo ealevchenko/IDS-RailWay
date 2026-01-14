@@ -45,6 +45,10 @@
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Огран. по отправке',
             'togc_field_outgoing_uz_vagon_vesg': 'вес ЭПД',
             'togc_field_sap_outgoing_supply_netto': 'вес САП',
+            'ttdr_field_wagon_usage_fee_calc_time': 'Время пользования',
+            'ttdr_field_wagon_usage_fee_calc_fee_amount': 'Плата за пользование, грн',
+            'ttdr_field_wagon_usage_fee_downtime': 'Общий простой, час',
+            'ttdr_field_wagon_usage_fee_calc_fee_amount_final': 'Плата за пользование, грн',
 
             'togc_title_yes': 'Да',
             'togc_title_all': 'Все',
@@ -110,6 +114,10 @@
             'togc_field_outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr': 'Limited. on dispatch',
             'togc_field_outgoing_uz_vagon_vesg': 'ETD weight',
             'togc_field_sap_outgoing_supply_netto': 'SAP weight',
+            'ttdr_field_wagon_usage_fee_calc_time': 'Usage Time',
+            'ttdr_field_wagon_usage_fee_calc_fee_amount': 'User fee, UAH',
+            'ttdr_field_wagon_usage_fee_downtime': 'Total downtime, hour',
+            'ttdr_field_wagon_usage_fee_calc_fee_amount_final': 'User fee, UAH',
 
             'togc_title_yes': 'Yes',
             'togc_title_all': 'All',
@@ -416,6 +424,41 @@
             className: 'dt-body-right',
             title: langView('togc_field_sap_outgoing_supply_netto', App.Langs), width: "30px", orderable: true, searchable: true
         },
+        // Оплата
+        {
+            field: 'wagon_usage_fee_calc_time',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_calc_time !== null ? getTimeFromHour(row.wagon_usage_fee_calc_time) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_wagon_usage_fee_calc_time', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_usage_fee_calc_fee_amount',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_wagon_usage_fee_calc_fee_amount', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        // Оплата
+        {
+            field: 'wagon_usage_fee_downtime',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_downtime !== null ? getTimeFromMins(row.wagon_usage_fee_downtime) : null;
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_wagon_usage_fee_downtime', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+        {
+            field: 'wagon_usage_fee_calc_fee_amount_final',
+            data: function (row, type, val, meta) {
+                return row.wagon_usage_fee_manual_fee_amount !== null ? Number(row.wagon_usage_fee_manual_fee_amount).toFixed(2) : (row.wagon_usage_fee_calc_fee_amount !== null ? Number(row.wagon_usage_fee_calc_fee_amount).toFixed(2) : null);
+            },
+            className: 'dt-body-center',
+            title: langView('ttdr_field_wagon_usage_fee_calc_fee_amount_final', App.Langs), width: "50px", orderable: true, searchable: true
+        },
+
     ];
     // Перечень кнопок
     var list_buttons = [
@@ -492,6 +535,19 @@
             extend: 'pageLength',
         }
     ];
+
+    // Показать правильную дату
+    function getTimeFromHour(hours) {
+        return hours + ':00';
+    };
+
+    // Показать правильную дату
+    function getTimeFromMins(mins) {
+        let hours = Math.trunc(mins / 60);
+        let minutes = mins % 60;
+        return hours + ':' + minutes;
+    };
+
     //-----------------------------------------------------------------------------------------
     // Крнструктор
     function table_outgoing_cars(selector) {
@@ -533,6 +589,10 @@
         collums.push({ field: 'outgoing_uz_vagon_outgoing_wagons_rent_limiting_abbr', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_vesg', title: null, class: null });
         collums.push({ field: 'sap_outgoing_supply_netto', title: null, class: null });
+        //collums.push({ field: 'wagon_usage_fee_calc_time', title: null, class: null });
+        //collums.push({ field: 'wagon_usage_fee_calc_fee_amount', title: null, class: null });
+        collums.push({ field: 'wagon_usage_fee_downtime', title: null, class: null });
+        collums.push({ field: 'wagon_usage_fee_calc_fee_amount_final', title: null, class: null });
 
         return init_columns_detali(collums, list_collums);
     };
@@ -619,8 +679,6 @@
             };
         }
     };
-
-
     // Инициализация
     table_outgoing_cars.prototype.init = function (options) {
         this.result_init = true;
@@ -741,8 +799,9 @@
 
             }.bind(this),
             fn_edit: function (result) {
-                this.update();
-                this.out_clear();
+                //this.update();
+                this.action_refresh();
+                //this.out_clear();
                 if (result && result.data) {
                     if (result.data.status < 2) {
                         this.out_info(langView('togc_mess_ok_operation_return_present', App.Langs));

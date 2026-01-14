@@ -573,7 +573,7 @@
                 control: null,
                 list: this.list_station,
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     this.update_sostav_outer_ways_and_way_of_station(id, -1, null); // Обновим составы в прибытии и пути по выбранной станции
@@ -703,7 +703,7 @@
                 control: null,
                 list: this.get_list_way(-1),
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     this.load_wagons_of_way(id);

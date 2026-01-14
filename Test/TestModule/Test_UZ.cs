@@ -43,7 +43,7 @@ namespace Test.TestModule
             WebAPIClientUZ_GOV client = new WebAPIClientUZ_GOV(service.Null);
             Console.WriteLine("Запрос....");
             //List<string> list2 = client.GetInfoWagon(58647785);
-            UZWagonInfo info = client.GetInfoWagonOfNum(55590509);
+            UZWagonInfo info = client.GetInfoWagonOfNum(64066467);
         }
         /// <summary>
         /// Тест нового запроса по коду станции
@@ -84,7 +84,7 @@ namespace Test.TestModule
         public void UZ_SMS_GetDocument_of_id_doc()
         {
             UZ_SMS sms = new UZ_SMS();
-            string doc_id = "86854766";
+            string doc_id = "35000000000533640749";
             sms.Connection();
             byte[] doc = sms.GetUZ_Document_Of_doc_id(doc_id);
             File.WriteAllBytes(@"d:\" + doc_id + ".pdf", doc);
@@ -148,7 +148,15 @@ namespace Test.TestModule
             UZ_SMS sms = new UZ_SMS();
             DateTime? ве = sms.GetLastDT_UZ_DOC();
         }
-
+        public void UZ_SMS_Get_UZ_DOC_SDB_Of_Num_Date()
+        {
+            UZ_SMS sms = new UZ_SMS();
+            List<int> consignees = new List<int>() { 7932, 6302, 659 };
+            List<int> stations = new List<int>() { 457905, 466904, 466923, 467004, 467108, 467201, 466603, 457708 };
+            DateTime dt_adoption = new DateTime(2023, 11, 14, 16, 00, 00);
+            DateTime? dt_old_outgoing = new DateTime(2023, 11, 8, 22, 25, 00);
+            sms.Get_UZ_DOC_SDB_Of_Num_Date(61337481, consignees, stations, dt_old_outgoing, dt_adoption, -36);
+        }
 
         #endregion
     }

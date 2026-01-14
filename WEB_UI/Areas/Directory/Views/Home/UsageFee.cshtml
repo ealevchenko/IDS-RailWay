@@ -1,0 +1,198 @@
+﻿@using WEB_UI.App_LocalResources;
+@{
+    ViewBag.Title = @DirectoryResource.usage_fee_title;
+}
+
+@section styles {
+    @Styles.Render("~/DataTables/css")
+    @Styles.Render("~/DateTime/css")
+
+
+    <link rel="stylesheet" type="text/css" href="~/Content/view/directory/usage_fee.css">
+    <!-- модули -->
+    <link href="~/Content/module/directory/table_directory.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/module/report/table_td_report.css" rel="stylesheet" />
+
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/Moment")
+    @Scripts.Render("~/bundles/DataTables")
+    @Scripts.Render("~/bundles/DateTime")
+
+    <script src="~/Scripts/view/shared/common.js"></script>                 <!-- Общая библиотека методов программы -->
+    <script src="~/Scripts/module/shared/common.js"></script>
+    <script src="~/Scripts/module/shared/modal_confirm_form.js"></script>   <!-- Форма сообщений подтверждения -->
+    <script src="~/Scripts/api/shared.js"></script>                     <!-- Общая библиотека методов API -->
+    <script src="~/Scripts/api/ids_server.js"></script>                     <!-- Работа с сервером библиотека методов API -->
+    <script src="~/Scripts/api/ids_direct.js"></script>
+    <script src="~/Scripts/api/ids_wsd.js"></script>
+
+    <script src="~/Scripts/module/directory/table_directory.js"></script>
+    <script src="~/Scripts/module/report/table_td_report.js"></script>
+
+    <script src="~/Scripts/view/directory/main_usage_fee.js"></script> <!--  -->
+}
+
+<input id="username" type="hidden" value="@User.Identity.Name" />
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nb-incoming" aria-controls="nb-incoming" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-light" id="nb-incoming">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-rates-tab" data-toggle="pill" data-target="#pills-rates" type="button" role="tab" aria-controls="pills-rates" aria-selected="true">СТАВКИ</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-correction-tab" data-toggle="pill" data-target="#pills-correction" type="button" role="tab" aria-controls="pills-correction" aria-selected="false">КОРРЕКТИРОВКА</button>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <label class="text-warning">@User.Identity.Name</label><br />
+            <label class="text-warning" id="curent_date"></label>
+        </div>
+        <div class="ml-1">
+            <a href="#" id="client_count" class="badge badge-primary">0</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="alert" id="main-alert"></div>
+    <div class="row mt-1">
+        <div class="col-sm-12">
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-rates" role="tabpanel" aria-labelledby="pills-rates-tab">
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header text-center">
+                                    РАСЧЕТ ПЛАТЫ ЗА ПОЛЬЗОВАНИЕ
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <div class="card border-secondary mb-3">
+                                                <div class="card-header">Справочник операторов</div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12" id="operators-wagons">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <div class="card border-primary mb-3">
+                                                <div class="card-header">Род вагонов</div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12" id="operators-wagons-genus">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header text-center">УСЛОВИЯ РАСЧЕТА</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="card border-secondary mb-3">
+                                                <div class="card-header">УСЛОВИЕ</div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12" id="form-edit">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="card border-primary mb-3">
+                                                <div class="card-header">ПЕРИОДЫ</div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12" id="usage-fee-period">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-correction" role="tabpanel" aria-labelledby="pills-correction-tab">
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header text-center">
+                                    <form class="form-inline">
+                                        <label class="col-form-label text-dark mr-2" for="num_wagon">Найти вагон:</label>
+                                        <input class="form-control mr-sm-2" id="num_wagon" name="num_wagon" type="number" placeholder="Номер вагона" aria-label="Search">
+                                        <button class="btn btn-primary my-2 my-sm-0" id="bt_search_wagon" name="bt_search_wagon" type="submit">Найти</button>
+                                        <div class="ml-3">КОРРЕКТИРОВКА ИТОГОВОЙ СУММЫ ПЛАТЫ В РУЧНОМ РЕЖИМЕ</div>
+                                    </form>
+
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-1">
+                                        <div class="col-sm-12">
+                                            <fieldset class="border-primary">
+                                                <legend class="text-primary">Скорректировать</legend>
+                                                <div class="form-inline">
+                                                    <div class="form-group mb-2">
+                                                        <label class="col-form-label text-dark mr-2" for="manual_fee_amount">Плата:</label>
+                                                        <input class="form-control mr-sm-2" id="manual_fee_amount" name="manual_fee_amount" type="number">
+                                                    </div>
+                                                    <div class="form-group mb-2">
+                                                        <label class="col-form-label text-dark mr-2" for="manual_time">Время (мин.):</label>
+                                                        <input class="form-control mr-sm-2" id="manual_time" name="manual_time" type="number">
+                                                        <label class="col-form-label text-dark mr-2" id="manual_time_hour"></label>
+                                                    </div>
+                                                    <div class="form-group mx-sm-3 mb-2">
+                                                        <label for="note" class="col-form-label text-dark mr-2">Примечание:</label>
+                                                        <input class="form-control mr-sm-2" id="note" name="note" type="text">
+                                                    </div>
+                                                    <button class="btn btn-primary my-2 my-sm-0" id="bt_update_wagon" name="bt_update_wagon">Применить</button>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-sm-12">
+                                            <fieldset class="border-primary">
+                                                <legend class="text-primary">Перечень вагонов</legend>
+                                                <div id="usage-fee-outgoing-cars">
+
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

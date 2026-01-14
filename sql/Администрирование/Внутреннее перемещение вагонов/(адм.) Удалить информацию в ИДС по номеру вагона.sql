@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num int = 51175091
+declare @num int = 4130
 
 --> ОПЕРАЦИИ
 --SELECT [id]

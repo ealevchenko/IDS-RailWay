@@ -387,4 +387,16 @@
   <data name="title_change_num_old" xml:space="preserve">
     <value>Старый номер</value>
   </data>
+  <data name="usage_fee_description" xml:space="preserve">
+    <value>Расчет платы за пользование</value>
+  </data>
+  <data name="usage_fee_title" xml:space="preserve">
+    <value>Плата за пользование</value>
+  </data>
+  <data name="wagon_addressing_description" xml:space="preserve">
+    <value>Заадресовка вагонов на территории АМКР</value>
+  </data>
+  <data name="wagon_addressing_title" xml:space="preserve">
+    <value>Заадресовка вагонов</value>
+  </data>
 </root>

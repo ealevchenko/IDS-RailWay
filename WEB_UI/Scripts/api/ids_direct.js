@@ -57,6 +57,7 @@
         this.list_certification_data = null;
         this.list_commercial_condition = null;
         this.list_hazard_class = null;
+        this.list_currency = null;
     }
     //****************************************************************************************
     //-------------------------------- Функции работы с БД через api ---------------
@@ -465,9 +466,44 @@
                         }.bind(this));
                     };
                 };
+                if (table === 'currency') {
+                    if (lock) LockScreen(langView('mess_load_reference', App.Langs));
+                    if (update || !this.list_currency) {
+                        process++;
+                        this.getCurrency(function (data) {
+                            this.list_currency = data;
+                            process--;
+                            result.push('currency');
+                            out_load(process);
+                        }.bind(this));
+                    };
+                };
             }.bind(this));
         };
         out_load(process);
+    };
+    //======= Directory_Currency (Справочник валют) ======================================
+    ids_directory.prototype.getCurrency = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/currency/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getCurrency", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
     };
     //======= Directory_OperatorsWagons (Справочник операторов вагонов) ======================================
     ids_directory.prototype.getOperatorsWagons = function (callback) {
@@ -509,6 +545,29 @@
             },
             error: function (x, y, z) {
                 OnAJAXError("ids_directory.getOperatorsWagonsID", x, y, z);
+            },
+            complete: function () {
+                AJAXComplete();
+            },
+        });
+    };
+    // Получим роды вагонов по операторам (используется привязка связка оператор-род в карточках вагонов)
+    ids_directory.prototype.getOperatorsWagonsOfGenus = function (callback) {
+        $.ajax({
+            type: 'GET',
+            url: '../../api/ids/directory/operators_wagons/genus/all',
+            async: true,
+            dataType: 'json',
+            beforeSend: function () {
+                AJAXBeforeSend();
+            },
+            success: function (data) {
+                if (typeof callback === 'function') {
+                    callback(data);
+                }
+            },
+            error: function (x, y, z) {
+                OnAJAXError("ids_directory.getOperatorsWagonsOfGenus", x, y, z);
             },
             complete: function () {
                 AJAXComplete();
@@ -2130,9 +2189,29 @@
         }
         return objs;
     };
-
+    //  Вернуть первый объект в указаным поле которых есть текст text (проверка убирает все пробелы и выравнивает буквы)
+    ids_directory.prototype.getObjs_Of_text_find = function (list_obj, ftext, text, lang) {
+        var objs = null;
+        var field = lang ? ftext + '_' + lang : ftext;
+        if (list_obj && list_obj.length > 0) {
+            objs = list_obj.find(function (o) {
+                var txt1 = o[field].split(' ').join('').toUpperCase(), txt2 = text.split(' ').join('').toUpperCase();
+                return txt1 === txt2 ? true : false;
+            });
+        }
+        return objs;
+    };
     //****************************************************************************************
     //-------------------------------- функции для работы с таблицами ------------------------
+    //*======= ids_directory.list_currency  (Справочник валют) ====================================== Directory_Currency
+    // Выбрать строку по id
+    ids_directory.prototype.getCurrency_Of_ID = function (id) {
+        return this.getObj_Of_ID(this.list_currency, 'id', id);
+    };
+    // Вернуть список валют
+    ids_directory.prototype.getListCurrency = function (fvalue, ftext, lang, filter) {
+        return this.getListObj(this.list_currency, fvalue, ftext, lang, filter);
+    };
     //*======= ids_directory.list_locomotive  (Справочник локомотивов) ======================================
     // Выбрать строку по номеру локомотива
     ids_directory.prototype.getLocomotive_Of_ID = function (locomotive) {
@@ -2362,6 +2441,13 @@
         }
         return null;
     };
+    // Получим первую строку в указаным поле которых есть текст text (проверка убирает все пробелы и выравнивает буквы)
+    ids_directory.prototype.getCargoETSNG_Of_Name_find = function (name, text, lang) {
+        if (this.list_cargo_etsng) {
+            return this.getObjs_Of_text_find(this.list_cargo_etsng, name, text, lang);
+        }
+        return null;
+    };
     //*======= ids_directory.list_cargo_gng  (Справочник грузов ГНГ) ======================================
     // Получить строку по id
     ids_directory.prototype.getCargoGNG_Of_ID = function (id) {
@@ -2448,6 +2534,15 @@
     ids_directory.prototype.getListConsignee = function (fvalue, ftext, filter) {
         return this.getListObj(this.list_consignee, fvalue, ftext, null, filter);
     };
+    // Получим список с выборкой по полю
+    ids_directory.prototype.getListConsignee_Of_Name = function (name, text) {
+        if (this.list_consignee) {
+            var obj = getObjects(this.list_consignee, name, text);
+            return obj;
+        }
+        return null;
+    };
+
     //*======= ids_directory.list_countrys  (Справочник стран) ======================================
     // Получить по id
     ids_directory.prototype.getCountrys_Of_ID = function (id) {
@@ -2481,7 +2576,6 @@
         }
         return null;
     };
-
     //*======= ids_directory.list_genus_wagon (Справочник РОД ВАГОНА) ======================================
     // Получить по id
     ids_directory.prototype.getGenusWagons_Of_ID = function (id) {
@@ -2507,7 +2601,6 @@
         }
         return null;
     };
-
     //*======= ids_directory.list_condition_arrival  (Справочник разметка по прибытию) ======================================
     // Получить по id
     ids_directory.prototype.getConditionArrival_Of_ID = function (id) {

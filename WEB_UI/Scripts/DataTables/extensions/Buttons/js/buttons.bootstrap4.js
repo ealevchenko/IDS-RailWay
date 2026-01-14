@@ -11,21 +11,37 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-bs4')(root, $).$;
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-bs4')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
 				require('datatables.net-buttons')(root, $);
 			}
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -34,6 +50,8 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
+
 
 $.extend( true, DataTable.Buttons.defaults, {
 	dom: {
@@ -46,13 +64,32 @@ $.extend( true, DataTable.Buttons.defaults, {
 		collection: {
 			tag: 'div',
 			className: 'dropdown-menu',
+			closeButton: false,
 			button: {
 				tag: 'a',
 				className: 'dt-button dropdown-item',
 				active: 'active',
 				disabled: 'disabled'
 			}
-		}
+		},
+		splitWrapper: {
+			tag: 'div',
+			className: 'dt-btn-split-wrapper btn-group',
+			closeButton: false,
+		},
+		splitDropdown: {
+			tag: 'button',
+			text: '',
+			className: 'btn btn-secondary dt-btn-split-drop dropdown-toggle dropdown-toggle-split',
+			closeButton: false,
+			align: 'split-left',
+			splitAlignClass: 'dt-button-split-left'
+		},
+		splitDropdownButton: {
+			tag: 'button',
+			className: 'dt-btn-split-drop-button btn btn-secondary',
+			closeButton: false
+		} 
 	},
 	buttonCreated: function ( config, button ) {
 		return config.buttons ?
@@ -64,5 +101,6 @@ $.extend( true, DataTable.Buttons.defaults, {
 DataTable.ext.buttons.collection.className += ' dropdown-toggle';
 DataTable.ext.buttons.collection.rightAlignClassName = 'dropdown-menu-right';
 
-return DataTable.Buttons;
+
+return DataTable;
 }));

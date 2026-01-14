@@ -29,6 +29,9 @@ namespace EFIDS.Entities
         public string description { get; set; }
 
         public bool auxiliary { get; set; }
+        public int? id_division { get; set; }
+
+        public virtual Directory_Divisions Directory_Divisions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Arrival_UZ_Document> Arrival_UZ_Document { get; set; }

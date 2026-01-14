@@ -14,16 +14,19 @@
             'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
             'mi_init_main': 'Инициализация формы прибытие...',
             'mi_title_label_dropdown': 'Отчетная документация',
-            'mi_title_report_fst': 'Натурная ведомость поезда',
-            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра',
-            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР.',
-            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл.',
-            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР.',
-            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл.',
-            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР.',
-            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл.',
-            'mi_title_report_gfa': 'Акт общей формы',
-            'mi_title_report_dg20': 'Накладная предприятия ДГ-20',
+            'mi_title_report_draft_fst': 'Натурная ведомость поезда (черновик)',
+            'mi_title_report_fst': 'Натурная ведомость поезда (А4)',
+            'mi_title_report_fst_landscape': 'Натурная ведомость поезда (А4-альбомный)',
+            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра (А4)',
+            'mi_title_report_fsci_landscape': 'Натурная ведомость коммерческого осмотра (А4-альбомный)',
+            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР. (А4)',
+            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл. (А4)',
+            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР. (А4)',
+            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл. (А4)',
+            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР. (А4)',
+            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл. (А4)',
+            'mi_title_report_gfa': 'Акт общей формы (А4-альбомный)',
+            'mi_title_report_dg20': 'Накладная предприятия ДГ-20 (А4-альбомный)',
             'mi_title_report_way': 'Путевая',
             'mi_operation_mess_print': 'Готовлю документ для печати ...',
             'mi_title_button_send_db_us_doc': 'БД ЭПД',
@@ -31,23 +34,26 @@
         },
         'en':  //default language: English
         {
-            'mi_title_label_date': 'LINE-UP PERIOD :',
-            'mi_title_label_station': 'DEPARTURE STATION:',
-            'mi_init_main': 'Initializing form arrival...',
-            'mi_title_label_dropdown': 'Reporting documentation',
-            'mi_title_report_fst': 'Train sheet',
-            'mi_title_report_fsci': 'Commercial inspection sheet',
-            'mi_title_report_aica_kr': 'Application for the issuance of a commercial act art. KR.',
-            'mi_title_report_aica_kr_gl': 'Application for the issuance of a commercial act art. CR Ch.',
-            'mi_title_report_api_kr': 'Application for participation in the issuance of art. KR.',
-            'mi_title_report_api_kr_gl': 'Application for participation in the issuance of art. CR Ch.',
-            'mi_title_report_apaca_kr': 'Application for participation with accompanying Kom. Act Art. KR.',
-            'mi_title_report_apaca_kr_gl': 'Application for participation with a passing Kom. Act Art. CR Ch.',
-            'mi_title_report_gfa': 'General Form Act',
-            'mi_title_report_dg20': 'Invoice of enterprise DG-20',
-            'mi_title_report_way': 'Travel',
-            'mi_operation_mess_print': 'Preparing a document for printing...',
-            'mi_title_button_send_db_us_doc': 'EPD DB',
+            'mi_title_label_date': 'СОСТАВЫ ЗА ПЕРИОД :',
+            'mi_title_label_station': 'СТАНЦИЯ ОТПРАВКИ:',
+            'mi_init_main': 'Инициализация формы прибытие...',
+            'mi_title_label_dropdown': 'Отчетная документация',
+            'mi_title_report_draft_fst': 'Натурная ведомость поезда (черновик)',
+            'mi_title_report_fst': 'Натурная ведомость поезда (А4)',
+            'mi_title_report_fst_landscape': 'Натурная ведомость поезда (А4-альбомный)',
+            'mi_title_report_fsci': 'Натурная ведомость коммерческого осмотра (А4)',
+            'mi_title_report_fsci_landscape': 'Натурная ведомость коммерческого осмотра (А4-альбомный)',
+            'mi_title_report_aica_kr': 'Заявка на выдачу коммерческого акта ст. КР. (А4)',
+            'mi_title_report_aica_kr_gl': 'Заявка на выдачу коммерческого акта ст. КР Гл. (А4)',
+            'mi_title_report_api_kr': 'Заявка на участие в выдаче ст. КР. (А4)',
+            'mi_title_report_api_kr_gl': 'Заявка на участие в выдаче ст. КР Гл. (А4)',
+            'mi_title_report_apaca_kr': 'Заявка на участие с попутным Ком. Актом ст. КР. (А4)',
+            'mi_title_report_apaca_kr_gl': 'Заявка на участие с попутным Ком. Актом ст. КР Гл. (А4)',
+            'mi_title_report_gfa': 'Акт общей формы (А4-альбомный)',
+            'mi_title_report_dg20': 'Накладная предприятия ДГ-20 (А4-альбомный)',
+            'mi_title_report_way': 'Путевая',
+            'mi_operation_mess_print': 'Готовлю документ для печати ...',
+            'mi_title_button_send_db_us_doc': 'БД ЭПД',
         }
     };
 
@@ -215,7 +221,17 @@
                 title: 'отчеты',
                 list_menu: [
                     {
-                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function () {
+                        href: '#',
+                        id: 'report_fst', label: langView('mi_title_report_draft_fst', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status <=3) {
+                                window.open("https://krr-app-paweb01.europe.mittalco.com/IDSRW_UI/areas/print/print.html?report=arr_natural_statement_draft&format=A4L&id=" + table_incoming_sostav.id_sostav, "Print");
+                                //window.open("http://localhost:53848//IDSRW_UI/areas/print/print.html?report=report_fst&id=" + table_incoming_sostav.id_sostav, "Print");
+                            };
+                        }.bind(this)
+                    },
+                    {
+                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
                                 view_incoming_report.fst(table_incoming_sostav.id_sostav)
@@ -223,80 +239,96 @@
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_fst', label: langView('mi_title_report_fst_landscape', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                                view_incoming_report.fst(table_incoming_sostav.id_sostav, true)
+                            }
+                        }.bind(this)
+                    },
+                    {
+                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.fsci(table_incoming_sostav.id_sostav)
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_fsci', label: langView('mi_title_report_fsci_landscape', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
+                                view_incoming_report.fsci(table_incoming_sostav.id_sostav, true)
+                            }
+                        }.bind(this)
+                    },
+                    {
+                        href: '#', id: 'report_aica_kr', label: langView('mi_title_report_aica_kr', App.Langs), disabled: false, click: function (event) {
+                            event.preventDefault();
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr');
                             }
                         }.bind(this)
 
                     },
                     {
-                        href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_aica_kr_gl', label: langView('mi_title_report_aica_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'aica_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_api_kr', label: langView('mi_title_report_api_kr', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_api_kr_gl', label: langView('mi_title_report_api_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'api_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_apaca_kr', label: langView('mi_title_report_apaca_kr', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_apaca_kr_gl', label: langView('mi_title_report_apaca_kr_gl', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'apaca_kr_gl');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_gfa', label: langView('mi_title_report_gfa', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'gfa');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_dg20', label: langView('mi_title_report_dg20', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
-                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && table_incoming_sostav.select_rows_sostav[0].status === 2) {
+                            if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.move_nums(table_incoming_sostav.id_sostav, 'dg20');
                             }
                         }.bind(this)
                     },
                     {
-                        href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function () {
+                        href: '#', id: 'report_way', label: langView('mi_title_report_way', App.Langs), disabled: false, click: function (event) {
                             event.preventDefault();
                             if (table_incoming_sostav.id_sostav && table_incoming_sostav.select_rows_sostav.length > 0 && (table_incoming_sostav.select_rows_sostav[0].status === 1 || table_incoming_sostav.select_rows_sostav[0].status === 2)) {
                                 view_incoming_report.select_nums(table_incoming_sostav.id_sostav, 'way');

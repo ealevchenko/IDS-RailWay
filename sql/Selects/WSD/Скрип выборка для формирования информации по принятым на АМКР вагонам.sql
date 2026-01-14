@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @id_sostav int = 182058
+declare @id_sostav int = 263451
 
 
 	select 
@@ -331,7 +331,8 @@ declare @id_sostav int = 182058
 		Left JOIN IDS.Arrival_UZ_Document as arr_doc_uz ON arr_doc_vag.id_document = arr_doc_uz.id
 		 --> Документы SAP Входящая поставка
 		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON wir.id_sap_incoming_supply = sap_is.id
-		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON arr_car.id = sap_is.id_arrival_car
+		--Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON sap_is.id_arrival_car = arr_car.id
+		Left JOIN [IDS].[SAPIncomingSupply] as sap_is ON sap_is.id = (SELECT top(1) [id] FROM [KRR-PA-CNT-Railway].[IDS].[SAPIncomingSupply] where [id_arrival_car]=arr_car.id)
 		 --==== ИНСТРУКТИВНЫЕ ПИСЬМА =====================================================================
 		--> Перечень вагонов по письма
 		Left JOIN IDS.InstructionalLettersWagon as ilw  ON ilw.id = (SELECT TOP (1) [id] FROM [IDS].[InstructionalLettersWagon] where [num] =wir.num and [close] is null order by id desc)
@@ -413,6 +414,7 @@ declare @id_sostav int = 182058
 		Left JOIN [IDS].[Directory_PayerArrival] as arr_payer_arr ON arr_doc_uz.[code_payer_arrival] = arr_payer_arr.[code]
 	WHERE 
 
-	arr_sost.[id] =@id_sostav 
+	arr_sost.[id] =@id_sostav-- and  arr_car.num = 63532444
 
-	order by arr_car.position	RETURN
+	order by arr_car.position	
+	--RETURN

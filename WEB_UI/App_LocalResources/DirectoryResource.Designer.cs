@@ -844,6 +844,42 @@ namespace WEB_UI.App_LocalResources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Расчет платы за пользование.
+        /// </summary>
+        public static string usage_fee_description {
+            get {
+                return ResourceManager.GetString("usage_fee_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Плата за пользование.
+        /// </summary>
+        public static string usage_fee_title {
+            get {
+                return ResourceManager.GetString("usage_fee_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Заадресовка вагонов на территории АМКР.
+        /// </summary>
+        public static string wagon_addressing_description {
+            get {
+                return ResourceManager.GetString("wagon_addressing_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Заадресовка вагонов.
+        /// </summary>
+        public static string wagon_addressing_title {
+            get {
+                return ResourceManager.GetString("wagon_addressing_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выбрать прибывший состав и произвести разметку вагонов.
         /// </summary>
         public static string wagon_marking_description {

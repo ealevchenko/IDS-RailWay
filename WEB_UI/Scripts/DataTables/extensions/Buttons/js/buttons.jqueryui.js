@@ -11,21 +11,37 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-jqui')(root, $).$;
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-jqui')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
 				require('datatables.net-buttons')(root, $);
 			}
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -34,6 +50,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 $.extend( true, DataTable.Buttons.defaults, {
@@ -49,6 +66,19 @@ $.extend( true, DataTable.Buttons.defaults, {
 		buttonLiner: {
 			tag: 'span',
 			className: 'ui-button-text'
+		},
+		splitWrapper: {
+			tag: 'div',
+			className: 'dt-btn-split-wrapper dt-btn-split-wrapper ui-widget ui-controlgroup-item ui-corner-left',
+		},
+		splitDropdown: {
+			tag: 'button',
+			text: '&#x25BC;',
+			className: 'dt-btn-split-drop ui-selectmenu-button demo-splitbutton-select ui-button ui-widget ui-controlgroup-item ui-selectmenu-button-closed ui-corner-right',
+		},
+		splitDropdownButton: {
+			tag: 'button',
+			className: 'dt-btn-split-drop-button ui-button'
 		}
 	}
 } );
@@ -58,5 +88,5 @@ DataTable.ext.buttons.collection.text = function ( dt ) {
 };
 
 
-return DataTable.Buttons;
+return DataTable;
 }));

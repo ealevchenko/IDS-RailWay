@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
+using IDS;
 
 namespace WEB_UI.Controllers.api
 {
@@ -359,6 +360,11 @@ namespace WEB_UI.Controllers.api
             {
                 this.ef_ids.Update(value);
                 int res = this.ef_ids.Save();
+                if (res >= 0) {
+                    IDS_WIR ids = new IDS_WIR();
+                    ResultUpdateIDWagon result = ids.CalcUsageFeeOfIncomingSostav(value.id, value.change_user);
+                    res = result.result;
+                }
                 return res > 0 ? value.id : res;
             }
             catch (Exception e)

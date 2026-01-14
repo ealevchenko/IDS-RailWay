@@ -77,7 +77,8 @@ namespace WEB_UI
             // Плагин таблицы --------------------------------------------------------------------------
             bundles.Add(new ScriptBundle("~/bundles/DataTables").Include(
                 // ------- 
-                "~/Scripts/DataTables/media/js/jquery.dataTables.min.js",
+                //"~/Scripts/DataTables/media/js/jquery.dataTables.min.js",
+                "~/Scripts/jquery.dataTables.min.js",
                 //"~/Scripts/DataTables/media/js/dataTables.jqueryui.min.js",
                 //"~/Scripts/DataTables/media/js/dataTables.bootstrap4.min.js",
                 // ------- КНОПКИ

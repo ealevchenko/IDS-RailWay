@@ -762,6 +762,9 @@ var get_select_string_value = function (select) {
 var isNumeric = function (value) {
     return /^\d+$/.test(value);
 };
+var isDecimal = function (value) {
+    return /^(0|[1-9]\d*)(\.[0-9]{1,2})?$/.test(value);
+};
 
 //==============================================================================================
 /* ----------------------------------------------------------
@@ -1422,6 +1425,7 @@ var outSAP_KOD_R_10 = function (s) {
     switch (s) {
         case '@5A@': return "Запрещена";
         case '@5B@': return "Разрешена";
+        case '@5C@': return "Запрещена";
         default: return s;
     }
 };

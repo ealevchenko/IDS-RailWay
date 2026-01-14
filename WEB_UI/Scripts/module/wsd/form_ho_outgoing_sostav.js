@@ -12,6 +12,7 @@
 
     var min_err_data_outgoing = -20 * 60;   // TODO: Минимальная разница в часах дата предъявления
     var max_err_data_outgoing = 20 * 60;    // TODO: Максимальная разница в часах дата сдачи
+    //var list_adm_user = ['EUROPE\\ealevchenk', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva'];               // Список админов для правки
 
     // Массив текстовых сообщений 
     $.Text_View =
@@ -52,6 +53,9 @@
             'fhoogs_error_date_time': 'Укажите правильно дату и время',
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Дата и время предъявления должны быть не меньше {0} мин. или больше {1} мин. от текущего времени',
             'fhoogs_mess_error_operation_return_present': 'Ошибка выполнения операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhoogs_mess_error_operation_return_present1': 'Ошибка расчета платы операции "Предъявить состав на УЗ", код ошибки = ',
+            'fhoogs_mess_error_operation_return_lts': 'Ошибка обнавления открытых писем, код ошибки = ',
+            'fhoogs_mess_error_edit_user': 'У пользователя {0} нет прав для изменения! ',
         },
         'en':  //default language: English
         {
@@ -89,6 +93,9 @@
             'fhoogs_error_date_time': 'Please enter the correct date and time',
             'fhoogs_error_date_outgoing_not_deff_date_detention': 'Date and time of presentation must be at least {0} min. or more {1} min. from current time',
             'fhoogs_mess_error_operation_return_present': 'Error executing operation "Present composition to UZ", error code = ',
+            'fhoogs_mess_error_operation_return_present1': 'Error calculating the fee for the operation "Present the train to the UZ", error code = ',
+            'fhoogs_mess_error_operation_return_lts': 'Error refreshing open emails, error code =',
+            'fhoogs_mess_error_edit_user': 'User {0} does not have permission to edit!',
         }
     };
     // Определлим список текста для этого модуля
@@ -482,14 +489,19 @@
                     }
                 }.bind(this),
             });
-
-
             //-------------------------------------
         }.bind(this));
     }
     // Уточняющая валидация данных 
     form_ho_outgoing_sostav.prototype.validation = function (result) {
         var valid = true;
+        var user_adm = App.RoleAdm.indexOf(App.User_Name) >= 0;
+        if (user_adm) return valid;
+        // если закрыто то правка запрещена
+        if (result.old !== null && result.old.status >= 3) {
+            this.form.out_error(langView('fhoogs_mess_error_edit_user', App.Langs).format(App.User_Name));
+            return false;
+        }
         // Сдесь можно проверить дополнительно
         var current = moment();
         var date_readiness_amkr = moment(result.old.date_readiness_amkr);
@@ -582,14 +594,47 @@
         LockScreen(langView('fhoogs_mess_operation_run', App.Langs));
         this.ids_wsd.postOperationPresentSostav(data, function (result) {
             if (result > 0) {
-                this.mf_edit.close(); // закроем форму
-                if (typeof this.settings.fn_edit === 'function') {
-                    this.settings.fn_edit({ data: data, result: result });
-                }
-                LockScreenOff();
+
+                var pr = 2;
+                this.result_calc = {}
+                this.result_lts = {}
+
+                // Выход из обновления
+                var out_update = function (pr) {
+                    if (pr === 0) {
+                        this.mf_edit.close(); // закроем форму
+                        if (typeof this.settings.fn_edit === 'function') {
+                            this.settings.fn_edit({ data: data, result: result });
+                        }
+                        if (this.result_calc && this.result_calc.error > 0) {
+                            this.mf_edit.out_error(langView('fhoogs_mess_error_operation_return_present1', App.Langs) + result_calc.error);
+                        }
+                        if (this.result_lts && this.result_lts.error > 0) {
+                            this.mf_edit.out_error(langView('fhoogs_mess_error_operation_return_lts', App.Langs) + result_lts.error);
+                        }
+                        LockScreenOff();
+                    }
+                }.bind(this);
+
+                // расчет платы
+                this.ids_wsd.getCalcUsageFeeOfOutgoingSostav(data.id, function (result_calc) {
+                    // На проверку окончания обновления
+                    this.result_calc = result_calc;
+                    pr--;
+                    out_update(pr);
+                }.bind(this));
+                // инструктивные письма
+                this.ids_wsd.postUpdateOpenInstructionalLetters(function (result_lts) {
+                    // На проверку окончания обновления
+                    this.result_lts = result_lts;
+                    pr--;
+                    out_update(pr);
+                }.bind(this));
+
+
             } else {
                 LockScreenOff();
-                this.mf_edit.out_error(langView('fogcd_mess_error_operation_return_present', App.Langs) + result);
+                this.mf_edit.out_error(langView('fhoogs_mess_error_operation_return_present', App.Langs) + result);
             }
         }.bind(this));
     };

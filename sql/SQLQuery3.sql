@@ -1,48 +1,37 @@
-/****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
-SELECT [id]
-      ,[num]
-      ,[id_operator]
-      ,[id_limiting]
-      ,[rent_start]
-      ,[rent_end]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-      ,[parent_id]
-	  --delete
-  FROM [KRR-PA-CNT-Railway].[IDS].[Directory_WagonsRent]
-  where [num]=56107667
-  order by 1 desc
-
-  /****** Скрипт для команды SelectTopNRows из среды SSMS  ******/
-SELECT TOP (1000) [id]
-      ,[id_document]
-      ,[num]
-      ,[id_outgoing]
-      ,[id_car]
-      ,[id_condition]
-      ,[id_wagons_rent_arrival]
-      ,[id_wagons_rent_outgoing]
-      ,[id_countrys]
-      ,[id_genus]
-      ,[id_owner]
-      ,[gruzp_uz]
-      ,[tara_uz]
-      ,[note_uz]
-      ,[gruzp]
-      ,[u_tara]
-      ,[ves_tary_arc]
-      ,[id_warehouse]
-      ,[id_division]
-      ,[laden]
-      ,[id_cargo]
-      ,[id_cargo_gng]
-      ,[vesg]
-      ,[code_stn_to]
-      ,[create]
-      ,[create_user]
-      ,[change]
-      ,[change_user]
-  FROM [KRR-PA-CNT-Railway].[IDS].[Outgoing_UZ_Vagon]
-  where [id_wagons_rent_arrival] = 216115 or [id_wagons_rent_outgoing] = 216115
+use [KRR-PA-CNT-Railway]
+	SELECT
+      rent.[id_operator]
+	  ,dir_oper.[parent_id]
+	  ,dir_wag.[id_genus]
+      ,dir_oper.[operators_ru]
+      ,dir_oper.[operators_en]
+	  ,dir_oper.[abbr_ru] as operators_abbr_ru
+      ,dir_oper.[abbr_en] as operators_abbr_en
+      ,dir_genus.[rod_uz]
+      ,dir_genus.[genus_ru]
+      ,dir_genus.[genus_en]
+	  ,dir_genus.[abbr_ru] as genus_abbr_ru
+      ,dir_genus.[abbr_en] as genus_abbr_en
+  FROM  [IDS].[Directory_WagonsRent] as rent
+  	--> �������� �������
+	Left JOIN [IDS].[Directory_Wagons] as dir_wag ON dir_wag.num = rent.num
+	Left JOIN [IDS].[Directory_OperatorsWagons] as dir_oper ON dir_oper.id = rent.[id_operator]
+	Left JOIN [IDS].[Directory_GenusWagons] as dir_genus ON dir_genus.id = dir_wag.[id_genus]
+  where rent.[rent_end] is null and rent.[id_operator] is not null
+  group by 
+   dir_wag.[id_genus]
+   	  ,dir_genus.[abbr_ru]
+      ,dir_genus.[genus_ru]
+      ,dir_genus.[abbr_en]
+      ,dir_genus.[genus_en]
+      ,dir_genus.[rod_uz]
+      , rent.[id_operator]
+	  ,dir_oper.[parent_id]
+  	  ,dir_oper.[abbr_ru]
+      ,dir_oper.[operators_ru]
+      ,dir_oper.[abbr_en]
+      ,dir_oper.[operators_en]
+  order by 
+  dir_oper.[abbr_ru], 
+  rent.[id_operator],
+  dir_wag.[id_genus]

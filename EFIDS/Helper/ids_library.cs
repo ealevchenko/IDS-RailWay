@@ -10,7 +10,18 @@ namespace EFIDS.Helper
     public static class ids_library
     {
         #region Directory
-
+        public static Directory_Currency GetDirectory_Currency(this Directory_Currency g)
+        {
+            if (g == null) return null;
+            return new Directory_Currency()
+            {
+                id = g.id,
+                currency_ru = g.currency_ru,
+                currency_en = g.currency_en,
+                code = g.code,
+                code_cc = g.code_cc
+            };
+        }
         public static Directory_GenusWagons GetGenusWagons(this Directory_GenusWagons g)
         {
             if (g == null) return null;
@@ -22,10 +33,9 @@ namespace EFIDS.Helper
                 abbr_en = g.abbr_en,
                 genus_en = g.genus_en,
                 rod_uz = g.rod_uz,
-                rod_default = g.rod_default
+                rod_default = g.rod_default, 
             };
         }
-
         public static Directory_WagonManufacturers GetWagonManufacturers(this Directory_WagonManufacturers g)
         {
             if (g == null) return null;
@@ -131,14 +141,16 @@ namespace EFIDS.Helper
                 rop = o.rop,
                 local_use = o.local_use,
                 color = o.color,
-                monitoring_idle_time = o.monitoring_idle_time,
+                monitoring_idle_time = o.monitoring_idle_time, 
+                parent_id = o.parent_id,
                 create = o.create,
                 create_user = o.create_user,
                 change = o.change,
                 change_user = o.change_user,
                 CardsWagons = null,
                 Directory_Wagons = null,
-                Directory_WagonsRent = null
+                Directory_WagonsRent = null, 
+                Usage_Fee_Period = null
             };
         }
 
@@ -203,7 +215,8 @@ namespace EFIDS.Helper
                 code = c.code,
                 name = c.name,
                 description = c.description,
-                auxiliary = c.auxiliary,
+                auxiliary = c.auxiliary, 
+                id_division = c.id_division,
             };
         }
 
@@ -568,7 +581,7 @@ namespace EFIDS.Helper
                 create = c.create,
                 create_user = c.create_user,
                 change = c.change,
-                change_user = c.change_user, 
+                change_user = c.change_user,
             };
         }
         // Справочник сертификационные данные
@@ -1019,6 +1032,42 @@ namespace EFIDS.Helper
 
         #region RWT
 
+        public static Usage_Fee_Period GetUsage_Fee_Period(this Usage_Fee_Period u)
+        {
+            if (u == null) return null;
+            return new Usage_Fee_Period()
+            {
+                id = u.id,
+                id_operator = u.id_operator,
+                id_genus = u.id_genus,
+                start = u.start,
+                stop = u.stop,
+                id_currency = u.id_currency,
+                rate = u.rate,
+                id_currency_derailment = u.id_currency_derailment,
+                rate_derailment = u.rate_derailment,
+                coefficient_route = u.coefficient_route,
+                coefficient_not_route = u.coefficient_not_route,
+                grace_time_1 = u.grace_time_1,
+                grace_time_2 = u.grace_time_2, 
+                hour_after_30 = u.hour_after_30, 
+                note = u.note,
+                create = u.create,
+                create_user = u.create_user,
+                change = u.change,
+                change_user = u.change_user,
+                close = u.close,
+                close_user = u.close_user,
+                parent_id = u.parent_id,
+                Directory_Currency = u.Directory_Currency.GetDirectory_Currency(),
+                Directory_Currency1 = u.Directory_Currency.GetDirectory_Currency(),
+                Usage_Fee_Period1 = null,
+                Usage_Fee_Period2 = null, 
+                Directory_GenusWagons = u.Directory_GenusWagons.GetGenusWagons(), 
+                Directory_OperatorsWagons = u.Directory_OperatorsWagons.GetOperatorsWagons()
+            };
+        }
+
         public static Arrival_UZ_Vagon_Pay GetArrival_UZ_Vagon_Pay(this Arrival_UZ_Vagon_Pay p)
         {
             if (p == null) return null;
@@ -1031,7 +1080,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Cont_Pay GetArrival_UZ_Cont_Pay(this Arrival_UZ_Cont_Pay p)
         {
             if (p == null) return null;
@@ -1044,7 +1092,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon_Cont = null
             };
         }
-
         public static Arrival_UZ_Vagon_Cont GetArrival_UZ_Vagon_Cont(this Arrival_UZ_Vagon_Cont c)
         {
             if (c == null) return null;
@@ -1069,7 +1116,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Vagon_Acts GetArrival_UZ_Vagon_Acts(this Arrival_UZ_Vagon_Acts a)
         {
             if (a == null) return null;
@@ -1089,7 +1135,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Vagon = null
             };
         }
-
         public static Arrival_UZ_Vagon GetArrival_UZ_Vagon(this Arrival_UZ_Vagon v)
         {
             if (v == null) return null;
@@ -1135,11 +1180,14 @@ namespace EFIDS.Helper
                 id_owner = v.id_owner,
                 id_type_ownership = v.id_type_ownership,
                 kol_os = v.kol_os,
-                manual = v.manual, 
+                manual = v.manual,
                 pay_summa = v.pay_summa,
-                tara_uz = v.tara_uz, usl_tip = v.usl_tip, zayava = v.zayava,
+                tara_uz = v.tara_uz,
+                usl_tip = v.usl_tip,
+                zayava = v.zayava, 
+                id_wagons_rent_arrival = v.id_wagons_rent_arrival,
                 ArrivalSostav = null,
-                Arrival_UZ_Document = null,                
+                Arrival_UZ_Document = null,
                 ArrivalCars = null,
                 Directory_Wagons = v.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 Arrival_UZ_Vagon_Acts = v.Arrival_UZ_Vagon_Acts.ToList().Select(a => a.GetArrival_UZ_Vagon_Acts()).ToList(),
@@ -1153,14 +1201,14 @@ namespace EFIDS.Helper
                 Directory_HazardClass = v.Directory_HazardClass.GetDirectory_HazardClass(),
                 Directory_Station = v.Directory_Station.GetDirectory_Station(),
                 Directory_TypeWagons = v.Directory_TypeWagons.GetTypeWagons(),
-                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(), 
-                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(), 
-                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(), 
-                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(), 
-                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip() 
+                Directory_Divisions = v.Directory_Divisions.GetDirectory_Divisions(),
+                Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
+                Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
+                Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
+                Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent()
             };
         }
-
         public static Arrival_UZ_Vagon GetArrival_UZ_Vagon_Arrival_UZ_Document(this Arrival_UZ_Vagon v)
         {
             try
@@ -1211,7 +1259,9 @@ namespace EFIDS.Helper
                     manual = v.manual,
                     tara_uz = v.tara_uz,
                     usl_tip = v.usl_tip,
-                    zayava = v.zayava,  
+                    zayava = v.zayava, 
+                    pay_summa = v.pay_summa, 
+                    id_wagons_rent_arrival = v.id_wagons_rent_arrival,
                     ArrivalCars = null,
                     ArrivalSostav = null,
                     Arrival_UZ_Document = v.Arrival_UZ_Document.GetArrival_UZ_Document(),
@@ -1231,7 +1281,8 @@ namespace EFIDS.Helper
                     Directory_Countrys = v.Directory_Countrys.GetDirectory_Countrys(),
                     Directory_GenusWagons = v.Directory_GenusWagons.GetGenusWagons(),
                     Directory_OwnersWagons = v.Directory_OwnersWagons.GetOwnersWagons(),
-                    Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip()
+                    Directory_TypeOwnerShip = v.Directory_TypeOwnerShip.GetTypeOwnerShip(), 
+                    Directory_WagonsRent = v.Directory_WagonsRent.GetDirectory_WagonsRent(),
                 };
             }
             catch (Exception e)
@@ -1239,7 +1290,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static Arrival_UZ_Document_Pay GetArrival_UZ_Document_Pay(this Arrival_UZ_Document_Pay p)
         {
             if (p == null) return null;
@@ -1254,7 +1304,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null,
             };
         }
-
         public static Arrival_UZ_Document_Docs GetArrival_UZ_Document_Docs(this Arrival_UZ_Document_Docs d)
         {
             if (d == null) return null;
@@ -1271,7 +1320,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null,
             };
         }
-
         public static Arrival_UZ_Document_Acts GetArrival_UZ_Document_Acts(this Arrival_UZ_Document_Acts a)
         {
             if (a == null) return null;
@@ -1291,7 +1339,6 @@ namespace EFIDS.Helper
                 Arrival_UZ_Document = null
             };
         }
-
         public static Arrival_UZ_Document GetArrival_UZ_Document_Arrival_UZ_Vagon(this Arrival_UZ_Document d)
         {
             try
@@ -1318,8 +1365,13 @@ namespace EFIDS.Helper
                     create = d.create,
                     create_user = d.create_user,
                     change = d.change,
-                    change_user = d.change_user, 
-                    manual = d.manual, 
+                    change_user = d.change_user,
+                    manual = d.manual,
+                    date_otpr = d.date_otpr,
+                    srok_end = d.srok_end,
+                    date_grpol = d.date_grpol,
+                    date_pr = d.date_pr,
+                    date_vid = d.date_vid,
                     UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
                     Arrival_UZ_Vagon = d.Arrival_UZ_Vagon.ToList().Select(v => v.GetArrival_UZ_Vagon()).ToList(),
                     Arrival_UZ_Document1 = null,
@@ -1334,7 +1386,6 @@ namespace EFIDS.Helper
                     Arrival_UZ_Document_Acts = d.Arrival_UZ_Document_Acts.ToList().Select(a => a.GetArrival_UZ_Document_Acts()).ToList(),
                     Arrival_UZ_Document_Docs = d.Arrival_UZ_Document_Docs.ToList().Select(s => s.GetArrival_UZ_Document_Docs()).ToList(),
                     Arrival_UZ_Document_Pay = d.Arrival_UZ_Document_Pay.ToList().Select(p => p.GetArrival_UZ_Document_Pay()).ToList(),
-
                 };
             }
             catch (Exception e)
@@ -1342,7 +1393,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static Arrival_UZ_Document GetArrival_UZ_Document(this Arrival_UZ_Document d)
         {
             try
@@ -1371,6 +1421,11 @@ namespace EFIDS.Helper
                     change = d.change,
                     change_user = d.change_user,
                     manual = d.manual,
+                    date_otpr = d.date_otpr,
+                    srok_end = d.srok_end,
+                    date_grpol = d.date_grpol,
+                    date_pr = d.date_pr,
+                    date_vid = d.date_vid,
                     UZ_DOC = d.UZ_DOC.GetUZ_DOC(),
                     Arrival_UZ_Vagon = null,
                     Arrival_UZ_Document1 = null,
@@ -1393,7 +1448,6 @@ namespace EFIDS.Helper
                 return null;
             }
         }
-
         public static ArrivalSostav GetArrivalSostav_ArrivalCars(this ArrivalSostav s)
         {
             try
@@ -2240,8 +2294,9 @@ namespace EFIDS.Helper
                 create_user = r.create_user,
                 close = r.close,
                 close_user = r.close_user,
-                parent_id = r.parent_id, 
-                highlight_color = r.highlight_color,
+                parent_id = r.parent_id,
+                highlight_color = r.highlight_color, 
+                id_usage_fee = r.id_usage_fee, 
                 Directory_Wagons = r.Directory_Wagons.GetDirectory_Wagons_Directory_WagonsRent(),
                 ArrivalCars = r.ArrivalCars.GetArrivalCars_ArrivalSostav(),
                 OutgoingCars = r.OutgoingCars.GetOutgoingCars_OutgoingSostav(),
@@ -2317,6 +2372,41 @@ namespace EFIDS.Helper
                 Directory_Station = m.Directory_Station.GetDirectory_Station(),
                 Directory_Ways = m.Directory_Ways.GetDirectory_Ways(),
                 Directory_OuterWays = m.Directory_OuterWays.GetDirectory_OuterWays(),
+            };
+        }
+        public static WagonUsageFee GetWagonUsageFee(this WagonUsageFee u)
+        {
+            if (u == null) return null;
+            return new WagonUsageFee()
+            {
+                id=u.id,
+                id_wir = u.id_wir,
+                num = u.num,
+                id_operator = u.id_operator,
+                id_genus = u.id_genus,
+                date_adoption = u.date_adoption,
+                date_outgoing = u.date_outgoing,
+                route = u.route,
+                inp_cargo = u.inp_cargo,
+                out_cargo = u.out_cargo,
+                derailment = u.derailment,
+                count_stage = u.count_stage,
+                id_currency = u.id_currency,
+                rate = u.rate,
+                exchange_rate = u.exchange_rate,
+                coefficient = u.coefficient,
+                use_time = u.use_time,
+                grace_time = u.grace_time,
+                calc_time = u.calc_time,
+                calc_fee_amount = u.calc_fee_amount,
+                manual_time = u.manual_time,
+                manual_fee_amount = u.manual_fee_amount, 
+                downtime = u.downtime,
+                note = u.note,
+                create = u.create,
+                create_user = u.create_user,
+                change = u.change,
+                change_user = u.change_user,
             };
         }
 

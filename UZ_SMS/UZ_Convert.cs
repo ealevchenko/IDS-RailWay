@@ -13,73 +13,85 @@ namespace UZ
 
     public class OTPR
     {
-        public DateTime? date_sozdan { get; set; }
-        public DateTime? date_finish { get; set; }
-        public DateTime? date_plan { get; set; }
-        public DateTime? date_strah_dog_recipient { get; set; }
-        public DateTime? date_vid { get; set; }
-        public string deliv_note { get; set; }
-        public string street { get; set; }
-        public string ser_passp { get; set; }
-        public int? strah_komp_recipient { get; set; }
-        public string name_strah_komp_recipient { get; set; }
-        public int? nom_passp { get; set; }
-        public long? nom_dover { get; set; }
-        public string nom_strah_polis_recipient { get; set; }
-        public string house { get; set; }
-        public DateTime? date_dover { get; set; }
-        public string city { get; set; }
-        public int? apartam { get; set; }
-        public int? rab_esr_pr { get; set; }
-        public DateTime? date_pr { get; set; }
-        public DateTime? date_grpol { get; set; }
-        public int? sum_pereb { get; set; }
-        public int? sum_deliv { get; set; }
-        public string ser_doc { get; set; }
-        public string pr_distance { get; set; }
-        public int? osum { get; set; }
-        public int? distance_way { get; set; }
-        public string doc_lang { get; set; }
-        public DateTime? date_otpr { get; set; }
-        public int? country_nazn { get; set; }
-        public int? country_otpr { get; set; }
-        public string esr_nakop { get; set; }
-        public string esr_rz_marsh_grot { get; set; }
-        public int? foreign_not_accept { get; set; }
-        public string freeze { get; set; }
-        public int? kod_doc { get; set; }
-        public string kod_marsh_grot { get; set; }
-        public string loader { get; set; }
-        public string measure_equip_num { get; set; }
-        public int? metod { get; set; }
-        public int? nom_doc { get; set; }
-        public int? nom_marsh_grot { get; set; }
-        public ulong? nom_plan { get; set; }
-        public int? nоm_park { get; set; }
-        public int? pr_freeze { get; set; }
-        public string pr_locom { get; set; }
-        public string pr_vohr { get; set; }
-        public string priznak { get; set; }
-        public int? rab_esr { get; set; }
-        public string speed { get; set; }
-        public DateTime? srok_end { get; set; }
-        public string type_pay { get; set; }
-        public int? val_gr { get; set; }
-        public double? value { get; set; }
-        public string vid { get; set; }
-        public int? vid_marsh { get; set; }
-        public int? vid_nakaz_pr { get; set; }
-        public string vid_perev { get; set; }
-        public int? vmd_nom_declar { get; set; }
-        public int? vmd_nom_custom { get; set; }
-        public int? vmd_year_declar { get; set; }
-        public DateTime? vmd_date_declar { get; set; }
+        public DateTime? date_finish { get; set; } // Дата закінчення перевезення (без розкредитування)
+        public DateTime? date_plan { get; set; } // Дата планового навантаження
+        public DateTime? date_sozdan { get; set; } // Дата создания документа (для ЦИМ и ЦИМ/СМГС)
+        public DateTime? date_strah_dog_recipient { get; set; } // Дата початку дії страхового договору одержувача
+        public DateTime? date_vid { get; set; } // Дата розкредитування (видачі вантажу )
+        public string deliv_note { get; set; } // Відмітки про видачу вантаж (не використовується)
+        public int? double_op_cnt { get; set; } // кількість вагонів перевізника АТ “Укрзалізниця” у контейнерній відправці після подвійної операції
+        public string frd_num { get; set; } // номер замовлення по погодженому скороченому терміну доставки
+        public string route_train_num { get; set; } // номер маршрутного поїзда
+        public DateTime? frd_arrival_date { get; set; } // розрахункова дата прискоренного прибуття (маршрутного поїзда)
+        public string street { get; set; } // Вулиця представника одержувач
+        public string ser_passp { get; set; } // Серія паспорту представника одержувач
+        public int? strah_komp_recipient { get; set; } // Умовний код страхової компанії одержувача
+        public string name_strah_komp_recipient { get; set; } // Найменування страхової компанії одержувача
+        public int? nom_passp { get; set; } // Номер паспорту представника одержувач
+        public ulong? nom_dover { get; set; } // Номер доручення представника одержувача
+        public string nom_strah_polis_recipient { get; set; } // Номер страхового полісу одержувача
+        public string house { get; set; } // Дім представника одержувач
+        public DateTime? date_dover { get; set; } // Дата видачі доручення представника одержувач
+        public string city { get; set; } // Край, місто представника одержувач
+        public int? apartam { get; set; } // Квартира представника одержувач
+        public int? rab_esr_pr { get; set; } // Вид роботи станції по прибуттю 
+        public DateTime? date_pr { get; set; } // Дата прибуття вантажу
+        public DateTime? date_grpol { get; set; } // Дата повідомлення вантажоодержувачу
+        public ulong? sum_pereb { get; set; } // Сума перебору
+        public ulong? sum_deliv { get; set; } // Сума по прибуттю
+        public string ser_doc { get; set; } // Серія документу 
+        public string pr_distance { get; set; } // Ознака виставлення відстані 
+        public ulong? osum { get; set; } // Сума по відправленню 
+        public int? distance_way { get; set; } // Відстань від станції відправлення до станції призначення по УЗ
+        public string doc_lang { get; set; } // Друга мова перевізного документа (для ЦІМ та ЦІМ/СМГС)
+        public DateTime? date_otpr { get; set; } // Дата відправлення вантажу або ввозу на УЗ
+        public int? country_nazn { get; set; } // Код країни призначення 
+        public int? country_otpr { get; set; } // Код країни відправлення 
+        //public string esr_nakop { get; set; } //
+        public string esr_rz_marsh_grot { get; set; } // Код станції розпилення маршруту
+        public int? foreign_not_accept { get; set; } // Ознака переадресування відправки неприйнятої іноземною залізницею
+        public string freeze { get; set; } // Ознака попереднього охолодження швидкопсувних вантажів
+        public int? kod_doc { get; set; } // Код документу 
+        public string kod_marsh_grot { get; set; } // Код типу маршруту, з класифікатора типів маршрутів та поїздів
+        public string loader { get; set; } // Навантаження засобами (не вказується для порожніх відправок)
+        public string measure_equip_num { get; set; } // Заводський номер засобу вагоно-вимірювальної техніки (ЗВВТ)
+        public int? metod { get; set; } // Код способу визначення маси (обов'язковий, якщо контейнер або вагон не порожній) 
+        public int? nom_doc { get; set; } // Номер документу 
+        public int? nom_marsh_grot { get; set; } // Номер маршруту відправлення
+        public ulong? nom_plan { get; set; } // Номер плану навантаження
+        public int? nоm_park { get; set; } // Номер парку 
+        public int? pr_freeze { get; set; } // Ознака охолодження 
+        public string pr_locom { get; set; } // Ознака подачі одиночного локомотиву
+        public string pr_vohr { get; set; } // Охорона вантажу
+        public string priznak { get; set; } // Ознака неробочого парку
+        public int? rab_esr { get; set; } // Вид роботи станції
+        public string rrt_edoc { get; set; } // Номер замовлення на погодження перевезення
+        public string speed { get; set; } // Код швидкості
+        public DateTime? srok_end { get; set; } // Термін доставки вантажу
+        public string type_pay { get; set; } // Вид розрахунку
+        public int? uz_wags_cnt_by_sender { get; set; } // Кількість вагонів перевізника АТ «Укрзалізниця» у контейнерній відправці (зазначена відправником)
+        public int? uz_wags_cnt_by_uz { get; set; } // Кількість вагонів перевізника АТ «Укрзалізниця» у контейнерній відправці (встановлена по прибуттю)
+        public int? uz_wags_rod_by_sender { get; set; } // Рід вагонів перевізника АТ «Укрзалізниця» контейнерної відправки (зазначений відправником)
+        public int? uz_wags_rod_by_uz { get; set; } // Рід вагонів перевізника АТ «Укрзалізниця» контейнерної відправки (встановлений по прибуттю)
+        public int? val_gr { get; set; } // Код валюти цінності вантажу
+        public double? value { get; set; } // Об'явлена цінність вантажу 
+        public string vid { get; set; } // Категорія відправки 
+        public int? vid_marsh { get; set; } // № маршруту відправника
+        public int? vid_nakaz_pr { get; set; } // Ознака нормативного документу на підставі якого здійснюється видача вантажів (0 або не зазначено – видача за довіреністю, 1 – видача за наказом).
+        //public string vid_perev { get; set; } //
+        public int? vmd_nom_declar { get; set; } // Номер документа у номері ЕЗН митницы (единої залізничної накладної)
+        public int? vmd_nom_custom { get; set; } // Код митниці у номері ЕЗН митної (единої залізничної накладної)
+        public int? vmd_year_declar { get; set; } // Рік у номері ЕЗН (единої залізничної накладної)
+        public DateTime? vmd_date_declar { get; set; } // Дата оформлення митної декларації
+        public int? wags_sign_by_sender { get; set; } // Ознака перевезення контейнерів у вагонах перевізника АТ «Укрзалізниця»
+
         public ACTS[] acts = new ACTS[] { }; // (~)
         public CARRIER[] carrier = new CARRIER[] { }; // (~)
         public CIM_INFO cim_info { get; set; } // (0..1)
         public CLIENT[] client = new CLIENT[] { }; // (2)
         public COM_COND[] com_cond = new COM_COND[] { }; // (~)
         public CONT[] cont = new CONT[] { }; // (~)
+        public EORDER[] eorder = new EORDER[] { }; // (~)
         public FRONTIER_MARK[] frontier_mark = new FRONTIER_MARK[] { }; // (~)
         public OTPRDP otprdp { get; set; } // (0..1)
         public PAC pac { get; set; } // (0..1)
@@ -295,6 +307,11 @@ namespace UZ
     }
 
     #endregion
+
+    public class EORDER
+    {
+        public string load_num { get; set; }	// Номер добового обсягу Е-Замовлення
+    }
 
     public class FRONTIER_MARK
     {
@@ -562,19 +579,31 @@ namespace UZ
     public class VAGON
     {
         public int? calc_weight { get; set; }   //	Розрахункова вага вантажу (кг)
+        public int? double_oper { get; set; }   //	Ознака подвійної операції навантаження вивантаження вагону (0 або null – подвійна операція відсутня;1 – подвійна операція розвантаж/навантаж; 2- розвантаж/навантаж за межами України або в межах однієї станції)
         public string etsng_old { get; set; }   //	Код вантажу по ЄТСНВ, 
+        public DateTime? excise_date { get; set; }    // Дата складання акцизної накладної
+        public int? excise_edrpou { get; set; } //	Код за ЄДРПОУ відокремленого підрозділу юридичної особи або код за внутрішньою кодифікацією, прийнятою юридичною особою (друга складова номеру акцизної накладної)
+        public ulong? excise_num { get; set; } //	Порядковий номер акцизної накладної (перша складова номеру акцизної накладної)
+        public string auction_num { get; set; } //	Номер протоколу електроних торгів (аукціону)        
         public string gng_old { get; set; } //	Код вантажу по ГНВ, з-під якого був вивантажений вагон
         public double? gruzp { get; set; }  //	Вантажопід'ємність вагону (т)
         public string is_removed { get; set; }  //	Ознака викреслення вагона з перевізного документа при відчепленні
+        public string opus_num { get; set; }    //	№ замовлення на перевезення вантажу з узгодженими строками та обсягами
         public double? ostat_davl { get; set; } //	Залишковий тиск у котлу (МПа)
         public int? kod_adm { get; set; }   //	Код власника вагону 
         public string kod_firm_owner { get; set; }  //	Код компанії — власниці вагона
         public int? kol_conductor { get; set; } //	Кількість провідників
         public int? kol_os { get; set; }    //	Кількість вісей
-        public string measure_equip_num { get; set; }   //	Заводський номер засобу вагоно-вимірювальної техніки
-        public string name_firm_owner { get; set; } //	Найменування компанії — власниці вагона
-        public string name_firm_operator { get; set; }  //	Найменування компанії — оператора вагона
-        public string name_firm_renter { get; set; }    //	Найменування компанії — renter вагона
+        public string load_num { get; set; }   // Номер добового обсягу Е-Замовлення
+        public string edrpou_firm_owner { get; set; }   // Код ЕДРПОУ власника вагона	
+        public string edrpou_firm_operator { get; set; }   // Код ЕДРПОУ оператора вагона	
+        public string edrpou_firm_renter { get; set; }   //	Код ЕДРПОУ орендаря вагона
+        public string name_firm_owner { get; set; }   // Найменування компанії — власниці вагона	
+        public string name_firm_operator { get; set; }   // Найменування операторської компанії
+        public string name_firm_renter { get; set; }   // Найменування орендаря
+
+        //public string measure_equip_num { get; set; }   //	Заводський номер засобу вагоно-вимірювальної техніки
+
         public int? negab_do { get; set; }  //	Індекс негабаритності додаткового обладнання
         public int? negab_rs { get; set; }  //	Індекс негабаритності рухомого складу
         public int? negab_v { get; set; }   //	Індекс негабаритності вантажу
@@ -584,6 +613,7 @@ namespace UZ
         public int? pr_sobst { get; set; }  //	Ознака власності вагону 
         public int? pr_zam { get; set; }    //	Ознака заміни вагону
         public string promoted_by { get; set; } //	Ознака надання вагону для перевезення
+        public string property_sign_eorder { get; set; } //	Ознака власності вагона для планування
         public int? remove_weight { get; set; } //	Вага знімного устаткування (кг)
         public int? rod_vag { get; set; }   //	Род вагону
         public int? roller_weight { get; set; } //	Вага роллерів (кг)
@@ -596,6 +626,8 @@ namespace UZ
         public PEREGR_V peregr_v { get; set; } // {0..1}
         public PAY_V[] pay_v = new PAY_V[] { }; // {~}
         public COLLECT_V[] collect_v = new COLLECT_V[] { }; // {0..99}
+        public FORWARD_DOC forward_doc { get; set; } // {0..1}
+        public FORWARD_SURPLUS forward_surplus { get; set; } // {0..1}
         public TOOLS[] tools = new TOOLS[] { }; // {~}
         public ZPU_V[] zpu_v = new ZPU_V[] { }; // {0..60}
     }
@@ -666,6 +698,69 @@ namespace UZ
         public string zvvt_num { get; set; }    //	Заводський номер засобу вагоно-вимірювальної техніки (для збірних відправок)
     }
 
+    #region FORWARD_DOC
+    public class FORWARD_DOC
+    {
+        public int? act_adm { get; set; } // Адміністрація станції відчеплення
+        public DateTime? act_date { get; set; }  //	Дата акту про відчеплення
+        public int? act_emr { get; set; } // Станція відчеплення
+        public string act_num { get; set; } //	Номер акту про відчеплення
+        public string act_carrier_code { get; set; } // Код перевізника 
+        public string act_carrier_name { get; set; } // Назва перевізника
+        public string act_reason { get; set; } // Причина складання акту
+        public DateTime? doc_date { get; set; }  //	Дата досильного документу
+        public FORWARD_PAY forward_pay { get; set; } // {0..1}
+        public REVIEWED reviewed { get; set; } // {0..1}
+        public SURPLUS surplus { get; set; } // {0..1}
+    }
+    public class FORWARD_PAY
+    {
+        public int? code { get; set; } // Код платежу
+        public int? currency { get; set; } // Код валюти
+        public DateTime? doc_date { get; set; }  //	Дата досильного документу, за яким нараховано платежі
+        public string doc_num { get; set; } // Номер досильного документу, за яким нараховано платежі
+        public ulong? nds { get; set; } // ПДВ платежу
+        public int? subcode { get; set; } // Підкод платежу
+        public ulong? sum { get; set; } // Сума платежу (коп.)
+    }
+    public class REVIEWED
+    {
+        public int? apartam { get; set; } // Квартира представника одержувача      
+        public string city { get; set; } // Край, місто представника одержувача
+        public DateTime? date_sign { get; set; }  // Дата та час підтвердження одержання вантажу	
+        public DateTime? delivery_date { get; set; }  // Дата видачі вантажу
+        public string enotification { get; set; } // Повідомлення одержувача про прибуття вантажу
+        public string house { get; set; } // Дім представника одержувача
+        public int? passp_num { get; set; } // Номер паспорту представника одержувача
+        public string passp_ser { get; set; } // Серія паспорту представника одержувача
+        public string signer { get; set; } // ПІБ відповідальної особи
+        public string street { get; set; } // Вулиця представника одержувача
+        public DateTime? surplus_doc_date { get; set; }  //	Дата досильного документу, за яким здійснюється видача
+        public string surplus_doc_num { get; set; } // Номер досильного документу, за яким здійснюється видача
+        public DateTime? warrant_date { get; set; }  // Дата видачі доручення представника одержувача
+        public ulong? warrant_num { get; set; } // Номер доручення представника одержувача
+        public int? warrant_type { get; set; } // Ознака нормативного документу на підставі якого здійснюється видача вантажів
+
+    }
+    public class SURPLUS
+    {
+        public DateTime? doc_date { get; set; }  // Дата досильного документу, за яким перевозиться надлишок
+        public string doc_num { get; set; } // Номер досильного документу, за яким перевозиться надлишок
+        public int? surplus_count { get; set; } // Відвантажено кількість місць 
+        public DateTime? surplus_date { get; set; }  // Дата виявлення надлишку
+        public int? surplus_weight { get; set; } // Відвантажено надлишок, кг
+    }
+    #endregion
+
+    public class FORWARD_SURPLUS
+    {
+        public DateTime? doc_date { get; set; }  //	Дата документу, з якого відвантажено надлишок
+        public string doc_num { get; set; } // Номер документу, з якого відвантажено надлишок
+        public int? surplus_count { get; set; } // Відвантажено кількість місць
+        public DateTime? surplus_date { get; set; }  //	Дата виявлення надлишку
+        public int? surplus_weight { get; set; } // Відвантажено надлишок, кг
+    }
+
     public class TOOLS
     {
         public int? ves_tools { get; set; } //	Вага пристроїв (кг)
@@ -677,7 +772,7 @@ namespace UZ
         public string nom_zpu { get; set; } //	Номер ЗПП
         public string sobst_zpu { get; set; }   //	Ознака власності пломб або ЗПП
         public int? zd_kod { get; set; }    //	Код залізниці накладання пломби
-        public string zpu { get; set; }	//	Код виду ЗПП 
+        public string zpu { get; set; } //	Код виду ЗПП 
     }
     #endregion
 
@@ -778,18 +873,22 @@ namespace UZ
             {
                 if (node.Attributes.Count > 0)
                 {
-                    tag.date_sozdan = getAttributes<DateTime?>(node, "date_sozdan");
                     tag.date_finish = getAttributes<DateTime?>(node, "date_finish");
                     tag.date_plan = getAttributes<DateTime?>(node, "date_plan");
+                    tag.date_sozdan = getAttributes<DateTime?>(node, "date_sozdan");
                     tag.date_strah_dog_recipient = getAttributes<DateTime?>(node, "date_strah_dog_recipient");
                     tag.date_vid = getAttributes<DateTime?>(node, "date_vid");
                     tag.deliv_note = getAttributes<string>(node, "deliv_note");
+                    tag.double_op_cnt = getAttributes<int?>(node, "double_op_cnt");
+                    tag.frd_num = getAttributes<string>(node, "frd_num");
+                    tag.route_train_num = getAttributes<string>(node, "route_train_num");
+                    tag.frd_arrival_date = getAttributes<DateTime?>(node, "frd_arrival_date");
                     tag.street = getAttributes<string>(node, "street");
                     tag.ser_passp = getAttributes<string>(node, "ser_passp");
                     tag.strah_komp_recipient = getAttributes<int?>(node, "strah_komp_recipient");
                     tag.name_strah_komp_recipient = getAttributes<string>(node, "name_strah_komp_recipient");
                     tag.nom_passp = getAttributes<int?>(node, "nom_passp");
-                    tag.nom_dover = getAttributes<long?>(node, "nom_dover");
+                    tag.nom_dover = getAttributes<ulong?>(node, "nom_dover");
                     tag.nom_strah_polis_recipient = getAttributes<string>(node, "nom_strah_polis_recipient");
                     tag.house = getAttributes<string>(node, "house");
                     tag.date_dover = getAttributes<DateTime?>(node, "date_dover");
@@ -798,17 +897,17 @@ namespace UZ
                     tag.rab_esr_pr = getAttributes<int?>(node, "rab_esr_pr");
                     tag.date_pr = getAttributes<DateTime?>(node, "date_pr");
                     tag.date_grpol = getAttributes<DateTime?>(node, "date_grpol");
-                    tag.sum_pereb = getAttributes<int?>(node, "sum_pereb");
-                    tag.sum_deliv = getAttributes<int?>(node, "sum_deliv");
+                    tag.sum_pereb = getAttributes<ulong?>(node, "sum_pereb");
+                    tag.sum_deliv = getAttributes<ulong?>(node, "sum_deliv");
                     tag.ser_doc = getAttributes<string>(node, "ser_doc");
                     tag.pr_distance = getAttributes<string>(node, "pr_distance");
-                    tag.osum = getAttributes<int?>(node, "osum");
+                    tag.osum = getAttributes<ulong?>(node, "osum");
                     tag.distance_way = getAttributes<int?>(node, "distance_way");
                     tag.doc_lang = getAttributes<string>(node, "doc_lang");
                     tag.date_otpr = getAttributes<DateTime?>(node, "date_otpr");
                     tag.country_nazn = getAttributes<int?>(node, "country_nazn");
                     tag.country_otpr = getAttributes<int?>(node, "country_otpr");
-                    tag.esr_nakop = getAttributes<string>(node, "esr_nakop");
+                    //tag.esr_nakop = getAttributes<string>(node, "esr_nakop");
                     tag.esr_rz_marsh_grot = getAttributes<string>(node, "esr_rz_marsh_grot");
                     tag.foreign_not_accept = getAttributes<int?>(node, "foreign_not_accept");
                     tag.freeze = getAttributes<string>(node, "freeze");
@@ -829,16 +928,21 @@ namespace UZ
                     tag.speed = getAttributes<string>(node, "speed");
                     tag.srok_end = getAttributes<DateTime?>(node, "srok_end");
                     tag.type_pay = getAttributes<string>(node, "type_pay");
+                    tag.uz_wags_cnt_by_sender = getAttributes<int?>(node, "uz_wags_cnt_by_sender");
+                    tag.uz_wags_cnt_by_uz = getAttributes<int?>(node, "uz_wags_cnt_by_uz");
+                    tag.uz_wags_rod_by_sender = getAttributes<int?>(node, "uz_wags_rod_by_sender");
+                    tag.uz_wags_rod_by_uz = getAttributes<int?>(node, "uz_wags_rod_by_uz");
                     tag.val_gr = getAttributes<int?>(node, "val_gr");
                     tag.value = getAttributes<double?>(node, "value");
                     tag.vid = getAttributes<string>(node, "vid");
                     tag.vid_marsh = getAttributes<int?>(node, "vid_marsh");
                     tag.vid_nakaz_pr = getAttributes<int?>(node, "vid_nakaz_pr");
-                    tag.vid_perev = getAttributes<string>(node, "vid_perev");
+                    //tag.vid_perev = getAttributes<string>(node, "vid_perev");
                     tag.vmd_nom_declar = getAttributes<int?>(node, "vmd_nom_declar");
                     tag.vmd_nom_custom = getAttributes<int?>(node, "vmd_nom_custom");
                     tag.vmd_year_declar = getAttributes<int?>(node, "vmd_year_declar");
                     tag.vmd_date_declar = getAttributes<DateTime?>(node, "vmd_date_declar");
+                    tag.wags_sign_by_sender = getAttributes<int?>(node, "wags_sign_by_sender");
                 }
             }
             catch (Exception e)
@@ -1151,6 +1255,19 @@ namespace UZ
             }
         }
         #endregion
+
+        /// <summary>
+        /// Заполнить атрибуты EORDER
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref EORDER tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.load_num = getAttributes<string>(node, "load_num");
+            }
+        }
         /// <summary>
         /// Заполнить атрибуты FRONTIER_MARK
         /// </summary>
@@ -1658,16 +1775,26 @@ namespace UZ
             if (node.Attributes.Count > 0)
             {
                 tag.calc_weight = getAttributes<int?>(node, "calc_weight");
+                tag.double_oper = getAttributes<int?>(node, "double_oper");
                 tag.etsng_old = getAttributes<string>(node, "etsng_old");
+                tag.excise_date = getAttributes<DateTime?>(node, "excise_date");
+                tag.excise_edrpou = getAttributes<int?>(node, "excise_edrpou");
+                tag.excise_num = getAttributes<ulong?>(node, "excise_num");
+                tag.auction_num = getAttributes<string>(node, "auction_num");
                 tag.gng_old = getAttributes<string>(node, "gng_old");
                 tag.gruzp = getAttributes<double?>(node, "gruzp");
                 tag.is_removed = getAttributes<string>(node, "is_removed");
+                tag.opus_num = getAttributes<string>(node, "opus_num");
                 tag.ostat_davl = getAttributes<double?>(node, "ostat_davl");
                 tag.kod_adm = getAttributes<int?>(node, "kod_adm");
                 tag.kod_firm_owner = getAttributes<string>(node, "kod_firm_owner");
                 tag.kol_conductor = getAttributes<int?>(node, "kol_conductor");
                 tag.kol_os = getAttributes<int?>(node, "kol_os");
-                tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
+                //tag.measure_equip_num = getAttributes<string>(node, "measure_equip_num");
+                tag.load_num = getAttributes<string>(node, "load_num");
+                tag.edrpou_firm_owner = getAttributes<string>(node, "edrpou_firm_owner");
+                tag.edrpou_firm_operator = getAttributes<string>(node, "edrpou_firm_operator");
+                tag.edrpou_firm_renter = getAttributes<string>(node, "edrpou_firm_renter");
                 tag.name_firm_owner = getAttributes<string>(node, "name_firm_owner");
                 tag.name_firm_operator = getAttributes<string>(node, "name_firm_operator");
                 tag.name_firm_renter = getAttributes<string>(node, "name_firm_renter");
@@ -1680,6 +1807,7 @@ namespace UZ
                 tag.pr_sobst = getAttributes<int?>(node, "pr_sobst");
                 tag.pr_zam = getAttributes<int?>(node, "pr_zam");
                 tag.promoted_by = getAttributes<string>(node, "promoted_by");
+                tag.property_sign_eorder = getAttributes<string>(node, "property_sign_eorder");
                 tag.remove_weight = getAttributes<int?>(node, "remove_weight");
                 tag.rod_vag = getAttributes<int?>(node, "rod_vag");
                 tag.roller_weight = getAttributes<int?>(node, "roller_weight");
@@ -1716,6 +1844,19 @@ namespace UZ
                     list.Add(collect_v);
                     tag.collect_v = list.ToArray();
                 }
+                if (chield_node.Name == "FORWARD_DOC")
+                {
+                    FORWARD_DOC forward_doc = new FORWARD_DOC();
+                    GetAttributes(chield_node, ref forward_doc);
+                    tag.forward_doc = forward_doc;
+                }
+                if (chield_node.Name == "FORWARD_SURPLUS")
+                {
+                    FORWARD_SURPLUS forward_surplus = new FORWARD_SURPLUS();
+                    GetAttributes(chield_node, ref forward_surplus);
+                    tag.forward_surplus = forward_surplus;
+                }
+
                 if (chield_node.Name == "TOOLS")
                 {
                     TOOLS tools = new TOOLS();
@@ -1821,6 +1962,135 @@ namespace UZ
                 tag.weight_place_br_gr = getAttributes<int?>(node, "weight_place_br_gr");
                 tag.weight_place_net_gr = getAttributes<int?>(node, "weight_place_net_gr");
                 tag.zvvt_num = getAttributes<string>(node, "zvvt_num");
+            }
+        }
+        /// <summary>
+        /// Заполнить атрибуты FORWARD_PAY
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref FORWARD_PAY tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.code = getAttributes<int?>(node, "code");
+                tag.currency = getAttributes<int?>(node, "currency");
+                tag.doc_date = getAttributes<DateTime?>(node, "doc_date");
+                tag.doc_num = getAttributes<string>(node, "doc_num");
+                tag.nds = getAttributes<ulong?>(node, "nds");
+                tag.subcode = getAttributes<int?>(node, "subcode");
+                tag.sum = getAttributes<ulong?>(node, "sum");
+            }
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+
+            }
+        }
+        /// <summary>
+        /// Заполнить атрибуты REVIEWED
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref REVIEWED tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.apartam = getAttributes<int?>(node, "apartam");
+                tag.city = getAttributes<string>(node, "city");
+                tag.date_sign = getAttributes<DateTime?>(node, "date_sign");
+                tag.delivery_date = getAttributes<DateTime?>(node, "delivery_date");
+                tag.enotification = getAttributes<string>(node, "enotification");
+                tag.house = getAttributes<string>(node, "house");
+                tag.passp_num = getAttributes<int?>(node, "passp_num");
+                tag.passp_ser = getAttributes<string>(node, "passp_ser");
+                tag.signer = getAttributes<string>(node, "signer");
+                tag.street = getAttributes<string>(node, "street");
+                tag.surplus_doc_date = getAttributes<DateTime?>(node, "surplus_doc_date");
+                tag.surplus_doc_num = getAttributes<string>(node, "surplus_doc_num");
+                tag.warrant_date = getAttributes<DateTime?>(node, "warrant_date");
+                tag.warrant_num = getAttributes<ulong?>(node, "warrant_num");
+                tag.warrant_type = getAttributes<int?>(node, "warrant_type");
+                foreach (XmlNode chield_node in node.ChildNodes)
+                {
+
+                }
+            }
+        }
+        /// <summary>
+        /// Заполнить атрибуты SURPLUS
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref SURPLUS tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.doc_date = getAttributes<DateTime?>(node, "doc_date");
+                tag.doc_num = getAttributes<string>(node, "doc_num");
+                tag.surplus_count = getAttributes<int?>(node, "surplus_count");
+                tag.surplus_date = getAttributes<DateTime?>(node, "surplus_date");
+                tag.surplus_weight = getAttributes<int?>(node, "surplus_weight");
+                foreach (XmlNode chield_node in node.ChildNodes)
+                {
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Заполнить атрибуты FORWARD_DOC
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref FORWARD_DOC tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.act_adm = getAttributes<int?>(node, "act_adm");
+                tag.act_date = getAttributes<DateTime?>(node, "act_date");
+                tag.act_emr = getAttributes<int?>(node, "act_emr");
+                tag.act_num = getAttributes<string>(node, "act_num");
+                tag.act_carrier_code = getAttributes<string>(node, "act_carrier_code");
+                tag.act_carrier_name = getAttributes<string>(node, "act_carrier_name");
+                tag.act_reason = getAttributes<string>(node, "act_reason");
+                tag.doc_date = getAttributes<DateTime?>(node, "doc_date");
+            }
+            foreach (XmlNode chield_node in node.ChildNodes)
+            {
+                if (chield_node.Name == "FORWARD_PAY")
+                {
+                    FORWARD_PAY forward_pay = new FORWARD_PAY();
+                    GetAttributes(chield_node, ref forward_pay);
+                    tag.forward_pay = forward_pay;
+                }
+                if (chield_node.Name == "REVIEWED")
+                {
+                    REVIEWED reviewed = new REVIEWED();
+                    GetAttributes(chield_node, ref reviewed);
+                    tag.reviewed = reviewed;
+                }
+                if (chield_node.Name == "SURPLUS")
+                {
+                    SURPLUS surplus = new SURPLUS();
+                    GetAttributes(chield_node, ref surplus);
+                    tag.surplus = surplus;
+                }
+            }
+        }
+        /// <summary>
+        /// Заполнить атрибуты FORWARD_SURPLUS
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="tag"></param>
+        private void GetAttributes(XmlNode node, ref FORWARD_SURPLUS tag)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                tag.doc_date = getAttributes<DateTime?>(node, "doc_date");
+                tag.doc_num = getAttributes<string>(node, "doc_num");
+                tag.surplus_count = getAttributes<int?>(node, "surplus_count");
+                tag.surplus_date = getAttributes<DateTime?>(node, "surplus_date");
+                tag.surplus_weight = getAttributes<int?>(node, "surplus_weight");
             }
         }
         /// <summary>
@@ -1937,6 +2207,20 @@ namespace UZ
             List<CONT> list = otpr.cont.ToList();
             list.Add(tag);
             otpr.cont = list.ToArray();
+        }
+        /// <summary>
+        /// Заполним тег EORDER
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="otpr"></param>
+        private void GetTagEORDER(XmlNode node, ref OTPR otpr)
+        {
+            EORDER tag = new EORDER();
+            GetAttributes(node, ref tag);
+            // Добавим клиентов
+            List<EORDER> list = otpr.eorder.ToList();
+            list.Add(tag);
+            otpr.eorder = list.ToArray();
         }
         /// <summary>
         /// Заполним тег FRONTIER_MARK
@@ -2214,6 +2498,7 @@ namespace UZ
                             case "CLIENT": { GetTagCLIENT(otpr_node, ref otpr); break; }
                             case "COM_COND": { GetTagCOM_COND(otpr_node, ref otpr); break; }
                             case "CONT": { GetTagCONT(otpr_node, ref otpr); break; }
+                            case "EORDER": { GetTagEORDER(otpr_node, ref otpr); break; }
                             case "FRONTIER_MARK": { GetTagFRONTIER_MARK(otpr_node, ref otpr); break; }
                             case "OTPRDP": { GetTagOTPRDP(otpr_node, ref otpr); break; }
                             case "PAC": { GetTagPAC(otpr_node, ref otpr); break; }
@@ -2280,7 +2565,8 @@ namespace UZ
                     List<XmlNode> list = result.ToList();
                     list.Add(chield_node);
                     result = list.ToArray();
-                };
+                }
+                ;
             }
             return result;
         }
@@ -2365,43 +2651,47 @@ namespace UZ
             }
             else
             {
-                foreach (XmlNode attr in edit_node.Attributes)
+                if (edit_node != null)
                 {
-
-                    if (mode == 0 || mode == 1)
+                    foreach (XmlNode attr in edit_node.Attributes)
                     {
-                        XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
-                        if (upd_attr != null)
-                        {
-                            upd_attr.Value = attr.Value;
-                        }
-                        else
-                        {
-                            XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
-                            new_attr.Value = attr.Value;
-                            node_searsh.Attributes.Append(new_attr);
-                        }
 
+                        if (mode == 0 || mode == 1)
+                        {
+                            XmlNode upd_attr = node_searsh.Attributes.GetNamedItem(attr.Name);
+                            if (upd_attr != null)
+                            {
+                                upd_attr.Value = attr.Value;
+                            }
+                            else
+                            {
+                                XmlAttribute new_attr = doc.CreateAttribute(attr.Name);
+                                new_attr.Value = attr.Value;
+                                node_searsh.Attributes.Append(new_attr);
+                            }
+
+                        }
+                        if (mode == 2)
+                        {
+                            node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
+                            //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
+                            //at.RemoveAll();
+                        }
                     }
-                    if (mode == 2)
+                    foreach (XmlNode child_node_doc in edit_node.ChildNodes)
                     {
-                        node_searsh.Attributes.Remove(node_searsh.Attributes[attr.Name]);
-                        //XmlNode at = node_searsh.Attributes.GetNamedItem(attr.Name);
-                        //at.RemoveAll();
+                        if (mode == 0)
+                        {
+                            XmlElement new_node = doc.CreateElement(child_node_doc.Name);
+                            foreach (XmlNode attr in child_node_doc.Attributes)
+                            {
+                                new_node.SetAttribute(attr.Name, attr.Value);
+                            }
+                            node_searsh.AppendChild(new_node);
+                        }
                     }
                 }
-                foreach (XmlNode child_node_doc in edit_node.ChildNodes)
-                {
-                    if (mode == 0)
-                    {
-                        XmlElement new_node = doc.CreateElement(child_node_doc.Name);
-                        foreach (XmlNode attr in child_node_doc.Attributes)
-                        {
-                            new_node.SetAttribute(attr.Name, attr.Value);
-                        }
-                        node_searsh.AppendChild(new_node);
-                    }
-                }
+
             }
             // обновим
             xml = doc.OuterXml;

@@ -131,29 +131,30 @@ IDS_TRANSFER.prototype.postUZ_DOC_To_DB_IDS = function (uz_doc, callback) {
     });
 };
 
-//======= Перенос сотавов по прибытию и отправке (ИДС-Прибытие, ИДС-АРМ диспетчера, ИДС-Отправка ======================================
-// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
-IDS_TRANSFER.prototype.postIncomingArrivalSostav = function (transfer_sostav, callback) {
-    $.ajax({
-        url: '../../api/ids/transfer/incoming/arrival_sostav/',
-        type: 'POST',
-        data: JSON.stringify(transfer_sostav),
-        contentType: "application/json;charset=utf-8",
-        async: true,
-        beforeSend: function () {
-            AJAXBeforeSend();
-        },
-        success: function (data) {
-            if (typeof callback === 'function') {
-                callback(data);
-            }
-        },
-        error: function (x, y, z) {
-            LockScreenOff();
-            OnAJAXError("IDS_TRANSFER.postIncomingArrivalSostav", x, y, z);
-        },
-        complete: function () {
-            AJAXComplete();
-        },
-    });
-};
+////TODO! Удалить переделал
+////======= Перенос сотавов по прибытию и отправке (ИДС-Прибытие, ИДС-АРМ диспетчера, ИДС-Отправка ======================================
+//// Перенести принятый состав на станцию парибытия состав на станцию прибытия АМКР
+//IDS_TRANSFER.prototype.postIncomingArrivalSostav = function (transfer_sostav, callback) {
+//    $.ajax({
+//        url: '../../api/ids/transfer/incoming/arrival_sostav/',
+//        type: 'POST',
+//        data: JSON.stringify(transfer_sostav),
+//        contentType: "application/json;charset=utf-8",
+//        async: true,
+//        beforeSend: function () {
+//            AJAXBeforeSend();
+//        },
+//        success: function (data) {
+//            if (typeof callback === 'function') {
+//                callback(data);
+//            }
+//        },
+//        error: function (x, y, z) {
+//            LockScreenOff();
+//            OnAJAXError("IDS_TRANSFER.postIncomingArrivalSostav", x, y, z);
+//        },
+//        complete: function () {
+//            AJAXComplete();
+//        },
+//    });
+//};

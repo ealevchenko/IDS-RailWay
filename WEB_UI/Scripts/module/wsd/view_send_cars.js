@@ -453,7 +453,7 @@
                 control: 'way',
                 list: this.list_station,
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     var list_way = get_list_way(id);
@@ -577,7 +577,7 @@
                 control: 'outer_way',
                 list: get_list_station_on(-1, -1),
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     var list_outer_ways = get_list_outer_ways(id);
@@ -611,7 +611,7 @@
                 control: null,
                 list: get_list_outer_ways(-1),
                 select: function (e, ui) {
-                    event.preventDefault();
+                    e.preventDefault();
                     // Обработать выбор
                     var id = Number($(e.currentTarget).val());
                     //view_wagons_from_way(id);

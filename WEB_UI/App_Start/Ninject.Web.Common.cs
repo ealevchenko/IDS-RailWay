@@ -156,6 +156,9 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Ways>>().To<EFIDS.Concrete.EFDirectory_Ways>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_OuterWays>>().To<EFIDS.Concrete.EFDirectory_OuterWays>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Currency>>().To<EFIDS.Concrete.EFDirectory_Currency>();
+
+
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagons>>().To<EFIDS.Concrete.EFCardsWagons>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.CardsWagonsRepairs>>().To<EFIDS.Concrete.EFCardsWagonsRepairs>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParksWagons>>().To<EFIDS.Concrete.EFParksWagons>();
@@ -167,6 +170,8 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Countrys>>().To<EFUZ.Concrete.EFDirectory_Countrys>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Stations>>().To<EFUZ.Concrete.EFDirectory_Stations>();
             kernel.Bind<EFUZ.Abstract.IRepository<EFUZ.Entities.Directory_Cargo>>().To<EFUZ.Concrete.EFDirectory_Cargo>();
+
+
 
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_Reason_Discrepancy>>().To<EFIDS.Concrete.EFDirectory_Reason_Discrepancy>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Directory_DetentionReturn>>().To<EFIDS.Concrete.EFDirectory_DetentionReturn>();
@@ -207,9 +212,12 @@ namespace WEB_UI.App_Start
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Wagon>>().To<EFIDS.Concrete.EFParkState_Wagon>();
             kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.ParkState_Way>>().To<EFIDS.Concrete.EFParkState_Way>();
 
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.Usage_Fee_Period>>().To<EFIDS.Concrete.EFUsage_Fee_Period>();
+
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalRoutes>>().To<EFIDS.Concrete.EFWagonInternalRoutes>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalMovement>>().To<EFIDS.Concrete.EFWagonInternalMovement>();
             kernel.Bind<EFIDS.Abstract.ILongRepository<EFIDS.Entities.WagonInternalOperation>>().To<EFIDS.Concrete.EFWagonInternalOperation>();
+            kernel.Bind<EFIDS.Abstract.IRepository<EFIDS.Entities.WagonUsageFee>>().To<EFIDS.Concrete.EFWagonUsageFee>();
 
             kernel.Bind<EFIDS_Arhiv.Abstract.IStringRepository<EFIDS_Arhiv.Entities.UZ_DOC_PDF>>().To<EFIDS_Arhiv.Concrete.EFUZ_DOC_PDF>();
 

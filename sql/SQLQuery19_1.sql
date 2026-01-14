@@ -1,0 +1,12 @@
+SELECT TOP (1000) [id]
+      ,[doc_Id]
+      ,[doc_Revision]
+      ,[doc_Status]
+      ,[depart_code]
+      ,[arrived_code]
+      ,[dt]
+      ,[update_dt]
+      ,[raw_xml]
+      ,[namespace_uri]
+  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data]
+  where [doc_Id] in ('97130351', '32000000000540082961')

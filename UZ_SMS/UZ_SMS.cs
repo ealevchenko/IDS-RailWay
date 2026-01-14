@@ -143,12 +143,6 @@ namespace UZ
                 e.ExceptionMethodLog(String.Format("Connection(host={0}, port={1})", host, port), this.servece_owner, eventID);
                 return false;
             }
-
-
-
-
-
-
         }
         /// <summary>
         /// Подключится к модулю согласования
@@ -460,9 +454,9 @@ namespace UZ
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 //DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
-                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString(), sender_code);
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString().PadLeft(8, '0'), sender_code);
 
-                list = list.ToList().Where(d => d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
+                list = list.ToList().Where(d => d.status != uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr > start_date).OrderByDescending(c => c.otpr.date_otpr).ToList();
                 // Проверим наличие документов
                 if (list == null || list.Count() == 0) return doc;
                 doc = new UZ_DOC()
@@ -482,6 +476,40 @@ namespace UZ
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetDocumentOfSMS_NumShipper(num={0}, shipper={1}, start_date={2})", num, sender_code, start_date), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        public UZ_DOC GetDocumentOfSMS_NumShipper(int num, string sender_code, DateTime lower_date, DateTime upper_date)
+        {
+            try
+            {
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                UZ_DOC doc = null;
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                //DateTime new_dt = ((DateTime)start_date).AddHours(0);
+
+                List<UZ_DOC_FULL> list = Get_UZ_DOC_SMS_Of_NumWagon(num.ToString().PadLeft(8, '0'), sender_code);
+
+                list = list.ToList().Where(d => d.status != uz_status.canceled && d.sender_code == sender_code && d.otpr.date_otpr >= lower_date && d.otpr.date_otpr <= upper_date).OrderBy(c => c.otpr.date_otpr).ToList();
+                // Проверим наличие документов
+                if (list == null || list.Count() == 0) return doc;
+                doc = new UZ_DOC()
+                {
+                    id_doc = list[0].id_doc,
+                    revision = list[0].revision,
+                    status = list[0].status,
+                    sender_code = list[0].sender_code,
+                    recipient_code = list[0].recipient_code,
+                    dt = list[0].dt,
+                    xml = list[0].xml,
+                    xml_final = list[0].xml_final,
+                    otpr = list[0].otpr,
+                };
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfSMS_NumShipper(num={0}, sender_code={1}, lower_date={2}, upper_date={3})", num, sender_code, lower_date, upper_date), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -526,7 +554,7 @@ namespace UZ
                 UZ_DOC doc = null;
                 EFUZ_VagonData ef_vagon = new EFUZ_VagonData(new EFSMSDbContext());
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
-                UZ_VagonData vagon = ef_vagon.Context.Where(v => v.nomer == num.ToString()).OrderByDescending(c => c.dt).FirstOrDefault();
+                UZ_VagonData vagon = ef_vagon.Context.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).OrderByDescending(c => c.dt).FirstOrDefault();
                 if (vagon != null)
                 {
                     // вагон найден. найдем документ
@@ -574,8 +602,9 @@ namespace UZ
             {
                 UZ_DOC doc = null;
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                if (dt_arrival == null) dt_arrival = DateTime.Now;
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 if (list_uz_data != null && list_uz_data.Count() > 0)
                 {
@@ -590,12 +619,14 @@ namespace UZ
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                         DateTime? end_date = otpr != null ? otpr.srok_end : null;
 
-                        if ((dt_arrival != null && end_date != null && dt_arrival <= end_date) || (dt_arrival != null && uzd.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.update_dt) || (dt_arrival != null && uzd.update_dt == null && uzd.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.dt))
+                        if ((dt_arrival != null && end_date != null && dt_arrival <= end_date) ||
+                            (dt_arrival != null && uzd.update_dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.update_dt) ||
+                            (dt_arrival != null && uzd.update_dt == null && uzd.dt != null && ((DateTime)dt_arrival).AddHours(period) <= uzd.dt))
                         {
                             // Проверим есть вагон в этом документе
                             if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                             {
-                                int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
                                 if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
                                 {
                                     if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
@@ -637,6 +668,7 @@ namespace UZ
         /// <param name="shipper"></param>
         /// <param name="start_date"></param>
         /// <returns></returns>
+        //TODO: !!! Переделать на 2 даты
         public UZ_DOC GetDocumentOfDB_NumShipper(int num, int[] shipper, DateTime? start_date)
         {
             try
@@ -647,8 +679,10 @@ namespace UZ
                 DateTime new_dt = ((DateTime)start_date).AddHours(0);
 
                 string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and [depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
-                    "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)))) order by [dt]";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                    "and ((update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))    )) order by [dt] desc";
+
+                // and (([depart_code] in (0,7932,'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932'))
                 //"" +
                 //""and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)" +
                 //" and CONVERT(nvarchar(max), raw_xml) like(N'%" + num.ToString() + "%') " + 
@@ -663,8 +697,8 @@ namespace UZ
                         OTPR otpr = convert.FinalXMLToOTPR(xml_final);
                         if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                         {
-                            // Проверим вагон пренадлежит документу
-                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString());
+                            // Проверим вагон принадлежит документу
+                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString().PadLeft(8, '0'));
                             if (vagon != null)
                             {
                                 // Документ найден 
@@ -692,6 +726,149 @@ namespace UZ
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumShipper(num={0}, shipper={1}, start_date={2})", num, shipper, start_date), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        public UZ_DOC GetDocumentOfDB_NumShipper(int num, int[] shipper, DateTime lower_date, DateTime upper_date)
+        {
+            try
+            {
+
+                UZ_DOC doc = null;
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                DateTime new_dt = ((DateTime)upper_date).AddHours(0);
+
+                //string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                //    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                //    "and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
+                //    "and (update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120))) order by [dt] "; //desc
+
+                //            string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                //"where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString() + "') and (([depart_code] in (0," + IntsToString(shipper, ',') + ",'none') and [arrived_code] <> '7932') or ([depart_code]='7932' and [arrived_code] = '7932')) and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                //"and (dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) " +
+                //"and (update_dt is not null and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120) or (update_dt is null and dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)) or (not ([depart_code]='7932' and [arrived_code]='7932') and update_dt >= convert(datetime,'" + new_dt.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss") + "',120)))" +
+                //" order by [dt] "; //desc
+
+                // !Обновил 05.12.2025 (смотри накл 45734811 ведомость 1571 здача 04-12-2025 04:30:00)
+                // убрал условие нельзя отправлять (с 7932 до 7932)
+                // дата создания документа отправки всегда больше даты принятия вагона
+                // если есть дата обновления дока тогда проверяем статус если Accepted','Recieved тогда дата обновления меньше или равна верхнему пределу
+                // если Recieved', 'Uncredited тогда дата обновления больше или равна верхнему пределу
+                // если нет даты обновления тогда дата создания должна быть меньше или равна верхнему пределу
+                string sql = @"SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
+                "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = '" + num.ToString().PadLeft(8, '0') + "') " +
+                "and ([depart_code] in (0," + IntsToString(shipper, ',') + ",'none')  )" + //and [arrived_code] <> '7932' // Обновил 05.12.2025
+                "and [doc_Status] in (N'Accepted', N'Delivered', N'Recieved', N'Uncredited') " +
+                "and dt >= convert(datetime,'" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "',120) " +
+                "and " +
+                "( " +
+                "(update_dt is not null and " +
+                "(([doc_Status] in (N'Accepted', N'Recieved') and update_dt <= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120))  or ([doc_Status] in (N'Delivered', N'Uncredited') and update_dt >= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120))) " +
+                ") " +
+                "or (update_dt is null and dt <= convert(datetime,'" + new_dt.ToString("yyyy-MM-dd HH:mm:ss") + "',120)))";
+                List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
+                //List<UZ_Data> list_uzd_uncredited = list_uzd.Where(u => u.doc_Status == "Uncredited").ToList();
+                //List<UZ_Data> list_uzd_not_uncredited = list_uzd.Where(u => u.doc_Status != "Uncredited").ToList();
+                doc = GetDocumentOfList_UZ_Data(num, list_uzd, lower_date, upper_date);
+                //if (list_uzd_not_uncredited != null && list_uzd_not_uncredited.Count() > 0)
+                //{
+                //    doc = GetDocumentOfList_UZ_Data(num, list_uzd_not_uncredited, lower_date);
+                //}
+                //if (doc == null && list_uzd_uncredited != null && list_uzd_uncredited.Count() > 0)
+                //{
+                //    doc = GetDocumentOfList_UZ_Data(num, list_uzd_uncredited, lower_date);
+                //}
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumShipper(num={0}, shipper={1}, upper_date={2})", num, shipper, upper_date), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        public List<OTPR> GetDocumentsOfDB_Period(int depart_code, DateTime lower_date, DateTime upper_date)
+        {
+            try
+            {
+
+                UZ_DOC doc = null;
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
+                List<OTPR> list = new List<OTPR>();
+                //DateTime new_dt = ((DateTime)upper_date).AddHours(0);
+
+                string sql = @"SELECT * FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] where  [dt] > '" + lower_date.ToString("yyyy-MM-dd HH:mm:ss") + "' and [dt] < '" + upper_date.ToString("yyyy-MM-dd HH:mm:ss") + "' and  [depart_code] = '" + depart_code.ToString() + "'";
+                List<UZ_Data> list_uzd = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
+                foreach (UZ_Data uzd in list_uzd)
+                {
+                    if (uzd != null)
+                    {
+                        string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
+                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        list.Add(otpr);
+                    }
+                }
+                return list;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfDB_NumShipper(depart_code={0}, lower_date={1}, upper_date={2})", depart_code, lower_date, upper_date), this.servece_owner, eventID);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Получить нужный документ из списка документов
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="list_uzd"></param>
+        /// <param name="lower_date"></param>
+        /// <param name="upper_date"></param>
+        /// <returns></returns>
+        public UZ_DOC GetDocumentOfList_UZ_Data(int num, List<UZ_Data> list_uzd, DateTime lower_date, DateTime upper_date)
+        {
+            try
+            {
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                UZ_DOC doc = null;
+
+                foreach (UZ_Data uzd in list_uzd)
+                {
+                    if (uzd != null)
+                    {
+                        string xml_final = convert.XMLToFinalXML(uzd.raw_xml);
+                        OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                        if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0 && otpr.date_otpr >= lower_date && otpr.date_otpr <= upper_date)
+                        {
+                            // Проверим вагон принадлежит документу
+                            UZ.VAGON vagon = otpr.vagon.ToList().Find(v => v.nomer == num.ToString().PadLeft(8, '0'));
+                            if (vagon != null)
+                            {
+                                // Документ найден 
+                                doc = new UZ_DOC();
+                                doc.id_doc = uzd.doc_Id;
+                                doc.revision = uzd.doc_Revision;
+                                doc.status = GetStatus(uzd.doc_Status);
+                                doc.sender_code = uzd.depart_code;
+                                doc.recipient_code = uzd.arrived_code;
+                                doc.dt = uzd.dt;
+                                doc.xml = uzd.raw_xml;
+                                doc.xml_final = xml_final;
+                                doc.otpr = otpr;
+                                break;
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                }
+                return doc;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("GetDocumentOfList_UZ_Data(num={0}, list_uzd={1}, lower_date={2}, upper_date={3})", num, list_uzd, lower_date, upper_date), this.servece_owner, eventID);
                 return null;
             }
         }
@@ -745,7 +922,7 @@ namespace UZ
             {
                 EFUZ_Data ef_data = new EFUZ_Data(new EFSMSDbContext());
                 string sql = "SELECT *  FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_Data] " +
-                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString() + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
+                    "where [doc_Id] in (SELECT [nom_doc] FROM [KRR-PA-VIZ-Other_DATA].[dbo].[UZ_VagonData] where [nomer] = " + num.ToString().PadLeft(8, '0') + ") and [arrived_code] in (0," + IntsToString(consignees, ',') + ",'none') order by[dt] desc";
                 List<UZ_Data> list_uz_data = ef_data.Database.SqlQuery<UZ_Data>(sql).ToList();
                 // Выберем все документы за указаный период
                 List<UZ_DOC> result = new List<UZ_DOC>();
@@ -888,7 +1065,7 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
                 string sql = "select * from [dbo].[get_UZ_Data_of_num](@num)";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
 
@@ -934,14 +1111,14 @@ namespace UZ
                 EFSMSDbContext context = new EFSMSDbContext();
                 UZ_Convert convert = new UZ_Convert(this.servece_owner);
                 // Сделаем выборку 
-                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString());
-                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by[dt] desc";
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
+                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by [dt] desc";
                 List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
                 if (list_uz_data != null)
                 {
                     foreach (UZ_Data uz_data in list_uz_data)
                     {
-                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) ? int.Parse(uz_data.arrived_code) : -1) == true)
+                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) && uz_data.arrived_code != "none" ? int.Parse(uz_data.arrived_code) : -1) == true)
                         {
                             string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
                             OTPR otpr = convert.FinalXMLToOTPR(xml_final);
@@ -954,7 +1131,7 @@ namespace UZ
                                 // Проверим есть вагон в этом документе
                                 if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
                                 {
-                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString()).Count();
+                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
                                     if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
                                     {
                                         if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
@@ -990,6 +1167,81 @@ namespace UZ
             catch (Exception e)
             {
                 e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SDB_Of_Num_Date(num={0}, consignees={1}, stations={2}, dt_arrival={3}, period={4})", num, consignees, stations, dt_arrival, period), this.servece_owner, eventID);
+                return null;
+            }
+        }
+        /// <summary>
+        /// Получить текущий документ по номеру вагона и датам предудущей отправки и текущего приема
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="consignees"></param>
+        /// <param name="stations"></param>
+        /// <param name="dt_old_outgoing"></param>
+        /// <param name="dt_adoption"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        public UZ_DOC_FULL Get_UZ_DOC_SDB_Of_Num_Date(int num, List<int> consignees, List<int> stations, DateTime? dt_old_outgoing, DateTime dt_adoption, int period)
+        {
+            try
+            {
+                UZ_DOC_FULL result = null;
+                EFSMSDbContext context = new EFSMSDbContext();
+                UZ_Convert convert = new UZ_Convert(this.servece_owner);
+                // Сделаем выборку 
+                System.Data.SqlClient.SqlParameter p_num = new System.Data.SqlClient.SqlParameter("@num", num.ToString().PadLeft(8, '0'));
+                string sql = "select * from [dbo].[get_UZ_Data_of_num](@num) order by [dt] desc";
+                List<UZ_Data> list_uz_data = context.Database.SqlQuery<UZ_Data>(sql, p_num).ToList();
+                if (list_uz_data != null)
+                {
+                    foreach (UZ_Data uz_data in list_uz_data)
+                    {
+                        if (consignees.Contains(!string.IsNullOrWhiteSpace(uz_data.arrived_code) ? int.Parse(uz_data.arrived_code) : -1) == true)
+                        {
+                            string xml_final = convert.XMLToFinalXML(uz_data.raw_xml);
+                            OTPR otpr = convert.FinalXMLToOTPR(xml_final);
+                            DateTime? end_date = otpr != null ? otpr.srok_end : null;
+                            // Проверим на время
+                            if (dt_old_outgoing != null && otpr.date_otpr >= dt_old_outgoing && otpr.date_otpr <= dt_adoption)
+                            {
+                                // Проверим есть вагон в этом документе
+                                if (otpr != null && otpr.vagon != null && otpr.vagon.Count() > 0)
+                                {
+                                    int searsh_vag = otpr.vagon.Where(v => v.nomer == num.ToString().PadLeft(8, '0')).Count();
+                                    if (searsh_vag > 0 && otpr != null && otpr.route != null && otpr.route.Count() > 0)
+                                    {
+                                        if (!String.IsNullOrWhiteSpace(otpr.route[0].stn_to))
+                                        {
+                                            int res = (stations != null && stations.Count() > 0 ? stations.Where(s => s.ToString() == otpr.route[0].stn_to.ToString()).Count() : 0);
+                                            if (res > 0)
+                                            {
+                                                result = new UZ_DOC_FULL()
+                                                {
+                                                    id_doc = uz_data.doc_Id,
+                                                    revision = uz_data.doc_Revision,
+                                                    num_uz = otpr != null ? otpr.nom_doc : null,
+                                                    status = GetStatus(uz_data.doc_Status),
+                                                    sender_code = uz_data.depart_code,
+                                                    recipient_code = uz_data.arrived_code,
+                                                    dt = uz_data.dt,
+                                                    xml = uz_data.raw_xml,
+                                                    xml_final = xml_final,
+                                                    otpr = otpr,
+                                                };
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                e.ExceptionMethodLog(String.Format("Get_UZ_DOC_SDB_Of_Num_Date(num={0}, consignees={1}, stations={2}, dt_old_outgoing={3}, dt_adoption={4}, period={4})", num, consignees, stations, dt_old_outgoing, dt_adoption, period), this.servece_owner, eventID);
                 return null;
             }
         }

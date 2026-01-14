@@ -216,7 +216,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
-                IDSDirectory ids_dir = new IDSDirectory(service.WebAPI_IDS);
+                IDS_Directory ids_dir = new IDS_Directory(service.WebAPI_IDS);
                 bool correct = ids_dir.IsCorrectNumCar(num);
                 return Ok(correct);
             }

@@ -9,6 +9,7 @@ using EFIDS.Helper;
 using EFIDS.Abstract;
 using EFIDS.Entities;
 using System.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace WEB_UI.Controllers.api
 {
@@ -24,6 +25,17 @@ namespace WEB_UI.Controllers.api
         // Добавил 21-06-2022
         public long? arrival_car_id_outgoing_car { get; set; }
         public long? arrival_car_id_outgoing_uz_vagon { get; set; }
+        // Добавил 12-12-2022
+        public long? old_arrival_car_id_outgoing_car { get; set; }
+        public long? old_arrival_car_id_outgoing_uz_vagon { get; set; }
+        public DateTime? old_date_outgoing { get; set; }
+        public DateTime? old_date_outgoing_act { get; set; }
+        public int? old_outgoing_uz_vagon_id_cargo { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_ru { get; set; }
+        public string old_outgoing_uz_vagon_cargo_name_en { get; set; }
+        public int? old_outgoingl_uz_document_code_stn_to { get; set; }
+        public string old_outgoing_uz_document_station_to_name_ru { get; set; }
+        public string old_outgoing_uz_document_station_to_name_en { get; set; }
         // Добавил 10-05-2022
         public long? arrival_car_wim_cur_id { get; set; }
         public long? arrival_car_wim_cur_id_wagon_internal_routes { get; set; }
@@ -143,6 +155,11 @@ namespace WEB_UI.Controllers.api
         public DateTime? arrival_uz_vagon_arrival_wagons_rent_end { get; set; }
         public bool? arrival_uz_vagon_arrival_wagons_rent_operator_paid { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_operator_color { get; set; }
+        public int? arrival_uz_vagon_arrival_wagons_rent_group_id_operator { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_group_operators_ru { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_group_operators_en { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_ru { get; set; }
+        public string arrival_uz_vagon_arrival_wagons_rent_operator_group_abbr_en { get; set; }
         public int? arrival_uz_vagon_arrival_wagons_rent_id_limiting { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_limiting_name_ru { get; set; }
         public string arrival_uz_vagon_arrival_wagons_rent_limiting_name_en { get; set; }
@@ -256,6 +273,12 @@ namespace WEB_UI.Controllers.api
         public long? arrival_uz_document_parent_id { get; set; }
         // добавил 10-05-2022
         public bool? arrival_uz_document_manual { get; set; }
+        // добавил 13-07-2023
+        public DateTime? arrival_uz_document_date_otpr { get; set; }
+        public DateTime? arrival_uz_document_srok_end { get; set; }
+        public DateTime? arrival_uz_document_date_grpol { get; set; }
+        public DateTime? arrival_uz_document_date_pr { get; set; }
+        public DateTime? arrival_uz_document_date_vid { get; set; }
         // Исправил 27.04.2022
         public string sap_incoming_supply_num { get; set; }
         public string sap_incoming_supply_pos { get; set; }
@@ -278,7 +301,30 @@ namespace WEB_UI.Controllers.api
         public string instructional_letters_note { get; set; }
         public bool? account_balance { get; set; }
     }
-
+    public class MineCargoIncomingCars
+    {
+        public int? id_cargo { get; set; } 
+        public string cargo_name_ru { get; set; } 
+        public string cargo_name_en { get; set; } 
+        public int? id_group_cargo { get; set; } 
+        public string cargo_group_name_ru { get; set; } 
+        public string cargo_group_name_en { get; set; } 
+        public int? id_out_group_cargo { get; set; } 
+        public string cargo_out_group_name_ru { get; set; } 
+        public string cargo_out_group_name_en { get; set; } 
+        public int? id_cargo_etsng { get; set; } 
+        public int? code_cargo_etsng { get; set; } 
+        public string cargo_etsng_name_ru { get; set; } 
+        public string cargo_etsng_name_en { get; set; } 
+        public int? id_division { get; set; } 
+        public string division_abbr_ru { get; set; } 
+        public string division_abbr_en { get; set; } 
+        public int? code_stn_from { get; set; } 
+        public string station_name_ru { get; set; } 
+        public string station_name_en { get; set; } 
+        public int? count_wagon { get; set; } 
+        public int? vesg { get; set; } 
+    }
     public class ViewReportAdoptionWagonNotOperation
     {
         public long id_sostav { get; set; }
@@ -471,6 +517,26 @@ namespace WEB_UI.Controllers.api
             }
         }
 
+
+        // GET: api/ids/rwt/arrival_cars/mine_cargo/car/start/2023-03-01T00:00:00/stop/2023-03-31T23:59:59
+        [Route("mine_cargo/car/start/{start:datetime}/stop/{stop:datetime}")]
+        [ResponseType(typeof(MineCargoIncomingCars))]
+        public IHttpActionResult GetMineCargoIncomingCarsOfPeriod(DateTime start, DateTime stop)
+        {
+            try
+            {
+                System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", start);
+                System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", stop);
+                string sql = "select * from [IDS].[get_mine_cargo_incoming_cars_of_period](@start, @stop)";
+                List<MineCargoIncomingCars> result = this.ef_ids.Database.SqlQuery<MineCargoIncomingCars>(sql, p_start, p_stop).ToList();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         public object get_string_of_int(int[] vals) {
             if (vals != null && vals.Count() > 0) {
                 return (object)String.Join(",", vals);
@@ -491,6 +557,7 @@ namespace WEB_UI.Controllers.api
         {
             try
             {
+                this.ef_ids.Database.CommandTimeout = 300;
                 System.Data.SqlClient.SqlParameter p_start = new System.Data.SqlClient.SqlParameter("@start", value.start);
                 System.Data.SqlClient.SqlParameter p_stop = new System.Data.SqlClient.SqlParameter("@stop", value.stop);
                 System.Data.SqlClient.SqlParameter p_laden = new System.Data.SqlClient.SqlParameter("@laden", value.laden);
@@ -520,6 +587,7 @@ namespace WEB_UI.Controllers.api
 
                 string sql = "EXEC [IDS].[get_view_incoming_cars_of_where] @start, @stop, @laden, @accounting, @client, @not_client, @paid, @nums, @nom_main_docs, @nom_docs, @id_operator, @id_limiting, @id_owner, @code_stn_from, @id_cargo, @id_certification_data, @supply_cargo_code, @id_group_cargo, @code_consignee, @id_division, @id_genus, @id_condition, @code_payer_arrival, @code_payer_arrival_name, @id_station_on";
                 List<ViewIncomingCars> result = this.ef_ids.Database.SqlQuery<ViewIncomingCars>(sql, p_start, p_stop, p_laden, p_accounting, p_client, p_not_client, p_paid, p_nums, p_nom_main_docs, p_nom_docs, p_id_operator, p_id_limiting, p_id_owner, p_code_stn_from, p_id_cargo, p_id_certification_data, p_supply_cargo_code, p_id_group_cargo, p_code_consignee, p_id_division, p_id_genus, p_id_condition, p_code_payer_arrival, p_code_payer_arrival_name, p_id_station_on).ToList();
+                this.ef_ids.Database.CommandTimeout = null;
                 return Ok(result);
             }
             catch (Exception e)
