@@ -1,4 +1,4 @@
-declare @num int = 64502       
+declare @num int = 52921152       
 
 SELECT TOP (100) [id]
       ,[num]
