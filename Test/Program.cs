@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Test.TestModule;
@@ -27,6 +28,24 @@ namespace Test
     {
         static void Main(string[] args)
         {
+            // Пример GET-запроса
+            ////WebRequest request = WebRequest.Create("https://www.uz.gov.ua/car_info/index.php?func=print&site_nv=56585409");
+            //WebRequest request = WebRequest.Create("https://www.uz.gov.ua/");
+            //request.Method = "GET";
+            //// GitHub требует User-Agent
+            //((HttpWebRequest)request).UserAgent = "CSharp App";
+
+            //using (WebResponse response = request.GetResponse())
+            //{
+            //    using (Stream dataStream = response.GetResponseStream())
+            //    {
+            //        StreamReader reader = new StreamReader(dataStream);
+            //        string responseFromServer = reader.ReadToEnd();
+            //        Console.WriteLine(responseFromServer);
+            //    }
+            //}
+
+
 
             //string ar = "WEB_UI.Areas.IDSMORS.Controllers.HomeController";
 
@@ -271,7 +290,7 @@ namespace Test
             //tids.IDS_WIR_CalcUsageFeeOfIncomingSostav();                    //  Тест Расчет платы за пользование по принятому составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostav();                    //  Тест Расчет платы за пользование по сданному составу
             //tids.IDS_WIR_CalcUsageFeeOfOutgoingSostavOfPeriod();          //  Расчет платы за пользование по сданным составам за выбранный период
-            tids.Get_ConvertEPD();
+            //tids.Get_ConvertEPD();
 
             #endregion
 
@@ -303,7 +322,7 @@ namespace Test
             #region Test_UZ тест логирования
             Test_UZ tuz = new Test_UZ();
             //tuz.UZ_WebApiClientUZWagon();
-            //tuz.UZ_WebAPIClientUZ_GOV_Wagon(); // Тест нового запроса вагон из базы УЗ
+            tuz.UZ_WebAPIClientUZ_GOV_Wagon(); // Тест нового запроса вагон из базы УЗ
             //tuz.UZ_WebAPIClientUZ_GOV_Station(); // Тест нового запроса станции из базы УЗ
             //tuz.UZ_XML();
             //tuz.UZ_SMS_GetOTPR();

@@ -11,6 +11,7 @@ using HtmlAgilityPack;
 using System.Globalization;
 using System.Net;
 using System.IO;
+using System.Net.Http;
 
 namespace UZ
 {
@@ -187,18 +188,19 @@ namespace UZ
             {
                 //String.Format("Выполняем запрос к WebAPI, url:{0}, api_comand {1}, metod {2}, accept {3}", url, api_comand, metod, accept).WriteInformation(eventID);
 
-                WebProxy myProxy = new WebProxy("10.21.1.18", 3128);
-                myProxy.Credentials = new NetworkCredential(@"krr-svc-RailWay", "B8T2OMoUyB4jZ62F49WT");
-
+                WebProxy myProxy = new WebProxy("165.225.200.22", 10299);
+                //myProxy.Credentials = new NetworkCredential(@"krr-svc-RailWay", "B8T2OMoUyB4jZ62F49WT");
 
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
                        | SecurityProtocolType.Tls11
                        | SecurityProtocolType.Tls12
+                       | SecurityProtocolType.Tls13
                        | SecurityProtocolType.Ssl3;
+                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
+                //HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + url_api + api_comand);
 
-                HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url + url_api + api_comand);
-                //request.Proxy =  myProxy;
+                request.Proxy =  myProxy;
                 request.Method = metod;
                 //request.PreAuthenticate = true;
                 //request.Credentials = CredentialCache.DefaultCredentials;
