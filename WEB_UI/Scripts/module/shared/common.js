@@ -4,6 +4,8 @@
     var App = window.App || {};
     var $ = window.jQuery;
     App.RoleAdm = ['EUROPE\\ealevchenko', 'EUROPE\\ivshuba', 'EUROPE\\lvgubarenko', 'EUROPE\\nnlavrenko', 'EUROPE\\osnechaeva']; 
+    //App.URLApi = "https://krr-app-paweb01.europe.mittalco.com/IDSRW_API"; // продуктив
+    App.URLApi = "https://krr-tst-padev02.europe.mittalco.com/IDSRW_API"; // тест
     // Определим язык
     //App.Lang = ($.cookie('lang') === undefined ? 'ru' : $.cookie('lang'));
     App.Lang = 'ru';
