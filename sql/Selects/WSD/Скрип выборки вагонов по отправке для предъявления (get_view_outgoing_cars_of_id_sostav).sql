@@ -1,4 +1,4 @@
-declare @id_sostav int = 398394
+declare @id_sostav int = 398414
 
 --select * from [IDS].[get_view_outgoing_cars_of_id_sostav](@id_sostav) order by outgoing_car_position
 
@@ -7,20 +7,6 @@ declare @id_sostav int = 398394
 		,out_car.[num]
 		,out_car.[position] as outgoing_car_position
 		,wir.id as id_wir
-		--> ПРЕДЫДУЩАЯ ПОДАЧА -----------------------------
-		,wf_pre.id as id_previous_filing 
-		,wf_pre.num_filing as num_previous_filing 
-		,wf_pre.type_filing as type_previous_filing 
-		--,wf_pre.id_division as id_previous_division_filing
-		,wf_pre.vesg as vesg_previous_filing
-		,wf_pre.note as note_previous_filing
-		,wf_pre.start_filing as start_previous_filing
-		,wf_pre.end_filing as end_previous_filing
-		,wf_pre.doc_received as doc_received_previous_filing
-		--> Детальная информация по перемещению груза на АМКР
-		,wimc_curr.[internal_doc_num]
-		,wimc_curr.[id_weighing_num]
-		,wimc_curr.[doc_received] as move_cargo_doc_received
 		----================= ИНФОРМАЦИЯ ПО ВАГОНУ ==========================================
 		---- Справочник вагона Directory_Wagons
 		---- администрация
@@ -582,6 +568,28 @@ declare @id_sostav int = 398394
         ,wuf.[create_user] as wagon_usage_fee_create_user
         ,wuf.[change] as wagon_usage_fee_change
         ,wuf.[change_user] as wagon_usage_fee_change_user
+		-- Запрет не закрыта подача
+	    ,current_filing_busy = CASE 
+		WHEN (wf_pre.start_filing is not null and wf_pre.end_filing is null) or 
+		(wf_pre.type_filing = 2 and wf_pre.start_filing is not null and wf_pre.end_filing is not null and wf_pre.doc_received is null and wimc_curr.[doc_received] is null) 
+		THEN 1  
+		ELSE 0 
+		END	
+		--> ПРЕДЫДУЩАЯ ПОДАЧА -----------------------------
+		,wf_pre.id as id_filing 
+		--,wf_pre.num_filing as num_previous_filing 
+		--,wf_pre.type_filing as type_previous_filing 
+		----,wf_pre.id_division as id_previous_division_filing
+		--,wf_pre.vesg as vesg_previous_filing
+		--,wf_pre.note as note_previous_filing
+		--,wf_pre.start_filing as start_previous_filing
+		--,wf_pre.end_filing as end_previous_filing
+		--,wf_pre.doc_received as doc_received_previous_filing
+		--> Детальная информация по перемещению груза на АМКР
+		,wimc_curr.id as id_wimc_curr
+		--,wimc_curr.[internal_doc_num]
+		--,wimc_curr.[id_weighing_num]
+		--,wimc_curr.[doc_received] as move_cargo_doc_received
 	FROM [IDS].[OutgoingSostav] as out_sost
 		--> Отправка вагона
 		Left JOIN [IDS].[OutgoingCars] as out_car ON out_sost.id = out_car.id_outgoing
