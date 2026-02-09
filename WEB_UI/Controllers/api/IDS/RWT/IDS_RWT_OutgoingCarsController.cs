@@ -1619,6 +1619,9 @@ namespace WEB_UI.Controllers.api
         public string wagon_usage_fee_create_user { get; set; }
         public DateTime? wagon_usage_fee_change { get; set; }
         public string wagon_usage_fee_change_user { get; set; }
+        public bool? current_filing_busy { get; set; }
+        public long? id_filing { get; set; }
+        public long? id_wimc_curr { get; set; }
     }
 
     public class ViewIncomingOutgoing

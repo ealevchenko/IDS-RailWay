@@ -19,6 +19,7 @@
             'togc_field_outgoing_car_id': 'id вагона',
             'togc_field_outgoing_car_position_outgoing': '№ поз.',
             'togc_field_num': '№ вагона',
+            'togc_field_current_filing_busy': 'Запрет',
             'togc_field_outgoing_uz_document_nom_doc': '№ накл.',
             'togc_field_outgoing_uz_vagon_cargo_name': 'Груз',
             'togc_field_outgoing_uz_vagon_cargo_group_name': 'Груз',
@@ -71,6 +72,7 @@
             'togc_mess_run_operation': 'Выполняю операцию...',
             'togc_mess_warning_id_sostav_null': 'Операция недопустима состав не выбран!',
             'togc_mess_warning_id_car_null': 'Операция недопустима вагон не выбран!',
+            'togc_mess_warning_sostav_wagon_ban': 'Операция недопустима, в составе есть вагоны в количестве {0} шт., по которым не закрыта подача!',
             'togc_mess_warning_sostav_status_4': 'Операция недопустима состав отклонён!',
             'togc_mess_warning_sostav_status_5': 'Операция недопустима, состав не имеет статус «в работе» или «предъявлен»!',
             'togc_mess_warning_sostav_status_6': 'Операция недопустима, состав не имеет статус «отправлен» или «предъявлен»!',
@@ -88,6 +90,7 @@
             'togc_field_outgoing_car_id': 'car id',
             'togc_field_outgoing_car_position_outgoing': 'Pos#',
             'togc_field_num': 'car number',
+            'togc_field_current_filing_busy': 'Запрет',
             'togc_field_outgoing_uz_document_nom_doc': 'inc#',
             'togc_field_outgoing_uz_vagon_cargo_name': 'Cargo',
             'togc_field_outgoing_uz_vagon_cargo_group_name': 'Cargo',
@@ -140,6 +143,7 @@
             'togc_mess_run_operation': 'Running operation...',
             'togc_mess_warning_id_sostav_null': 'Operation invalid no composition selected!',
             'togc_mess_warning_id_car_null': 'Operation invalid no car selected!',
+            'togc_mess_warning_sostav_wagon_ban': 'Операция недопустима, в составе есть вагоны в количестве {0} шт., по которым не закрыта подача!',
             'togc_mess_warning_sostav_status_4': 'Operation invalid composition rejected!',
             'togc_mess_warning_sostav_status_5': 'Operation is invalid, composition does not have status "in progress" or "submitted"!',
             'togc_mess_warning_sostav_status_6': 'Operation is invalid, composition has no status "sent" or "presented"!',
@@ -196,6 +200,14 @@
             },
             className: 'dt-body-center',
             title: langView('togc_field_outgoing_car_position_outgoing', App.Langs), width: "30px", orderable: true, searchable: true
+        },
+        {
+            field: 'current_filing_busy',
+            data: function (row, type, val, meta) {
+                return row.current_filing_busy ? langView('togc_title_yes', App.Langs) : '';
+            },
+            className: 'dt-body-center',
+            title: langView('togc_field_current_filing_busy', App.Langs), width: "50px", orderable: true, searchable: true
         },
         {
             field: 'outgoing_uz_document_nom_doc',
@@ -576,6 +588,7 @@
         collums.push({ field: 'outgoing_car_position_outgoing', title: null, class: 'fixed-column' });
         collums.push({ field: 'num', title: null, class: 'fixed-column' });
         collums.push({ field: 'outgoing_uz_document_nom_doc', title: null, class: 'fixed-column' });
+        collums.push({ field: 'current_filing_busy', title: null, class: null });
         collums.push({ field: 'outgoing_uz_vagon_cargo_name', title: null, class: null });
         //collums.push({ field: 'outgoing_uz_vagon_cargo_group_name', title: null, class: null });
         //collums.push({ field: 'outgoing_uz_vagon_to_station_uz_name', title: null, class: null });
@@ -981,15 +994,30 @@
             this.ids_wsd.getOutgoingSostavOfIDSostav(this.id_sostav, function (sostav) {
                 if (sostav) {
                     if (sostav.status < 4) {
-                        if (sostav.status < 2) {
-                            // Сдать состав
-                            LockScreenOff();
-                            this.fhoogs.add(sostav);
-                        } else {
-                            // Править сданный состав
-                            LockScreenOff();
-                            this.fhoogs.edit(sostav);
-                        };
+
+                        this.ids_wsd.getViewOutgoingCarsOfIDSostav(this.id_sostav, function (wagons) {
+                            if (this.wagons && this.wagons.length > 0) {
+                                var vag_ban = this.wagons.filter(function (i) {
+                                    return i.current_filing_busy;
+                                }.bind(this));
+                                if (vag_ban && vag_ban.length === 0) {
+                                    if (sostav.status < 2) {
+                                        // Сдать состав
+                                        LockScreenOff();
+                                        this.fhoogs.add(sostav);
+                                    } else {
+                                        // Править сданный состав
+                                        LockScreenOff();
+                                        this.fhoogs.edit(sostav);
+                                    };
+                                } else {
+                                    // Ошибка, состав откланен 
+                                    this.out_warning(langView('togc_mess_warning_sostav_wagon_ban', App.Langs).format(vag_ban.length));
+                                    LockScreenOff();
+                                }
+                            }
+                        }.bind(this));
+
                     } else {
                         // Ошибка, состав откланен 
                         this.out_warning(langView('togc_mess_warning_sostav_status_4', App.Langs).format(this.id_sostav));
