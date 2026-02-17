@@ -1,3 +1,5 @@
+use [KRR-PA-CNT-Railway-Test]
+
 declare @num int = 36135    
           
 
@@ -17,7 +19,7 @@ SELECT TOP (100) [id]
       ,[highlight_color]
       ,[id_usage_fee]
       ,[note2]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
+  FROM [IDS].[WagonInternalRoutes]
   where num =@num
   order by 1 desc
 
@@ -42,8 +44,8 @@ SELECT [id]
       ,[filing_start]
       ,[filing_end]
       ,[id_filing]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
-  where [id_wagon_internal_routes] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
+  FROM [IDS].[WagonInternalMovement]
+  where [id_wagon_internal_routes] = (select top(1) id FROM [IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
   order by 1 desc
 
 SELECT [id]
@@ -64,8 +66,8 @@ SELECT [id]
       ,[con_change]
       ,[con_change_user]
       ,[id_organization_service]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
-    where [id_wagon_internal_routes] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
+  FROM [IDS].[WagonInternalOperation]
+    where [id_wagon_internal_routes] = (select top(1) id FROM [IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
   order by 1 desc
 
   SELECT TOP (1000) [id]
@@ -91,6 +93,6 @@ SELECT [id]
       ,[close]
       ,[close_user]
       ,[parent_id]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
-    where [id_wagon_internal_routes] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
+  FROM [IDS].[WagonInternalMoveCargo]
+    where [id_wagon_internal_routes] = (select top(1) id FROM [IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
   order by 1 desc

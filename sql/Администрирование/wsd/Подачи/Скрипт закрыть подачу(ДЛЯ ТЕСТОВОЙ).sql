@@ -1,4 +1,4 @@
-use [KRR-PA-CNT-Railway]
+use [KRR-PA-CNT-Railway-Test]
 declare @id int = 201126                                                                                                                                                                                                  
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
