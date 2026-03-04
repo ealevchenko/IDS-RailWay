@@ -1,7 +1,7 @@
 use [KRR-PA-CNT-Railway-Test]
-declare @id int = 201126                                                                                                                                                                                                  
- select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
-declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+declare @id int = 203798--200021--                                                                                                                                                                                                  
+ select max([filing_end])  FROM [IDS].[WagonInternalMovement] where [id_filing] = @id
+declare @date_close datetime = (select max([filing_end])  FROM [IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
 declare @date_start datetime = '2026-02-06 21:30:00.000';
 declare @date_end datetime = '2026-02-06 23:40:00.000';
@@ -46,10 +46,10 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
 --=====================================================================================================
 ---->!!!! ÇÀÊÐÛÒÜ ÏÎÄÀ×Ó
 --UPDATE [IDS].[WagonFiling]
---   SET [end_filing] = @date_close
---	 ,[doc_received] = @date_close
---      ,[close] = @date_close
---      ,[close_user] = 'EUROPE\ealevchenko'
+--   SET [end_filing]  = null --@date_close
+--	 --,[doc_received] = @date_close
+--      --,[close] = @date_close
+--     -- ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
 
 --13	Âûãðóçêà ñ ÓÇ	
@@ -108,7 +108,7 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
 		  ,[change_user]
 		  ,[close]
 		  ,[close_user]
-	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonFiling]
+	  FROM [IDS].[WagonFiling]
 	  where [id] = @id
 	SELECT N'=================WIR==========================='
 	SELECT [id]
@@ -127,8 +127,8 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
 		  ,[highlight_color]
 		  ,[id_usage_fee]
 		  ,[note2]
-	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes]
-	  where id in (SELECT [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+	  FROM [IDS].[WagonInternalRoutes]
+	  where id in (SELECT [id_wagon_internal_routes] FROM [IDS].[WagonInternalMovement] where [id_filing] = @id)
 	  order by id 
 	SELECT N'=================WIM==========================='
 	SELECT TOP (1000) [id]
@@ -152,7 +152,7 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
 		  ,[filing_start]
 		  ,[filing_end]
 		  ,[id_filing]
-	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
+	  FROM .[IDS].[WagonInternalMovement]
 	  where [id_filing] = @id
 	  order by [id_wagon_internal_routes]
 
@@ -175,8 +175,8 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
 		  ,[con_change]
 		  ,[con_change_user]
 		  ,[id_organization_service]
-	  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
-	  where id in (select [id_wio] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
+	  FROM [IDS].[WagonInternalOperation]
+	  where id in (select [id_wio] FROM [IDS].[WagonInternalMovement] where [id_filing] = @id)
 	SELECT N'=================WagonInternalMoveCargo==========================='
 	SELECT [id]
       ,[id_wagon_internal_routes]
@@ -201,8 +201,8 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
       ,[close]
       ,[close_user]
       ,[parent_id]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
-  where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
+  FROM [IDS].[WagonInternalMoveCargo]
+  where [id_wim_load] in (select [id] FROM [IDS].[WagonInternalMovement]  where [id_filing] = @id)
   order by [id_wagon_internal_routes]
 	
 	
@@ -229,6 +229,6 @@ declare @date_end datetime = '2026-02-06 23:40:00.000';
       ,[close]
       ,[close_user]
       ,[parent_id]
-  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
-  where [id_wagon_internal_routes] in (select [id_wagon_internal_routes] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id ) --and [close] is null
+  FROM [IDS].[WagonInternalMoveCargo]
+  where [id_wagon_internal_routes] in (select [id_wagon_internal_routes] FROM [IDS].[WagonInternalMovement] where [id_filing] = @id ) --and [close] is null
   order by [id_wagon_internal_routes], [id] desc
