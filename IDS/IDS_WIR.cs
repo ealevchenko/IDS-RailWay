@@ -2696,6 +2696,8 @@ namespace IDS
                 EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
                 EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
                 EFWagonInternalMovement ef_wim = new EFWagonInternalMovement(context);
+                EFInstructionalLettersWagon ef_il = new EFInstructionalLettersWagon(context);
+
 
                 ArrivalSostav sostav = ef_arr_sostav.Context.Where(d => d.id == id_arrival_sostav).FirstOrDefault();
                 if (sostav == null) return (int)errors_base.not_arrival_sostav_db; // В базе данных нет записи состава для оправки
@@ -2711,6 +2713,18 @@ namespace IDS
                     WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_arrival_car == car.id).FirstOrDefault();
                     if (wir == null) return (int)errors_base.not_wir_db; // В базе данных нет записи по WagonInternalRoutes (Внутреннее перемещение вагонов)
                     WagonInternalRoutes wir_next = ef_wir.Context.Where(w => w.parent_id == wir.id).FirstOrDefault();
+                    // Проверим на письма, если есть отвяжим эти письма
+                    InstructionalLettersWagon ilw = ef_il.Context.Where(l => l.id_wir == wir.id).FirstOrDefault();
+                    if (ilw != null)
+                    {
+                        ilw.note = null;
+                        ilw.status = 0;
+                        ilw.id_wir = null;
+                        ilw.change = null;
+                        ilw.change_user = null;
+                        ef_il.Update(ilw);
+                    }
+                    //
                     if (wir_next != null) return (int)errors_base.close_wir; // Записи по WagonInternalRoutes - закрыта есть следущее внутреннее перемещение
                     List<WagonInternalOperation> list_wio = ef_wio.Context.Where(w => w.id_wagon_internal_routes == wir.id).ToList();
                     if (list_wio.Count() > 1) return (int)errors_base.not_arrival_operation; // Операция вагона текущая операция вагона не "Прибытие с УЗ"

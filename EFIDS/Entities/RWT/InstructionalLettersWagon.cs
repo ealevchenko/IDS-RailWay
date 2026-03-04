@@ -32,6 +32,8 @@ namespace EFIDS.Entities
 
         [StringLength(50)]
         public string change_user { get; set; }
+        public int? status { get; set; }
+        public long? id_wir { get; set; }
 
         public virtual InstructionalLetters InstructionalLetters { get; set; }
     }
