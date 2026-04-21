@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 213562                                                                                                                                                                                                                                                                                                                                                           
+declare @id int = 213350                                                                                                                                                                                                                                                                                                                                                                     
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
@@ -41,11 +41,11 @@ declare @date_end datetime = '2026-04-10 17:15:00.000';
 --=====================================================================================================
 -->!!!!! -->хяопюбхрэ жеу он х онцпсгйх
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 14
+	--set [id_division_from] = 49
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 14
+	--   SET [id_division] = 49
 	-- WHERE [id] = @id
 --=====================================================================================================
 -->!!!! гюйпшрэ ондювс
