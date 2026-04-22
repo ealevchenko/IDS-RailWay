@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 213350                                                                                                                                                                                                                                                                                                                                                                     
+declare @id int = 213364                                                                                                                                                                                                                                                                                                                                                                         
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
-declare @date_start datetime = '2026-04-10 16:20:00.000';
-declare @date_end datetime = '2026-04-10 17:15:00.000';
+declare @date_start datetime = '2026-04-11 10:40:00.000';
+declare @date_end datetime = '2026-04-11 11:30:00.000';
 
 -->!!!!! Исправить время начала и конца
 --UPDATE [IDS].[WagonInternalOperation]
