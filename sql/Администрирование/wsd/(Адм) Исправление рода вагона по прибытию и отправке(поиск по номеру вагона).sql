@@ -1,6 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num int = 90980749 
+declare @num int = 60433059  
   
 
 SELECT TOP (1000) [num]

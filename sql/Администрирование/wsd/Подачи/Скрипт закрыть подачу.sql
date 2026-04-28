@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 213364                                                                                                                                                                                                                                                                                                                                                                         
+declare @id int = 216791                                                                                                                                                                                                                                                                                                                                                                                
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
-declare @date_start datetime = '2026-04-11 10:40:00.000';
-declare @date_end datetime = '2026-04-11 11:30:00.000';
+declare @date_start datetime = '2026-04-23 11:25:00.000';
+declare @date_end datetime = '2026-04-23 18:00:00.000';
 
 -->!!!!! Исправить время начала и конца
 --UPDATE [IDS].[WagonInternalOperation]
@@ -51,7 +51,7 @@ declare @date_end datetime = '2026-04-11 11:30:00.000';
 -->!!!! ЗАКРЫТЬ ПОДАЧУ
 --UPDATE [IDS].[WagonFiling]
 --   SET [end_filing] = @date_close
---	  --,[doc_received] = @date_close
+--	  ,[doc_received] = @date_close
 --      ,[close] = @date_close
 --      ,[close_user] = 'EUROPE\ealevchenko'
 -- WHERE [id] = @id
@@ -78,7 +78,7 @@ declare @date_end datetime = '2026-04-11 11:30:00.000';
 	--set 
 	----[id_station_from_amkr] = 9
 	----,	
-	--[id_station_on_amkr] = 12
+	--[id_station_on_amkr] = 26
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 -->!!!!! Исправить груз

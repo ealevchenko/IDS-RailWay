@@ -265,7 +265,7 @@ use [KRR-PA-CNT-Railway-Test]
 		,filing_dir_operation.[operation_name_en] as filing_operation_name_en
 		,wio_filing.[operation_start] as filing_operation_start
 		,wio_filing.[operation_end] as filing_operation_end
-		,wio.[id_organization_service] as  filing_id_organization_service
+		,wio_filing.[id_organization_service] as  filing_id_organization_service
 		,filing_dir_org_service.[organization_service_ru] as filing_organization_service_ru
 		,filing_dir_org_service.[organization_service_en] as filing_organization_service_en
 		--> Перемещение груза на АМКР в подаче
@@ -493,11 +493,11 @@ use [KRR-PA-CNT-Railway-Test]
 		Left JOIN IDS.Directory_Divisions as dir_division_on ON dir_division_on.id = wimc_curr.[id_division_on]
 		--> Справочник Подразделения (цех отправитель) подачи
 		Left JOIN IDS.Directory_Divisions as filing_dir_division_on ON filing_dir_division_on.id = wimc_filing.[id_division_on]
-		--> Справочник Организация
+		--> Справочник Организация текущая
 		Left JOIN [IDS].[Directory_OrganizationService] as curr_dir_org_service ON curr_dir_org_service.id = wio.[id_organization_service]
-		--> Справочник Организация
+		--> Справочник Организация подачи текущей
 		Left JOIN [IDS].[Directory_OrganizationService] as filing_dir_org_service ON filing_dir_org_service.id = wio_filing.[id_organization_service]
 
-	where ((wf.[create] is not null and wf.[close] is null) or (wf.[create] >= '2026-04-10 00:00:00' and wf.[create]<='2026-04-10 23:59:59'))
-	and wim_filing.id_station = 1	and wf.id=212800
+	where ((wf.[create] is not null and wf.[close] is null) or (wf.[create] >= '2026-04-08 00:00:00' and wf.[create]<='2026-04-08 23:59:59'))
+	and wim_filing.id_station = 2	and wf.id=212749
 	ORDER BY wf.[create], wim_filing.position
