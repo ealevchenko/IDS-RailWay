@@ -1,0 +1,17 @@
+USE [KRR-PA-CNT-Railway]
+
+--select * from[IDS].[get_view_incoming_outgoing_cars_of_num](50024108)
+--select * from[IDS].[get_current_operation_wagon_of_num](50024108)
+--select * from [IDS].[get_current_operation_wagon_of_id_wir](1208766)
+--select * from [IDS].[get_view_remainder_wagons_of_date]('2026-05-04T17:00:00.842Z')
+--select * from [IDS].[get_view_operating_balance_of_date]('2026-05-04T17:00:00.842Z')
+--select * from [IDS].[get_view_wagons_of_balance]()
+--select * from [IDS].[get_view_wagons_of_list_nums]('50024108')
+--select * from [IDS].[get_view_wagons_of_way](233)
+--select * from [IDS].[get_view_incoming_cars_of_id_car](2104069)
+--select * from [IDS].[get_view_incoming_cars_of_id_sostav](401138)
+--select * from [IDS].[get_view_incoming_cars_of_period]('2026-05-01T01:00:00','2026-05-03T01:00:00')
+--select * from [IDS].[get_view_outgoing_cars_of_id_car](1099098)
+--select * from [IDS].[get_view_outgoing_cars_of_id_sostav](366042)
+--select * from [IDS].[get_view_outgoing_cars_of_num](56578388)
+--select * from [IDS].[get_view_wagons_outgoing_sostav_of_id_sostav](366042)
