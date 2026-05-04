@@ -1,4 +1,5 @@
-declare @num int = 63062582                               
+use [KRR-PA-CNT-Railway]
+declare @num int = 11247                                  
 
 SELECT TOP (100) [id]
       ,[num]
