@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway-Test]
-declare @id int = 212836 -- 212462 --212578 --205030--203807--203816--200021--                                                                                                                                                                                                  
+declare @id int = 212780 -- 212462 --212578 --205030--203807--203816--200021--                                                                                                                                                                                                  
  select max([filing_end])  FROM [IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
