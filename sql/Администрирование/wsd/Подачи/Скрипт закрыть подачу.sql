@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 219016                                                                                                                                                                                                                                                                                                                                                                                                           
+declare @id int = 221393                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
-declare @date_start datetime = '2024-12-23 21:00:00.000';
-declare @date_end datetime = '2024-12-24 07:00:00.000';
+declare @date_start datetime = '2026-05-20 18:05:00.000';
+declare @date_end datetime = '2026-05-21 00:00:00.000';
 
 -->!!!!! Исправить время начала и конца
 --UPDATE [IDS].[WagonInternalOperation]
@@ -41,11 +41,11 @@ declare @date_end datetime = '2024-12-24 07:00:00.000';
 --=====================================================================================================
 -->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
 	--update [IDS].[WagonInternalMoveCargo]
-	--set [id_division_from] = 84
+	--set [id_division_from] = 13
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
 
 	--UPDATE [IDS].[WagonFiling]
-	--   SET [id_division] = 84
+	--   SET [id_division] = 13
 	-- WHERE [id] = @id
 --=====================================================================================================
 -->!!!! ЗАКРЫТЬ ПОДАЧУ

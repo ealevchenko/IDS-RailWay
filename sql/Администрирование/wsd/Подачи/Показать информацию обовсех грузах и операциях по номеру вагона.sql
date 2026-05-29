@@ -1,5 +1,6 @@
 use [KRR-PA-CNT-Railway]
-declare @num int = 63100                                        
+declare @num int = 61528964;
+declare @id_wir int = 1214981;
 
 SELECT TOP (100) [id]
       ,[num]
@@ -68,7 +69,7 @@ SELECT [id]
     where [id_wagon_internal_routes] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
   order by 1 desc
 
-  SELECT TOP (1000) [id]
+SELECT TOP (1000) [id]
       ,[id_wagon_internal_routes]
       ,[internal_doc_num]
       ,[id_weighing_num]
@@ -93,4 +94,79 @@ SELECT [id]
       ,[parent_id]
   FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
     where [id_wagon_internal_routes] = (select top(1) id FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalRoutes] where num =@num  order by 1 desc)
+  order by 1 desc
+-->
+print N'¬€¡Œ– ¿ œŒ ID WIR'
+SELECT [id]
+      ,[id_wagon_internal_routes]
+      ,[id_station]
+      ,[id_way]
+      ,[way_start]
+      ,[way_end]
+      ,[id_outer_way]
+      ,[outer_way_start]
+      ,[outer_way_end]
+      ,[position]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+      ,[id_wio]
+      ,[num_sostav]
+      ,[filing_start]
+      ,[filing_end]
+      ,[id_filing]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]
+  where [id_wagon_internal_routes] = @id_wir
+  order by 1 desc
+
+SELECT [id]
+      ,[id_wagon_internal_routes]
+      ,[id_operation]
+      ,[operation_start]
+      ,[operation_end]
+      ,[id_condition]
+      ,[id_loading_status]
+      ,[locomotive1]
+      ,[locomotive2]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+      ,[con_change]
+      ,[con_change_user]
+      ,[id_organization_service]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalOperation]
+    where [id_wagon_internal_routes] = @id_wir
+  order by 1 desc
+
+  SELECT TOP (1000) [id]
+      ,[id_wagon_internal_routes]
+      ,[internal_doc_num]
+      ,[id_weighing_num]
+      ,[doc_received]
+      ,[id_cargo]
+      ,[id_internal_cargo]
+      ,[empty]
+      ,[vesg]
+      ,[id_station_from_amkr]
+      ,[id_division_from]
+      ,[id_wim_load]
+      ,[id_wim_redirection]
+      ,[code_external_station]
+      ,[id_station_on_amkr]
+      ,[id_division_on]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[close]
+      ,[close_user]
+      ,[parent_id]
+  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMoveCargo]
+    where [id_wagon_internal_routes] = @id_wir
   order by 1 desc
