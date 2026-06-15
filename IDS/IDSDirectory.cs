@@ -769,7 +769,8 @@ namespace IDS
                         id_limiting = edit_limiting ? id_limiting : (rent_last != null ? rent_last.id_limiting : null),
                         rent_start = start_rent,
                         rent_end = null,
-                        create = (DateTime)start_rent,
+                        //create = (DateTime)start_rent,
+                        create = DateTime.Now,
                         create_user = user,
                         change = null,
                         change_user = null,
@@ -811,7 +812,8 @@ namespace IDS
                 if (rent_last != null)
                 {
                     // Оновим штамп изменений
-                    rent_last.change = start_rent;
+                    //rent_last.change = start_rent;
+                    rent_last.change = DateTime.Now;
                     rent_last.change_user = user;
                 }
                 //Установить бит требующий внимания
