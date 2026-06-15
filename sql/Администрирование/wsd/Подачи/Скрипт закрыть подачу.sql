@@ -1,10 +1,10 @@
 use [KRR-PA-CNT-Railway]
-declare @id int = 221393                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+declare @id int = 226186                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
  select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id
 declare @date_close datetime = (select max([filing_end])  FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement] where [id_filing] = @id)
 --declare @date_close datetime = '2026-01-23 16:40:00.000'
-declare @date_start datetime = '2026-05-20 18:05:00.000';
-declare @date_end datetime = '2026-05-21 00:00:00.000';
+declare @date_start datetime = '2026-05-25 09:00:00.000';
+declare @date_end datetime = '2026-06-12 08:00:00.000';
 
 -->!!!!! Исправить время начала и конца
 --UPDATE [IDS].[WagonInternalOperation]
@@ -39,7 +39,7 @@ declare @date_end datetime = '2026-05-21 00:00:00.000';
 --	SET [id_filing] = null
 --where [id] in (13297453,13297454,13297455,13297456,13297457)
 --=====================================================================================================
--->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ
+-->!!!!! -->ИСПРАВИТЬ ЦЕХ ПО И ПОГРУЗКИ (7-ГД; 34-СПЦ-2; ДЦ-1-14 АЦ3-13 МНЛЗ-89)
 	--update [IDS].[WagonInternalMoveCargo]
 	--set [id_division_from] = 13
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
@@ -76,7 +76,7 @@ declare @date_end datetime = '2026-05-21 00:00:00.000';
 -->!!!!! Исправить станции отпраки и прибытия
 	--update [IDS].[WagonInternalMoveCargo]
 	--set 
-	--[id_station_from_amkr] = 30
+	--[id_station_from_amkr] = 23
 	----,	
 	----[id_station_on_amkr] = 26
 	--where [id_wim_load] in (select [id] FROM [KRR-PA-CNT-Railway].[IDS].[WagonInternalMovement]  where [id_filing] = @id)
