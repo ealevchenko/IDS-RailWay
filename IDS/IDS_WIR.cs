@@ -9228,7 +9228,7 @@ namespace IDS
                 {
                     // Найдем все вагоны состава
                     long id_sostav = car.OutgoingSostav.id;
-                    List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == id_sostav).ToList();
+                    List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == id_sostav && c.position_outgoing!=null).ToList();
                     //--------------------------------
                     WagonInternalRoutes wir = ef_wir.Context.Where(n => n.id_outgoing_car == car.id).FirstOrDefault();
                     if (wir != null)
