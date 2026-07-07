@@ -57,7 +57,7 @@ SELECT TOP (1000) [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Directory_Cargo]
     order by [cargo_name_ru]
 
-  SELECT TOP (1000) [code]
+  SELECT [code]
       ,[station_name_ru]
       ,[station_name_en]
       ,[code_inlandrailway]
