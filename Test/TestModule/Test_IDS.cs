@@ -403,7 +403,7 @@ namespace Test.TestModule
         public void IDS_WIR_OperationUpdateEPDSendingCar()
         {
             IDS_WIR ids = new IDS_WIR(service.Test);
-            OperationResultID res = ids.OperationUpdateEPDSendingCar(1235313, @"EUROPE\ealevchenko"); //231984
+            OperationResultID res = ids.OperationUpdateEPDSendingCar(1294694, @"EUROPE\ealevchenko"); //231984
         }
 
         /// <summary>
