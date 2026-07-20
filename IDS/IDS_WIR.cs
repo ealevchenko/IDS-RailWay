@@ -6052,7 +6052,10 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
+
                 if (sostav == null) return (int)errors_base.not_outgoing_sostav_db;                     //В базе данных нет записи состава для оправки
                                                                                                         // Проверим состав откланен
                 if (sostav.status == 4) return (int)errors_base.error_status_outgoing_sostav;           // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
@@ -6063,8 +6066,31 @@ namespace IDS
                     // Если впервый раз сдаем тогда откорректируем вагоны
                     int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
                     List<OutgoingCars> list_not_out_car = sostav.OutgoingCars.Where(c => c.outgoing == null).ToList();
+                    List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList();
                     if (count_car == 0) return (int)errors_base.not_outgoing_cars_db; // В базе данных нет записи по вагонам для отпправки
-                                                                                      // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
+                    // По вагонам закроем операцию предъявления
+                    foreach (OutgoingCars car in list_out_car)
+                    {
+                        WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id && w.close == null).FirstOrDefault();
+                        if (wir != null)
+                        {
+                            WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.close == null && o.id_operation == 9).FirstOrDefault();
+                            if (wio != null)
+                            {
+                                wio.operation_end = date_outgoing_act != null ? date_outgoing_act : date_outgoing;
+                                ef_wio.Update(wio);
+                            }
+                            else
+                            {
+                                return (int)errors_base.not_wio_db;
+                            }
+                        }
+                        else
+                        {
+                            return (int)errors_base.not_wir_db;
+                        }
+                    }
+                    // Проверить есть вагоны которые не перенесли в левую часть, если да убрать вагоны и убрать блокировку
                     if (list_not_out_car != null && list_not_out_car.Count() > 0)
                     {
                         foreach (OutgoingCars car in list_not_out_car)
@@ -6078,10 +6104,8 @@ namespace IDS
                                     ef_out_car.Delete(car.id);
                                 }
                             }
-
                         }
                     }
-
                 }
                 // Обновим состав
                 //sostav.status = 2;
@@ -6139,10 +6163,36 @@ namespace IDS
                 EFDbContext context = new EFDbContext();
                 EFOutgoingSostav ef_out_sostav = new EFOutgoingSostav(context);
                 EFOutgoingCars ef_out_car = new EFOutgoingCars(context);
+                EFWagonInternalRoutes ef_wir = new EFWagonInternalRoutes(context);
+                EFWagonInternalOperation ef_wio = new EFWagonInternalOperation(context);
                 OutgoingSostav sostav = ef_out_sostav.Context.Where(s => s.id == id_outgoing_sostav).FirstOrDefault();
                 if (sostav == null) return (int)errors_base.not_outgoing_sostav_db; //В базе данных нет записи состава для оправки
                 if (sostav.status != 2) return (int)errors_base.error_status_outgoing_sostav; // Ошибка статуса состава (Статус не позволяет сделать эту операцию)
-                int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList();
+                // По вагонам закроем операцию предъявления
+                foreach (OutgoingCars car in list_out_car)
+                {
+                    WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id && w.close == null).FirstOrDefault();
+                    if (wir != null)
+                    {
+                        WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.close == null && o.id_operation == 9).FirstOrDefault();
+                        if (wio != null)
+                        {
+                            wio.operation_end = null;
+                            ef_wio.Update(wio);
+                        }
+                        else
+                        {
+                            return (int)errors_base.not_wio_db;
+                        }
+                    }
+                    else
+                    {
+                        return (int)errors_base.not_wir_db;
+                    }
+                }
+                //int count_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList().Count();
+                int count_car = list_out_car.Count();
                 // Обновим состав
                 sostav.status = count_car > 0 ? 1 : 0;
                 sostav.date_end_inspection_acceptance_delivery = null;
@@ -9228,7 +9278,7 @@ namespace IDS
                 {
                     // Найдем все вагоны состава
                     long id_sostav = car.OutgoingSostav.id;
-                    List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == id_sostav && c.position_outgoing!=null).ToList();
+                    List<OutgoingCars> cars = ef_out_car.Context.Where(c => c.id_outgoing == id_sostav && c.position_outgoing != null).ToList();
                     //--------------------------------
                     WagonInternalRoutes wir = ef_wir.Context.Where(n => n.id_outgoing_car == car.id).FirstOrDefault();
                     if (wir != null)
