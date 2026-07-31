@@ -1,6 +1,8 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num int = 68367622
+declare @num int = 61001954
+
+
 
 SELECT TOP (1000) [num]
       ,[id_countrys]
@@ -37,15 +39,15 @@ SELECT TOP (1000) [num]
 
   select @id_countrys,@id_genus
 
---UPDATE [IDS].[Arrival_UZ_Vagon]
---   SET [id_countrys] = @id_countrys
---      ,[id_genus] = @id_genus
---WHERE num=@num 
+UPDATE [IDS].[Arrival_UZ_Vagon]
+   SET [id_countrys] = @id_countrys
+      ,[id_genus] = @id_genus
+WHERE num=@num 
 
---UPDATE [IDS].[Outgoing_UZ_Vagon]
---   SET [id_countrys] = @id_countrys
---      ,[id_genus] = @id_genus
---WHERE num=@num 
+UPDATE [IDS].[Outgoing_UZ_Vagon]
+   SET [id_countrys] = @id_countrys
+      ,[id_genus] = @id_genus
+WHERE num=@num 
 
   SELECT [id]
       ,[abbr_ru]

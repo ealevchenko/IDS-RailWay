@@ -45,7 +45,7 @@ SELECT [id]
       ,[pay_summa]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-    where [num] in (63177976  )
+    where [num] in (64569908   )
   order by 1 desc
 
   SELECT [id]
@@ -89,7 +89,7 @@ SELECT [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
   where id in (select max([id_document])
    FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-  where [num] in (63177976  )
+  where [num] in (64569908  )
   group by [num])
 
 
@@ -102,11 +102,11 @@ SELECT [id]
 --9200	«Промбудресурс КР»		Основной код							0	99
 
 -- Исправить грузополучателя 
---UPDATE [IDS].[Arrival_UZ_Document]
---   SET [code_consignee] = 7932
---   , [klient] = 0
+--UPDATE [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+--   SET [code_consignee] = 0
+--   , [klient] = 1
 --	WHERE id in (select max([id_document])
 --   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
---	where [num] in (63177976  )
+--	where [num] in (64569908  )
 --	group by [num])
    
