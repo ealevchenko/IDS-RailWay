@@ -6077,7 +6077,7 @@ namespace IDS
                             WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.close == null && o.id_operation == 9).FirstOrDefault();
                             if (wio != null)
                             {
-                                wio.operation_end = date_outgoing_act != null ? date_outgoing_act : date_outgoing;
+                                wio.operation_end = date_outgoing;
                                 ef_wio.Update(wio);
                             }
                             else
@@ -6104,6 +6104,31 @@ namespace IDS
                                     ef_out_car.Delete(car.id);
                                 }
                             }
+                        }
+                    }
+                }
+                if ((sostav.status == 2 || sostav.status == 3) && sostav.date_outgoing != date_outgoing) {
+                    List<OutgoingCars> list_out_car = sostav.OutgoingCars.Where(c => c.outgoing != null).ToList();
+                    // По вагонам закроем операцию предъявления
+                    foreach (OutgoingCars car in list_out_car)
+                    {
+                        WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id).FirstOrDefault();
+                        if (wir != null)
+                        {
+                            WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.id_operation == 9).FirstOrDefault();
+                            if (wio != null)
+                            {
+                                wio.operation_end = date_outgoing;
+                                ef_wio.Update(wio);
+                            }
+                            else
+                            {
+                                return (int)errors_base.not_wio_db;
+                            }
+                        }
+                        else
+                        {
+                            return (int)errors_base.not_wir_db;
                         }
                     }
                 }
