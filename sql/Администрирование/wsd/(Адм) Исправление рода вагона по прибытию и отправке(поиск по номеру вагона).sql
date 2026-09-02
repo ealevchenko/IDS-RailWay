@@ -1,8 +1,6 @@
 use [KRR-PA-CNT-Railway]
 
-declare @num int = 61001954
-
-
+declare @num int = 63746143
 
 SELECT TOP (1000) [num]
       ,[id_countrys]

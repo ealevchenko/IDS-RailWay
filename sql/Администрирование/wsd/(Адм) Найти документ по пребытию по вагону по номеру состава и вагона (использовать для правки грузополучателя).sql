@@ -1,0 +1,170 @@
+SELECT TOP (1000) [id]
+      ,[id_arrived]
+      ,[id_sostav]
+      ,[train]
+      ,[composition_index]
+      ,[date_arrival]
+      ,[date_adoption]
+      ,[date_adoption_act]
+      ,[id_station_from]
+      ,[id_station_on]
+      ,[id_way]
+      ,[numeration]
+      ,[num_doc]
+      ,[count]
+      ,[status]
+      ,[note]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalSostav]
+  where [num_doc] in (1308)
+  order by 1 desc
+
+SELECT TOP (1000) [id]
+      ,[id_arrival]
+      ,[num]
+      ,[position]
+      ,[position_arrival]
+      ,[consignee]
+      ,[num_doc]
+      ,[id_transfer]
+      ,[note]
+      ,[date_adoption_act]
+      ,[arrival]
+      ,[arrival_user]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[id_arrival_uz_vagon]
+  FROM [KRR-PA-CNT-Railway].[IDS].[ArrivalCars]
+  where [id_arrival] in (401812, 398994) and num in (64054885)
+
+SELECT TOP (1000) [id]
+      ,[id_document]
+      ,[num]
+      ,[id_arrival]
+      ,[id_car]
+      ,[id_condition]
+      ,[id_type]
+      ,[gruzp]
+      ,[u_tara]
+      ,[ves_tary_arc]
+      ,[route]
+      ,[note_vagon]
+      ,[id_cargo]
+      ,[id_cargo_gng]
+      ,[id_certification_data]
+      ,[id_commercial_condition]
+      ,[kol_pac]
+      ,[pac]
+      ,[vesg]
+      ,[vesg_reweighing]
+      ,[nom_zpu]
+      ,[danger]
+      ,[danger_kod]
+      ,[cargo_returns]
+      ,[id_station_on_amkr]
+      ,[id_division_on_amkr]
+      ,[empty_car]
+      ,[kol_conductor]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[id_owner]
+      ,[id_countrys]
+      ,[id_genus]
+      ,[kol_os]
+      ,[usl_tip]
+      ,[date_rem_uz]
+      ,[date_rem_vag]
+      ,[id_type_ownership]
+      ,[gruzp_uz]
+      ,[tara_uz]
+      ,[zayava]
+      ,[manual]
+      ,[pay_summa]
+      ,[id_wagons_rent_arrival]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
+  where id in (1429212,1429213,
+1429214,
+1429215,
+1429216,
+1429217,
+1429218,
+1429219,
+1429220,
+1429221,
+1429222,
+1429223,
+1429224,
+1429225,
+1429252,
+1429253,
+1429254,
+1429255,
+1429256,
+1429257)
+
+SELECT TOP (1000) [id]
+      ,[id_doc_uz]
+      ,[nom_doc]
+      ,[nom_main_doc]
+      ,[code_stn_from]
+      ,[code_stn_to]
+      ,[code_border_checkpoint]
+      ,[cross_time]
+      ,[code_shipper]
+      ,[code_consignee]
+      ,[klient]
+      ,[code_payer_sender]
+      ,[code_payer_arrival]
+      ,[distance_way]
+      ,[note]
+      ,[parent_id]
+      ,[create]
+      ,[create_user]
+      ,[change]
+      ,[change_user]
+      ,[manual]
+      ,[date_otpr]
+      ,[srok_end]
+      ,[date_grpol]
+      ,[date_pr]
+      ,[date_vid]
+      ,[code_payer_local]
+      ,[tariff_contract]
+      ,[calc_payer]
+      ,[calc_payer_user]
+      ,[IdActServices1]
+      ,[NumActServices1]
+      ,[IdActServices2]
+      ,[NumActServices2]
+      ,[IdActServices3]
+      ,[NumActServices3]
+      ,[Verification]
+      ,[VerificationUser]
+  FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
+  where id in (1073603,
+1073604,
+1073605,
+1073605,
+1073604,
+1073604,
+1073606,
+1073606,
+1073604,
+1073603,
+1073606,
+1073607,
+1073607,
+1073607,
+1073615,
+1073615,
+1073615,
+1073615,
+1073616,
+1073616)
