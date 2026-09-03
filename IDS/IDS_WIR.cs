@@ -6074,7 +6074,7 @@ namespace IDS
                         WagonInternalRoutes wir = ef_wir.Context.Where(w => w.id_outgoing_car == car.id && w.close == null).FirstOrDefault();
                         if (wir != null)
                         {
-                            WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.close == null && o.id_operation == 9).FirstOrDefault();
+                            WagonInternalOperation wio = ef_wio.Context.Where(o => o.id_wagon_internal_routes == wir.id && o.id_operation == 9).FirstOrDefault();
                             if (wio != null)
                             {
                                 wio.operation_end = date_outgoing;
