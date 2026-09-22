@@ -1,5 +1,5 @@
 use [KRR-PA-CNT-Railway]
-declare @num int = 61509626      -- 64093529   --56936370   ;
+declare @num int = 32418--2109--32432 --44327       -- 64093529   --56936370   ;
 declare @id_wir int = 1223244;
 
 SELECT TOP (100) [id]
