@@ -79,6 +79,10 @@
     top: 20px;
 }
 
+.crossed-out {
+    text-decoration: line-through;
+}
+
 .ca-main {
     font-size: 30px;
     -webkit-transition: all 300ms linear;
