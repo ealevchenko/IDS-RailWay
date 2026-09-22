@@ -18,14 +18,14 @@ namespace WEB_UI.Areas.Directory.Controllers
 
         // GET: Directory/Cargo
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Cargo()
         {
             return View();
         }
         // GET: Directory/Cargo
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult CargoGroup()
         {
             return View();
@@ -33,56 +33,56 @@ namespace WEB_UI.Areas.Directory.Controllers
         // GET: Directory/Cars
         [AccessOfDB(LogVisit = true)]
         //[ViewAuthorize(Users = @"EUROPE\ykkozir,EUROPE\nabondarenko,EUROPE\vvoleynik,EUROPE\nnlavrenko,EUROPE\osnechaeva,EUROPE\tfivashina,EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Cars()
         {
             return View();
         }
         // GET: Directory/ExternalStation
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult ExternalStation()
         {
             return View();
         }
         // GET: Directory/InlandRailway
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult InlandRailway()
         {
             return View();
         }
         // GET: Directory/Railway
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Railway()
         {
             return View();
         }
         // GET: Directory/Countrys
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Countrys()
         {
             return View();
         }
         // GET: Directory/Shipper
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Shipper()
         {
             return View();
         }
         // GET: Directory/Ways
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Ways()
         {
             return View();
         }
         // GET: Directory/Ways
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult Park()
         {
             return View();
@@ -91,7 +91,7 @@ namespace WEB_UI.Areas.Directory.Controllers
         // Справочник операторы вагонов
         [AccessOfDB(LogVisit = true)]
         //[ViewAuthorize(Users = @"EUROPE\ealevchenko,EUROPE\ivshuba,EUROPE\lvgubarenko")]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_DIRECTORY,UAKRR\KRR-LG_TD-IDSRW_DIRECTORY,EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
         public ActionResult OperatorsWagons()
         {
             return View();
