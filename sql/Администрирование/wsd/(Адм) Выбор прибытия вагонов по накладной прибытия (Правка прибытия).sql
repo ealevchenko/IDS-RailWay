@@ -1,4 +1,4 @@
-declare @num_doc int = 78
+declare @num_doc int = 1573 
 
 SELECT [id]
       ,[id_arrived]
