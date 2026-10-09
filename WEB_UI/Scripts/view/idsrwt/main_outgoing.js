@@ -22,6 +22,9 @@
             'mo_title_label_date': 'LINE-UP PERIOD :',
             'mo_title_label_station': 'DEPARTURE STATION:',
             'mo_init_main': 'Initializing the submit form...',
+            'mo_title_label_dropdown': 'Отчетная документация',
+            'mo_title_report_register_doc_transfer': 'Реєстр передач документів.',
+            'mo_title_report_register_doc_transfer_amkr': 'Реєстр передач документів (АМКР).',
         }
     };
 
