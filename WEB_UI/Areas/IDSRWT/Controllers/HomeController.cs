@@ -45,7 +45,7 @@ namespace WEB_UI.Areas.IDSRWT.Controllers
         /// </summary>
         /// <returns></returns>
         [AccessOfDB(LogVisit = true)]
-        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN")]
+        [ViewAuthorize(Roles = @"EUROPE\KRR-LG_TD-IDSRW_ADMIN,UAKRR\KRR-LG_TD-IDSRW_ADMIN,EUROPE\KRR-LG_TD-IDSRW_CORREECT,UAKRR\KRR-LG_TD-IDSRW_CORREECT")]
         public ActionResult WSD()
         {
             return View();
