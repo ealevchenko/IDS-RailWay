@@ -45,7 +45,7 @@ SELECT [id]
       ,[pay_summa]
       ,[id_wagons_rent_arrival]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-    where [num] in (64569908   )
+    where [num] in (55175244 )
   order by 1 desc
 
   SELECT [id]
@@ -89,7 +89,7 @@ SELECT [id]
   FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Document]
   where id in (select max([id_document])
    FROM [KRR-PA-CNT-Railway].[IDS].[Arrival_UZ_Vagon]
-  where [num] in (64569908  )
+  where [num] in (55175244)
   group by [num])
 
 
